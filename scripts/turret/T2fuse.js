@@ -29,7 +29,7 @@ T2fuse.spread = 12;
 T2fuse.restitution = 0.1;
 T2fuse.shootCone = 30;
 T2fuse.size = 3;
-T2fuse.health = 220 * 3 * 3;
+T2fuse.health = 240 * 3 * 3;
 T2fuse.shootSound = Sounds.shotgun;
 
 

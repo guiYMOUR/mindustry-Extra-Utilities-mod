@@ -59,16 +59,16 @@ const f1 = extend(BasicBulletType, {
             boolf(t => this.collidesGround)
                     );
             if(targetSet != null){
-                if(b.timer.get(40)){
-                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(targetSet), this.homingPower));
-                }
-                var targetS = Units.closestTarget(b.team, b.x, b.y, this.homingRange*1.5,
-                    boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
-                    boolf(t => this.collidesGround)
-                );
+            if(b.timer.get(40)){
+                b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(targetSet), this.homingPower));
+            }
+            var targetS = Units.closestTarget(b.team, b.x, b.y, this.homingRange*1.5,
+            boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
+            boolf(t => this.collidesGround)
+                    );
                 if(targetS != null){
                     if(b.timer.get(30)){
-                        laser.create(b, b.x, b.y, b.rotation(), 1, 1);
+                laser.create(b, b.x, b.y, b.rotation(), 1, 1);
                     }
                 }
             }
@@ -136,16 +136,16 @@ const f2 = extend(BasicBulletType, {
             boolf(t => this.collidesGround)
                     );
             if(targetSet != null){
-                if(b.timer.get(40)){
-                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(targetSet), this.homingPower));
-                }
-                var targetS = Units.closestTarget(b.team, b.x, b.y, this.homingRange/8,
-                    boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
-                    boolf(t => this.collidesGround)
+            if(b.timer.get(40)){
+                b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(targetSet), this.homingPower));
+            }
+            var targetS = Units.closestTarget(b.team, b.x, b.y, this.homingRange/8,
+            boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
+            boolf(t => this.collidesGround)
                     );
                 if(targetS != null){
                     if(b.timer.get(5)){
-                        bomb.create(b, b.x, b.y, b.rotation(), 1, 1);
+                bomb.create(b, b.x, b.y, b.rotation(), 1, 1);
                     }
                 }
             }
@@ -213,16 +213,16 @@ const f3 = extend(BasicBulletType, {
             boolf(t => this.collidesGround)
                     );
             if(targetSet != null){
-                if(b.timer.get(40)){
-                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(targetSet), this.homingPower));
-                }
-                var targetS = Units.closestTarget(b.team, b.x, b.y, this.homingRange * 1.2,
-                    boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
-                    boolf(t => this.collidesGround)
+            if(b.timer.get(40)){
+                b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(targetSet), this.homingPower));
+            }
+            var targetS = Units.closestTarget(b.team, b.x, b.y, this.homingRange * 1.2,
+            boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
+            boolf(t => this.collidesGround)
                     );
                 if(targetS != null){
                     if(b.timer.get(5)){
-                        Bullets.standardThorium.create(b, b.x, b.y, b.rotation(), 1, 1);
+                Bullets.standardThorium.create(b, b.x, b.y, b.rotation(), 1, 1);
                     }
                 }
             }
@@ -281,7 +281,7 @@ swT2.ammo(
     Items.blastCompound, Bullets.missileExplosive,
             Items.pyratite, Bullets.missileIncendiary,
             Items.surgeAlloy, Bullets.missileSurge
-            
+            //Items.copper, f2
 );
 swT2.requirements = ItemStack.with(
     Items.graphite, 65,
@@ -295,3 +295,4 @@ swT2.category = Category.turret;
 
 exports.f = bt;
 exports.swT2 = swT2;
+

@@ -9,7 +9,7 @@ lib.setBuildingSimple(T2rip, ItemTurret.ItemTurretBuild, {
         
         var i = (shotCounter % this.block.shots) - (this.block.shots - 1)/2;
 
-        tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), 3 * this.tilesize / 2);
+        tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), this.block.size * 8 / 2);
         for(var i = 0; i < 3; i++){
             this.bullet(type, this.rotation + Mathf.range(this.block.inaccuracy))
         }
@@ -34,7 +34,7 @@ T2rip.recoilAmount = 6;
 T2rip.shootShake = 2;
 T2rip.range = 320;
 T2rip.minRange = 50;
-T2rip.health = 150 * 3 * 3;
+T2rip.health = 180 * 3 * 3;
 T2rip.shootSound = Sounds.artillery;
 
 T2rip.ammo(

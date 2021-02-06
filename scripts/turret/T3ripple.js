@@ -9,7 +9,7 @@ lib.setBuildingSimple(T3rip, ItemTurret.ItemTurretBuild, {
         
         var i = (shotCounter % this.block.shots) - (this.block.shots - 1)/2;
 
-        tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), 3 * this.tilesize / 2);
+        tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), this.block.size * 8 / 2);
         for(var i = 0; i < 4; i++){
             this.bullet(type, this.rotation + Mathf.range(this.block.inaccuracy))
         }

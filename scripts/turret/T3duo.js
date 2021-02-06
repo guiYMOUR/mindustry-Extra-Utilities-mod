@@ -19,7 +19,7 @@ T3duo.restitution = 0.03;
 T3duo.range = 130;
 T3duo.shootCone = 15;
 T3duo.ammoUseEffect = Fx.casing1;
-T3duo.health = 320;
+T3duo.health = 400;
 T3duo.inaccuracy = 2;
 T3duo.rotateSpeed = 10;
 T3duo.ammo(
