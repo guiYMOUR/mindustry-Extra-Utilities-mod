@@ -2,6 +2,7 @@ const lib = require('blib');
 
 
 const range = 90;
+const maxNode = 3;
 
 const cor = Color.valueOf("#c6d676");
 const cureRatio = 0.02;
@@ -55,6 +56,8 @@ DCF.saveConfig = false;
 DCF.itemCapacity = 100;
 DCF.noUpdateDisabled = true;
 DCF.buildCostMultiplier = 0.35;
+DCF.absorbLasers = true;
+DCF.insulated = true;
 DCF.requirements = ItemStack.with(
     Items.copper, 550,
     Items.silicon, 600,
@@ -79,6 +82,7 @@ DCF.buildType = prov(() => {
     var ab = 1;
     var h = 2500;
     var r = Mathf.random(reload);
+    var radscl = 0;
     function fairLoopIndex(i, max, offset) {
         return (i + offset) % max;
     }
@@ -98,6 +102,7 @@ DCF.buildType = prov(() => {
             }
         },
         updateTile(){
+            radscl = Mathf.lerpDelta(radscl, ab == 0 ? ab : 1.2, 0.05);
             var speed = ab == 1 ? 2.5 : 4;
             var duration = 33.5 - speed;
             r += 1 * this.delta();
@@ -118,26 +123,63 @@ DCF.buildType = prov(() => {
         },
         draw(){
             this.super$draw();
+            Draw.color(Color.white);
+            Draw.alpha(1- (h / 2500));
+            Draw.rect(Core.atlas.find("btm-DIMENSIONAL-COMPLEX-FIELD-capacity"), this.x, this.y);
+            if(links.size < 1){
+                if(ab != 0){
+                    const RR = this.block.size * 30 * 1.66667;
+		            Groups.bullet.intersect(this.x - RR, this.y - RR, RR * 2, RR * 2, cons(trait =>{
+			            if(trait.type.absorbable && trait.team != this.team && Intersector.isInsideHexagon(trait.getX(), trait.getY(), RR, this.x, this.y) ){
+				             trait.absorb();
+				             Fx.absorb.at(trait);
+				             if(h <= trait.damage){
+				                 Fx.shieldBreak.at(this.x, this.y, RR * 0.5 * radscl, cor);
+				                 ab = 0;
+				            }
+				            h -= trait.damage;
+				            if(h<2500) h++;
+			            }
+                    }));
+                    const R = this.block.size * 30 * 0.8;
+	                Draw.z(Layer.shields);
+
+                    Draw.color(cor, Color.white, Mathf.clamp(0));
+
+                    if(Core.settings.getBool("animatedshields")){
+                        Fill.poly(this.x, this.y, 6, R * radscl);
+                    }else{
+                        Lines.stroke(1.5);
+                        Draw.alpha(0.11);
+                        Fill.poly(this.x, this.y, 6, R * radscl);
+                        Draw.alpha(1);
+                        Lines.poly(this.x, this.y, 6, R * radscl);
+                    }
+                }else{
+                    if(h < 2500){
+                        if(this.timer.get(2)){
+                            h += 8;
+                        }
+                    }else{
+                        ab = 1;
+                    }
+                }
+            }
             for (var i = 0; i < links.size; i++) {
                 var pos = links.get(i);
                 if (linkValid(this, pos) && ab == 1) {
                     var linkTarget = Vars.world.build(pos);
-                    
                     const realRange = linkTarget.block.size * 30 * 1.66667;
 		            Groups.bullet.intersect(linkTarget.x - realRange, linkTarget.y - realRange, realRange * 2, realRange * 2, cons(trait =>{
 			            if(trait.type.absorbable && trait.team != linkTarget.team && Intersector.isInsideHexagon(trait.getX(), trait.getY(), realRange, linkTarget.x, linkTarget.y) ){
 				             trait.absorb();
 				             Fx.absorb.at(trait);
 				             if(h <= trait.damage){
-				                 Fx.shieldBreak.at(linkTarget.x, linkTarget.y, realRange * 0.5, cor);
+				                 Fx.shieldBreak.at(linkTarget.x, linkTarget.y, realRange * 0.5 * radscl, cor);
 				                 ab = 0;
 				            }
 				            h -= trait.damage;
-				            if(h<2500){
-				                if(this.timer.get(1)){
-				                    h++;
-				                }
-			                }
+				            if(h<2500) h++;
 			            }
                     }));
                     const radius = linkTarget.block.size * 30 * 0.8;
@@ -146,13 +188,13 @@ DCF.buildType = prov(() => {
                     Draw.color(cor, Color.white, Mathf.clamp(0));
 
                     if(Core.settings.getBool("animatedshields")){
-                        Fill.poly(linkTarget.x, linkTarget.y, 6, radius);
+                        Fill.poly(linkTarget.x, linkTarget.y, 6, radius * radscl);
                     }else{
                         Lines.stroke(1.5);
                         Draw.alpha(0.09);
-                        Fill.poly(linkTarget.x, linkTarget.y, 6, radius);
+                        Fill.poly(linkTarget.x, linkTarget.y, 6, radius * radscl);
                         Draw.alpha(1);
-                        Lines.poly(linkTarget.x, linkTarget.y, 6, radius);
+                        Lines.poly(linkTarget.x, linkTarget.y, 6, radius * radscl);
                     }
                 }
                 if(ab == 0){
@@ -199,11 +241,11 @@ DCF.buildType = prov(() => {
                 return false;
             }
 
-            if (this.dst(other) <= range && other.team == this.team && links.size < 3) {
+            if (this.dst(other) <= range && other.team == this.team && links.size < maxNode) {
                 this.configure(new java.lang.Integer(other.pos()));
                 return false;
             }
-            if(links.size >= 3){
+            if(links.size >= maxNode){
                 for (var i = 0; i < links.size; i++) {
                     var pos = links.get(i);
                     if (linkValid(this, pos)) {
@@ -221,6 +263,7 @@ DCF.buildType = prov(() => {
             this.super$write(write);
             write.f(h);
             write.f(ab);
+            write.f(radscl);
             write.s(links.size);
             var it = links.iterator();
             while (it.hasNext()) {
@@ -232,17 +275,13 @@ DCF.buildType = prov(() => {
             this.super$read(read, revision);
             h = read.f();
             ab = read.f();
+            radscl = read.f();
             links = new Seq(java.lang.Integer);
-            if (revision == 1) {
-                var linkl = read.i();
-                links.add(new java.lang.Integer(linkl));
-            } else {
-                var linkSize = read.s();
-                for (var i = 0; i < linkSize; i++) {
-                    var pos = read.i();
-                    links.add(new java.lang.Integer(pos));
+             var linkSize = read.s();
+             for (var i = 0; i < linkSize; i++) {
+                 var pos = read.i();
+                 links.add(new java.lang.Integer(pos));
                 }
-            }
         },
     });
 });

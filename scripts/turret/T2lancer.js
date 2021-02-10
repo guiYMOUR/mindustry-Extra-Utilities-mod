@@ -29,6 +29,14 @@ laser.length = 190;
 laser.hitSize = 4;
 laser.lifetime = 16;
 laser.drawSize = 400;
+laser.lightningSpacing = 35;
+laser.lightningLength = 2;
+laser.lightningDelay = 1.1;
+laser.lightningLengthRand = 10;
+laser.lightningDamage = 1;
+laser.lightningAngleRand = 30;
+laser.lightColor = Pal.lancerLaser;
+laser.lightningColor = Pal.lancerLaser;
 laser.shootEffect = eff1;
 
 

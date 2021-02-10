@@ -3,6 +3,7 @@ const lib = require("blib");
 require("turret/T2duo");
 require("turret/T3duo");
 require("turret/hurricane");
+require("turret/ms");
 require("turret/T2lancer");
 require("turret/stinger");
 require("turret/miniswarmer");
@@ -13,6 +14,13 @@ require("turret/T2fuse");
 require("turret/T3fuse");
 
 require("block/he");
+require("power/png");
+require("block/T2PC");
+require("block/T2PF");
+require("block/T2CM");
+require("block/T2SA");
+require("block/LB");
+
 require("tree");
 
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');

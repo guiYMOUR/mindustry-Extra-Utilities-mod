@@ -2,7 +2,14 @@
 const lib = require("blib");
 const tr = new Vec2();
 var shotCounter = 0;
-const T3rip = extendContent(ItemTurret, "T3-ripple", {});
+const T3rip = extendContent(ItemTurret, "T3-ripple", {
+    setStats(){
+		this.super$setStats();
+		
+		this.stats.remove(Stat.reload);
+		this.stats.add(Stat.reload, 14.25, StatUnit.none);
+	},
+});
 lib.setBuildingSimple(T3rip, ItemTurret.ItemTurretBuild, {
     shoot(type){
         this.super$shoot(type);
