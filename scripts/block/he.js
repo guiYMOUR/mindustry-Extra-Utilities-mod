@@ -102,6 +102,7 @@ DCF.buildType = prov(() => {
             }
         },
         updateTile(){
+            if(h < 2500) h += ab;
             radscl = Mathf.lerpDelta(radscl, ab == 0 ? ab : 1.2, 0.05);
             var speed = ab == 1 ? 2.5 : 4;
             var duration = 33.5 - speed;
@@ -138,7 +139,6 @@ DCF.buildType = prov(() => {
 				                 ab = 0;
 				            }
 				            h -= trait.damage;
-				            if(h<2500) h++;
 			            }
                     }));
                     const R = this.block.size * 30 * 0.8;
@@ -179,7 +179,6 @@ DCF.buildType = prov(() => {
 				                 ab = 0;
 				            }
 				            h -= trait.damage;
-				            if(h<2500) h++;
 			            }
                     }));
                     const radius = linkTarget.block.size * 30 * 0.8;

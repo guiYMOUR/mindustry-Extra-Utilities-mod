@@ -49,14 +49,14 @@ lib.setBuildingSimple(stinger, PowerTurret.PowerTurretBuild, {
         this.useAmmo();
         var vec = new Vec2();
         vec.trns(this.rotation, this.block.size * 8 / 2);
-        chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
+        chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
         chargeSound.at(this.x + vec.x, this.y + vec.y, 1);
             
         for(var i = 0; i < chargeEffects; i++){
             Time.run(Mathf.random(chargeMaxDelay), () => {
                 if(!this.isValid()) return;
                 vec.trns(this.rotation, this.block.size * 8 / 2);
-                chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
+                chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
             });
         }
         

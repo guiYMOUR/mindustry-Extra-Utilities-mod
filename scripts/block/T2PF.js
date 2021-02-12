@@ -1,8 +1,8 @@
 const lib = require("blib");
 const cor = Pal.accent;
 
-const T2PF = extendContent(GenericSmelter, "T2-PF", {});
-lib.setBuildingSimple(T2PF, GenericSmelter.SmelterBuild, {
+const T2PF = extendContent(AttributeSmelter, "T2-PF", {});
+lib.setBuildingSimple(T2PF, AttributeSmelter.AttributeSmelterBuild, {
     draw(){
         Draw.rect(Core.atlas.find("btm-T2-PF-bottom"),this.x,this.y);
         Draw.rect(Core.atlas.find("btm-T2-PF-s"), this.x, this.y, 0 + this.totalProgress * 3)
@@ -35,6 +35,7 @@ T2PF.size = 3;
 T2PF.hasPower = true;
 T2PF.ambientSound = Sounds.techloop;
 T2PF.ambientSoundVolume = 0.03;
+T2PF.boostScale = 0.3;
 T2PF.consumes.items(ItemStack.with(
     Items.thorium, 6,
     Items.sand, 16

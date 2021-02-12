@@ -1,7 +1,7 @@
 const range = 20;
 const lib = require("blib");
 
-const LB = extendContent(LiquidExtendingBridge, "lb", {
+const IN = extendContent(ExtendingItemBridge, "i-node", {
     drawPlace(x, y, rotation, valid){
 		Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range + 1) * Vars.tilesize, Pal.accent);
     },
@@ -13,7 +13,7 @@ const LB = extendContent(LiquidExtendingBridge, "lb", {
             && (!checkDouble || other.build.link != tile.pos());
 	},
 });
-lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
+lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
 	drawConfigure() {
 		const sin = Mathf.absin(Time.time, 6, 1);
 
@@ -29,15 +29,15 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
 	},
 	draw(){
 	    //this.super$draw();
-        Draw.rect(Core.atlas.find("btm-lb"),this.x,this.y);
+        Draw.rect(Core.atlas.find("btm-i-node"),this.x,this.y);
         Draw.z(Layer.power);
-        var bridgeRegion = Core.atlas.find("btm-ld-b");
-        var endRegion = Core.atlas.find("btm-ld-e");
+        var bridgeRegion = Core.atlas.find("btm-in-b");
+        var endRegion = Core.atlas.find("btm-in-e");
         var other = Vars.world.build(this.link);
         if(other == null) return;
         
 
-        Draw.color((this.liquids.total() > 0 ? this.liquids.current().color : Color.white));
+        Draw.color(Color.white);
         Draw.alpha(Math.max(this.power.status, 0.25));
 
         Draw.rect(endRegion, this.x, this.y);
@@ -55,18 +55,19 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
         Draw.reset();
     },
 });
-LB.hasPower = true;
-LB.consumes.power(1.5);
-LB.size = 1;
-LB.requirements = ItemStack.with(
-    Items.metaglass, 80,
-    Items.silicon, 90,
+IN.hasPower = true;
+IN.consumes.power(1.5);
+IN.size = 1;
+IN.requirements = ItemStack.with(
+    Items.copper, 150,
+    Items.lead, 80,
+    Items.silicon, 110,
     Items.graphite, 85,
     Items.titanium, 45,
     Items.thorium, 40,
     Items.phaseFabric, 25
 );
-LB.buildVisibility = BuildVisibility.shown;
-LB.category = Category.liquid;
+IN.buildVisibility = BuildVisibility.shown;
+IN.category = Category.distribution;
 
-exports.LB = LB;
+exports.IN = IN;
