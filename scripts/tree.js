@@ -18,7 +18,7 @@ const { png } = require('power/png');
 const { T2ST } = require('power/T2steam');
 
 const { LB } = require('block/LB');
-const { T2IB } = require('block/T2IB');
+const { T2IB, TJ, TR } = require('block/T2IB');
 const { IN } = require('block/IN');
 const { T2PC } = require('block/T2PC');
 const { T2PF } = require('block/T2PF');
@@ -45,6 +45,8 @@ lib.addToResearch(T2ST, { parent: 'steam-generator', });
 
 lib.addToResearch(LB, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor', });
+lib.addToResearch(TJ, { parent: 'junction', });
+lib.addToResearch(TR, { parent: 'router', });
 lib.addToResearch(IN, { parent: T2IB.name, });
 lib.addToResearch(T2PC, { parent: 'plastanium-compressor', });
 lib.addToResearch(T2PF, { parent: 'phase-weaver', });
