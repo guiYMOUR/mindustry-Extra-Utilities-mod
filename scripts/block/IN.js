@@ -35,10 +35,11 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
         var endRegion = Core.atlas.find("btm-in-e");
         var other = Vars.world.build(this.link);
         if(other == null) return;
-        
+        var op = Core.settings.getInt("bridgeopacity") / 100;
+        if(Mathf.zero(op)) return;
 
         Draw.color(Color.white);
-        Draw.alpha(Math.max(this.power.status, 0.25));
+        Draw.alpha(Math.max(this.power.status, 0.25) * op);
 
         Draw.rect(endRegion, this.x, this.y);
         Draw.rect(endRegion, other.x, other.y);
