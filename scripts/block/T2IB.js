@@ -25,7 +25,7 @@ TJ.requirements = ItemStack.with(
 );
 TJ.buildVisibility = BuildVisibility.shown;
 TJ.category = Category.distribution;
-TJ.speed = 26 * 3;
+TJ.speed = (26 + 2) / 4;
 TJ.capacity = 14;
 TJ.health = 70;
 TJ.buildCostMultiplier = 5;
@@ -39,7 +39,7 @@ TR.requirements = ItemStack.with(
 );
 TR.buildVisibility = BuildVisibility.shown;
 TR.category = Category.distribution;
-TR.speed = 8 * 3;
+TR.speed = 8 / 4;
 TR.health = 70;
 TR.buildCostMultiplier = 4;
 exports.TR = TR;
