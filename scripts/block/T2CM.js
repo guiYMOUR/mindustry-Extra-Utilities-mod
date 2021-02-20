@@ -1,12 +1,24 @@
-const T2CM = extendContent(LiquidConverter, "T2-CM", {});
+const T2CM = extendContent(AttributeSmelter, "T2-CM", {});
 T2CM.buildType = prov(() => {
     var totalProgress = 0;
     function getTotalProgress(){ return totalProgress; }
     function setTotalProgress(v){ totalProgress = v; }
-    return new JavaAdapter(LiquidConverter.LiquidConverterBuild, {
+    return new JavaAdapter(AttributeSmelter.AttributeSmelterBuild, {
         updateTile(){
-            this.super$updateTile();
-            if(this.consValid()) totalProgress += this.delta();
+            //this.super$updateTile();
+            if(this.consValid()){
+                var cl = this.block.consumes.get(ConsumeType.liquid);
+                var use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
+                totalProgress += this.delta();
+                this.progress += use / cl.amount;
+                this.liquids.add(this.block.outputLiquid.liquid, use);
+                if(this.progress >= this.block.craftTime){
+                    this.consume();
+                    this.progress %= this.block.craftTime;
+                }
+            }
+
+            this.dumpLiquid(this.block.outputLiquid.liquid);
         },
         draw(){
             Draw.rect(Core.atlas.find("btm-T2-CM-bottom"),this.x,this.y);
@@ -40,8 +52,8 @@ T2CM.rotate = false;
 T2CM.solid = true;
 T2CM.outputsLiquid = true;
 T2CM.liquidCapacity = 54;
-//T2CM.drawer = new DrawMixer();
-
+T2CM.attribute = Attribute.water;
+T2CM.boostScale = 0.6;
 T2CM.consumes.power(3);
 T2CM.consumes.item(Items.titanium);
 T2CM.consumes.liquid(Liquids.water, 0.3);

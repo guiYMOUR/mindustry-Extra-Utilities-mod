@@ -29,7 +29,7 @@ lib.setBuildingSimple(T2PF, AttributeSmelter.AttributeSmelterBuild, {
     },
 });
 T2PF.craftEffect = Fx.smeltsmoke;
-T2PF.outputItem = new ItemStack(Items.phaseFabric, 2);
+T2PF.outputItem = new ItemStack(Items.phaseFabric, 3);
 T2PF.craftTime = 96;
 T2PF.size = 3;
 T2PF.hasPower = true;

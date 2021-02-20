@@ -17,6 +17,7 @@ require("turret/RG");
 require("block/he");
 require("power/png");
 require("power/T2steam");
+require("block/drill");
 require("block/T2PC");
 require("block/T2PF");
 require("block/T2CM");
@@ -24,6 +25,8 @@ require("block/T2SA");
 require("block/T2IB");
 require("block/IN");
 require("block/LB");
+require("block/core");
+require("block/cure");
 
 require("tree");
 

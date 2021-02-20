@@ -10,7 +10,7 @@ T2IB.requirements = ItemStack.with(
     Items.titanium, 5
 );
 T2IB.range = 6;
-T2IB.speed = 90;
+T2IB.speed = 12;
 T2IB.health = 75;
 T2IB.bufferCapacity = 25;
 T2IB.buildVisibility = BuildVisibility.shown;
@@ -43,3 +43,16 @@ TR.speed = 8 / 4;
 TR.health = 70;
 TR.buildCostMultiplier = 4;
 exports.TR = TR;
+
+const T2LB = extendContent(LiquidExtendingBridge , "TLB",{});
+T2LB.requirements = ItemStack.with(
+    Items.graphite, 8,
+     Items.metaglass, 9,
+    Items.titanium, 8
+);
+T2LB.buildVisibility = BuildVisibility.shown;
+T2LB.category = Category.liquid;
+T2LB.health = 70;
+T2LB.range = 6;
+T2LB.hasPower = false;
+exports.T2LB = T2LB;
