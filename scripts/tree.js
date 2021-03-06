@@ -18,7 +18,7 @@ const { png } = require('power/png');
 const { T2ST } = require('power/T2steam');
 
 const { LB } = require('block/LB');
-const { T2IB, TJ, TR, T2LB } = require('block/T2IB');
+const { T2IB, TJ, TR, T2LB, TLR } = require('block/T2IB');
 const { IN } = require('block/IN');
 const { T2PC } = require('block/T2PC');
 const { T2PF } = require('block/T2PF');
@@ -28,6 +28,11 @@ const { DCF } = require('block/he');
 const { drill } = require('block/drill');
 const { core } = require('block/core');
 const { cure } = require('block/cure');
+const { unitA } = require('block/unitA');
+
+const { unitF } = require('unit/UF');
+const { tera } = require('unit/tera');
+const { nebula } = require('unit/nebula');
 
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -51,6 +56,7 @@ lib.addToResearch(T2IB, { parent: 'bridge-conveyor', });
 lib.addToResearch(TJ, { parent: 'junction', });
 lib.addToResearch(TR, { parent: 'router', });
 lib.addToResearch(T2LB, { parent: 'bridge-conduit', });
+lib.addToResearch(TLR, { parent: 'liquid-router', });
 lib.addToResearch(IN, { parent: T2IB.name, });
 lib.addToResearch(T2PC, { parent: 'plastanium-compressor', });
 lib.addToResearch(T2PF, { parent: 'phase-weaver', });
@@ -60,3 +66,8 @@ lib.addToResearch(DCF, { parent: 'force-projector', });
 lib.addToResearch(drill, { parent: 'blast-drill', });
 lib.addToResearch(core, { parent: 'core-shard', });
 lib.addToResearch(cure, { parent: 'mend-projector', });
+lib.addToResearch(unitA, { parent: 'repair-point', });
+
+lib.addToResearch(unitF, { parent: 'tetrative-reconstructor', });
+lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
+lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });

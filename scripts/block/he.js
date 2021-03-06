@@ -4,7 +4,7 @@ const lib = require('blib');
 const range = 90;
 const maxNode = 3;
 
-const cor = Color.valueOf("#c6d676");
+const cor = Color.valueOf("#BF92F9");
 const cureRatio = 0.02;
 const reload = 600;
 const baseColor = cor;

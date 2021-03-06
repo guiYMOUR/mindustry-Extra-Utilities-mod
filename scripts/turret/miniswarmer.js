@@ -8,8 +8,9 @@ m.height = 8;
 m.shrinkY = 0;
 m.drag = -0.01;
 m.homingPower = 0.08;
+m.reloadMultiplier = 1.2;
 m.splashDamageRadius = 25;
-m.splashDamage = 15;
+m.splashDamage = 16;
 m.hitEffect = Fx.blastExplosion;
 
 const swMin = extendContent(ItemTurret, "mini-swarmer", {});

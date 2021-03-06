@@ -46,7 +46,8 @@ T2PF.requirements = ItemStack.with(
     Items.silicon, 130,
     Items.graphite, 80,
     Items.lead, 160,
-    Items.thorium, 90
+    Items.thorium, 90,
+    Items.phaseFabric, 6
 );
 T2PF.buildVisibility = BuildVisibility.shown;
 T2PF.category = Category.crafting;

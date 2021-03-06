@@ -27,6 +27,11 @@ require("block/IN");
 require("block/LB");
 require("block/core");
 require("block/cure");
+require("block/unitA");
+
+require("unit/UF");
+require("unit/tera");
+require("unit/nebula");
 
 require("tree");
 

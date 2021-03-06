@@ -18,8 +18,8 @@ core.itemCapacity= 1000;
 core.buildCostMultiplier= 0.6;
 core.unitCapModifier = 5;
 core.requirements = ItemStack.with(
-    Items.copper, 1250,
-    Items.lead, 1100,
+    Items.copper, 850,
+    Items.lead, 800,
     Items.silicon, 400,
     Items.graphite, 550,
     Items.titanium, 600,

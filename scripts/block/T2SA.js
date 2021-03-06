@@ -10,19 +10,20 @@ T2SA.hasPower = true;
 
 T2SA.consumes.power(6);
 T2SA.consumes.items(ItemStack.with(
-    Items.copper, 5,
-    Items.lead, 7,
-    Items.titanium, 4,
-    Items.silicon, 4,
+    Items.copper, 6,
+    Items.lead, 10,
+    Items.titanium, 5,
+    Items.silicon, 5,
     Items.pyratite, 1
 ));
 T2SA.requirements = ItemStack.with(
     Items.silicon, 100,
     Items.lead, 120,
     Items.titanium, 90,
-    Items.thorium, 80
+    Items.thorium, 80,
+    Items.surgeAlloy, 8
 );
-T2SA.itemCapacity = 14;
+T2SA.itemCapacity = 20;
 T2SA.boostScale = 0.35;
 T2SA.buildVisibility = BuildVisibility.shown;
 T2SA.category = Category.crafting;

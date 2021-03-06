@@ -127,7 +127,7 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
         this.reload = 0;
     },
     efficiency(){
-        if(!this.enabled || this.liquids.total() < 1) return 0;
+        if(!this.enabled || this.liquids.get(this.liquids.current()) / this.block.liquidCapacity < 0.036) return 0;
         return this.power.status;
     },
     effects(){
@@ -155,9 +155,9 @@ RG.restitution = 0.05;
 RG.recoilAmount = 6;
 RG.shootShake = 5;
 RG.ammoPerShot = 2;
-RG.range = 8 * 42.5;
-RG.liquidCapacity = 40;
-RG.coolantMultiplier = 0.8;
+RG.range = 8 * 59.5;
+RG.liquidCapacity = 12;
+RG.coolantMultiplier = 1.1;
 RG.coolantUsage = 0.45;
 RG.health = 180 * 4 * 4;
 //RG.canOverdrive = false;
@@ -168,7 +168,7 @@ RG.ammo(
     Items.surgeAlloy, RGS
 );
 RG.requirements = ItemStack.with(
-    Items.copper, 500,
+    //Items.copper, 500,
     Items.lead, 600,
     Items.silicon, 550,
     Items.graphite, 355,

@@ -19,14 +19,15 @@ cure.buildType = prov(() => {
             heatR = Mathf.lerpDelta(heatR, this.consValid() || this.cheating() ? 1 : 0, 0.08);
 
             timeR += heatR * this.delta();
-            if(timeR > (this.block.reload * 0.9)){
+            if(timeR > (this.block.reload * 1.2)){
                 wasHealed = false;
                 Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                     if(other.damaged()){
                         Fx.heal.at(other);
                         wasHealed = true;
                     }
-                    other.heal(other.maxHealth * (0.05 + phaseHeatR * 0.05));
+                    var hm = other.maxHealth;
+                    other.heal(hm < 10000 ? (hm <= 1500 ? 150 + 120 * phaseHeatR : hm * 0.06 + hm * 0.05) : hm * 0.03 + hm * 0.02);
                 }));
                 if(wasHealed){
                     Fx.healWaveDynamic.at(this.x, this.y, realRange);
@@ -58,7 +59,7 @@ cure.requirements = ItemStack.with(
     Items.titanium, 90,
     Items.thorium, 50,
     Items.plastanium, 60,
-    Items.surgeAlloy, 80
+    Items.surgeAlloy, 120
 );
 cure.buildVisibility = BuildVisibility.shown;
 cure.category = Category.effect;

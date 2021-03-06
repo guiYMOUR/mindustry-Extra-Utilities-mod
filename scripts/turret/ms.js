@@ -51,7 +51,7 @@ MS.speed = 1.5,
 MS.damage = 0,
 MS.knockback = 0.2,
 MS.splashDamageRadius = 40,
-MS.splashDamage = 250,
+MS.splashDamage = 200,
 MS.width = 3,
 MS.height = 3,
 MS.drag = 0,
@@ -90,7 +90,7 @@ const storm = extendContent(PowerTurret, 'MAGNETIC-STORM', {
 });
 
 lib.setBuildingSimple(storm, PowerTurret.PowerTurretBuild, {});
-storm.powerUse = 11;
+storm.powerUse = 12;
 storm.shootType = MS;
 storm.shots = 1;
 storm.shootShake = 5;
@@ -102,7 +102,9 @@ storm.shootCone = 15;
 storm.ammoUseEffect = Fx.none;
 storm.health = 3320;
 storm.inaccuracy = 0;
-storm.rotateSpeed = 10;
+storm.rotateSpeed = 3;
+storm.coolantUsage = 0.65;
+storm.coolantMultiplier = 0.7;
 storm.size = 4;
 storm.shootSound = Sounds.spark;
 
@@ -111,7 +113,7 @@ storm.requirements = ItemStack.with(
     Items.lead, 500,
     Items.silicon, 460,
     Items.titanium, 350,
-    Items.plastanium, 300,
+    Items.plastanium, 350,
     Items.thorium, 320,
     Items.surgeAlloy, 150
 );
