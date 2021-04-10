@@ -18,15 +18,11 @@ core.itemCapacity= 1000;
 core.buildCostMultiplier= 0.6;
 core.unitCapModifier = 5;
 core.requirements = ItemStack.with(
-    Items.copper, 850,
-    Items.lead, 800,
+    Items.copper, 1000,
+    Items.lead, 1000,
     Items.silicon, 400,
-    Items.graphite, 550,
-    Items.titanium, 600,
-    Items.thorium, 465,
-    Items.plastanium, 280,
-    Items.phaseFabric, 120,
-    Items.surgeAlloy, 150
+    Items.graphite, 450,
+    Items.titanium, 400
 );
 core.buildVisibility = BuildVisibility.shown;
 core.category = Category.effect;

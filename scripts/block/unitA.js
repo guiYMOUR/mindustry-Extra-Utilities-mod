@@ -6,21 +6,13 @@ const damApply = new Effect(11, cons(e => {
         Lines.stroke(e.fout() * 2);
         Lines.circle(e.x, e.y, 2 + e.finpow() * 7);
 }));
-const speedUp = new StatusEffect("su");
-speedUp.speedMultiplier = 1.2;
-speedUp.reloadMultiplier = 2;
-speedUp.effect = Fx.none;
-
-const speedDown = new StatusEffect("sd");
-speedDown.speedMultiplier = 0.6;
-speedDown.reloadMultiplier = 0.6;
-speedDown.effect = Fx.none;
+const status = require("other/status");
 
 const unitA = extendContent(MendProjector , "unitA", {
     drawPlace(x, y, rotation, valid) {
         
-        Drawf.circles(x * Vars.tilesize, y * Vars.tilesize, unitRange * 0.6, Pal.accent);
-        Drawf.circles(x * Vars.tilesize, y * Vars.tilesize, unitRange, Color.valueOf("ff0000"));
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, unitRange * 0.6, Pal.accent);
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, unitRange, Color.valueOf("ff0000"));
     },
     setStats(){
         this.super$setStats();
@@ -40,7 +32,7 @@ unitA.buildType = prov(() => {
             phaseHeatU = Mathf.lerpDelta(phaseHeatU, Mathf.num(this.cons.optionalValid()), 0.1);
             var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost * 0.6;
             Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
-                other.apply(speedUp, 30);
+                other.apply(status.speedUp, 30);
             }));
             heatU = Mathf.lerpDelta(heatU, this.consValid() || this.cheating() ? 1 : 0, 0.08);
             if(this.cons.optionalValid() && this.timer.get(unitA.timerUse, unitA.useTime) && this.efficiency() > 0){
@@ -74,7 +66,7 @@ unitA.buildType = prov(() => {
                 Units.nearbyEnemies(this.team, this.x, this.y, realR*2, realR*2, cons(other => {
                     if(other != null && other.within(this.x, this.y, realR)){
                         other.damage(120 + phaseHeatU * 100);
-                        other.apply(speedDown, 120);
+                        other.apply(status.speedDown, 120);
                         damApply.at(other.x, other.y);
                         dam = true;
                     }
@@ -92,9 +84,9 @@ unitA.buildType = prov(() => {
         drawSelect(){
             
             var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost * 0.6;
-            Drawf.circles(this.x, this.y, realRange, Pal.shield);
+            Drawf.dashCircle(this.x, this.y, realRange, Pal.shield);
             var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost;
-            Drawf.circles(this.x, this.y, realR, Color.valueOf("ff0000"));
+            Drawf.dashCircle(this.x, this.y, realR, Color.valueOf("ff0000"));
         },
         draw(){
             this.super$draw();

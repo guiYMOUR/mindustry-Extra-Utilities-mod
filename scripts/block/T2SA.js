@@ -11,7 +11,7 @@ T2SA.hasPower = true;
 T2SA.consumes.power(6);
 T2SA.consumes.items(ItemStack.with(
     Items.copper, 6,
-    Items.lead, 10,
+    Items.lead, 8,
     Items.titanium, 5,
     Items.silicon, 5,
     Items.pyratite, 1

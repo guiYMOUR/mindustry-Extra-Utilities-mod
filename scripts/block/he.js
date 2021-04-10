@@ -5,7 +5,7 @@ const range = 90;
 const maxNode = 3;
 
 const cor = Color.valueOf("#BF92F9");
-const cureRatio = 0.02;
+const cureRatio = 0.06;
 const reload = 600;
 const baseColor = cor;
 const phaseColor = Color.valueOf("de98b0");
@@ -54,7 +54,6 @@ DCF.solid = true;
 DCF.configurable = true;
 DCF.saveConfig = false;
 DCF.itemCapacity = 100;
-DCF.noUpdateDisabled = true;
 DCF.buildCostMultiplier = 0.35;
 DCF.absorbLasers = true;
 DCF.insulated = true;
@@ -104,7 +103,7 @@ DCF.buildType = prov(() => {
         updateTile(){
             if(h < 2500) h += ab;
             radscl = Mathf.lerpDelta(radscl, ab == 0 ? ab : 1.2, 0.05);
-            var speed = ab == 1 ? 2.5 : 4;
+            var speed = ab == 1 ? 2.5 : 5;
             var duration = 33.5 - speed;
             r += 1 * this.delta();
             if(r > reload / speed){
@@ -124,6 +123,7 @@ DCF.buildType = prov(() => {
         },
         draw(){
             this.super$draw();
+            Draw.z();
             Draw.color(Color.white);
             Draw.alpha(1- (h / 2500));
             Draw.rect(Core.atlas.find("btm-DIMENSIONAL-COMPLEX-FIELD-capacity"), this.x, this.y);
