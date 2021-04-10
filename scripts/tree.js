@@ -16,14 +16,18 @@ const { RG } = require('turret/RG');
 
 const { png } = require('power/png');
 const { T2ST } = require('power/T2steam');
+const { T2ther } = require('power/T2ther');
+const { th2 } = require('power/th2');
 
 const { LB } = require('block/LB');
 const { T2IB, TJ, TR, T2LB, TLR } = require('block/T2IB');
 const { IN } = require('block/IN');
+const { T2kiln } = require('block/T2kiln');
 const { T2PC } = require('block/T2PC');
 const { T2PF } = require('block/T2PF');
 const { T2SA } = require('block/T2SA');
 const { T2CM } = require('block/T2CM');
+const { pu } = require("block/T2pulverize");
 const { DCF } = require('block/he');
 const { drill } = require('block/drill');
 const { core } = require('block/core');
@@ -31,6 +35,7 @@ const { cure } = require('block/cure');
 const { unitA } = require('block/unitA');
 
 const { unitF } = require('unit/UF');
+const { suzerain } = require("unit/suzerain");
 const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 
@@ -50,6 +55,8 @@ lib.addToResearch(RG, { parent: 'salvo', });
 
 lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
+lib.addToResearch(T2ther, { parent: 'thermal-generator', });
+lib.addToResearch(th2, { parent: 'thorium-reactor', });
 
 lib.addToResearch(LB, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor', });
@@ -58,10 +65,12 @@ lib.addToResearch(TR, { parent: 'router', });
 lib.addToResearch(T2LB, { parent: 'bridge-conduit', });
 lib.addToResearch(TLR, { parent: 'liquid-router', });
 lib.addToResearch(IN, { parent: T2IB.name, });
+lib.addToResearch(T2kiln, { parent: 'kiln', });
 lib.addToResearch(T2PC, { parent: 'plastanium-compressor', });
 lib.addToResearch(T2PF, { parent: 'phase-weaver', });
 lib.addToResearch(T2SA, { parent: 'alloy-smelter', });
 lib.addToResearch(T2CM, { parent: 'cryofluid-mixer', });
+lib.addToResearch(pu, { parent: 'pulverizer', });
 lib.addToResearch(DCF, { parent: 'force-projector', });
 lib.addToResearch(drill, { parent: 'blast-drill', });
 lib.addToResearch(core, { parent: 'core-shard', });
@@ -69,5 +78,6 @@ lib.addToResearch(cure, { parent: 'mend-projector', });
 lib.addToResearch(unitA, { parent: 'repair-point', });
 
 lib.addToResearch(unitF, { parent: 'tetrative-reconstructor', });
+lib.addToResearch(suzerain, { parent: 'reign',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });

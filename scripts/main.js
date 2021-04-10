@@ -17,11 +17,15 @@ require("turret/RG");
 require("block/he");
 require("power/png");
 require("power/T2steam");
+require("power/T2ther");
+require("power/th2");
 require("block/drill");
+require("block/T2kiln");
 require("block/T2PC");
 require("block/T2PF");
 require("block/T2CM");
 require("block/T2SA");
+require("block/T2pulverize");
 require("block/T2IB");
 require("block/IN");
 require("block/LB");
@@ -30,8 +34,11 @@ require("block/cure");
 require("block/unitA");
 
 require("unit/UF");
+require("unit/suzerain");
 require("unit/tera");
 require("unit/nebula");
+
+require("other/status");
 
 require("tree");
 
