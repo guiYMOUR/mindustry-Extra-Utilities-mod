@@ -26,12 +26,13 @@ tera.weapons.add(
         w.bullet = la;
         w.rotate = true;
         w.rotateSpeed = 2;
+        w.shootSound = Sounds.laser;
         w.x = 25;
         w.y = -6;
         return w;
     })()
 );
-tera.armor = 15;
+tera.armor = 16;
 tera.flying = true;
 tera.speed = 0.7;
 tera.hitSize = 66;

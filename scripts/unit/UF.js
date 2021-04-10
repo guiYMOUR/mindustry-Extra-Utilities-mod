@@ -1,3 +1,4 @@
+const { suzerain } = require("unit/suzerain");
 const { nebula } = require("unit/nebula");
 const { tera } = require("unit/tera");
 var unitType = (unitFrom, unitTo) => {
@@ -11,17 +12,18 @@ const unitF = extendContent(Reconstructor, "imaginary-reconstructor", {});
 unitF.size = 11;
 unitF.consumes.power(30);
 unitF.consumes.items(ItemStack.with(
-    Items.silicon, 1200,
+    Items.silicon, 600,
     Items.titanium, 600,
-    Items.plastanium, 750,
-    Items.surgeAlloy, 600,
-    Items.phaseFabric, 400
+    Items.plastanium, 350,
+    Items.surgeAlloy, 300,
+    Items.phaseFabric, 200
 ));
 unitF.consumes.liquid(Liquids.cryofluid, 4);
 unitF.constructTime = 60 * 60 * 3.8;
 unitF.liquidCapacity = 180;
 
 unitF.upgrades.addAll(
+    unitType(UnitTypes.reign, suzerain),
     unitType(UnitTypes.corvus, nebula),
     unitType(UnitTypes.oct, tera),
 );
