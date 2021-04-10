@@ -81,12 +81,12 @@ MS.despawnEffect = lib.newEffect(60, e => {
 });
 
 const storm = extendContent(PowerTurret, 'MAGNETIC-STORM', {
-    setStats(){
+    /*setStats(){
 		this.super$setStats();
 		
 		this.stats.remove(Stat.damage);
 		this.stats.add(Stat.damage, "250+/s");
-	},
+	},*/
 });
 
 lib.setBuildingSimple(storm, PowerTurret.PowerTurretBuild, {});

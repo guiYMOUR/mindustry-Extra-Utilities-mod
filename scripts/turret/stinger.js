@@ -1,5 +1,6 @@
 //
 const lib = require('blib');
+const status = require("other/status");
 
 const chargeTime = 40;
 const chargeMaxDelay = 30;
@@ -18,12 +19,6 @@ const eff1 = lib.newEffect(10, (e) => {
         Lines.stroke(e.fout() * 2 + 0.2);
         Lines.circle(e.x, e.y, e.fin() * 28);
 });
-const poison = new StatusEffect("poison");
-poison.color = Color.valueOf("c6d676");
-poison.speedMultiplier = 0.4;
-poison.damage = 0.5;
-poison.healthMultiplier = 0.7;
-poison.effect = Fx.oily;
 
 const stingerLaser = extend(LaserBulletType, {});
 stingerLaser.damage = 286;
@@ -36,7 +31,7 @@ stingerLaser.width = 22;
 stingerLaser.hitSize = 6;
 stingerLaser.lifetime = 25;
 stingerLaser.drawSize = 400;
-stingerLaser.status = poison;
+stingerLaser.status = status.poison;
 stingerLaser.colors =[Color.valueOf("#C6D676"), Color.valueOf("#C6D676"), Color.white];
 stingerLaser.shootEffect = eff1;
 
