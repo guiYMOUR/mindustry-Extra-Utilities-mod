@@ -1,5 +1,4 @@
 # Extra Utilities
-![](ad/logo.png)
 
 English | [中文](README_cn.md)
 
