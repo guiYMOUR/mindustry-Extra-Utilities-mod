@@ -62,6 +62,7 @@ MS.hitSize = 0,
 MS.collides = false,
 MS.collidesAir = true,
 MS.lifetime = 300;
+MS.status = StatusEffects.shocked;
 MS.despawnEffect = lib.newEffect(60, e => {
 	Draw.color(liC, cor, e.fin());
 	Fill.circle(e.x, e.y, e.fout() * 50);

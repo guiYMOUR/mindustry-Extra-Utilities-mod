@@ -17,6 +17,7 @@ const unitA = extendContent(MendProjector , "unitA", {
     setStats(){
         this.super$setStats();
         this.stats.remove(Stat.repairTime);
+        this.stats.add(Stat.damage, "120(+100phase)");
     },
 });
 unitA.buildType = prov(() => {

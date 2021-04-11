@@ -40,7 +40,6 @@ tera.accel = 0.04;
 tera.rotateSpeed = 1;
 tera.baseRotateSpeed = 20;
 tera.drag = 0.018;
-tera.mass = 31210;
 tera.shake = 3;
 tera.health = 62000;
 tera.mineSpeed = 7;

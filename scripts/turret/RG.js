@@ -70,7 +70,7 @@ RGS.pierceBuilding = true;
 RGS.shrinkY = 0;
 RGS.backColor = Pal.surge;
 RGS.frontColor = Pal.surge;
-
+RGS.status = StatusEffects.shocked;
 RGS.despawnEffect = lib.newEffect(20,(e) => {
 	Draw.color(Pal.surge);
 	Lines.stroke(e.fout() * 3);

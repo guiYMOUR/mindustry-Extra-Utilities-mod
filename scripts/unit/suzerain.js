@@ -1,4 +1,4 @@
-var ability = require("unit/ability");
+var ability = require("other/ability");
 
 const suzerain = extendContent(UnitType, 'suzerain', {});
 suzerain.constructor = prov(() => extend(UnitTypes.reign.constructor.get().class, {}));
@@ -24,18 +24,19 @@ suzerain.weapons.add(
 );
 
 suzerain.abilities.add(ability.TerritoryFieldAbility(150, 60 * 4, 200));
-suzerain.abilities.add(new ShieldRegenFieldAbility(200, 800, 60 * 6, 60));
+suzerain.abilities.add(new ShieldRegenFieldAbility(200, 800, 60 * 6, 200));
 suzerain.armor = 17;
 suzerain.flying = false;
 suzerain.speed = 0.3;
 suzerain.hitSize = 26;
 suzerain.rotateSpeed = 1.8;
-suzerain.drag = 0.018;
-suzerain.mass = 31210;
-suzerain.shake = 3;
+suzerain.canDrown = false;
+suzerain.mechStepParticles = true;
+suzerain.mechStepShake = 1;
+suzerain.mechFrontSway = 1.9;
+suzerain.mechSideSway = 0.6;
 suzerain.health = 61000;
 suzerain.itemCapacity = 300;
 suzerain.rotateShooting = true;
-suzerain.drawShields =false;
 suzerain.commandLimit = 8;
 exports.suzerain = suzerain;

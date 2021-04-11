@@ -21,6 +21,7 @@ hur.height = 1;
 hur.damage = 26;
 hur.lifetime = 60;
 hur.speed = 3;
+hur.status = StatusEffects.shocked;
 hur.despawnEffect = lib.newEffect(20,(e) => {
 	Draw.color(dec,dec2,e.fin());
 	Lines.stroke(e.fout() * 3);

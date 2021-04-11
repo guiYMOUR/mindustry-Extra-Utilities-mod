@@ -25,6 +25,7 @@ require("block/T2PC");
 require("block/T2PF");
 require("block/T2CM");
 require("block/T2SA");
+require("power/GeneratorCrafter");
 require("block/T2pulverize");
 require("block/T2IB");
 require("block/IN");
@@ -44,3 +45,15 @@ require("tree");
 
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
+
+const CoreSchematics = [
+"bXNjaAF4nCWLWwqAMBAD05eI/ngRD1XXBQt9yFpEb6+lCQRmIHAYNGz2iTHxU8WvVIQx73yRhLOGkgGDJTEdPgfycd0lxIiRSr75LYJxq6m/AIce9VdD6X9sY9OlafIDyOMXfA=="
+];
+(() => {
+    for (var schematic of CoreSchematics) {
+        let read = Schematics.readBase64(schematic);
+        if (read.hasCore()) {
+            Vars.schematics.getLoadouts(Blocks.coreShard).add(read);
+        }
+    }
+})();

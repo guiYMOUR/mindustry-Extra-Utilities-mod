@@ -108,13 +108,11 @@ nebula.weapons.add(
         return w2;
     })()
 );
-nebula.armor = 16;
+nebula.armor = 15;
 nebula.flying = false;
 nebula.speed = 0.25;
 nebula.hitSize = 35;
 nebula.rotateSpeed = 1.8;
-nebula.drag = 0.018;
-nebula.mass = 31210;
 nebula.shake = 3;
 nebula.health = 54000;
 nebula.mineSpeed = 7;
