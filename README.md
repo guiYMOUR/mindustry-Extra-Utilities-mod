@@ -34,6 +34,10 @@ The MOD body uses only JS, including the ability, status effect, mod introductio
 ### Drill
 - High Energy drill
 
+### Wall
+- Copper-Lead Wall
+- Composite Wall
+
 ### Effect
 - Composite repair field
 - DIMENSIONAL COMPLEX FIELD
@@ -48,6 +52,7 @@ The MOD body uses only JS, including the ability, status effect, mod introductio
 
 ### Ability
 - Territory Field
+- Mend Field
 
 ### Status Effect
 - Erosion
