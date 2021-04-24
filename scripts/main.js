@@ -2,6 +2,7 @@ const lib = require("blib");
 
 require("turret/T2duo");
 require("turret/T3duo");
+require("turret/T2scatter");
 require("turret/hurricane");
 require("turret/ms");
 require("turret/T2lancer");
@@ -12,6 +13,7 @@ require("turret/T2ripple");
 require("turret/T3ripple");
 require("turret/T2fuse");
 require("turret/T3fuse");
+require("turret/antiaircraft");
 require("turret/RG");
 
 require("block/he");
@@ -33,6 +35,7 @@ require("block/LB");
 require("block/core");
 require("block/cure");
 require("block/unitA");
+require("block/wall");
 
 require("unit/UF");
 require("unit/suzerain");

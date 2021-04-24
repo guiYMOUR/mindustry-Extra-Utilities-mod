@@ -1,7 +1,9 @@
+//The single quotation mark is used because it looks comfortable.
 const lib = require('blib');
 
 const { T2duo } = require('turret/T2duo');
 const { T3duo } = require('turret/T3duo');
+const { T2scatter } = require('turret/T2scatter');
 const { hurricane } = require('turret/hurricane');
 const { ms } = require('turret/ms');
 const { T2lan } = require('turret/T2lancer');
@@ -12,6 +14,7 @@ const { T2rip } = require('turret/T2ripple');
 const { T3rip } = require('turret/T3ripple');
 const { T2fuse } = require('turret/T2fuse');
 const { T3fuse } = require('turret/T3fuse');
+const { antiaircraft } = require('turret/antiaircraft');
 const { RG } = require('turret/RG');
 
 const { png } = require('power/png');
@@ -34,6 +37,7 @@ const { drill } = require('block/drill');
 const { core } = require('block/core');
 const { cure } = require('block/cure');
 const { unitA } = require('block/unitA');
+const { clWall, clWallL, aws, awl } = require('block/wall');
 
 const { unitF } = require('unit/UF');
 const { suzerain } = require("unit/suzerain");
@@ -42,6 +46,7 @@ const { nebula } = require('unit/nebula');
 
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
+lib.addToResearch(T2scatter, { parent: 'scatter', });
 lib.addToResearch(hurricane, { parent: 'arc', });
 lib.addToResearch(ms, { parent: hurricane.name, });
 lib.addToResearch(T2lan, { parent: 'lancer', });
@@ -52,6 +57,7 @@ lib.addToResearch(T2rip, { parent: 'ripple', });
 lib.addToResearch(T3rip, { parent: T2rip.name, });
 lib.addToResearch(T2fuse, { parent: 'fuse', });
 lib.addToResearch(T3fuse, { parent: T2fuse.name, });
+lib.addToResearch(antiaircraft, { parent: 'scatter', });
 lib.addToResearch(RG, { parent: 'salvo', });
 
 lib.addToResearch(png, { parent: 'power-node-large', });
@@ -78,6 +84,10 @@ lib.addToResearch(drill, { parent: 'blast-drill', });
 lib.addToResearch(core, { parent: 'core-shard', });
 lib.addToResearch(cure, { parent: 'mend-projector', });
 lib.addToResearch(unitA, { parent: 'repair-point', });
+lib.addToResearch(clWall, { parent: 'copper-wall-large', });
+lib.addToResearch(clWallL, { parent: clWall.name, });
+lib.addToResearch(aws, { parent: 'surge-wall-large', });
+lib.addToResearch(awl, { parent: aws.name, });
 
 lib.addToResearch(unitF, { parent: 'tetrative-reconstructor', });
 lib.addToResearch(suzerain, { parent: 'reign',objectives: Seq.with( new Objectives.Research(unitF) ) });

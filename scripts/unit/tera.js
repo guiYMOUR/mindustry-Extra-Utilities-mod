@@ -1,5 +1,6 @@
+const ability = require("other/ability");
 const c1 = Color.valueOf("84f491");
-var spawnTime = 60 * 18;
+var spawnTime = 60 * 24;
 const la = extend(LaserBulletType, {});
 la.length = 200;
 la.width = 20;
@@ -14,7 +15,8 @@ la.collidesTeam = true;
 la.colors = [c1, c1, Color.white];
 
 const tera = extendContent(UnitType, 'Tera', {});
-tera.abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 31.5, -27.5), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -31.5, -27.5), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 0, -10));
+tera.abilities.add(ability.MendFieldAbility(150, 150, 12));
+tera.abilities.add(new UnitSpawnAbility(UnitTypes.poly, spawnTime, 31.5, -27.5), new UnitSpawnAbility(UnitTypes.poly, spawnTime, -31.5, -27.5));
 tera.abilities.add(new ForceFieldAbility(140, 5, 8500, 60 * 8), new RepairFieldAbility(200, 60 * 2, 140));
 tera.constructor = prov(() => extend(UnitTypes.mega.constructor.get().class, {}));
 tera.weapons.add(
@@ -32,7 +34,7 @@ tera.weapons.add(
         return w;
     })()
 );
-tera.armor = 16;
+tera.armor = 17;
 tera.flying = true;
 tera.speed = 0.7;
 tera.hitSize = 66;

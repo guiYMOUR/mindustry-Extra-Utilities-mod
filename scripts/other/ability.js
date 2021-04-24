@@ -54,3 +54,36 @@ const TerritoryFieldAbility = (damage, reload, range) => {
     return ability;
 };
 exports.TerritoryFieldAbility = TerritoryFieldAbility;
+
+const baseColor = Color.valueOf("84f491");
+const phaseColor = Color.valueOf("ffd59e");
+const MendFieldAbility = (range, reload, healP) => {
+    var timer = 0;
+    var ability = new JavaAdapter(Ability, {
+        localized() {
+            return Core.bundle.get("ability.btm-MendFieldAbility");
+        },
+        update(unit) {
+            Vars.indexer.eachBlock(unit, range, boolf(other => other.damaged()), cons(other => {
+                timer += Time.delta;
+                if(timer >= reload){
+                    timer = 0;
+                    other.heal((healP/100) * other.block.health);
+                    Fx.healBlockFull.at(other.x, other.y, other.block.size, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
+                }
+            }));
+        },
+        copy() {
+            return MendFieldAbility(range, reload, healP);
+        },
+        draw(unit) {
+            Vars.indexer.eachBlock(unit, range, boolf(other => other.damaged()), cons(other => {
+                var tmp = Tmp.c1.set(baseColor);
+                tmp.a = Mathf.absin(4, 1);
+                Drawf.selected(other, tmp);
+                }));
+        },
+    });
+    return ability;
+};
+exports.MendFieldAbility = MendFieldAbility;
