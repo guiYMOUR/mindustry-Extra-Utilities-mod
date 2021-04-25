@@ -6,7 +6,7 @@ Add more than 40 blocks and some advanced units.
 
 This module does not affect the game balance, and enrich the content of the game, making the original game easier
 
-The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to write, welcome to refer
+The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
 
 
 - QQ Group①：513165958
