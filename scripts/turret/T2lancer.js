@@ -13,7 +13,6 @@ const chargeBeginEffect = lib.newEffect(chargeTime * 2, e => {
         Draw.color();
         Fill.circle(e.x, e.y, e.fin() * 1.5);
 });
-var shotCounter = 0;
 const eff1 = lib.newEffect(10, (e) => {
         Draw.color(Color.white, Color.valueOf("00faff"), e.fin());
         Lines.stroke(e.fout() * 2 + 0.2);
@@ -43,9 +42,10 @@ laser.shootEffect = eff1;
 const T2lan = extendContent(PowerTurret, 'T2-lancer', {});
 
 lib.setBuildingSimple(T2lan, PowerTurret.PowerTurretBuild, {
+    _shotCounter: 0,
     shoot(type){
         this.super$shoot(type);
-        var i = (shotCounter % this.block.shots) - (this.block.shots - 1)/2;
+        var i = (this._shotCounter % this.block.shots) - (this.block.shots - 1)/2;
         var vec = new Vec2();
         vec.trns(this.rotation - 90, -(this.block.spread * i + Mathf.range(0)), this.block.size * 8 / 2);
         chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
@@ -57,7 +57,7 @@ lib.setBuildingSimple(T2lan, PowerTurret.PowerTurretBuild, {
                 chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
             });
         }
-        shotCounter ++;
+        this._shotCounter ++;
     }
 });
 T2lan.powerUse = 8.5;

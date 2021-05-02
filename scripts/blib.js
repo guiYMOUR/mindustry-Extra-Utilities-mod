@@ -1,20 +1,15 @@
 //function from abomb4's lib.js
-exports.loadSound = function (name, setter) {
-    const params = new Packages.arc.assets.loaders.SoundLoader.SoundParameter();
-    params.loadedCallback = new Packages.arc.assets.AssetLoaderParameters.LoadedCallback({
-        finishedLoading(asset, str, cls) {
-            // print('1 load sound ' + name + ' from arc');
-            setter(asset.get(str, cls));
+exports.loadSound = (() => {
+    const cache = {};
+    return (path) => {
+        const c = cache[path];
+        if (c === undefined) {
+            return cache[path] = Vars.mods.scripts.loadSound(path);
         }
-    });
+        return c;
+    }
+})();
 
-    Core.assets.load("sounds/" + name, Packages.arc.audio.Sound, params).loaded = new Cons({
-        get(a) {
-            // print('2 load sound ' + name + ' from arc');
-            setter(a);
-        }
-    });
-}
 
 exports.aModName = "btm";//你mod的名字
 exports.mod = Vars.mods.locateMod(exports.aModName);

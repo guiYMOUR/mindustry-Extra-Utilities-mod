@@ -1,4 +1,4 @@
-const craftTime = 108;
+const craftTime = 126;
 const itemDuration = 90;
 const input = Items.coal;
 const output = Items.pyratite;

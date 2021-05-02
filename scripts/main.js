@@ -15,6 +15,7 @@ require("turret/T2fuse");
 require("turret/T3fuse");
 require("turret/antiaircraft");
 require("turret/RG");
+require("turret/prism");
 
 require("block/he");
 require("power/png");
@@ -23,6 +24,7 @@ require("power/T2ther");
 require("power/th2");
 require("block/drill");
 require("block/T2kiln");
+//require("block/T2melter");//Add to the next version
 require("block/T2PC");
 require("block/T2PF");
 require("block/T2CM");
@@ -43,6 +45,10 @@ require("unit/tera");
 require("unit/nebula");
 
 require("other/status");
+
+//coming soon...
+//require("game/challengeMap/cmain");
+//require("game/TD/tmain");
 
 require("tree");
 

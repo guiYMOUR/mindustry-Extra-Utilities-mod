@@ -22,6 +22,7 @@ const speedUp = extend(StatusEffect, "speedUp", {
         this.opposite(speedDown);
     },*/
 });
+speedUp.buildSpeedMultiplier = 2;
 speedUp.speedMultiplier = 1.3;
 speedUp.reloadMultiplier = 2;
 speedUp.effect = Fx.none;

@@ -87,3 +87,62 @@ const MendFieldAbility = (range, reload, healP) => {
     return ability;
 };
 exports.MendFieldAbility = MendFieldAbility;
+
+const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) => {
+    const color = Color.white;
+    var target = null;
+    var reload = 0;
+    var rotation = 90;
+    var timer = 90;
+    var ability = new JavaAdapter(Ability, {
+        localized() {
+            return Core.bundle.get("ability.btm-pointDefenseAbility");
+        },
+        update(unit) {
+            var x = unit.x + Angles.trnsx(unit.rotation, py, px);
+            var y = unit.y + Angles.trnsy(unit.rotation, py, px);
+            target = Groups.bullet.intersect(unit.x - range, unit.y - range, range*2, range*2).min(b => b.team != unit.team && b.type.hittable, b => b.dst2(unit));
+
+            if(target != null && !target.isAdded()){
+                target = null;
+            }
+            if(target == null){
+                if(timer >= 90){
+                    rotation = Angles.moveToward(rotation, unit.rotation, 3);
+                }else{
+                    timer += Time.delta;
+                }
+            }
+            if(target != null && target.within(unit, range) && target.team != unit.team && target.type != null && target.type.hittable){
+                timer = 0;
+                reload += Time.delta;
+                var dest = unit.angleTo(target);
+                rotation = Angles.moveToward(rotation, dest, 20);
+                if(Angles.within(rotation, dest, 3) && reload >= reloadTime){
+                    if(target.damage > bulletDamage){
+                        target.damage = target.damage - bulletDamage;
+                    }else{
+                        target.remove();
+                    }
+                    Tmp.v1.trns(rotation, 6);
+                    Fx.pointBeam.at(x + Tmp.v1.x, y + Tmp.v1.y, rotation, color, new Vec2().set(target));
+                    Fx.sparkShoot.at(x + Tmp.v1.x, y + Tmp.v1.y, rotation, color);
+                    Fx.pointHit.at(target.x, target.y, color);
+                    Sounds.lasershoot.at(x, y, Mathf.random(0.9, 1.1));
+                    reload = 0;
+                }
+            }
+        },
+        copy() {
+            return pointDefenseAbility(px, py, reloadTime, range, bulletDamage, sprite);
+        },
+        draw(unit){
+            var x = unit.x + Angles.trnsx(unit.rotation, py, px);
+            var y = unit.y + Angles.trnsy(unit.rotation, py, px);
+            var region = Core.atlas.find("btm-" + sprite);
+            Draw.rect(region, x, y, rotation - 90);
+        },
+    });
+    return ability;
+};
+exports.pointDefenseAbility = pointDefenseAbility;

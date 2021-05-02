@@ -10,7 +10,7 @@ const chargeEffect = lib.newEffect(20, (e) => {
         Lines.circle(e.x, e.y, e.fout() * 54);
         Draw.reset();
 });
-const chargeSound = Sounds.none;
+const chargeSound = Sounds.lasercharge2;
 const chargeBeginEffect = lib.newEffect(chargeTime * 1.2, e => {
         Draw.color(Pal.surge, Color.valueOf("e5f3fe"), e.fout());
         Fill.circle(e.x, e.y, e.fout() * 18 + 6);
@@ -131,7 +131,7 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
         return this.power.status;
     },
     effects(){
-        var tr = new Vec2;
+        var tr = new Vec2();
         var fshootEffect = this.block.shootEffect == Fx.none ? this.peekAmmo().shootEffect : this.block.shootEffect;
         var fsmokeEffect = this.block.smokeEffect == Fx.none ? this.peekAmmo().smokeEffect : this.block.smokeEffect;
         tr.trns(this.rotation, this.block.size * 8 / 2);

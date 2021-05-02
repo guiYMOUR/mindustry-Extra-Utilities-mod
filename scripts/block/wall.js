@@ -1,4 +1,4 @@
-const absorbDamageChance = 0.12;
+const absorbDamageChance = 0.08;
 const cor1 = Color.valueOf("b9ff00");
 const cor2 = Color.valueOf("b9ff22");
 
@@ -51,7 +51,7 @@ aws.buildType = prov(() => {
         damage(damage){
             this.super$damage(damage);
             if(Mathf.chance(absorbDamageChance)){
-                this.heal(damage);
+                this.heal(damage * 2);
                 Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
             }
         },
@@ -86,7 +86,7 @@ awl.buildType = prov(() => {
         damage(damage){
             this.super$damage(damage);
             if(Mathf.chance(absorbDamageChance)){
-                this.heal(damage * 2);
+                this.heal(damage * 4);
                 Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
             }
         },

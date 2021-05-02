@@ -1,7 +1,6 @@
 //guiY
 const lib = require("blib");
-const tr = new Vec2();
-var shotCounter = 0;
+//const tr = new Vec2();
 const T3rip = extendContent(ItemTurret, "T3-ripple", {
     setStats(){
 		this.super$setStats();
@@ -11,17 +10,18 @@ const T3rip = extendContent(ItemTurret, "T3-ripple", {
 	},
 });
 lib.setBuildingSimple(T3rip, ItemTurret.ItemTurretBuild, {
+    _shotCounter: 0,
     shoot(type){
         this.super$shoot(type);
         
-        var i = (shotCounter % this.block.shots) - (this.block.shots - 1)/2;
+        var i = (this._shotCounter % this.block.shots) - (this.block.shots - 1)/2;
 
-        tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), this.block.size * 8 / 2);
+        //tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), this.block.size * 8 / 2);
         for(var i = 0; i < 4; i++){
             this.bullet(type, this.rotation + Mathf.range(this.block.inaccuracy))
         }
-        shotCounter ++;
-    }
+        this._shotCounter ++;
+    },
 });
 T3rip.reloadTime = 20;
 T3rip.shots = 3;
