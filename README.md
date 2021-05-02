@@ -7,7 +7,7 @@
 - This module does not affect the game balance, and enrich the content of the game, making the original game easier
 
 - The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer.
-- Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:172499451@qq.com, I will treat every suggestion sincerely.
+- Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:172499451@qq.com, I will treat every suggestion sincerely.Thank you play my frist js mod.
 
 
 - QQ Group①：513165958
