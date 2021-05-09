@@ -2,6 +2,7 @@ const th2 = extendContent(NuclearReactor, "Th2", {});
 th2.ambientSound = Sounds.hum;
 th2.ambientSoundVolume = 0.24;
 th2.size = 4;
+th2.itemCapacity = 40;
 th2.health = 2400;
 th2.itemDuration = 300;
 th2.powerProduction = 2400/60;

@@ -116,7 +116,8 @@ const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) =>
             if(target != null && target.within(unit, range) && target.team != unit.team && target.type != null && target.type.hittable){
                 timer = 0;
                 reload += Time.delta;
-                var dest = unit.angleTo(target);
+                //var dest = unit.angleTo(target);
+                var dest = target.angleTo(x, y) - 180;
                 rotation = Angles.moveToward(rotation, dest, 20);
                 if(Angles.within(rotation, dest, 3) && reload >= reloadTime){
                     if(target.damage > bulletDamage){

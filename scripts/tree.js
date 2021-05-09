@@ -27,6 +27,7 @@ const { LB } = require('block/LB');
 const { T2IB, TJ, TR, T2LB, TLR } = require('block/T2IB');
 const { IN } = require('block/IN');
 const { T2kiln } = require('block/T2kiln');
+const { T2melter } = require('block/T2melter');
 const { T2PC } = require('block/T2PC');
 const { T2PF } = require('block/T2PF');
 const { T2SA } = require('block/T2SA');
@@ -107,6 +108,7 @@ lib.addToResearch(TLR, { parent: 'liquid-router',
 });
 lib.addToResearch(IN, { parent: T2IB.name, });
 lib.addToResearch(T2kiln, { parent: 'kiln', });
+lib.addToResearch(T2melter, { parent: 'melter', });
 lib.addToResearch(T2PC, { parent: 'plastanium-compressor', });
 lib.addToResearch(T2PF, { parent: 'phase-weaver', });
 lib.addToResearch(T2SA, { parent: 'alloy-smelter', });

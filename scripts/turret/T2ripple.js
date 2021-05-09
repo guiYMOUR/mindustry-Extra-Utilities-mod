@@ -1,4 +1,4 @@
-//guiY
+//
 const lib = require("blib");
 //const tr = new Vec2();
 const T2rip = extendContent(ItemTurret, "T2-ripple", {

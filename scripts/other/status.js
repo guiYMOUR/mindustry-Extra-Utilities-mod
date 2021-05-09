@@ -6,12 +6,15 @@ const poison = extend(StatusEffect, "poison", {
             result.set(poison, time);
         }));
     },
-    
+    setStats(){
+        this.stats.add(Stat.abilities, Core.bundle.format("status.btm-poison.ability",""));
+        this.super$setStats();
+    },
 });
 poison.transitionDamage = 30;
 poison.color = Color.valueOf("#CBD97F");
 poison.speedMultiplier = 0.4;
-poison.damage = 2;
+poison.damage = 1.8;
 poison.healthMultiplier = 0.7;
 poison.effect = Fx.oily;
 poison.reactive = true;

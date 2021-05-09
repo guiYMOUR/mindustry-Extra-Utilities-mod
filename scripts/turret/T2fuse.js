@@ -1,4 +1,4 @@
-//guiY
+//
 const lib = require("blib");
 //钛
 const fuse1 = extend(ShrapnelBulletType, {});

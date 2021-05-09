@@ -23,7 +23,7 @@ tera.weapons.add(
     (() => {
         const w = new Weapon("btm-Tera-weapon");
         w.shake = 4;
-        w.shootY = 2;
+        w.shootY = 12;
         w.reload = 60;
         w.bullet = la;
         w.rotate = true;

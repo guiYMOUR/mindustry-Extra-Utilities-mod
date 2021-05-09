@@ -1,4 +1,4 @@
-const unitRange = 160;
+const unitRange = 240;
 const baseColor = Pal.shield;
 const phaseColor = Color.valueOf("ffd59e");
 const damApply = new Effect(11, cons(e => {
@@ -8,15 +8,14 @@ const damApply = new Effect(11, cons(e => {
 }));
 const status = require("other/status");
 
-const unitA = extendContent(MendProjector , "unitA", {
+const unitA = extendContent(OverdriveProjector , "unitA", {
     drawPlace(x, y, rotation, valid) {
-        
+        this.super$drawPlace(x, y, rotation, valid);
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, unitRange * 0.6, Pal.accent);
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, unitRange, Color.valueOf("ff0000"));
     },
     setStats(){
         this.super$setStats();
-        this.stats.remove(Stat.repairTime);
         this.stats.add(Stat.damage, "120(+100phase)");
     },
 });
@@ -27,20 +26,20 @@ unitA.buildType = prov(() => {
     var timeR = 0;
     var heatU = 0;
     var phaseHeatU = 0;
-    return new JavaAdapter(MendProjector.MendBuild, {
+    return new JavaAdapter(OverdriveProjector.OverdriveBuild, {
         updateTile(){
-            
+            this.super$updateTile();
             phaseHeatU = Mathf.lerpDelta(phaseHeatU, Mathf.num(this.cons.optionalValid()), 0.1);
             var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost * 0.6;
             Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                 other.apply(status.speedUp, 30);
             }));
             heatU = Mathf.lerpDelta(heatU, this.consValid() || this.cheating() ? 1 : 0, 0.08);
-            if(this.cons.optionalValid() && this.timer.get(unitA.timerUse, unitA.useTime) && this.efficiency() > 0){
+            /*if(this.cons.optionalValid() && this.timer.get(unitA.timerUse, unitA.useTime) && this.efficiency() > 0){
                 this.consume();
-            }
+            }*/
             timeR += heatU * this.delta();
-            if(timeR > (this.block.reload * 0.8)){
+            if(timeR > (this.block.reload * 0.8 * 4)){
                 applied = false;
                 Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                     var max = other.maxHealth * 0.08;
@@ -61,8 +60,8 @@ unitA.buildType = prov(() => {
                 timeR = 0;
             }
             timer += heatU * this.delta();
-            var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost;
-            if(timer > (this.block.reload)){
+            var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost * 1.2;
+            if(timer > (this.block.reload * 4)){
                 dam = false;
                 Units.nearbyEnemies(this.team, this.x, this.y, realR*2, realR*2, cons(other => {
                     if(other != null && other.within(this.x, this.y, realR)){
@@ -83,25 +82,11 @@ unitA.buildType = prov(() => {
             }
         },
         drawSelect(){
-            
+            this.super$drawSelect();
             var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost * 0.6;
             Drawf.dashCircle(this.x, this.y, realRange, Pal.shield);
-            var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost;
+            var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost * 1.2;
             Drawf.dashCircle(this.x, this.y, realR, Color.valueOf("ff0000"));
-        },
-        draw(){
-            this.super$draw();
-            var topRegion = Core.atlas.find("btm-unitA-top");
-            var f = 1 - (Time.time / 100) % 1;
-
-            Draw.color(baseColor, phaseColor, phaseHeatU);
-            Draw.alpha(heatU * Mathf.absin(Time.time, 10, 1) * 0.5);
-            Draw.rect(topRegion, this.x, this.y);
-            Draw.alpha(1);
-            Lines.stroke((2 * f + 0.2) * heatU);
-            Lines.square(this.x, this.y, Math.min(1 + (1 - f) * this.block.size * Vars.tilesize / 2, this.block.size * Vars.tilesize/2));
-
-            Draw.reset();
         },
         write(write) {
             this.super$write(write);
@@ -126,13 +111,16 @@ unitA.requirements = ItemStack.with(
     Items.surgeAlloy, 180
 );
 unitA.buildVisibility = BuildVisibility.shown;
-unitA.category = Category.units;
-unitA.consumes.power(3);
+unitA.category = Category.effect;
+unitA.consumes.power(10);
 unitA.buildCostMultiplier = 0.85;
+unitA.useTime = 330;
 unitA.size = 3;
-unitA.reload = 240;
-unitA.range = unitRange;
-unitA.phaseBoost = 15;
+unitA.reload = 60;
+unitA.range = unitRange * 0.8;
+unitA.phaseRangeBoost = 56;
+unitA.speedBoost = 1.8;
+unitA.speedBoostPhase = 0.65;
 unitA.health = 700;
 unitA.consumes.item(Items.phaseFabric).boost();
 exports.unitA = unitA;

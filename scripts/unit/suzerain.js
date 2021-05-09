@@ -1,33 +1,49 @@
 var ability = require("other/ability");
-const powerShot = extend(PointBulletType, {
-    despawned(b){
-        this.super$despawned(b);
-        new Effect(15, cons(e => {
-            Draw.color(Color.white, Pal.surge, e.fin());
-            Lines.stroke(e.fout() * 2 + 0.2);
-            Lines.circle(e.x, e.y, e.fin() * this.splashDamageRadius);
-        })).at(b.x, b.y);
-    },
+
+const spark = extend(ShrapnelBulletType, {
+    draw(b){
+        var realLength = b.fdata;
+        Draw.color(this.fromColor, b.team.color, b.fin());
+        for(var i = 0; i < Math.floor(this.serrations * realLength / this.length); i++){
+            Tmp.v1.trns(b.rotation(), i * this.serrationSpacing);
+            var sl = Mathf.clamp(b.fout() - this.serrationFadeOffset) * (this.serrationSpaceOffset - i * this.serrationLenScl);
+            Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, this.serrationWidth, sl, b.rotation() + 90);
+            Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, this.serrationWidth, sl, b.rotation() - 90);
+        }
+        Drawf.tri(b.x, b.y, this.width * b.fout(), (realLength + 50), b.rotation());
+        Drawf.tri(b.x, b.y, this.width * b.fout(), 10, b.rotation() + 180);
+        Draw.reset();
+    }
 });
-powerShot.shootEffect = new Effect(10, cons(e => {
-        Draw.color(Color.white, Pal.surge, e.fin());
-        Lines.stroke(e.fout() * 2 + 0.2);
-        Lines.circle(e.x, e.y, e.fin() * 28);
-}));
-powerShot.hitEffect = Fx.none;
-powerShot.trailEffect = Fx.railTrail;
-powerShot.despawnEffect = Fx.none;
-powerShot.trailSpacing = 20;
-powerShot.damage = 400;
-powerShot.tileDamageMultiplier = 0.3;
-powerShot.speed = 46 * 8;
-powerShot.lifetime = 1;
-powerShot.splashDamage = 300;
-powerShot.splashDamageRadius = 60;
-powerShot.hitShake = 6;
+spark.length = 140;
+spark.damage = 150;
+spark.width = 20;
+spark.serrationLenScl = 7;
+spark.serrationSpaceOffset = 60;
+spark.serrationFadeOffset = 0;
+spark.serrations = 10;
+spark.serrationWidth = 6;
+spark.shootEffect = Fx.sparkShoot;
+spark.smokeEffect = Fx.sparkShoot;
 
 const suzerain = extendContent(UnitType, 'suzerain', {});
 suzerain.constructor = prov(() => extend(UnitTypes.reign.constructor.get().class, {}));
+suzerain.weapons.add(
+    (() => {
+        const w = new Weapon("btm-suzerain-weapon2");
+        w.shake = 4;
+        w.shootY = 7;
+        w.bullet = spark;
+        w.rotate = true;
+        w.rotateSpeed = 2;
+        w.x = 9;
+        w.y = -2;
+        w.shootSound = Sounds.railgun;
+        w.reload = 30;
+        w.recoil = 4;
+        return w;
+    })()
+);
 suzerain.weapons.add(
     (() => {
         const w = new Weapon("btm-suzerain-weapon");
@@ -44,22 +60,6 @@ suzerain.weapons.add(
         w.shootSound = Sounds.bang;
         w.reload = 24;
         w.recoil = 5;
-        return w;
-    })()
-);
-suzerain.weapons.add(
-    (() => {
-        const w = new Weapon("btm-suzerain-weapon2");
-        w.shake = 4;
-        w.shootY = 10;
-        w.bullet = powerShot;
-        w.rotate = true;
-        w.rotateSpeed = 1.5;
-        w.x = 9;
-        w.y = -2;
-        w.shootSound = Sounds.railgun;
-        w.reload = 300;
-        w.recoil = 6;
         return w;
     })()
 );
