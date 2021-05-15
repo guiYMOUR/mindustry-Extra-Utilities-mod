@@ -12,7 +12,7 @@
 - QQ Group①：513165958
 - QQ Group②：338651136
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
-- Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:172499451@qq.com, I will treat every suggestion sincerely.
+- Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
 
 ## The direction of mod development
 
