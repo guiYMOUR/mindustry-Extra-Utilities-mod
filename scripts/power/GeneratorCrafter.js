@@ -49,6 +49,20 @@ GC.buildType = prov(() => {
         getPowerProduction(){
             return Mathf.num(this.consValid()) * this.block.powerProduction * Mathf.num(!full);
         },
+        drawStatus(){
+            if(this.block.enableDrawStatus && this.block.consumes.any()){
+                var multiplier = 1;
+                var brcx = this.x + (this.block.size * Vars.tilesize / 2) - (Vars.tilesize * multiplier / 2);
+                var brcy = this.y - (this.block.size * Vars.tilesize / 2) + (Vars.tilesize * multiplier / 2);
+
+                Draw.z(Layer.power + 1);
+                Draw.color(Pal.gray);
+                Fill.square(brcx, brcy, 2.5 * multiplier, 45);
+                Draw.color(this.consValid() && !full ? Color.green : Color.red);
+                Fill.square(brcx, brcy, 1.5 * multiplier, 45);
+                Draw.color();
+            }
+        },
         write(write){
             this.super$write(write);
             write.f(p);
