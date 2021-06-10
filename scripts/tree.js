@@ -24,6 +24,7 @@ const { T2ther } = require('power/T2ther');
 const { th2 } = require('power/th2');
 
 const { LB } = require('block/LB');
+const { driver } = require('block/driver');
 const { T2IB, TJ, TR, T2LB, TLR } = require('block/T2IB');
 const { IN } = require('block/IN');
 const { T2kiln } = require('block/T2kiln');
@@ -81,6 +82,7 @@ lib.addToResearch(T2ther, { parent: 'thermal-generator', });
 lib.addToResearch(th2, { parent: 'thorium-reactor', });
 
 lib.addToResearch(LB, { parent: 'phase-conduit', });
+lib.addToResearch(driver, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),

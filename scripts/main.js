@@ -34,6 +34,7 @@ require("block/T2pulverize");
 require("block/T2IB");
 require("block/IN");
 require("block/LB");
+require("block/driver");
 require("block/core");
 require("block/cure");
 require("block/unitA");
@@ -66,19 +67,3 @@ const CoreSchematics = [
         }
     }
 })();
-
-Events.on(EventType.ClientLoadEvent, cons(e => {
-
-    var dialog = new JavaAdapter(BaseDialog, {}, "暂时告别 Farewell for a while");
-    var icon =new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find("btm-speedUp", Core.atlas.find("clear")));
-    dialog.shown(run(() => {
-        dialog.cont.table(Tex.button, cons(t => {
-            t.defaults().size(250, 45).left();
-            t.button("返回", icon, Styles.cleart, run(() => {
-                dialog.hide();
-            }));
-        t.add("由于作者guiY和贴图师\nPlastaniumX Carrot\n要高考原因\n此mod可能会停更一段时间\n到6/10\n这个版本将会可能是\n高考结束前最后一个版本\n且玩切珍惜\n感谢游玩\n\nDue to the author guiY\nand PlastaniumX Carrot\nWill be the college\nentrance examination,\nthis MOD may stop\nmore time to June 10,\nthis version will might be\nthe last version\n before the end of\nthe college entrance\nexamination.\nThank you for playing.")
-        }));
-    }));
-    dialog.show();
-}));
