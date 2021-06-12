@@ -15,6 +15,7 @@ const { T3rip } = require('block/turret/T3ripple');
 const { T2fuse } = require('block/turret/T2fuse');
 const { T3fuse } = require('block/turret/T3fuse');
 const { antiaircraft } = require('block/turret/antiaircraft');
+const { sam } = require('block/turret/sam');
 const { RG } = require('block/turret/RG');
 const { prism } = require('block/turret/prism');
 
@@ -46,6 +47,7 @@ const { unitF } = require('unit/UF');
 const { suzerain } = require("unit/suzerain");
 const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
+const { nihilo } = require('unit/nihilo');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -63,6 +65,11 @@ lib.addToResearch(T3fuse, { parent: T2fuse.name, });
 lib.addToResearch(antiaircraft, { parent: 'scatter',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.overgrowth),
+    )
+});
+lib.addToResearch(sam, { parent: 'scatter',
+    objectives: Seq.with(
+        new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
 lib.addToResearch(RG, { parent: 'salvo',
@@ -143,3 +150,4 @@ lib.addToResearch(unitF, { parent: 'tetrative-reconstructor',
 lib.addToResearch(suzerain, { parent: 'reign',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });
+lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives.Research(unitF) ) });

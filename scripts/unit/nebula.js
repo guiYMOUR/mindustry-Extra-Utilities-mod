@@ -26,7 +26,7 @@ r.pierceEffect = Fx.railHit;
 r.updateEffect = railTrail;
 r.hitEffect = Fx.massiveExplosion;
 r.smokeEffect = Fx.shootBig2;
-r.damage = 1150;
+r.damage = 1550;
 r.pierceDamageFactor = 0.5;
 
 const nebula = extendContent(UnitType, 'nebula', {});

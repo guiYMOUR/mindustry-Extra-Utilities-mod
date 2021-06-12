@@ -15,8 +15,8 @@ const spark = extend(ShrapnelBulletType, {
         Draw.reset();
     }
 });
-spark.length = 140;
-spark.damage = 150;
+spark.length = 150;
+spark.damage = 180;
 spark.width = 20;
 spark.serrationLenScl = 7;
 spark.serrationSpaceOffset = 60;

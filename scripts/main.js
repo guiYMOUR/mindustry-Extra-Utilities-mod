@@ -14,6 +14,7 @@ require("block/turret/T3ripple");
 require("block/turret/T2fuse");
 require("block/turret/T3fuse");
 require("block/turret/antiaircraft");
+require("block/turret/sam");
 require("block/turret/RG");
 require("block/turret/prism");
 
@@ -44,6 +45,7 @@ require("unit/UF");
 require("unit/suzerain");
 require("unit/tera");
 require("unit/nebula");
+require("unit/nihilo");
 
 require("other/status");
 
@@ -67,3 +69,4 @@ const CoreSchematics = [
         }
     }
 })();
+

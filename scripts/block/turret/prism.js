@@ -12,12 +12,12 @@ var rainbowRegions = [];
 
 const prism = extendContent(PowerTurret, "prism", {
     load(){
-		this.super$load();
-		for(var i = 0; i < 16; i++){
-			rainbowRegions[i] = Core.atlas.find("btm-prism-rainbow-" + (i + 1));
-		}
-	},
-	setStats() {
+        this.super$load();
+        for(var i = 0; i < 16; i++){
+            rainbowRegions[i] = Core.atlas.find("btm-prism-rainbow-" + (i + 1));
+        }
+    },
+    setStats() {
         this.super$setStats();
         this.stats.remove(Stat.booster);
         this.stats.add(Stat.input, new BoosterListValue(reloadTime, this.consumes.get(ConsumeType.liquid).amount, this.coolantMultiplier, false, l => this.consumes.liquidfilters.get(l.id)));
@@ -38,23 +38,23 @@ prism.buildType = prov(() => {
             return this._bulletHeat;
         },
         draw(){
-		    this.super$draw();
-		    tr2.trns(this.rotation, -this.recoil);
-		    Draw.blend(Blending.additive);
-		    for(var h = 0; h < 16; h++){
-			    Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 16))));
-			    Draw.rect(rainbowRegions[h], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
-		    }
-		    Draw.blend();
-		    Draw.color();
-	    },
-	    updateTile() {
+            this.super$draw();
+            tr2.trns(this.rotation, -this.recoil);
+            Draw.blend(Blending.additive);
+            for(var h = 0; h < 16; h++){
+                Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 16))));
+                Draw.rect(rainbowRegions[h], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+            }
+            Draw.blend();
+            Draw.color();
+        },
+        updateTile() {
             this.super$updateTile();
             if (bulletLife > 0 && bullet[1] != null) {
                 this.wasShooting = true;
                 for(var n = 0; n < bullet.length; n++){
-				    var data = (n * (360 / bullet.length));
-				    var sine = Mathf.sinDeg(data + (bulletTime * angleShiftStrength));
+                    var data = (n * (360 / bullet.length));
+                    var sine = Mathf.sinDeg(data + (bulletTime * angleShiftStrength));
                     tr.trns(this.rotation, (this.block.size * Vars.tilesize / 2) + -this.block.recoilAmount, sine * sideOffset);
                     bullet[n].rotation(this.rotation + ((sine * shiftAngel) * this._bulletHeat));
                     bullet[n].set(this.x + tr.x, this.y + tr.y);
@@ -66,8 +66,8 @@ prism.buildType = prov(() => {
                 bulletLife -= Time.delta / Math.max(this.efficiency(), 0.00001);
                 if (bulletLife <= 0) {
                     for(var b = 0; b < bullet.length; b++){
-			            bullet[b] = null;
-		            }
+                        bullet[b] = null;
+                    }
                     bulletTime = 0;
                     this._bulletHeat = 0;
                 }
@@ -86,41 +86,41 @@ prism.buildType = prov(() => {
             }
             this._bulletHeat = Mathf.lerpDelta(this._bulletHeat, 0, fade);
         },
-	    updateShooting(){
-		
-		    if(bulletLife > 0 && bullet[1] != null){
-			    return;
-		    }
-		    if(_reload <= 0 && (this.consValid() || this.cheating())){
-			    var type = this.peekAmmo();
-			    this.shoot(type);
-			
-			    _reload = reloadTime;
-		    }
-	    },
-	
-	    bullet(type, angle){
-		    bulletTime = 0;
-		    bulletLife = shootDuration;
-		    for(var s = 0; s < 6; s++){
-			    var data = (s * (360 / 6));
-			    var sine = Mathf.sinDeg(data + (bulletTime * angleShiftStrength));
-			    tr.trns(angle, this.block.size * Vars.tilesize / 2, sine * sideOffset);
-			    bullet[s] = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle + (sine * shiftAngel));
-			    bullet[s].data = data;
-		    }
-		
-		    this._bulletHeat = 1;
-	    },
-	
-	    turnToTarget(targetRot) {
+        updateShooting(){
+        
+            if(bulletLife > 0 && bullet[1] != null){
+                return;
+            }
+            if(_reload <= 0 && (this.consValid() || this.cheating())){
+                var type = this.peekAmmo();
+                this.shoot(type);
+            
+                _reload = reloadTime;
+            }
+        },
+    
+        bullet(type, angle){
+            bulletTime = 0;
+            bulletLife = shootDuration;
+            for(var s = 0; s < 6; s++){
+                var data = (s * (360 / 6));
+                var sine = Mathf.sinDeg(data + (bulletTime * angleShiftStrength));
+                tr.trns(angle, this.block.size * Vars.tilesize / 2, sine * sideOffset);
+                bullet[s] = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle + (sine * shiftAngel));
+                bullet[s].data = data;
+            }
+        
+            this._bulletHeat = 1;
+        },
+    
+        turnToTarget(targetRot) {
             this.rotation = Angles.moveToward(this.rotation, targetRot, this.efficiency() * this.block.rotateSpeed * this.delta() * (bulletLife > 0 ? firingMoveFract : 1));
         },
-	
-	    shouldActiveSound(){
-		    return bulletLife > 0 && bullet[1] != null;
-	    },
-	    write(write){
+    
+        shouldActiveSound(){
+            return bulletLife > 0 && bullet[1] != null;
+        },
+        write(write){
             this.super$write(write);
             write.f(_reload);
         },
@@ -169,16 +169,16 @@ prism.shootType = (() => {
     cl.lenscales = [0.92, 1, 1.017, 1.025];
     cl.length = 31 * 8;
     cl.hitEffect = new Effect(16, cons(e => {
-	    Draw.blend(Blending.additive);
-	    Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
-	    Lines.stroke(e.fout() * 1.5);
-	    const hl = new Floatc2({get: function(x, y){
-		    const ang = Mathf.angle(x, y);
-		    Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 8 + 1.5);
-		    }});
-	    Angles.randLenVectors(e.id, 1, e.finpow() * 70.0, e.rotation, 80.0, hl);
-	    Draw.blend();
-	    Draw.reset();
+        Draw.blend(Blending.additive);
+        Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
+        Lines.stroke(e.fout() * 1.5);
+        const hl = new Floatc2({get: function(x, y){
+            const ang = Mathf.angle(x, y);
+            Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 8 + 1.5);
+            }});
+        Angles.randLenVectors(e.id, 1, e.finpow() * 70.0, e.rotation, 80.0, hl);
+        Draw.blend();
+        Draw.reset();
     }));
     cl.drawSize = 380;
     cl.incendChance = 0;

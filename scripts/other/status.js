@@ -17,7 +17,7 @@ poison.speedMultiplier = 0.4;
 poison.damage = 1.8;
 poison.healthMultiplier = 0.7;
 poison.effect = Fx.oily;
-poison.reactive = true;
+//poison.reactive = true;
 exports.poison = poison;
 
 const speedUp = extend(StatusEffect, "speedUp", {

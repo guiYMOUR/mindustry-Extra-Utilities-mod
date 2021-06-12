@@ -31,8 +31,8 @@ swMin.ammo(
             //Items.copper, f2
 );
 swMin.requirements = ItemStack.with(
-    Items.graphite, 55,
-    Items.titanium, 50,
+    Items.graphite, 45,
+    Items.titanium, 40,
     Items.silicon, 30
 );
 swMin.buildVisibility = BuildVisibility.shown;

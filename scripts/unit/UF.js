@@ -1,6 +1,7 @@
 const { suzerain } = require("unit/suzerain");
 const { nebula } = require("unit/nebula");
 const { tera } = require("unit/tera");
+const { nihilo } = require("unit/nihilo");
 var unitType = (unitFrom, unitTo) => {
     var a = java.util.Arrays.copyOf(Blocks.tetrativeReconstructor.upgrades.get(0), 2);
     a[0] = unitFrom;
@@ -26,6 +27,7 @@ unitF.upgrades.addAll(
     unitType(UnitTypes.reign, suzerain),
     unitType(UnitTypes.corvus, nebula),
     unitType(UnitTypes.oct, tera),
+    unitType(UnitTypes.omura, nihilo),
 );
 unitF.requirements = ItemStack.with(
     Items.silicon, 1000,
