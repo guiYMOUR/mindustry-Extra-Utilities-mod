@@ -1,4 +1,4 @@
-﻿# Extra Utilities
+# Extra Utilities
 
 - English | [中文](README_cn.md)
 
@@ -59,6 +59,7 @@
 - suzerain
 - Nebula
 - Tera
+- Nihilo
 
 ### Ability
 - Territory Field
