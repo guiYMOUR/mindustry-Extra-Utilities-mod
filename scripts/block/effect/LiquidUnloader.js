@@ -6,7 +6,7 @@ const speed = 2;
 
 const lu = extendContent(LiquidSource, "liquid-unloader", {
     drawRequestConfig(req, list){
-        this.drawRequestConfigCenter(req, req.config, Core.atlas.find("ld-liquid-unloader-centre"), true);
+        this.drawRequestConfigCenter(req, req.config, Core.atlas.find("btm-liquid-unloader-centre"), true);
     },
 });
 lu.buildType = prov(() => {
