@@ -4,6 +4,8 @@ const lib = require('blib');
 const { T2duo } = require('block/turret/T2duo');
 const { T3duo } = require('block/turret/T3duo');
 const { T2scatter } = require('block/turret/T2scatter');
+const { shotgun } = require('block/turret/shotgun');
+const { sakura } = require('block/turret/sakura');
 const { hurricane } = require('block/turret/hurricane');
 const { ms } = require('block/turret/ms');
 const { T2lan } = require('block/turret/T2lancer');
@@ -39,6 +41,7 @@ const { pu } = require("block/production/T2pulverize");
 const { DCF } = require('block/effect/he');
 const { drill } = require('block/production/drill');
 const { core } = require('block/effect/core');
+const { lu } = require('block/effect/LiquidUnloader');
 const { cure } = require('block/effect/cure');
 const { unitA } = require('block/effect/unitA');
 const { clWall, clWallL, aws, awl } = require('block/defence/wall');
@@ -52,6 +55,12 @@ const { nihilo } = require('unit/nihilo');
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
 lib.addToResearch(T2scatter, { parent: 'scatter', });
+lib.addToResearch(shotgun, { parent: 'duo',
+    objectives: Seq.with(
+        new Objectives.SectorComplete(SectorPresets.craters),
+    )
+});
+lib.addToResearch(sakura, { parent: shotgun.name, });
 lib.addToResearch(hurricane, { parent: 'arc', });
 lib.addToResearch(ms, { parent: hurricane.name, });
 lib.addToResearch(T2lan, { parent: 'lancer', });
@@ -135,6 +144,7 @@ lib.addToResearch(core, { parent: 'core-shard',
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
     )
 });
+lib.addToResearch(lu, { parent: 'liquid-tank', });
 lib.addToResearch(cure, { parent: 'mend-projector', });
 lib.addToResearch(unitA, { parent: 'repair-point', });
 lib.addToResearch(clWall, { parent: 'copper-wall-large', });

@@ -24,9 +24,9 @@ T3duo.inaccuracy = 2;
 T3duo.rotateSpeed = 10;
 T3duo.ammo(
     Items.copper, Bullets.standardCopper,
-            Items.graphite, Bullets.standardDense,
-            Items.pyratite, Bullets.standardIncendiary,
-            Items.silicon, Bullets.standardHoming
+    Items.graphite, Bullets.standardDense,
+    Items.pyratite, Bullets.standardIncendiary,
+    Items.silicon, Bullets.standardHoming
 );
 T3duo.requirements = ItemStack.with(
     Items.copper, 65,

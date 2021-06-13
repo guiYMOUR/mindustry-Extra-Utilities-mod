@@ -88,6 +88,7 @@ const MendFieldAbility = (range, reload, healP) => {
 };
 exports.MendFieldAbility = MendFieldAbility;
 
+//In 7.0 I'll remove it.
 const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) => {
     const color = Color.white;
     var target = null;

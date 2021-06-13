@@ -18,7 +18,7 @@ const waterBullet = extend(BasicBulletType,{
     update(b){
         var owner = b.owner;
         var other = Vars.world.build(owner.link);
-        if(other == null) b.remove();
+        if(other == null) return;
         if(other != null && b.within(other, 16) && b.team == other.team){
             receiveEffect.at(b);
             b.remove();
@@ -43,6 +43,7 @@ waterBullet.shrinkY = 0;
 waterBullet.damage = 0;
 waterBullet.speed = 6;
 waterBullet.collidesTiles = false;
+waterBullet.collidesTeam = true;
 waterBullet.pierce = true;
 waterBullet.pierceBuilding = true;
 
@@ -63,7 +64,6 @@ const driver = extendContent(LiquidExtendingBridge, "ld", {
 driver.buildType = prov(() => {
     var rotation = 90;
     var reload = 0;
-    var bullet = null;
     var amount = 0;
     var liquid = null;
     var tr = new Vec2();
@@ -119,7 +119,6 @@ driver.buildType = prov(() => {
             reload = 1;
             this.bullet(waterBullet, this.getR());
             tr.trns(this.getR(), this.block.size * Vars.tilesize / 2);
-            bullet.set(this.x + tr.x, this.y + tr.y);
             var angle = this.angleTo(target);
             shootEffect.at(this.x + Angles.trnsx(angle, translation),
             this.y + Angles.trnsy(angle, translation), angle);
@@ -134,7 +133,7 @@ driver.buildType = prov(() => {
         },
         bullet(type, angle){
             tr.trns(angle, this.block.size * Vars.tilesize / 2);
-            bullet = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle);
+            type.create(this, this.team, this.x + tr.x, this.y + tr.y, angle, 1);
         },
         drawSelect(){    },
         drawConfigure() {
