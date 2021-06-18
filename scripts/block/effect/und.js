@@ -38,7 +38,7 @@ und.requirements = ItemStack.with(
 );
 und.buildVisibility = BuildVisibility.shown;
 und.category = Category.effect;
-und.speed = 2;
+und.speed = 1;
 und.health = 80;
 und.hasPower = true;
 und.consumes.power(1);
