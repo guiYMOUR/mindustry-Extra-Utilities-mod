@@ -3,7 +3,7 @@ const lib = require("blib");
 //钛
 const fuse1 = extend(ShrapnelBulletType, {});
 fuse1.length = 120;
-fuse1.damage = 77;
+fuse1.damage = 72;
 fuse1.width = 17;
 fuse1.reloadMultiplier = 1.3;
 fuse1.ammoMultiplier = 2;
@@ -12,7 +12,7 @@ fuse1.smokeEffect = Fx.lightningShoot;
 //钍
 const fuse2 = extend(ShrapnelBulletType, {});
 fuse2.length = 120;
-fuse2.damage = 117;
+fuse2.damage = 113;
 fuse2.toColor = Color.valueOf("ffc3ff");
 fuse2.ammoMultiplier = 3;
 fuse2.shootEffect = Fx.thoriumShoot;

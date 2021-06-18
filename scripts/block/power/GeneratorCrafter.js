@@ -1,4 +1,4 @@
-const craftTime = 126;
+const craftTime = 150;
 const itemDuration = 90;
 const input = Items.coal;
 const output = Items.pyratite;
@@ -84,7 +84,7 @@ GC.requirements = ItemStack.with(
 GC.buildVisibility = BuildVisibility.shown;
 GC.category = Category.crafting;
 GC.itemCapacity = 10;
-GC.powerProduction = 3.8;
+GC.powerProduction = 1.5;
 GC.itemDuration = itemDuration;
 GC.hasLiquids = true;
 GC.hasItems = true;

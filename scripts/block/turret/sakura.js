@@ -63,10 +63,10 @@ sakura.shootSound = Sounds.shootBig;
 sakura.shootEffect = Fx.thoriumShoot;
 sakura.smokeEffect = Fx.thoriumShoot;
 sakura.requirements = ItemStack.with(
-    Items.lead, 80,
-    Items.silicon, 95,
+    Items.lead, 180,
+    Items.silicon, 115,
     Items.titanium, 90,
-    Items.thorium, 75
+    Items.thorium, 85
 );
 sakura.buildVisibility = BuildVisibility.shown;
 sakura.category = Category.turret;

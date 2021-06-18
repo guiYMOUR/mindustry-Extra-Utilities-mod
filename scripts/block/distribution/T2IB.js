@@ -1,5 +1,18 @@
 const lib = require("blib");
 
+const ppc = extendContent(StackConveyor, "ppc", {});
+ppc.health = 100;
+ppc.speed = 6 / 60;
+ppc.itemCapacity = 10;
+ppc.requirements = ItemStack.with(
+    Items.silicon, 1,
+    Items.thorium, 1,
+    Items.phaseFabric, 1
+);
+ppc.buildVisibility = BuildVisibility.shown;
+ppc.category = Category.distribution;
+exports.ppc = ppc;
+
 const T2IB = extendContent(BufferedItemBridge, "T2IB", {});
 lib.setBuildingSimple(T2IB, BufferedItemBridge.BufferedItemBridgeBuild, {/**/});
 T2IB.size = 1;

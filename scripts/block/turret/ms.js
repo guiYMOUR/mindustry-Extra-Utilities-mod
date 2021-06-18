@@ -91,7 +91,7 @@ const storm = extendContent(PowerTurret, 'MAGNETIC-STORM', {
 });
 
 lib.setBuildingSimple(storm, PowerTurret.PowerTurretBuild, {});
-storm.powerUse = 12;
+storm.powerUse = 18;
 storm.shootType = MS;
 storm.shots = 1;
 storm.shootShake = 5;
@@ -110,10 +110,9 @@ storm.size = 4;
 storm.shootSound = Sounds.spark;
 
 storm.requirements = ItemStack.with(
-    Items.copper, 680,
-    Items.lead, 500,
-    Items.silicon, 460,
-    Items.titanium, 350,
+    Items.lead, 700,
+    Items.silicon, 510,
+    Items.titanium, 385,
     Items.plastanium, 350,
     Items.thorium, 320,
     Items.surgeAlloy, 150

@@ -41,7 +41,7 @@ mp.status = StatusEffects.burning;
 
 const shotgun = extendContent(ItemTurret, "shotgun", {});
 shotgun.reloadTime = 72;
-shotgun.shots = 9;
+shotgun.shots = 8;
 //shotgun.burstSpacing = 4;
 shotgun.inaccuracy = 9;
 shotgun.range = 190;

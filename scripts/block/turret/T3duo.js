@@ -5,7 +5,7 @@ lib.setBuildingSimple(T3duo, ItemTurret.ItemTurretBuild, {
     updateShooting(){
         this.super$updateShooting();
         if(this.reload == 0){
-            if(Mathf.chance(0.2)){
+            if(Mathf.chance(0.1)){
             Bullets.standardThoriumBig.create(this, this.team, this.x, this.y, this.rotation, 1 ,1);
             }
         }

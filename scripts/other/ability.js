@@ -148,3 +148,28 @@ const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) =>
     return ability;
 };
 exports.pointDefenseAbility = pointDefenseAbility;
+
+//Prevent players from using cheat mod
+const preventCheatingAbility = (open) => {
+    var range = 40;
+    var ability = new JavaAdapter(Ability, {
+        localized() {
+            return "";
+        },
+        update(unit) {
+            var target = open ? Groups.bullet.intersect(unit.x - range, unit.y - range, range*2, range*2).min(b => b.team != unit.team && b.type.hittable, b => b.dst2(unit)) : null;
+            if(target != null && (target.damage > unit.maxHealth/2 || target.owner.health > unit.health * 2)){
+                target.remove();
+                //target.owner.apply(StatusEffects.disarmed, Number.MAX_VALUE);
+                target.owner.health -= target.owner.maxHealth;
+                target = null
+            }
+            target = null;
+        },
+        copy() {
+            return preventCheatingAbility(open);
+        },
+    });
+    return ability;
+};
+exports.preventCheatingAbility = preventCheatingAbility;

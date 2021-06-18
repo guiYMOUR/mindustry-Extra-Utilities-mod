@@ -80,7 +80,7 @@ antiaircraft.requirements = ItemStack.with(
     Items.titanium, 205,
     Items.surgeAlloy, 30
 );
-antiaircraft.consumes.powerCond(6, boolf(b => b.isActive()));
+antiaircraft.consumes.powerCond(7, boolf(b => b.isActive()));
 antiaircraft.buildVisibility = BuildVisibility.shown;
 antiaircraft.category = Category.turret;
 

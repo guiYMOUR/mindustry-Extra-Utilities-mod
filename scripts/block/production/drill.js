@@ -1,3 +1,17 @@
+const tiDrill = extendContent(Drill, "tiDrill", {});
+tiDrill.requirements = ItemStack.with(
+    Items.copper, 20,
+    Items.graphite, 18,
+    Items.titanium, 15,
+);
+tiDrill.buildVisibility = BuildVisibility.shown;
+tiDrill.category = Category.production;
+tiDrill.drillTime = 350;
+tiDrill.size = 2;
+tiDrill.tier = 4;
+tiDrill.consumes.liquid(Liquids.water, 0.06).boost()
+exports.tiDrill = tiDrill;
+
 const drill = extendContent(Drill, "drill", {});
 drill.buildType = prov(() => {
     var work = false;
@@ -40,7 +54,7 @@ drill.drawRim = true;
 drill.hasPower = true;
 drill.tier = 8;
 drill.updateEffect = Fx.pulverizeRed;
-drill.updateEffectChance = 0.05;
+drill.updateEffectChance = 0.02;
 drill.drillEffect = Fx.mineHuge;
 drill.rotateSpeed = 7;
 drill.warmupSpeed = 0.01;

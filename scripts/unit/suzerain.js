@@ -27,7 +27,13 @@ spark.shootEffect = Fx.sparkShoot;
 spark.smokeEffect = Fx.sparkShoot;
 
 const suzerain = extendContent(UnitType, 'suzerain', {});
-suzerain.constructor = prov(() => extend(UnitTypes.reign.constructor.get().class, {}));
+suzerain.constructor = prov(() => extend(UnitTypes.reign.constructor.get().class, {
+    kill(){
+        if(this.health < 100){
+            this.super$kill();
+        }
+    },
+}));
 suzerain.weapons.add(
     (() => {
         const w = new Weapon("btm-suzerain-weapon2");
@@ -64,7 +70,7 @@ suzerain.weapons.add(
     })()
 );
 
-suzerain.abilities.add(ability.TerritoryFieldAbility(150, 60 * 4, 200));
+suzerain.abilities.add(ability.TerritoryFieldAbility(150, 60 * 4, 200), ability.preventCheatingAbility(true));
 suzerain.abilities.add(new ShieldRegenFieldAbility(200, 800, 60 * 6, 200));
 suzerain.armor = 14;
 suzerain.flying = false;

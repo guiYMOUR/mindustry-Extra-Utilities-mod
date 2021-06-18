@@ -1,6 +1,7 @@
 /*
     * @guiY
     * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
+    * @readme <I am sorry that the former version of the code due to my negligence led to a lot of problems, has been fixed, I hope you have fun. Finally, I would like to express my apologies again.>
 */
 const range = 58;//blocks
 const knockback = 2;
@@ -17,14 +18,17 @@ const waterBullet = extend(BasicBulletType,{
     hit(b){    },
     update(b){
         var owner = b.owner;
-        var other = Vars.world.build(owner.link);
-        if(other == null) return;
-        if(other != null && b.within(other, 16) && b.team == other.team){
+        var other = Vars.world.tile(owner.link);
+        if(other == null || other.build == null || !owner.block.linkValid(owner.tile, other)){
+            b.remove();
+            return;//Here is redundant, do not care, will not quit on the line.
+        }
+        if(other != null && other.build != null && b.within(other.build, 16) && b.team == other.build.team){
             receiveEffect.at(b);
             b.remove();
             Effect.shake(shake, shake, b);
-            other.setReload(1);
-            other.liquids.add(owner.getL(), owner.getA());
+            other.build.setReload(1);
+            other.build.liquids.add(owner.getL(), owner.getA());
         }
     },
     draw(b){
@@ -111,9 +115,13 @@ driver.buildType = prov(() => {
                     this.shoot(other);
                 }
             }
-            if(other != null && Vars.world.build(other.link) == null) {
+            //var otherL = other
+            if(other == null) return;
+            //if(other != null){
+            if(other.link == -1){
                 other.dumpLiquid(other.liquids.current());
             }
+            //}
         },
         shoot(target){
             reload = 1;

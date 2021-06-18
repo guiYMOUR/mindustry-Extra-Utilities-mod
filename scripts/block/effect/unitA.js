@@ -101,10 +101,9 @@ unitA.buildType = prov(() => {
     }, unitA);
 });
 unitA.requirements = ItemStack.with(
-    Items.copper, 210,
+    Items.copper, 230,
     Items.lead, 200,
-    Items.graphite, 135,
-    Items.silicon, 160,
+    Items.silicon, 180,
     Items.titanium, 100,
     Items.thorium, 80,
     Items.plastanium, 80,

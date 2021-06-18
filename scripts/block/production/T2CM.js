@@ -56,7 +56,7 @@ T2CM.attribute = Attribute.water;
 T2CM.boostScale = 0.6;
 T2CM.consumes.power(3);
 T2CM.consumes.item(Items.titanium);
-T2CM.consumes.liquid(Liquids.water, 0.3);
+T2CM.consumes.liquid(Liquids.water, 0.4);
 T2CM.requirements = ItemStack.with(
     Items.lead, 90,
     Items.graphite, 50,
