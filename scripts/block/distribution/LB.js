@@ -31,8 +31,8 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
 	    //this.super$draw();
         Draw.rect(Core.atlas.find("btm-lb"),this.x,this.y);
         Draw.z(Layer.power);
-        var bridgeRegion = Core.atlas.find("btm-ld-b");
-        var endRegion = Core.atlas.find("btm-ld-e");
+        var bridgeRegion = Core.atlas.find("btm-lb-bridge");
+        var endRegion = Core.atlas.find("btm-lb-end");
         var other = Vars.world.build(this.link);
         if(other == null) return;
         var op = Core.settings.getInt("bridgeopacity") / 100;

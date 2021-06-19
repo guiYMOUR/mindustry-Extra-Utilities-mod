@@ -106,3 +106,42 @@ drill.consumes.power(4);
 drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 0.1)).update(true);
 drill.buildCostMultiplier = 0.6;
 exports.drill = drill;
+
+const slagE = extendContent(SolidPump, "slag-extractor", {});
+slagE.result = Liquids.slag;
+slagE.pumpAmount = 0.1;
+slagE.size = 2;
+slagE.liquidCapacity = 30;
+slagE.rotateSpeed = 1.4;
+slagE.baseEfficiency = 1;
+slagE.attribute = Attribute.heat;
+slagE.consumes.power(2);
+slagE.requirements = ItemStack.with(
+    Items.metaglass, 40,
+    Items.graphite, 35,
+    Items.silicon, 25,
+    Items.titanium, 25
+);
+slagE.buildVisibility = BuildVisibility.shown;
+slagE.category = Category.production;
+exports.slagE = slagE;
+
+//6.0, 7.0 not this type.
+const T2CU = extendContent(Cultivator, "T2CU", {});
+T2CU.outputItem = new ItemStack(Items.sporePod, 2);
+T2CU.craftTime = 120;
+T2CU.size = 3;
+T2CU.hasLiquids = true;
+T2CU.hasPower = true;
+T2CU.hasItems = true;
+T2CU.consumes.power(1.5);
+T2CU.consumes.liquid(Liquids.water, 0.34);
+T2CU.requirements = ItemStack.with(
+    Items.copper, 40,
+    Items.graphite, 35,
+    Items.silicon, 25,
+    Items.titanium, 30
+);
+T2CU.buildVisibility = BuildVisibility.shown;
+T2CU.category = Category.production;
+exports.T2CU = T2CU;

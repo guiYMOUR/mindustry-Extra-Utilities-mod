@@ -57,7 +57,7 @@ require("unit/nihilo");
 require("other/status");
 
 //coming soon...
-//require("game/challengeMap/cmain");
+require("game/challengeMap/cmain");
 //require("game/TD/tmain");
 
 require("tree");
@@ -76,4 +76,3 @@ const CoreSchematics = [
         }
     }
 })();
-

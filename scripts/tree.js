@@ -42,7 +42,7 @@ const { T2CM } = require('block/production/T2CM');
 const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
 const { DCF } = require('block/effect/he');
-const { tiDrill, drill } = require('block/production/drill');
+const { tiDrill, drill, slagE, T2CU } = require('block/production/drill');
 const { core } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
@@ -55,6 +55,8 @@ const { suzerain } = require("unit/suzerain");
 const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
+
+const { start } = require('game/challengeMap/cmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -148,6 +150,8 @@ lib.addToResearch(DCF, { parent: 'force-projector',
 });
 lib.addToResearch(tiDrill, { parent: 'pneumatic-drill', });
 lib.addToResearch(drill, { parent: 'blast-drill', });
+lib.addToResearch(slagE, { parent: 'water-extractor', });
+lib.addToResearch(T2CU, { parent: 'cultivator', });
 lib.addToResearch(core, { parent: 'core-shard',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
@@ -171,3 +175,10 @@ lib.addToResearch(suzerain, { parent: 'reign',objectives: Seq.with( new Objectiv
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives.Research(unitF) ) });
+
+lib.addToResearch(start, {
+    parent: SectorPresets.planetaryTerminal.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(SectorPresets.planetaryTerminal)
+    )
+});

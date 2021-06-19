@@ -45,6 +45,7 @@
 ### Drill
 - Titanium Drill
 - High Energy drill
+- Slag Extractor
 
 ### Wall
 - Copper-Lead Wall

@@ -1,8 +1,8 @@
-const craftTime = 150;
+const craftTime = 120;
 const itemDuration = 90;
 const input = Items.coal;
 const output = Items.pyratite;
-const inputLiquid = Liquids.water;
+const inputLiquid = Liquids.slag;
 const amount = 0.055;
 const GC = extendContent(SingleTypeGenerator, "GC", {
     setStats(){
@@ -58,7 +58,7 @@ GC.buildType = prov(() => {
                 Draw.z(Layer.power + 1);
                 Draw.color(Pal.gray);
                 Fill.square(brcx, brcy, 2.5 * multiplier, 45);
-                Draw.color(this.consValid() && !full ? Color.green : Color.red);
+                Draw.color(this.consValid() && !full ? Color.green : full && this.consValid() ? Pal.lightOrange : Color.red);
                 Fill.square(brcx, brcy, 1.5 * multiplier, 45);
                 Draw.color();
             }
@@ -84,7 +84,7 @@ GC.requirements = ItemStack.with(
 GC.buildVisibility = BuildVisibility.shown;
 GC.category = Category.crafting;
 GC.itemCapacity = 10;
-GC.powerProduction = 1.5;
+GC.powerProduction = 3.1;
 GC.itemDuration = itemDuration;
 GC.hasLiquids = true;
 GC.hasItems = true;

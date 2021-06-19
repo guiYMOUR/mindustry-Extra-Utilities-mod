@@ -31,8 +31,8 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
 	    //this.super$draw();
         Draw.rect(Core.atlas.find("btm-i-node"),this.x,this.y);
         Draw.z(Layer.power);
-        var bridgeRegion = Core.atlas.find("btm-in-b");
-        var endRegion = Core.atlas.find("btm-in-e");
+        var bridgeRegion = Core.atlas.find("btm-i-node-bridge");
+        var endRegion = Core.atlas.find("btm-i-node-end");
         var other = Vars.world.build(this.link);
         if(other == null) return;
         var op = Core.settings.getInt("bridgeopacity") / 100;

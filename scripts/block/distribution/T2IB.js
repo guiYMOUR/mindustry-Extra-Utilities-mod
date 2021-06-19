@@ -2,7 +2,7 @@ const lib = require("blib");
 
 const ppc = extendContent(StackConveyor, "ppc", {});
 ppc.health = 100;
-ppc.speed = 6 / 60;
+ppc.speed = 8 / 60;
 ppc.itemCapacity = 10;
 ppc.requirements = ItemStack.with(
     Items.silicon, 1,
