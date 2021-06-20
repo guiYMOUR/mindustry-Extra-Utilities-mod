@@ -56,7 +56,8 @@ const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
-const { start } = require('game/challengeMap/cmain');
+const { start, sporeArea } = require('game/challengeMap/cmain');
+const { TD1 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -182,3 +183,10 @@ lib.addToResearch(start, {
         new Objectives.SectorComplete(SectorPresets.planetaryTerminal)
     )
 });
+lib.addToResearch(sporeArea, {
+    parent: start.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(start)
+    )
+});
+lib.addToResearch(TD1, { parent: 'core-shard', });

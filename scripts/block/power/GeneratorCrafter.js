@@ -1,9 +1,9 @@
-const craftTime = 120;
+const craftTime = 108;
 const itemDuration = 90;
 const input = Items.coal;
 const output = Items.pyratite;
 const inputLiquid = Liquids.slag;
-const amount = 0.055;
+const amount = 0.11;
 const GC = extendContent(SingleTypeGenerator, "GC", {
     setStats(){
         this.super$setStats();

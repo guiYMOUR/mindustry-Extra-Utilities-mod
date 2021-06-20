@@ -58,7 +58,7 @@ require("other/status");
 
 //coming soon...
 require("game/challengeMap/cmain");
-//require("game/TD/tmain");
+require("game/TD/tmain");
 
 require("tree");
 

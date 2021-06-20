@@ -173,3 +173,25 @@ const preventCheatingAbility = (open) => {
     return ability;
 };
 exports.preventCheatingAbility = preventCheatingAbility;
+
+const healthDisplay = (y, width, height) => {
+    var ability = new JavaAdapter(Ability, {
+        localized() {
+            return "";
+        },
+        draw(unit) {
+            var drawy = unit.y + y;
+            var realWidth = width * (unit.health / unit.maxHealth);
+            Draw.color(Pal.health);
+            //Draw.rect(unit.x, drawy, realWidth, height);
+            Fill.rect(unit.x, drawy, realWidth, height);
+            Draw.reset();
+            Draw.color();
+        },
+        copy() {
+            return healthDisplay(y, width, height);
+        },
+    });
+    return ability;
+};
+exports.healthDisplay = healthDisplay;
