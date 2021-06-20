@@ -76,3 +76,6 @@
 - Erosion
 - Territory Buff
 - Territory Debuff
+
+### Other
+- Added tower defense gameplay.
