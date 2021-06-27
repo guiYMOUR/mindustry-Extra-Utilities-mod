@@ -36,6 +36,7 @@ require("block/production/T2CM");
 require("block/production/T2SA");
 require("block/power/GeneratorCrafter");
 require("block/production/T2pulverize");
+require("block/production/AdjustableIncinerator");
 require("block/distribution/T2IB");
 require("block/distribution/stackBridge");
 require("block/distribution/IN");
@@ -50,6 +51,7 @@ require("block/defence/wall");
 
 require("unit/UF");
 require("unit/suzerain");
+require("unit/apocalypse");
 require("unit/tera");
 require("unit/nebula");
 require("unit/nihilo");

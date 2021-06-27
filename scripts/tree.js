@@ -41,6 +41,7 @@ const { T2SA } = require('block/production/T2SA');
 const { T2CM } = require('block/production/T2CM');
 const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
+const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/he');
 const { tiDrill, drill, slagE, T2CU } = require('block/production/drill');
 const { core } = require('block/effect/core');
@@ -51,13 +52,14 @@ const { unitA } = require('block/effect/unitA');
 const { clWall, clWallL, aws, awl } = require('block/defence/wall');
 
 const { unitF } = require('unit/UF');
-const { suzerain } = require("unit/suzerain");
+const { suzerain } = require('unit/suzerain');
+const { apocalypse } = require('unit/apocalypse');
 const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
 const { start, sporeArea } = require('game/challengeMap/cmain');
-const { TD1 } = require('game/TD/tmain');
+const { TD1, TD2 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -144,6 +146,7 @@ lib.addToResearch(T2SA, { parent: 'alloy-smelter', });
 lib.addToResearch(T2CM, { parent: 'cryofluid-mixer', });
 lib.addToResearch(GC, { parent: 'pyratite-mixer', });
 lib.addToResearch(pu, { parent: 'pulverizer', });
+lib.addToResearch(ai, { parent: 'incinerator', });
 lib.addToResearch(DCF, { parent: 'force-projector',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
@@ -173,6 +176,7 @@ lib.addToResearch(unitF, { parent: 'tetrative-reconstructor',
     )
 });
 lib.addToResearch(suzerain, { parent: 'reign',objectives: Seq.with( new Objectives.Research(unitF) ) });
+lib.addToResearch(apocalypse, { parent: 'eclipse',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives.Research(unitF) ) });
@@ -190,3 +194,9 @@ lib.addToResearch(sporeArea, {
     )
 });
 lib.addToResearch(TD1, { parent: 'core-shard', });
+lib.addToResearch(TD2, {
+    parent: TD1.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD1)
+    )
+});

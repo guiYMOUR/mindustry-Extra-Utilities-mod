@@ -38,11 +38,31 @@ r.pierceEffect = Fx.railHit;
 r.updateEffect = Fx.railTrail;
 r.hitEffect = Fx.massiveExplosion;
 r.smokeEffect = Fx.shootBig2;
-r.damage = 1150;
+r.damage = 1350;
 r.pierceDamageFactor = 0.5;
 
 const nihilo = extendContent(UnitType, 'nihilo', {});
 nihilo.constructor = prov(() => extend(UnitTypes.omura.constructor.get().class, {}));
+nihilo.weapons.add(
+    (() =>{
+        const w = new PointDefenseWeapon("btm-nihilo-defense");
+        w.x = 0;
+        w.y = -17;
+        w.reload = 6;
+        w.targetInterval = 8;
+        w.targetSwitchInterval = 8;
+        w.mirror = false;
+        w.bullet = (() => {
+            const b = new BulletType();
+            b.shootEffect = Fx.sparkShoot;
+            b.hitEffect = Fx.pointHit;
+            b.maxRange = 288;
+            b.damage = 40;
+            return b;
+        })()
+        return w;
+    })()
+);
 nihilo.weapons.add(
     (() => {
         const w = new Weapon("btm-nihilo-m");
@@ -56,11 +76,11 @@ nihilo.weapons.add(
         w.shotDelay = 1;
         w.xRand = 8;
         w.shots = 6;
-        w.spacing = 10;
+        w.spacing = 5;
         w.inaccuracy = 4;
         w.ejectEffect = Fx.none;
         w.shootSound = Sounds.missile;
-        w.reload = 45;
+        w.reload = 36;
         w.recoil = 2;
         return w;
     })()
@@ -130,7 +150,7 @@ nihilo.trailY = -32;
 nihilo.trailScl = 3.5;
 nihilo.abilities.add(ability.TerritoryFieldAbility(120, 60 * 5, 220));
 nihilo.abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 6, 200));
-nihilo.abilities.add(ability.pointDefenseAbility(0, -17, 8, 300, 40, "nihilo-defense"));
+//nihilo.abilities.add(ability.pointDefenseAbility(0, -17, 8, 300, 40, "nihilo-defense"));
 nihilo.abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5, -35.5), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5, -35.5), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
 nihilo.armor = 17;
 nihilo.drag = 0.2;

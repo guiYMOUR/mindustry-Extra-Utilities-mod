@@ -1,3 +1,7 @@
+/*
+* @author <guiY>
+*/
+
 const status = require("other/status");
 
 const TerritoryFieldAbility = (damage, reload, range) => {
@@ -89,7 +93,7 @@ const MendFieldAbility = (range, reload, healP) => {
 exports.MendFieldAbility = MendFieldAbility;
 
 //In 7.0 I'll remove it.
-const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) => {
+/*const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) => {
     const color = Color.white;
     var target = null;
     var reload = 0;
@@ -147,24 +151,31 @@ const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) =>
     });
     return ability;
 };
-exports.pointDefenseAbility = pointDefenseAbility;
+exports.pointDefenseAbility = pointDefenseAbility;*/
 
-//Prevent players from using cheat mod
+//Prevent players from using cheat mod(only certain aspects)
 const preventCheatingAbility = (open) => {
-    var range = 40;
+    var range = 80;
+    var unitD;
+    var consumer = cons(target => {
+        if (target.team != unitD.team && target.type.absorbable && Intersector.isInsideHexagon(unitD.x, unitD.y, range * 2, target.x, target.y)){
+            if(target.owner != null && (target.owner.health > unitD.maxHealth || target.damage > unitD.maxHealth/2)){
+                target.owner.health -= (target.owner.maxHealth - 1);
+                target.owner.kill();
+                target.absorb();
+            }
+            if(target.damage > unitD.maxHealth/2){
+                target.absorb();
+            }
+        }
+    });
     var ability = new JavaAdapter(Ability, {
         localized() {
             return "";
         },
         update(unit) {
-            var target = open ? Groups.bullet.intersect(unit.x - range, unit.y - range, range*2, range*2).min(b => b.team != unit.team && b.type.hittable, b => b.dst2(unit)) : null;
-            if(target != null && (target.damage > unit.maxHealth/2 || target.owner.health > unit.health * 2)){
-                target.remove();
-                //target.owner.apply(StatusEffects.disarmed, Number.MAX_VALUE);
-                target.owner.health -= target.owner.maxHealth;
-                target = null
-            }
-            target = null;
+            unitD = unit;
+            Groups.bullet.intersect(unit.x - range, unit.y - range, range * 2, range * 2, consumer);
         },
         copy() {
             return preventCheatingAbility(open);
@@ -195,3 +206,114 @@ const healthDisplay = (y, width, height) => {
     return ability;
 };
 exports.healthDisplay = healthDisplay;
+
+//I also will remove it in 7.0(maybe not)
+const sectors = 5;
+const sectorRad = 0.14;
+const blinkScl = 20;
+const rotateSpeed = 0.5;
+const effectRadius = 10;
+const LightningFieldAbility = (damage, reload, range, color) => {
+    var x = 0;
+    var y = 0;
+    var timer = 0;
+    const chargeTime = 20;
+    var ability = new JavaAdapter(Ability, {
+        localized() {
+            return Core.bundle.get("ability.btm-LightningFieldAbility");
+        },
+        draw(unit){
+            Draw.z(Layer.bullet - 0.001);
+            Draw.color(color);
+            Tmp.v1.trns(unit.rotation - 90, x, y).add(unit.x, unit.y);
+            var rx = Tmp.v1.x;
+            var ry = Tmp.v1.y;
+            var orbRadius = effectRadius * (1 + Mathf.absin(blinkScl, 0.1));
+
+            Fill.circle(rx, ry, orbRadius);
+            Draw.color();
+            Fill.circle(rx, ry, orbRadius / 2);
+
+            Lines.stroke((0.7 + Mathf.absin(blinkScl, 0.7)), color);
+
+            for(var i = 0; i < sectors; i++){
+                var rot = unit.rotation + i * 360/sectors - Time.time * rotateSpeed;
+                Lines.swirl(rx, ry, orbRadius + 3, sectorRad, rot);
+            }
+
+            Lines.stroke(Lines.getStroke());
+
+            for(var i = 0; i < sectors; i++){
+                var rot = unit.rotation + i * 360/sectors + Time.time * rotateSpeed;
+                Lines.swirl(rx, ry, range, sectorRad, rot);
+            }
+            Drawf.light(rx, ry, range * 1.5, color, 0.8);
+            Draw.reset();
+        },
+        update(unit) {
+            timer = Math.min(timer + Time.delta, reload);
+            //Lock multiple (group friend selection)
+            if(timer >= reload){
+                Units.nearbyEnemies(unit.team, unit.x - range, unit.y - range, range * 2, range * 2, cons(other => {
+                    if(other.within(unit.x, unit.y, range)){
+                        new Effect(chargeTime, cons(e => {
+                            Draw.color(color);
+                            Lines.circle(e.x, e.y, e.fout() * 54);
+                            Draw.reset();
+                        })).at(unit);
+                        Time.run(chargeTime, () => {
+                            if(!unit.isValid()) return;
+                            new Effect(12, cons(e => {
+                                Draw.color(color);
+                                Lines.circle(e.x, e.y, e.fin() * range);
+                                Draw.reset();
+                            })).at(unit);
+                            Fx.pointBeam.at(unit.x, unit.y, unit.angleTo(other), color, new Vec2().set(other));
+                            other.apply(StatusEffects.unmoving, 30);
+                            for(var i = 0; i < 4; i++){
+                                Lightning.create(unit.team, color, damage/4, other.x, other.y, Mathf.range(180), 10);
+                            }
+                        });
+                    }
+                }));
+                timer = 0;
+            }
+            //Lock single (my initial choice)
+            /*Units.nearbyEnemies(unit.team, unit.x - range, unit.y - range, range * 2, range * 2, cons(other => {
+                if(other.within(unit, range)){
+                    if(timer >= reload){
+                        //find = false;
+                        new Effect(chargeTime, cons(e => {
+                            Draw.color(color);
+                            Lines.circle(e.x, e.y, e.fout() * 54);
+                            Draw.reset();
+                        })).at(unit);
+                        Time.run(chargeTime, () => {
+                            if(!unit.isValid()) return;
+                            new Effect(12, cons(e => {
+                                Draw.color(color);
+                                Lines.circle(e.x, e.y, e.fin() * range);
+                                Draw.reset();
+                            })).at(unit);
+                            Fx.pointBeam.at(unit.x, unit.y, unit.angleTo(other), color, new Vec2().set(other));
+                            other.apply(StatusEffects.unmoving, 30);
+                            for(var i = 0; i < 4; i++){
+                                Lightning.create(unit.team, color, damage/4, other.x, other.y, Mathf.range(180), 10);
+                            }
+                        });
+                        timer = 0;
+                    }
+                }
+            }));*/
+            if(Mathf.chance(0.05)){
+                var a = unit.rotation + Mathf.range(180) + 0;
+                Lightning.create(unit.team, color, damage, unit.x, unit.y, a, 4);
+            }
+        },
+        copy() {
+            return LightningFieldAbility(damage, reload, range, color);
+        },
+    });
+    return ability;
+};
+exports.LightningFieldAbility = LightningFieldAbility;

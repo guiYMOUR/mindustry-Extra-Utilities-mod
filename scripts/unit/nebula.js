@@ -48,8 +48,27 @@ nebula.weapons.add(
         return w2;
     })()
 );
+nebula.weapons.add(
+    (() =>{
+        const w = new PointDefenseWeapon("btm-nebula-defense");
+        w.x = 25;
+        w.y = -8;
+        w.reload = 8;
+        w.targetInterval = 2;
+        w.targetSwitchInterval = 2;
+        w.bullet = (() => {
+            const b = new BulletType();
+            b.shootEffect = Fx.sparkShoot;
+            b.hitEffect = Fx.pointHit;
+            b.maxRange = 320;
+            b.damage = 40;
+            return b;
+        })()
+        return w;
+    })()
+);
 nebula.abilities.add(ability.MendFieldAbility(180, 210, 10));
-nebula.abilities.add(ability.pointDefenseAbility(25, -8, 10, 320, 40, "nebula-defense"), ability.pointDefenseAbility(-25, -8, 10, 320, 40, "nebula-defense"));
+//nebula.abilities.add(ability.pointDefenseAbility(25, -8, 10, 320, 40, "nebula-defense"), ability.pointDefenseAbility(-25, -8, 10, 320, 40, "nebula-defense"));
 nebula.armor = 15;
 nebula.flying = false;
 nebula.speed = 0.25;

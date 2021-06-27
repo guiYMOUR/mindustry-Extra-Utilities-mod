@@ -57,7 +57,7 @@ mb.collidesGround = false;
 const sam = extendContent(Turret, 'sam', {
     setStats(){
         this.super$setStats();
-        this.stats.add(Stat.ammo, new AmmoListValue(OrderedMap.of(this, mb)));
+        this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, mb)));
     },
 });
 sam.buildType = prov(() => {

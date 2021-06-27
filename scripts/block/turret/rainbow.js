@@ -81,7 +81,7 @@ const rainbow = extendContent(PowerTurret, "rainbow", {
         this.super$setStats();
         this.stats.remove(Stat.ammo);
         for(var i = 0; i < bullet.length; i++){
-            this.stats.add(Stat.ammo, new AmmoListValue(OrderedMap.of(this, bullet[i])));
+            this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, bullet[i])));
         }
     },
 });

@@ -2,7 +2,7 @@
 * @author <guiY>
 * @readme <My first attempt was to integrate the stack conveyor and the item bridge, but it did not achieve the effect I wanted, so now I'm writing bullets to get what I want.Unfortunately, Plan B, which I also chose to give up temporarily for design and time reasons, is a failure.I'm sorry, but I'll keep trying in future versions.>
 */
-const stackRegion = Core.atlas.find("plastanium-conveyor-stack");
+const stackRegion = Core.atlas.find("btm-ppc-stack");
 const stackBridge = extendContent(BufferedItemBridge, "stackBridge", {});
 stackBridge.buildType = prov(() => {
     var lastItem = null;

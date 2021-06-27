@@ -1,4 +1,16 @@
 //Will be added in version 1.4 or 1.3.30 onwards
+const graphiteBlock = extendContent(StaticWall, "graphite", {});
+graphiteBlock.itemDrop = Items.graphite;
+graphiteBlock.variants = 1;
+
+const thoriumBlock = extendContent(StaticWall, "thorium", {});
+thoriumBlock.itemDrop = Items.thorium;
+thoriumBlock.variants = 1;
+
+const pyratiteBlock = extendContent(StaticWall, "pyratite", {});
+pyratiteBlock.itemDrop = Items.pyratite;
+pyratiteBlock.variants = 1;
+
 const challenge = new JavaAdapter(Planet, {
     load() {
         this.meshLoader = prov(() => new HexMesh(challenge, 6));

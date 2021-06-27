@@ -40,3 +40,10 @@ speedDown.speedMultiplier = 0.4;
 speedDown.reloadMultiplier = 0.5;
 speedDown.effect = Fx.none;
 exports.speedDown = speedDown;
+
+const weakness = extend(StatusEffect, "weakness", {});
+weakness.color = Color.valueOf("#EC7458");
+weakness.speedMultiplier = 0.4;
+weakness.healthMultiplier = 0.8;
+weakness.effect = Fx.sapped;
+exports.weakness = weakness;

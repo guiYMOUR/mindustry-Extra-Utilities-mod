@@ -103,7 +103,7 @@ drill.rotateSpeed = 5;
 drill.warmupSpeed = 0.01;
 drill.liquidBoostIntensity = 1.8;
 drill.consumes.power(4);
-drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 0.1)).update(true);
+drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 0.1));
 drill.buildCostMultiplier = 0.6;
 exports.drill = drill;
 
@@ -127,7 +127,7 @@ slagE.category = Category.production;
 exports.slagE = slagE;
 
 //6.0, 7.0 not this type.
-const T2CU = extendContent(Cultivator, "T2CU", {});
+const T2CU = extendContent(AttributeCrafter, "T2CU", {});
 T2CU.outputItem = new ItemStack(Items.sporePod, 2);
 T2CU.craftTime = 120;
 T2CU.size = 3;
@@ -136,6 +136,7 @@ T2CU.hasPower = true;
 T2CU.hasItems = true;
 T2CU.consumes.power(1.5);
 T2CU.consumes.liquid(Liquids.water, 0.34);
+T2CU.drawer = new DrawCultivator();
 T2CU.requirements = ItemStack.with(
     Items.copper, 40,
     Items.graphite, 35,
@@ -145,3 +146,78 @@ T2CU.requirements = ItemStack.with(
 T2CU.buildVisibility = BuildVisibility.shown;
 T2CU.category = Category.production;
 exports.T2CU = T2CU;
+
+const testDrill = extendContent(BeamDrill, "beam-drill", {
+    drawPlace(x, y, rotation, valid){
+        this.drawPotentialLinks(x, y);
+        //this.super$drawPlace(x, y, rotation, valid);
+        var item = null;
+        var multiple = false;
+        var count = 0;
+
+        for(var i = 0; i < this.size; i++){
+            this.getLaserPos(x, y, rotation, i, Tmp.p1);
+
+            var j = 0;
+            var found = null;
+            for(/*var t = 0*/; j < this.range; j++){
+                var rx = Tmp.p1.x + Geometry.d4x(rotation) * t;
+                var ry = Tmp.p1.y + Geometry.d4y(rotation) * t;
+                var other = Vars.world.tile(rx, ry);
+                if(other != null){
+                    if(other.solid()){
+                        //j = t;
+                        var drop = other.wallDrop();
+                        if(drop != null && drop.hardness <= this.tier){
+                            found = drop;
+                            count ++;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if(found != null){
+                if(item != found && item != null){
+                    multiple = true;
+                }
+                item = found;
+            }
+
+            var len = Math.min(j, this.range - 1);
+            Drawf.dashLine(found == null ? Pal.remove : Pal.placing,
+            Tmp.p1.x * Vars.tilesize,
+            Tmp.p1.y * Vars.tilesize,
+            (Tmp.p1.x + Geometry.d4x(rotation) * len) * Vars.tilesize,
+            (Tmp.p1.y + Geometry.d4y(rotation) * len) * Vars.tilesize
+            );
+        }
+
+        if(item != null){
+            var width = this.drawPlaceText(Core.bundle.formatFloat("bar.drillspeed", 60 / this.drillTime * count, 2), x, y, valid);
+            if(!multiple){
+                var dx = x * Vars.tilesize + this.offset - width/2 - 4;
+                var dy = y * Vars.tilesize + this.offset + this.size * Vars.tilesize / 2 + 5;
+                var s = Vars.iconSmall / 4;
+                Draw.mixcol(Color.darkGray, 1);
+                Draw.rect(item.fullIcon, dx, dy - 1, s, s);
+                Draw.reset();
+                Draw.rect(item.fullIcon, dx, dy, s, s);
+            }
+        }
+    },
+});
+testDrill.drillTime = 180;
+testDrill.tier = 5;
+testDrill.size = 2;
+testDrill.range = 5;
+testDrill.hasPower = true;
+testDrill.drawArrow = false;
+testDrill.consumes.power(1);
+testDrill.requirements = ItemStack.with(
+    Items.copper, 85,
+    Items.graphite, 55,
+    Items.silicon, 55
+);
+testDrill.buildVisibility = BuildVisibility.shown;
+testDrill.category = Category.production;

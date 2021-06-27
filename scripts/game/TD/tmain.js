@@ -55,7 +55,7 @@ enemy1.defaultController = prov(() => new SuicideAI());
 enemy1.targetAir = false;
 enemy1.speed = 0.9;
 enemy1.hitSize = 8;
-enemy1.health = 300;
+enemy1.health = 350;
 enemy1.mechSideSway = 0.25;
 enemy1.range = 28;
 enemy1.weapons.add(
@@ -78,7 +78,7 @@ enemy2.defaultController = prov(() => new SuicideAI());
 enemy2.targetAir = false;
 enemy2.speed = 0.7;
 enemy2.hitSize = 9;
-enemy2.health = 180;
+enemy2.health = 210;
 enemy2.mechSideSway = 0.25;
 enemy2.range = 28;
 enemy2.weapons.add(
@@ -103,7 +103,7 @@ enemy3.defaultController = prov(() => new SuicideAI());
 enemy3.targetAir = false;
 enemy3.speed = 0.6;
 enemy3.hitSize = 16;
-enemy3.health = 900;
+enemy3.health = 1000;
 enemy3.mechSideSway = 0.25;
 enemy3.range = 28;
 enemy3.weapons.add(
@@ -127,7 +127,7 @@ boss1.defaultController = prov(() => new SuicideAI());
 boss1.targetAir = false;
 boss1.speed = 0.3;
 boss1.hitSize = 28;
-boss1.health = 11000;
+boss1.health = 13000;
 boss1.mechSideSway = 0.25;
 boss1.range = 28;
 boss1.weapons.add(
@@ -141,7 +141,7 @@ boss1.weapons.add(
         return w;
     })()
 );
-boss1.armor = 8;
+boss1.armor = 15;
 boss1.abilities.add(new UnitSpawnAbility(enemy1, 60 *6, -9.5, -11.5), new UnitSpawnAbility(enemy2, 60 * 8, 9.5, -11.5));
 boss1.abilities.add(new RepairFieldAbility(60, 60 * 3, 80));
 boss1.abilities.add(ability.healthDisplay(18, 30, 4));
@@ -153,7 +153,7 @@ boss2.defaultController = prov(() => new SuicideAI());
 boss2.targetAir = false;
 boss2.speed = 0.35;
 boss2.hitSize = 30;
-boss2.health = 40000;
+boss2.health = 48000;
 boss2.mechSideSway = 0.25;
 boss2.range = 28;
 boss2.weapons.add(
@@ -167,7 +167,7 @@ boss2.weapons.add(
         return w;
     })()
 );
-boss2.armor = 10;
+boss2.armor = 12;
 boss2.abilities.add(ability.healthDisplay(20, 36, 5));
 
 const TD = new JavaAdapter(Planet, {
@@ -195,5 +195,10 @@ TD.startSector = 2;
 const TD1 = new SectorPreset("TD1", TD, 2);
 TD1.alwaysUnlocked = true;
 TD1.captureWave = 50;
-TD1.difficulty = 5;
+TD1.difficulty = 3;
 exports.TD1 = TD1;
+
+const TD2 = new SectorPreset("TD2", TD, 22);
+TD2.captureWave = 80;
+TD2.difficulty = 6;
+exports.TD2 = TD2;

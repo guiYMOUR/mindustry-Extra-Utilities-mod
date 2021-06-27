@@ -78,8 +78,9 @@ GC.buildType = prov(() => {
 GC.requirements = ItemStack.with(
     Items.copper, 65,
     Items.lead, 50,
+    Items.metaglass, 50,
     Items.graphite, 55,
-    Items.silicon, 50
+    Items.silicon, 60
 );
 GC.buildVisibility = BuildVisibility.shown;
 GC.category = Category.crafting;
@@ -91,6 +92,6 @@ GC.hasItems = true;
 GC.size = 2;
 GC.ambientSound = Sounds.steam;
 GC.ambientSoundVolume = 0.02;
-GC.consumes.item(input).optional(false, false);
+GC.consumes.item(input)/*.optional(false, false)*/;
 GC.consumes.liquid(inputLiquid, amount);
 exports.GC = GC;

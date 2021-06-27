@@ -3,11 +3,14 @@ const lib = require("blib");
 //const tr = new Vec2();
 const T2rip = extendContent(ItemTurret, "T2-ripple", {
     setStats(){
-		this.super$setStats();
-		
-		this.stats.remove(Stat.reload);
-		this.stats.add(Stat.reload, 7.93, StatUnit.none);
-	},
+        this.super$setStats();
+        
+        this.stats.remove(Stat.reload);
+        this.stats.add(Stat.reload, 7.93, StatUnit.none);
+    },
+    /*canPlaceOn(tile, team){
+        return tile.block() == Blocks.ripple && tile.team() == team;
+    },*/
 });
 lib.setBuildingSimple(T2rip, ItemTurret.ItemTurretBuild, {
     //_tr: new Vec2(),
@@ -60,5 +63,7 @@ T2rip.requirements = ItemStack.with(
 );
 T2rip.buildVisibility = BuildVisibility.shown;
 T2rip.category = Category.turret;
+
+//T2rip.replaceable = false;
 
 exports.T2rip = T2rip;

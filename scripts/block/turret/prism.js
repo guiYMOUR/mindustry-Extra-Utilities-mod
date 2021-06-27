@@ -20,7 +20,7 @@ const prism = extendContent(PowerTurret, "prism", {
     setStats() {
         this.super$setStats();
         this.stats.remove(Stat.booster);
-        this.stats.add(Stat.input, new BoosterListValue(reloadTime, this.consumes.get(ConsumeType.liquid).amount, this.coolantMultiplier, false, l => this.consumes.liquidfilters.get(l.id)));
+        this.stats.add(Stat.input, StatValues.boosters(reloadTime, this.consumes.get(ConsumeType.liquid).amount, this.coolantMultiplier, false, l => this.consumes.liquidfilters.get(l.id)));
         this.stats.remove(Stat.ammo);
         this.stats.add(Stat.ammo, Core.bundle.format("bullet.damage", "540 (× 6shoots) / s"));
     },
@@ -186,7 +186,7 @@ prism.shootType = (() => {
 })();
 prism.health = 200 * 4 * 4;
 prism.coolantMultiplier = 1;
-prism.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 0.4)).update(false);
+prism.consumes.add(new ConsumeCoolant(0.5));
 prism.requirements = ItemStack.with(
     Items.lead, 300,
     Items.silicon, 350,
