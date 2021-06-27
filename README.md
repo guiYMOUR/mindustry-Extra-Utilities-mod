@@ -64,18 +64,20 @@
 - Imaginary Reconstructor
 - suzerain
 - Nebula
+- apocalypse
 - Tera
 - Nihilo
 
 ### Ability
 - Territory Field
 - Mend Field
-- pointDefenseAbility
+- Lightning Field
 
 ### Status Effect
 - Erosion
 - Territory Buff
 - Territory Debuff
+- Weakness
 
 ### Other
 - Added tower defense gameplay.
