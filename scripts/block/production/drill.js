@@ -29,7 +29,7 @@ drill.buildType = prov(() => {
                 return;
             }
             if(this.timer.get(this.block.timerDump, this.block.dumpTime)){
-                this.dump(this.dominantItem);
+                this.dump(this.items.has(this.dominantItem) ? this.dominantItem : null);
             }
             this.timeDrilled += this.warmup * this.delta();
             if(this.items.total() < this.block.itemCapacity && this.dominantItems > 0 && this.consValid()){
@@ -107,6 +107,28 @@ drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <=
 drill.buildCostMultiplier = 0.6;
 exports.drill = drill;
 
+const testDrill = extendContent(BeamDrill, "beam-drill", {
+    drawPlace(x, y, rotation, valid){
+        this.drawPotentialLinks(x, y);
+        this.super$drawPlace(x, y, rotation, valid);
+    },
+});
+testDrill.drillTime = 180;
+testDrill.tier = 5;
+testDrill.size = 2;
+testDrill.range = 5;
+testDrill.hasPower = true;
+testDrill.drawArrow = true;
+testDrill.consumes.power(1);
+testDrill.requirements = ItemStack.with(
+    Items.copper, 85,
+    Items.graphite, 55,
+    Items.silicon, 55
+);
+testDrill.buildVisibility = BuildVisibility.shown;
+testDrill.category = Category.production;
+exports.testDrill = testDrill;
+
 const slagE = extendContent(SolidPump, "slag-extractor", {});
 slagE.result = Liquids.slag;
 slagE.pumpAmount = 0.1;
@@ -145,79 +167,9 @@ T2CU.requirements = ItemStack.with(
 );
 T2CU.buildVisibility = BuildVisibility.shown;
 T2CU.category = Category.production;
+T2CU.envRequired |= Env.spores;
+T2CU.attribute = Attribute.spores;
+T2CU.legacyReadWarmup = true;
+T2CU.maxBoost = 3;
+
 exports.T2CU = T2CU;
-
-const testDrill = extendContent(BeamDrill, "beam-drill", {
-    drawPlace(x, y, rotation, valid){
-        this.drawPotentialLinks(x, y);
-        //this.super$drawPlace(x, y, rotation, valid);
-        var item = null;
-        var multiple = false;
-        var count = 0;
-
-        for(var i = 0; i < this.size; i++){
-            this.getLaserPos(x, y, rotation, i, Tmp.p1);
-
-            var j = 0;
-            var found = null;
-            for(/*var t = 0*/; j < this.range; j++){
-                var rx = Tmp.p1.x + Geometry.d4x(rotation) * t;
-                var ry = Tmp.p1.y + Geometry.d4y(rotation) * t;
-                var other = Vars.world.tile(rx, ry);
-                if(other != null){
-                    if(other.solid()){
-                        //j = t;
-                        var drop = other.wallDrop();
-                        if(drop != null && drop.hardness <= this.tier){
-                            found = drop;
-                            count ++;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if(found != null){
-                if(item != found && item != null){
-                    multiple = true;
-                }
-                item = found;
-            }
-
-            var len = Math.min(j, this.range - 1);
-            Drawf.dashLine(found == null ? Pal.remove : Pal.placing,
-            Tmp.p1.x * Vars.tilesize,
-            Tmp.p1.y * Vars.tilesize,
-            (Tmp.p1.x + Geometry.d4x(rotation) * len) * Vars.tilesize,
-            (Tmp.p1.y + Geometry.d4y(rotation) * len) * Vars.tilesize
-            );
-        }
-
-        if(item != null){
-            var width = this.drawPlaceText(Core.bundle.formatFloat("bar.drillspeed", 60 / this.drillTime * count, 2), x, y, valid);
-            if(!multiple){
-                var dx = x * Vars.tilesize + this.offset - width/2 - 4;
-                var dy = y * Vars.tilesize + this.offset + this.size * Vars.tilesize / 2 + 5;
-                var s = Vars.iconSmall / 4;
-                Draw.mixcol(Color.darkGray, 1);
-                Draw.rect(item.fullIcon, dx, dy - 1, s, s);
-                Draw.reset();
-                Draw.rect(item.fullIcon, dx, dy, s, s);
-            }
-        }
-    },
-});
-testDrill.drillTime = 180;
-testDrill.tier = 5;
-testDrill.size = 2;
-testDrill.range = 5;
-testDrill.hasPower = true;
-testDrill.drawArrow = false;
-testDrill.consumes.power(1);
-testDrill.requirements = ItemStack.with(
-    Items.copper, 85,
-    Items.graphite, 55,
-    Items.silicon, 55
-);
-testDrill.buildVisibility = BuildVisibility.shown;
-testDrill.category = Category.production;

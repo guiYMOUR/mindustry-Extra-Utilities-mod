@@ -24,8 +24,9 @@ RGT.sprite = "btm-gt";
 RGT.width = 36;
 RGT.height = 18;
 RGT.damage = 175;
-RGT.splashDamageRadius = 28,
-RGT.splashDamage = 125,
+RGT.splashDamageRadius = 28;
+RGT.splashDamage = 125;
+RGT.buildingDamageMultiplier = 0.3;
 RGT.lifetime = 60;
 RGT.speed = 8;
 RGT.reloadMultiplier = 1.2;
@@ -61,8 +62,9 @@ RGS.sprite = "btm-gs";
 RGS.width = 36;
 RGS.height = 18;
 RGS.damage = 285;
-RGS.splashDamageRadius = 36,
-RGS.splashDamage = 255,
+RGS.splashDamageRadius = 36;
+RGS.splashDamage = 255;
+RGS.buildingDamageMultiplier = 0.25;
 RGS.lifetime = 72;
 RGS.speed = 8;
 RGS.pierceCap = 2;
@@ -169,15 +171,14 @@ RG.ammo(
 );
 RG.requirements = ItemStack.with(
     //Items.copper, 500,
-    Items.lead, 600,
-    Items.silicon, 550,
-    Items.graphite, 355,
+    Items.lead, 700,
+    Items.silicon, 650,
+    Items.graphite, 555,
     Items.titanium, 325,
-    Items.thorium, 285,
     Items.plastanium, 220,
-    Items.surgeAlloy, 150
+    Items.surgeAlloy, 220
 );
-RG.consumes.powerCond(12, boolf(b => b.isActive()));
+RG.consumes.powerCond(15, boolf(b => b.isActive()));
 RG.buildVisibility = BuildVisibility.shown;
 RG.category = Category.turret;
 

@@ -71,6 +71,7 @@ enemy1.weapons.add(
 );
 enemy1.armor = 1;
 enemy1.abilities.add(ability.healthDisplay(10, 15, 2));
+enemy1.alwaysUnlocked = true;
 
 const enemy2 = extendContent(UnitType, 'enemy2', {});
 enemy2.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
@@ -96,6 +97,7 @@ enemy2.armor = 6;
 enemy2.abilities.add(new ShieldRegenFieldAbility(20, 160, 60 * 4, 60));
 enemy2.abilities.add(ability.healthDisplay(12, 15, 2));
 enemy2.abilities.add(new ForceFieldAbility(36, 1, 180, 60 * 10));
+enemy2.alwaysUnlocked = true;
 
 const enemy3 = extendContent(UnitType, 'enemy3', {});
 enemy3.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
@@ -120,6 +122,7 @@ enemy3.weapons.add(
 enemy3.armor = 4;
 enemy3.abilities.add(new RepairFieldAbility(60, 60 * 3, 64));
 enemy3.abilities.add(ability.healthDisplay(14, 22, 3));
+enemy3.alwaysUnlocked = true;
 
 const boss1 = extendContent(UnitType, 'boss1', {});
 boss1.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
@@ -146,6 +149,7 @@ boss1.abilities.add(new UnitSpawnAbility(enemy1, 60 *6, -9.5, -11.5), new UnitSp
 boss1.abilities.add(new RepairFieldAbility(60, 60 * 3, 80));
 boss1.abilities.add(ability.healthDisplay(18, 30, 4));
 boss1.abilities.add(new ForceFieldAbility(80, 2.2, 600, 60 * 15));
+boss1.alwaysUnlocked = true;
 
 const boss2 = extendContent(UnitType, 'boss2', {});
 boss2.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
@@ -169,6 +173,7 @@ boss2.weapons.add(
 );
 boss2.armor = 12;
 boss2.abilities.add(ability.healthDisplay(20, 36, 5));
+boss2.alwaysUnlocked = true;
 
 const TD = new JavaAdapter(Planet, {
     load() {
@@ -191,6 +196,7 @@ TD.sectorApproxRadius = 0.5;
 TD.atmosphereRadIn = 0.04;
 TD.atmosphereRadOut = 0.3;
 TD.startSector = 2;
+TD.alwaysUnlocked = true;
 
 const TD1 = new SectorPreset("TD1", TD, 2);
 TD1.alwaysUnlocked = true;

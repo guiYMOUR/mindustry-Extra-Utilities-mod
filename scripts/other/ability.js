@@ -72,7 +72,7 @@ const MendFieldAbility = (range, reload, healP) => {
                 timer += Time.delta;
                 if(timer >= reload){
                     timer = 0;
-                    other.heal((healP/100) * other.block.health);
+                    other.heal((healP/100) * other.maxHealth);
                     Fx.healBlockFull.at(other.x, other.y, other.block.size, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
                 }
             }));
@@ -217,6 +217,8 @@ const LightningFieldAbility = (damage, reload, range, color) => {
     var x = 0;
     var y = 0;
     var timer = 0;
+    var curStroke = 0;
+    var find = false;
     const chargeTime = 20;
     var ability = new JavaAdapter(Ability, {
         localized() {
@@ -241,21 +243,26 @@ const LightningFieldAbility = (damage, reload, range, color) => {
                 Lines.swirl(rx, ry, orbRadius + 3, sectorRad, rot);
             }
 
-            Lines.stroke(Lines.getStroke());
+            Lines.stroke(Lines.getStroke() * curStroke);
 
-            for(var i = 0; i < sectors; i++){
-                var rot = unit.rotation + i * 360/sectors + Time.time * rotateSpeed;
-                Lines.swirl(rx, ry, range, sectorRad, rot);
+            if(curStroke > 0){
+                for(var i = 0; i < sectors; i++){
+                   var rot = unit.rotation + i * 360/sectors + Time.time * rotateSpeed;
+                   Lines.swirl(rx, ry, range, sectorRad, rot);
+                }
             }
             Drawf.light(rx, ry, range * 1.5, color, 0.8);
             Draw.reset();
         },
         update(unit) {
             timer = Math.min(timer + Time.delta, reload);
+            curStroke = Mathf.lerpDelta(curStroke, find ? 1 : 0, 0.09);
             //Lock multiple (group friend selection)
             if(timer >= reload){
+                find = false;
                 Units.nearbyEnemies(unit.team, unit.x - range, unit.y - range, range * 2, range * 2, cons(other => {
                     if(other.within(unit.x, unit.y, range)){
+                        find = true;
                         new Effect(chargeTime, cons(e => {
                             Draw.color(color);
                             Lines.circle(e.x, e.y, e.fout() * 54);
@@ -268,15 +275,16 @@ const LightningFieldAbility = (damage, reload, range, color) => {
                                 Lines.circle(e.x, e.y, e.fin() * range);
                                 Draw.reset();
                             })).at(unit);
-                            Fx.pointBeam.at(unit.x, unit.y, unit.angleTo(other), color, new Vec2().set(other));
+                            Fx.chainLightning.at(unit.x, unit.y, 0, color, other);
                             other.apply(StatusEffects.unmoving, 30);
                             for(var i = 0; i < 4; i++){
                                 Lightning.create(unit.team, color, damage/4, other.x, other.y, Mathf.range(180), 10);
                             }
                         });
+                        timer = 0;
                     }
                 }));
-                timer = 0;
+                //timer = 0;
             }
             //Lock single (my initial choice)
             /*Units.nearbyEnemies(unit.team, unit.x - range, unit.y - range, range * 2, range * 2, cons(other => {

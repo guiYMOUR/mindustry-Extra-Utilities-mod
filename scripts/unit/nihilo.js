@@ -32,14 +32,14 @@ air.splashDamageRadius = 88;
 air.hitShake = 6;
 const r = extend(RailBulletType, {});
 r.shootEffect = Fx.railShoot;
-r.length = 520;
+r.length = 500;
 r.updateEffectSeg = 30;
 r.pierceEffect = Fx.railHit;
 r.updateEffect = Fx.railTrail;
 r.hitEffect = Fx.massiveExplosion;
 r.smokeEffect = Fx.shootBig2;
 r.damage = 1350;
-r.pierceDamageFactor = 0.5;
+r.pierceDamageFactor = 0.6;
 
 const nihilo = extendContent(UnitType, 'nihilo', {});
 nihilo.constructor = prov(() => extend(UnitTypes.omura.constructor.get().class, {}));

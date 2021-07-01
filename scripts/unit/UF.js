@@ -1,5 +1,6 @@
 const { suzerain } = require("unit/suzerain");
 const { nebula } = require("unit/nebula");
+const { asphyxia } = require("unit/asphyxia");
 const { apocalypse } = require("unit/apocalypse");
 const { tera } = require("unit/tera");
 const { nihilo } = require("unit/nihilo");
@@ -27,6 +28,7 @@ unitF.liquidCapacity = 180;
 unitF.upgrades.addAll(
     unitType(UnitTypes.reign, suzerain),
     unitType(UnitTypes.corvus, nebula),
+    unitType(UnitTypes.toxopid, asphyxia),
     unitType(UnitTypes.eclipse, apocalypse),
     unitType(UnitTypes.oct, tera),
     unitType(UnitTypes.omura, nihilo),

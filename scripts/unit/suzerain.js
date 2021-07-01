@@ -26,11 +26,19 @@ spark.serrationWidth = 6;
 spark.shootEffect = Fx.sparkShoot;
 spark.smokeEffect = Fx.sparkShoot;
 
-const suzerain = extendContent(UnitType, 'suzerain', {});
+const suzerain = extendContent(UnitType, 'suzerain', {
+    //我摊牌了，这个木大
+    remove(){
+        if(this.constructor.get().healthf() < 100/61000){
+            this.super$remove();
+        }
+    },
+    //kill(){    },
+});
 suzerain.constructor = prov(() => extend(UnitTypes.reign.constructor.get().class, {
-    kill(){
-        if(this.health < 100){
-            this.super$kill();
+    remove(){
+        if(this.healthf() < 100/61000){
+            this.super$remove();
         }
     },
 }));

@@ -1,13 +1,13 @@
 const lib = require("blib");
 
-const T2SA = extendContent(AttributeSmelter, "T2-SA", {});
-lib.setBuildingSimple(T2SA, AttributeSmelter.AttributeSmelterBuild, {});
+const T2SA = extendContent(AttributeCrafter, "T2-SA", {});
+lib.setBuildingSimple(T2SA, AttributeCrafter.AttributeCrafterBuild, {});
 T2SA.craftEffect = Fx.smeltsmoke;
 T2SA.outputItem = new ItemStack(Items.surgeAlloy, 5);
 T2SA.craftTime = 84;
 T2SA.size = 4;
 T2SA.hasPower = true;
-
+T2SA.drawer = new DrawSmelter(Color.valueOf("ffef99"));
 T2SA.consumes.power(6);
 T2SA.consumes.items(ItemStack.with(
     Items.copper, 6,

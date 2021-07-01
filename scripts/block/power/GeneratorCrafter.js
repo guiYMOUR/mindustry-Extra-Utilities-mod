@@ -3,7 +3,7 @@ const itemDuration = 90;
 const input = Items.coal;
 const output = Items.pyratite;
 const inputLiquid = Liquids.slag;
-const amount = 0.11;
+const amount = 0.125;
 const GC = extendContent(SingleTypeGenerator, "GC", {
     setStats(){
         this.super$setStats();

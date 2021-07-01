@@ -56,6 +56,7 @@ r4.despawnEffect = gone(Color.valueOf("5eecec"));
 r4.frontColor = Color.valueOf("5eecec");
 r4.backColor = Color.valueOf("5eecec");
 r4.status = StatusEffects.freezing;
+r4.statusDuration = 20;
 const r5 = extend(BasicBulletType,{});
 r5.sprite = "btm-shotgunShot";
 r5.speed = 7;
@@ -137,8 +138,8 @@ rainbow.health = 200 * 3 * 3;
 rainbow.shootType = r1;
 rainbow.requirements = ItemStack.with(
     Items.lead, 200,
-    Items.silicon, 180,
-    Items.metaglass, 130,
+    Items.silicon, 220,
+    Items.metaglass, 180,
     Items.thorium, 105
 );
 rainbow.buildVisibility = BuildVisibility.shown;

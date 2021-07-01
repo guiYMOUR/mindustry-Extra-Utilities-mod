@@ -23,6 +23,7 @@ challenge.accessible = true;
 challenge.atmosphereRadIn = 0.04;
 challenge.atmosphereRadOut = 0.3;
 challenge.startSector = 12;
+challenge.alwaysUnlocked = true;
 exports.challenge = challenge;
 
 const start = new SectorPreset("start", challenge, 12);

@@ -8,7 +8,7 @@ minisp.recoilAmount = 2;
 minisp.alternate = true;
 minisp.reloadTime = 8;
 minisp.restitution = 0.09;
-minisp.range = 192;
+minisp.range = 30 *8;
 minisp.shootCone = 22;
 minisp.ammoUseEffect = Fx.casing3;
 minisp.health = 160*3*3;
@@ -20,6 +20,7 @@ minisp.ammo(
     Items.pyratite, Bullets.standardIncendiaryBig,
     Items.thorium, Bullets.standardThoriumBig
 );
+minisp.limitRange();
 minisp.requirements = ItemStack.with(
     Items.copper, 600,
     Items.graphite, 210,

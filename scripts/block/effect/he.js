@@ -109,7 +109,7 @@ DCF.buildType = prov(() => {
             if(r > reload / speed){
                 r = 0;
                 Vars.indexer.eachBlock(this, range, boolf(other => other.damaged()), cons(other => {
-                    other.heal(cureRatio * other.block.health);
+                    other.heal(cureRatio * other.maxHealth);
                     Fx.healBlockFull.at(other.x, other.y, other.block.size, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
                 }));
             }

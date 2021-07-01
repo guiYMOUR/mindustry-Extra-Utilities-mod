@@ -2,12 +2,11 @@
 const lib = require("blib");
 const T3duo = extendContent(ItemTurret, "T3-duo", {});
 lib.setBuildingSimple(T3duo, ItemTurret.ItemTurretBuild, {
-    updateShooting(){
-        this.super$updateShooting();
-        if(this.reload == 0){
-            if(Mathf.chance(0.1)){
+    shoot(type){
+        this.super$shoot(type);
+        if(Mathf.chance(0.1)){
             Bullets.standardThoriumBig.create(this, this.team, this.x, this.y, this.rotation, 1 ,1);
-            }
+            Sounds.shootBig.at(this.x, this.y);
         }
     }
 });

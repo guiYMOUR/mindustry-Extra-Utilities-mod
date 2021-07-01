@@ -19,7 +19,7 @@ swMin.reloadTime = 35;
 swMin.shots = 3;
 swMin.burstSpacing = 4;
 swMin.inaccuracy = 10;
-swMin.range = 200;
+swMin.range = 26 *8;
 swMin.xRand = 4;
 swMin.size = 2;
 swMin.health = 200 * 2 * 2;
@@ -29,6 +29,7 @@ swMin.ammo(
             Items.pyratite, Bullets.missileIncendiary,
             Items.surgeAlloy, Bullets.missileSurge
 );
+swMin.limitRange();
 swMin.requirements = ItemStack.with(
     Items.graphite, 45,
     Items.titanium, 40,

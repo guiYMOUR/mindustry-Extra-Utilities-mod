@@ -257,14 +257,12 @@ var bt = [f1, f2, f3];
 
 const swT2 = extendContent(ItemTurret, "T2-swarmer", {});
 lib.setBuildingSimple(swT2, ItemTurret.ItemTurretBuild, {
-    updateShooting(){
-        this.super$updateShooting();
-        if(this.reload == 0){
-            if(Mathf.chance(0.1)){
-                for(var i = 0; i < 2; i ++){
-                    var a = Math.floor(Math.random() * (bt.length));
-                    bt[a].create(this, this.team, this.x, this.y, this.rotation + 45 * (i - 0.5), 1 ,1);
-                }
+    shoot(type){
+        this.super$shoot(type);
+        if(Mathf.chance(0.1)){
+            for(var i = 0; i < 2; i ++){
+                var a = Math.floor(Math.random() * (bt.length));
+                bt[a].create(this, this.team, this.x, this.y, this.rotation + 45 * (i - 0.5), 1 ,1);
             }
         }
     }
@@ -273,7 +271,7 @@ swT2.reloadTime = 25;
 swT2.shots = 6;
 swT2.burstSpacing = 5;
 swT2.inaccuracy = 10;
-swT2.range = 208;
+swT2.range = 27 *8;
 swT2.xRand = 6;
 swT2.size = 2;
 swT2.health = 500 * 2 * 2;
@@ -283,6 +281,7 @@ swT2.ammo(
             Items.surgeAlloy, Bullets.missileSurge
             //Items.copper, f2
 );
+swT2.limitRange();
 swT2.requirements = ItemStack.with(
     Items.graphite, 65,
     Items.titanium, 50,

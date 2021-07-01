@@ -54,8 +54,29 @@ nebula.weapons.add(
         w.x = 25;
         w.y = -8;
         w.reload = 8;
-        w.targetInterval = 2;
-        w.targetSwitchInterval = 2;
+        w.targetInterval = 8;
+        w.targetSwitchInterval = 8;
+        w.mirror = false;
+        w.bullet = (() => {
+            const b = new BulletType();
+            b.shootEffect = Fx.sparkShoot;
+            b.hitEffect = Fx.pointHit;
+            b.maxRange = 320;
+            b.damage = 40;
+            return b;
+        })()
+        return w;
+    })()
+);
+nebula.weapons.add(
+    (() =>{
+        const w = new PointDefenseWeapon("btm-nebula-defense");
+        w.x = -25;
+        w.y = -8;
+        w.reload = 8;
+        w.targetInterval = 8;
+        w.targetSwitchInterval = 8;
+        w.mirror = false;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;
@@ -78,7 +99,7 @@ nebula.shake = 3;
 nebula.health = 54000;
 nebula.mineSpeed = 7;
 nebula.mineTier = 3;
-nebula.buildSpeed = 2;
+nebula.buildSpeed = 3;
 nebula.itemCapacity = 300;
 nebula.rotateShooting = true;
 nebula.drawShields =false;

@@ -43,7 +43,7 @@ const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/he');
-const { tiDrill, drill, slagE, T2CU } = require('block/production/drill');
+const { tiDrill, drill, testDrill, slagE, T2CU } = require('block/production/drill');
 const { core } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
@@ -53,6 +53,7 @@ const { clWall, clWallL, aws, awl } = require('block/defence/wall');
 
 const { unitF } = require('unit/UF');
 const { suzerain } = require('unit/suzerain');
+const { asphyxia } = require('unit/asphyxia');
 const { apocalypse } = require('unit/apocalypse');
 const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
@@ -154,6 +155,7 @@ lib.addToResearch(DCF, { parent: 'force-projector',
 });
 lib.addToResearch(tiDrill, { parent: 'pneumatic-drill', });
 lib.addToResearch(drill, { parent: 'blast-drill', });
+lib.addToResearch(testDrill, { parent: 'laser-drill', });
 lib.addToResearch(slagE, { parent: 'water-extractor', });
 lib.addToResearch(T2CU, { parent: 'cultivator', });
 lib.addToResearch(core, { parent: 'core-shard',
@@ -176,6 +178,7 @@ lib.addToResearch(unitF, { parent: 'tetrative-reconstructor',
     )
 });
 lib.addToResearch(suzerain, { parent: 'reign',objectives: Seq.with( new Objectives.Research(unitF) ) });
+lib.addToResearch(asphyxia, { parent: 'toxopid',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(apocalypse, { parent: 'eclipse',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });

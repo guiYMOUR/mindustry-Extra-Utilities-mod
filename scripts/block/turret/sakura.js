@@ -13,6 +13,7 @@ const rankB = extend(BasicBulletType, {
 rankB.speed = 2;
 rankB.lifetime = 216;
 rankB.damage = 38;
+rankB.buildingDamageMultiplier = 0.5;
 rankB.width = 10;
 rankB.height = 7;
 rankB.shrinkY = 0;
@@ -41,6 +42,7 @@ sakura.ammo(
         rankS.speed = 2;
         rankS.lifetime = 120;
         rankS.damage = 61;
+        rankS.buildingDamageMultiplier = 0.5;
         rankS.width = 32;
         rankS.height = 18;
         rankS.shrinkY = 0;
@@ -64,8 +66,8 @@ sakura.shootEffect = Fx.thoriumShoot;
 sakura.smokeEffect = Fx.thoriumShoot;
 sakura.requirements = ItemStack.with(
     Items.lead, 180,
-    Items.silicon, 115,
-    Items.titanium, 90,
+    Items.silicon, 125,
+    Items.titanium, 100,
     Items.thorium, 85
 );
 sakura.buildVisibility = BuildVisibility.shown;

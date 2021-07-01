@@ -5,7 +5,7 @@ T2scatter.shots = 3;
 T2scatter.burstSpacing = 3;
 T2scatter.reloadTime = 9;
 T2scatter.recoilAmount = 2;
-T2scatter.range = 184;
+T2scatter.range = 220;
 T2scatter.shootCone = 35;
 T2scatter.health = 210 * 2 * 2;
 T2scatter.inaccuracy = 10;
@@ -17,6 +17,7 @@ T2scatter.ammo(
     Items.lead, Bullets.flakLead,
     Items.metaglass, Bullets.flakGlass
 );
+T2scatter.limitRange(2);
 T2scatter.requirements = ItemStack.with(
     Items.copper, 90,
     Items.lead, 70,

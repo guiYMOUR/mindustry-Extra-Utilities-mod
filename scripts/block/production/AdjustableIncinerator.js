@@ -24,8 +24,8 @@ ai.buildType = prov(() => {
     var choice1;
     var choice2;
     return new JavaAdapter(Incinerator.IncineratorBuild, {
-        updateTile(){
-            this.super$updateTile();
+        draw(){
+            this.super$draw();
             choice1 = cI ? loadRegion("c1t") : loadRegion("c1f");
             choice2 = cL ? loadRegion("c2t") : loadRegion("c2f");
         },
