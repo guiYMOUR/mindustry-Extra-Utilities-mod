@@ -46,6 +46,7 @@
 ### Drill
 - Titanium Drill
 - High Energy drill
+- Beam Drill updated in advance
 - Slag Extractor
 
 ### Wall
@@ -64,6 +65,7 @@
 - Imaginary Reconstructor
 - suzerain
 - Nebula
+- asphyxia
 - apocalypse
 - Tera
 - Nihilo
