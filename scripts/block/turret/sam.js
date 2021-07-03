@@ -65,10 +65,10 @@ sam.buildType = prov(() => {
     var shotCounter = 0;
     const tr = new Vec2();
     const tr2 = new Vec2();
-    var region = Core.atlas.find("btm-sam-top");
-    var bottom = Core.atlas.find("btm-sam-bottom");
-    var drawer = cons(tile => Draw.rect(region, tile.x + tr2.x, tile.y + tr2.y, tile.rotation - 90));
-    var bottomDrawer = cons(tile => Draw.rect(bottom, tile.x + tr2.x, tile.y + tr2.y, tile.rotation - 90));
+    //var region = Core.atlas.find("btm-sam-top");
+    //var bottom = Core.atlas.find("btm-sam-bottom");
+    var drawer = cons(tile => Draw.rect(Core.atlas.find("btm-sam-top"), tile.x + tr2.x, tile.y + tr2.y, tile.rotation - 90));
+    var bottomDrawer = cons(tile => Draw.rect(Core.atlas.find("btm-sam-bottom"), tile.x + tr2.x, tile.y + tr2.y, tile.rotation - 90));
     return new JavaAdapter(Turret.TurretBuild, {
         reloadSpeed(){
             return this.delta() * this.baseReloadSpeed()
@@ -93,7 +93,7 @@ sam.buildType = prov(() => {
             Draw.rect(this.block.baseRegion, this.x, this.y);
             Draw.color();
             tr2.trns(this.rotation, -this.recoil);
-            Drawf.shadow(region, this.x + tr2.x - this.block.elevation, this.y + tr2.y - this.block.elevation, this.rotation - 90);
+            Drawf.shadow(Core.atlas.find("btm-sam-top"), this.x + tr2.x - this.block.elevation, this.y + tr2.y - this.block.elevation, this.rotation - 90);
             bottomDrawer.get(this);
             Draw.z(Layer.turret + 1);
             drawer.get(this);

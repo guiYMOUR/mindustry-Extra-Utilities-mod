@@ -11,8 +11,8 @@ const status = require("other/status");
 const unitA = extendContent(OverdriveProjector , "unitA", {
     drawPlace(x, y, rotation, valid) {
         this.super$drawPlace(x, y, rotation, valid);
-        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, unitRange * 0.6, Pal.accent);
-        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, unitRange, Color.valueOf("ff0000"));
+        Drawf.dashCircle(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange * 0.6, Pal.accent);
+        Drawf.dashCircle(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange, Color.valueOf("ff0000"));
     },
     setStats(){
         this.super$setStats();

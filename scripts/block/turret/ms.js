@@ -1,6 +1,8 @@
 const cor = Color.valueOf("e5f3fe");
 const liC = Color.valueOf("bf92f9");
 var lib = require("blib");
+//var plasmaRegions = [];
+
 const MS = extend(BasicBulletType,{
     update(b){
         const target = Units.closestTarget(b.team, b.x,b.y,100)
@@ -9,48 +11,46 @@ const MS = extend(BasicBulletType,{
         }
         if(b.timer.get(1,4)){
             for(var i = 0; i < 3; i++){
-                Lightning.create(b.team, cor, 18, b.x + Mathf.random(-60,60), b.y + Mathf.random(-60,60), Mathf.random(360), Mathf.random(9,25));
+                Lightning.create(b.team, cor, 16, b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(8,20));
             }
             for(var i = 0; i < 5; i++){
-                Lightning.create(b.team, cor, 16, b.x + Mathf.random(-60,60), b.y + Mathf.random(-60,60), Mathf.random(360), Mathf.random(6,12));
+                Lightning.create(b.team, liC, 12, b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(5,10));
             }
             for(var i = 0; i < 7; i++){
-                Lightning.create(b.team, cor, 18, b.x + Mathf.random(-60,60), b.y + Mathf.random(-60,60), Mathf.random(360), Mathf.random(3,7));
+                Lightning.create(b.team, cor, 18, b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(3,7));
             }
             if(Mathf.chance(Time.delta * 0.075)){
                 var len = Mathf.random(1, 7);
                 var a = b.rotation() + Mathf.range(this.fragCone/2) + this.fragAngle;
-                Lightning.create(b.team, liC, 12, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, 0.5 + Mathf.random(15));
+                Lightning.create(b.team, liC, 12, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, 0.5 + Mathf.random(14));
             }
         }
     },
     draw(b){
         const plasmas = 6;
-        var plasmaRegions = new Array();
-        for(var i = 0; i < 6; i++){
-            plasmaRegions[i] = "btm-plasma-"+i;
-        }
         for(var i = 0; i < plasmas; i++){
             var r = 29 + Mathf.absin(Time.time, 2 + i * 1, 5 - i * 0.5);
-            Draw.color(Color.valueOf("a7d8fe"), liC, i / 6);
-            Draw.alpha((0.37128 + Mathf.absin(Time.time, 2 + i * 2, 0.3 + i * 0.05)) * 1);
-            Draw.rect(Core.atlas.find(plasmaRegions[i]), b.x, b.y,Time.time * (12 + i * 6) * 1);
+            Draw.color(liC, Color.valueOf("a7d8fe"), i / 6);
+            Draw.alpha((0.3 + Mathf.absin(Time.time, 2 + i * 2, 0.3 + i * 0.05)) * 1);
+            Draw.blend(Blending.additive);
+            Draw.rect(Core.atlas.find("btm-plasma-" + i), b.x, b.y, 40, 40, Time.time * (12 + i * 6) * 1);
+            Draw.blend();
         }
     },
     despawned(b){
         this.despawnEffect.at(b.x, b.y, b.rotation());
         for(var i = 0; i < 12; i++){
-            Lightning.create(b.team, cor, 32, b.x , b.y , Mathf.random(360), Mathf.random(30,45));  
+            Lightning.create(b.team, cor, 32, b.x , b.y , Mathf.random(360), Mathf.random(25,40));  
             var len = Mathf.random(1, 7);
                 var a = b.rotation() + Mathf.range(this.fragCone/2) + this.fragAngle;
-                Lightning.create(b.team, liC, 32, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, 0.5 + Mathf.random(15));
+                Lightning.create(b.team, liC, 32, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, 0.5 + Mathf.random(14));
         }
     }
 })
 MS.speed = 1.5,
 MS.damage = 0,
 MS.knockback = 0.2,
-MS.splashDamageRadius = 40,
+MS.splashDamageRadius = 56,
 MS.splashDamage = 200,
 MS.width = 3,
 MS.height = 3,
@@ -65,11 +65,11 @@ MS.lifetime = 300;
 MS.status = StatusEffects.shocked;
 MS.despawnEffect = lib.newEffect(60, e => {
     Draw.color(liC, cor, e.fin());
-    Fill.circle(e.x, e.y, e.fout() * 50);
+    Fill.circle(e.x, e.y, e.fout() * 40);
     Lines.stroke(e.fout() * 4.5);
-    Lines.circle(e.x, e.y, e.fin() * 70);
+    Lines.circle(e.x, e.y, e.fin() * 60);
     Lines.stroke(e.fout() * 2.75);
-    Lines.circle(e.x, e.y, e.fin() * 40);
+    Lines.circle(e.x, e.y, e.fin() * 30);
     const d = new Floatc2({get(x, y){
         Lines.stroke(e.fout() * 2);
         Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fslope() * 12 + 1);
@@ -82,11 +82,11 @@ MS.despawnEffect = lib.newEffect(60, e => {
 });
 
 const storm = extendContent(PowerTurret, 'MAGNETIC-STORM', {
-    /*setStats(){
-        this.super$setStats();
-        
-        this.stats.remove(Stat.damage);
-        this.stats.add(Stat.damage, "250+/s");
+    /*load(){
+        this.super$load();
+        for(var i = 0; i < 6; i++){
+            plasmaRegions[i] = "btm-plasma-"+i;
+        }
     },*/
 });
 

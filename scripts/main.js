@@ -22,7 +22,7 @@ require("block/turret/sam");
 require("block/turret/RG");
 require("block/turret/prism");
 
-require("block/effect/he");
+require("block/effect/DCF");
 require("block/power/png");
 require("block/power/T2steam");
 require("block/power/T2ther");
@@ -81,3 +81,4 @@ const CoreSchematics = [
 })();
 
 require("other/override");
+require("block/effect/pl");

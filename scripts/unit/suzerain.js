@@ -53,7 +53,7 @@ suzerain.weapons.add(
         w.x = 9;
         w.y = -2;
         w.shootSound = Sounds.railgun;
-        w.reload = 30;
+        w.reload = 27;
         w.recoil = 4;
         return w;
     })()
@@ -69,7 +69,7 @@ suzerain.weapons.add(
         w.shotDelay = 3;
         w.bullet = Bullets.standardThoriumBig;
         w.rotate = false;
-        w.x = 22;
+        w.x = 23;
         w.y = 1;
         w.shootSound = Sounds.bang;
         w.reload = 24;
@@ -80,7 +80,7 @@ suzerain.weapons.add(
 
 suzerain.abilities.add(ability.TerritoryFieldAbility(150, 60 * 4, 200), ability.preventCheatingAbility(true));
 suzerain.abilities.add(new ShieldRegenFieldAbility(200, 800, 60 * 6, 200));
-suzerain.armor = 14;
+suzerain.armor = 16;
 suzerain.flying = false;
 suzerain.speed = 0.3;
 suzerain.hitSize = 26;

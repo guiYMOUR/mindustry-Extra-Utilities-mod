@@ -65,23 +65,26 @@ const lb = extend(BasicBulletType, {
             }
         }));
         Vars.indexer.allBuildings(b.x, b.y, range2, cons(other =>{
-            if(other.team != b.team &&(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation)){
-                if(other.block instanceof PowerNode){
-                    for(var i = 0; i < other.power.links.size; i++){
-                        var link = Vars.world.build(other.power.links.get(i));
-                        other.power.graph.removeList(link);
-                        other.power.graph.remove(link);
-                        link.power.graph.removeList(other);
-                        link.power.graph.remove(other);
-                        other.power.links.removeValue(link.pos());
-                        link.power.links.removeValue(other.pos());
-                    }
+            if(other.team != b.team){
+                if(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation){
+                    if(other.block instanceof PowerNode){
+                        for(var i = 0; i < other.power.links.size; i++){
+                            var link = Vars.world.build(other.power.links.get(i));
+                            other.power.graph.removeList(link);
+                            other.power.graph.remove(link);
+                            link.power.graph.removeList(other);
+                            link.power.graph.remove(other);
+                            other.power.links.removeValue(link.pos());
+                            link.power.links.removeValue(other.pos());
+                        }
                     //other.kill();
+                    } else {
+                        other.damage(this.splashDamage * 1.5);
+                        Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
+                        Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
+                    }
                 } else {
                     other.damage(this.splashDamage);
-                    other.timeScale = 0.0001;
-                    Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
-                    Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
                 }
             }
         }));

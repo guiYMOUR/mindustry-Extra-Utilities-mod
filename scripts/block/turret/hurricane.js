@@ -9,7 +9,7 @@ const hur = extend(BasicBulletType, {
             for(var i = 0; i < 10; i++){
                 var len = Mathf.random(1, 7);
                 var a = b.rotation() + Mathf.range(this.fragCone/2) + this.fragAngle;
-                Lightning.create(b.team, liC, 5, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, 0.5 + Mathf.random(15));
+                Lightning.create(b.team, liC, 5, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, Mathf.random(2, 10));
                 
             }
         }

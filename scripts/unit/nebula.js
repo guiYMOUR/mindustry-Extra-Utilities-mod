@@ -51,7 +51,7 @@ nebula.weapons.add(
 nebula.weapons.add(
     (() =>{
         const w = new PointDefenseWeapon("btm-nebula-defense");
-        w.x = 25;
+        w.x = 24;
         w.y = -8;
         w.reload = 8;
         w.targetInterval = 8;
@@ -71,7 +71,7 @@ nebula.weapons.add(
 nebula.weapons.add(
     (() =>{
         const w = new PointDefenseWeapon("btm-nebula-defense");
-        w.x = -25;
+        w.x = -24;
         w.y = -8;
         w.reload = 8;
         w.targetInterval = 8;
@@ -108,6 +108,7 @@ nebula.legLength = 22;
 nebula.legBaseOffset = 11;
 nebula.legMoveSpace = 1.5;
 nebula.legTrns = 0.58;
+nebula.landShake = 1.8;
 nebula.hovering = true;
 nebula.visualElevation = 0.2;
 nebula.allowLegStep = true;

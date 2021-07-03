@@ -3,7 +3,7 @@ const poison = extend(StatusEffect, "poison", {
         this.affinity(StatusEffects.melting, ((unit, time, newTime, result) => {
             unit.damagePierce(this.transitionDamage);
             Fx.burning.at(unit.x + Mathf.range(unit.bounds() / 2), unit.y + Mathf.range(unit.bounds() / 2));
-            result.set(poison, time);
+            //result.set(poison, time);
         }));
     },
     setStats(){

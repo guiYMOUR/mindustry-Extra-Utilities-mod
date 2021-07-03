@@ -3,7 +3,7 @@ const cor = Color.valueOf("84f491");
 const cure = extendContent(MendProjector , "cure", {
     drawPlace(x, y, rotation, valid) {
         this.super$drawPlace(x, y, rotation, valid);
-        Drawf.circles(x * Vars.tilesize, y * Vars.tilesize, unitRange, Pal.accent);
+        Drawf.circles(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange, Pal.accent);
     },
 });
 cure.buildType = prov(() => {

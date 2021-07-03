@@ -48,12 +48,20 @@ aws.insulated = true;
 
 aws.buildType = prov(() => {
     return new JavaAdapter(Wall.WallBuild, {
-        damage(damage){
+        /*damage(damage){
             this.super$damage(damage);
             if(Mathf.chance(absorbDamageChance)){
-                this.heal(damage * 2);
+                this.health = Math.min(this.health + damage * 2, this.maxHealth);
                 Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
             }
+        },*/
+        handleDamage(amount){
+            if(Mathf.chance(absorbDamageChance)){
+                //this.health = Math.min(this.health + damage * 2, this.maxHealth);
+                this.heal(amount * 2);
+                Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
+            }
+            return amount;
         },
     }, aws);
 });
@@ -83,12 +91,20 @@ awl.insulated = true;
 
 awl.buildType = prov(() => {
     return new JavaAdapter(Wall.WallBuild, {
-        damage(damage){
+        /*damage(damage){
             this.super$damage(damage);
             if(Mathf.chance(absorbDamageChance)){
-                this.heal(damage * 4);
+                this.health = Math.min(this.health + damage * 4, this.maxHealth);
                 Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
             }
+        },*/
+        handleDamage(amount){
+            if(Mathf.chance(absorbDamageChance)){
+                //this.health = Math.min(this.health + damage * 4, this.maxHealth);
+                this.heal(amount * 4);
+                Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
+            }
+            return amount;
         },
     }, awl);
 });
