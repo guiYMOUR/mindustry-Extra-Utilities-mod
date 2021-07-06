@@ -1,6 +1,24 @@
 //
 const lib = require("blib");
-const T3duo = extendContent(ItemTurret, "T3-duo", {});
+const { T2duo } = require('block/turret/T2duo');
+const T3duo = extendContent(ItemTurret, "T3-duo", {
+    canPlaceOn(tile, team){
+        return tile.block() == T2duo && tile.team() == team && lib.placeRule(this);
+    },
+    canReplace(other){
+        if(other.alwaysReplace) return true;
+        return (other != this || this.rotate) && this.group != BlockGroup.none && other.group == this.group &&
+            (this.size == other.size || (this.size >= other.size && ((this.subclass != null && this.subclass == other.subclass) || this.group.anyReplace)));
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
+});
 lib.setBuildingSimple(T3duo, ItemTurret.ItemTurretBuild, {
     shoot(type){
         this.super$shoot(type);
@@ -28,10 +46,12 @@ T3duo.ammo(
     Items.silicon, Bullets.standardHoming
 );
 T3duo.requirements = ItemStack.with(
-    Items.copper, 65,
+    Items.copper, 15,
     Items.graphite, 25
 );
 T3duo.buildVisibility = BuildVisibility.shown;
 T3duo.category = Category.turret;
+
+T3duo.replaceable = false;
 
 exports.T3duo = T3duo;

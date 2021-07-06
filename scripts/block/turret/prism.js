@@ -24,6 +24,17 @@ const prism = extendContent(PowerTurret, "prism", {
         this.stats.remove(Stat.ammo);
         this.stats.add(Stat.ammo, Core.bundle.format("bullet.damage", "540 (× 6shoots) / s"));
     },
+    canPlaceOn(tile, team){
+        return tile.block() == Blocks.meltdown && tile.team() == team && lib.placeRule(this);
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
 });
 prism.buildType = prov(() => {
     var bullet = [null, null, null, null, null, null];
@@ -188,11 +199,9 @@ prism.health = 200 * 4 * 4;
 prism.coolantMultiplier = 1;
 prism.consumes.add(new ConsumeCoolant(0.5));
 prism.requirements = ItemStack.with(
-    Items.lead, 500,
-    Items.silicon, 450,
+    Items.silicon, 125,
     Items.metaglass, 430,
     Items.thorium, 385,
-    Items.surgeAlloy, 220
 );
 prism.buildVisibility = BuildVisibility.shown;
 prism.category = Category.turret;

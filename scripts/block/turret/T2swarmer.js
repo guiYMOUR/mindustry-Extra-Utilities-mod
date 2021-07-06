@@ -255,11 +255,28 @@ f3.fragBullet = f3E;
 
 var bt = [f1, f2, f3];
 
-const swT2 = extendContent(ItemTurret, "T2-swarmer", {});
+const swT2 = extendContent(ItemTurret, "T2-swarmer", {
+    canPlaceOn(tile, team){
+        return tile.block() == Blocks.swarmer && tile.team() == team && lib.placeRule(this);
+    },
+    canReplace(other){
+        if(other.alwaysReplace) return true;
+        return (other != this || this.rotate) && this.group != BlockGroup.none && other.group == this.group &&
+            (this.size == other.size || (this.size >= other.size && ((this.subclass != null && this.subclass == other.subclass) || this.group.anyReplace)));
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
+});
 lib.setBuildingSimple(swT2, ItemTurret.ItemTurretBuild, {
     shoot(type){
         this.super$shoot(type);
-        if(Mathf.chance(0.1)){
+        if(Mathf.chance(0.04)){
             for(var i = 0; i < 2; i ++){
                 var a = Math.floor(Math.random() * (bt.length));
                 bt[a].create(this, this.team, this.x, this.y, this.rotation + 45 * (i - 0.5), 1 ,1);
@@ -283,14 +300,16 @@ swT2.ammo(
 );
 swT2.limitRange();
 swT2.requirements = ItemStack.with(
-    Items.graphite, 65,
-    Items.titanium, 50,
-    Items.plastanium, 55,
-    Items.silicon, 90,
+    Items.graphite, 30,
+    Items.titanium, 15,
+    Items.plastanium, 10,
+    Items.silicon, 60,
     Items.surgeAlloy, 50
 );
 swT2.buildVisibility = BuildVisibility.shown;
 swT2.category = Category.turret;
+
+swT2.replaceable = false;//勤俭持家
 
 exports.f = bt;
 exports.swT2 = swT2;

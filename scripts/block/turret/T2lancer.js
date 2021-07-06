@@ -39,7 +39,19 @@ laser.lightningColor = Pal.lancerLaser;
 laser.shootEffect = eff1;
 
 
-const T2lan = extendContent(PowerTurret, 'T2-lancer', {});
+const T2lan = extendContent(PowerTurret, 'T2-lancer', {
+    canPlaceOn(tile, team){
+        return tile.block() == Blocks.lancer && tile.team() == team && lib.placeRule(this);
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
+});
 
 lib.setBuildingSimple(T2lan, PowerTurret.PowerTurretBuild, {
     _shotCounter: 0,
@@ -78,13 +90,15 @@ T2lan.size = 2;
 T2lan.targetAir = false;
 T2lan.shootSound = Sounds.laser;
 T2lan.requirements = ItemStack.with(
-    Items.copper, 80,
-    Items.lead, 90,
-    Items.silicon, 65,
+    Items.copper, 20,
+    Items.lead, 30,
+    Items.silicon, 20,
     Items.graphite, 55,
     Items.titanium, 60
 );
 T2lan.buildVisibility = BuildVisibility.shown;
 T2lan.category = Category.turret;
+
+T2lan.replaceable = false;
 
 exports.T2lan = T2lan;

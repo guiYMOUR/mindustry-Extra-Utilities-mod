@@ -1,5 +1,6 @@
 //
 const lib = require("blib");
+const { T2fuse } = require('block/turret/T2fuse');
 //钛
 const fuse1 = extend(ShrapnelBulletType, {});
 fuse1.length = 120;
@@ -18,7 +19,24 @@ fuse2.ammoMultiplier = 3;
 fuse2.shootEffect = Fx.thoriumShoot;
 fuse2.smokeEffect = Fx.thoriumShoot;
 
-const T3fuse = extendContent(ItemTurret, "T3-fuse", {});
+const T3fuse = extendContent(ItemTurret, "T3-fuse", {
+    canPlaceOn(tile, team){
+        return tile.block() == T2fuse && tile.team() == team && lib.placeRule(this);
+    },
+    canReplace(other){
+        if(other.alwaysReplace) return true;
+        return (other != this || this.rotate) && this.group != BlockGroup.none && other.group == this.group &&
+            (this.size == other.size || (this.size >= other.size && ((this.subclass != null && this.subclass == other.subclass) || this.group.anyReplace)));
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
+});
 lib.setBuildingSimple(T3fuse, ItemTurret.ItemTurretBuild, {});
 T3fuse.reloadTime = 35;
 T3fuse.shootShake = 4;
@@ -38,14 +56,16 @@ T3fuse.ammo(
     Items.thorium, fuse2
 );
 T3fuse.requirements = ItemStack.with(
-    Items.copper, 350,
-    Items.graphite, 300,
-    Items.titanium, 260,
-    Items.thorium, 150,
+    Items.copper, 90,
+    Items.graphite, 50,
+    Items.titanium, 40,
+    Items.thorium, 30,
     Items.silicon, 150,
     Items.surgeAlloy, 100
 );
 T3fuse.buildVisibility = BuildVisibility.shown;
 T3fuse.category = Category.turret;
+
+T3fuse.replaceable = false;
 
 exports.T3fuse = T3fuse;

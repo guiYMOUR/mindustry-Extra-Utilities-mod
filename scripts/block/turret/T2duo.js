@@ -1,6 +1,18 @@
 //
 const lib = require("blib");
-const T2duo = extendContent(ItemTurret, "T2-duo", {});
+const T2duo = extendContent(ItemTurret, "T2-duo", {
+    canPlaceOn(tile, team){
+        return tile.block() == Blocks.duo && tile.team() == team && lib.placeRule(this);
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
+});
 lib.setBuildingSimple(T2duo, ItemTurret.ItemTurretBuild, {});
 T2duo.spread = 2;
 T2duo.shots = 3;
@@ -20,9 +32,11 @@ T2duo.ammo(
             Items.silicon, Bullets.standardHoming
 );
 T2duo.requirements = ItemStack.with(
-    Items.copper, 55
+    Items.copper, 20
 );
 T2duo.buildVisibility = BuildVisibility.shown;
 T2duo.category = Category.turret;
+
+T2duo.replaceable = false;
 
 exports.T2duo = T2duo;

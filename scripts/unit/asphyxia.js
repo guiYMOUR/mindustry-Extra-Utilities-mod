@@ -70,6 +70,7 @@ const lb = extend(BasicBulletType, {
                     if(other.block instanceof PowerNode){
                         for(var i = 0; i < other.power.links.size; i++){
                             var link = Vars.world.build(other.power.links.get(i));
+                            if(link == null || !other.block.linkValid(other, link)) return;
                             other.power.graph.removeList(link);
                             other.power.graph.remove(link);
                             link.power.graph.removeList(other);

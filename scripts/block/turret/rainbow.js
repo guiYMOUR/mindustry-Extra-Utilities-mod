@@ -81,9 +81,16 @@ const rainbow = extendContent(PowerTurret, "rainbow", {
     setStats() {
         this.super$setStats();
         this.stats.remove(Stat.ammo);
-        for(var i = 0; i < bullet.length; i++){
+        /*for(var i = 0; i < bullet.length; i++){
             this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, bullet[i])));
-        }
+        }*/
+        //The computer player says it will retreat.↑
+        //So I took it step by step.↓
+        this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, r2)));
+        this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, r1)));
+        this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, r5)));
+        this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, r4)));
+        this.stats.add(Stat.ammo, StatValues.ammo(OrderedMap.of(this, r3)));
     },
 });
 rainbow.buildType = prov(() => {

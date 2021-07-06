@@ -1,3 +1,5 @@
+exports.placeRule = (b) => Vars.player.team().core().items.has(b.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources;
+
 //function from abomb4's lib.js
 exports.loadSound = (() => {
     const cache = {};

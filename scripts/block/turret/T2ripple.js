@@ -8,9 +8,17 @@ const T2rip = extendContent(ItemTurret, "T2-ripple", {
         this.stats.remove(Stat.reload);
         this.stats.add(Stat.reload, 7.93, StatUnit.none);
     },
-    /*canPlaceOn(tile, team){
-        return tile.block() == Blocks.ripple && tile.team() == team;
-    },*/
+    canPlaceOn(tile, team){
+        return tile.block() == Blocks.ripple && tile.team() == team && lib.placeRule(this);
+    },
+    drawPlace(x, y, rotation, valid){
+        if(Vars.world.tile(x, y) == null) return;
+        this.drawPlaceText(Core.bundle.get(
+            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
+            "bar.btm-can" :
+            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
+        ), x, y, valid);
+    },
 });
 lib.setBuildingSimple(T2rip, ItemTurret.ItemTurretBuild, {
     //_tr: new Vec2(),
@@ -56,14 +64,14 @@ T2rip.ammo(
             Items.plastanium, Bullets.artilleryPlastic
 );
 T2rip.requirements = ItemStack.with(
-    Items.copper, 200,
-    Items.graphite, 150,
-    Items.titanium, 70,
+    Items.copper, 50,
+    Items.graphite, 30,
+    Items.titanium, 20,
     Items.silicon, 30
 );
 T2rip.buildVisibility = BuildVisibility.shown;
 T2rip.category = Category.turret;
 
-//T2rip.replaceable = false;
+T2rip.replaceable = false;
 
 exports.T2rip = T2rip;
