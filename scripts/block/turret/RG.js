@@ -26,7 +26,7 @@ RGT.height = 18;
 RGT.damage = 175;
 RGT.splashDamageRadius = 28;
 RGT.splashDamage = 125;
-RGT.buildingDamageMultiplier = 0.3;
+RGT.buildingDamageMultiplier = 0.2;
 RGT.lifetime = 60;
 RGT.speed = 8;
 RGT.reloadMultiplier = 1.2;
@@ -64,7 +64,7 @@ RGS.height = 18;
 RGS.damage = 285;
 RGS.splashDamageRadius = 36;
 RGS.splashDamage = 255;
-RGS.buildingDamageMultiplier = 0.25;
+RGS.buildingDamageMultiplier = 0.15;
 RGS.lifetime = 72;
 RGS.speed = 8;
 RGS.pierceCap = 2;
@@ -85,19 +85,7 @@ RGS.despawnEffect = lib.newEffect(20,(e) => {
 	Fill.circle(e.x, e.y, e.fout() * 14);
 });
 
-const RG = extendContent(ItemTurret, 'RG', {
-    canPlaceOn(tile, team){
-        return tile.block() == Blocks.foreshadow && tile.team() == team && lib.placeRule(this);
-    },
-    drawPlace(x, y, rotation, valid){
-        if(Vars.world.tile(x, y) == null) return;
-        this.drawPlaceText(Core.bundle.get(
-            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
-            "bar.btm-can" :
-            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
-        ), x, y, valid);
-    },
-});
+const RG = extendContent(ItemTurret, 'RG', {});
 
 lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
     updateShooting(){
@@ -183,16 +171,15 @@ RG.ammo(
 );
 RG.requirements = ItemStack.with(
     //Items.copper, 500,
-    Items.lead, 700,
-    Items.silicon, 100,
-    Items.graphite, 455,
-    Items.plastanium, 20,
-    Items.surgeAlloy, 50
+    Items.lead, 750,
+    Items.silicon, 650,
+    Items.graphite, 555,
+    Items.titanium, 325,
+    Items.plastanium, 220,
+    Items.surgeAlloy, 350
 );
 RG.consumes.powerCond(15, boolf(b => b.isActive()));
 RG.buildVisibility = BuildVisibility.shown;
 RG.category = Category.turret;
-
-RG.replaceable = false;
 
 exports.RG = RG;

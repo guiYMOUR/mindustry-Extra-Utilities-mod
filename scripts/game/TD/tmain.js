@@ -208,3 +208,8 @@ const TD2 = new SectorPreset("TD2", TD, 22);
 TD2.captureWave = 80;
 TD2.difficulty = 6;
 exports.TD2 = TD2;
+
+const TD3 = new SectorPreset("TD3", TD, 23);
+TD3.captureWave = 90;
+TD3.difficulty = 9;
+exports.TD3 = TD3;

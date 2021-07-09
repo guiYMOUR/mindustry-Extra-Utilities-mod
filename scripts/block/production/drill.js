@@ -107,19 +107,74 @@ drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <=
 drill.buildCostMultiplier = 0.6;
 exports.drill = drill;
 
+const shovel = extendContent(Drill, "shovel", {});
+shovel.buildType = prov(() => {
+    return new JavaAdapter(Drill.DrillBuild, {
+        draw(){
+            Draw.color(Color.valueOf("ffd06b"));
+            Draw.alpha(this.warmup);
+            Draw.rect(Core.atlas.find("btm-shovel-rotator"), this.x, this.y, this.timeDrilled * 6);
+            Draw.alpha(1);
+            Draw.color();
+            Draw.rect(Core.atlas.find("btm-shovel"), this.x, this.y);
+            Draw.color(Pal.surge);
+            Draw.alpha(this.warmup * 0.6 * (1 - 0.3 + Mathf.absin(Time.time, 3, 0.3)));
+            Draw.blend(Blending.additive);
+            Draw.rect(Core.atlas.find("btm-shovel-rim"), this.x, this.y);
+            Draw.blend();
+            Draw.color();
+        },
+    }, shovel);
+});
+shovel.requirements = ItemStack.with(
+    Items.metaglass, 45,
+    Items.silicon, 60,
+    Items.titanium, 75
+);
+shovel.buildVisibility = BuildVisibility.shown;
+shovel.category = Category.production;
+shovel.drillTime = 30;
+shovel.size = 3;
+//shovel.drawRim = true;
+shovel.hasPower = true;
+shovel.tier = 0;
+shovel.updateEffect = Fx.mineBig;
+shovel.updateEffectChance = 0.05;
+shovel.drillEffect = Fx.none;
+shovel.warmupSpeed = 10;
+shovel.hasLiquids = false;
+shovel.liquidBoostIntensity = 1;
+shovel.consumes.power(2);
+shovel.buildCostMultiplier = 0.8;
+exports.shovel = shovel;
+
+const boof = 2;
 const testDrill = extendContent(BeamDrill, "beam-drill", {
     drawPlace(x, y, rotation, valid){
         this.drawPotentialLinks(x, y);
         this.super$drawPlace(x, y, rotation, valid);
     },
+    setStats(){
+        this.super$setStats();
+        this.stats.add(Stat.boostEffect, boof, StatUnit.timesSpeed);
+    },
 });
-testDrill.drillTime = 180;
+testDrill.buildType = prov(() => {
+    return new JavaAdapter(BeamDrill.BeamDrillBuild, {
+        delta(){
+            var boost = this.liquids.total() > 1 ? boof : 1;
+            return Time.delta * this.timeScale * boost;
+        },
+    }, testDrill);
+});
+testDrill.drillTime = 150;
 testDrill.tier = 5;
 testDrill.size = 2;
 testDrill.range = 5;
 testDrill.hasPower = true;
 testDrill.drawArrow = true;
 testDrill.consumes.power(1);
+testDrill.consumes.liquid(Liquids.water, 0.03).boost();
 testDrill.requirements = ItemStack.with(
     Items.copper, 85,
     Items.graphite, 55,

@@ -112,11 +112,11 @@ storm.absorbLasers = true;
 
 storm.requirements = ItemStack.with(
     Items.lead, 780,
-    Items.silicon, 610,
+    Items.silicon, 600,
     //Items.titanium, 385,
     Items.plastanium, 350,
     Items.thorium, 350,
-    Items.surgeAlloy, 185
+    Items.surgeAlloy, 295
 );
 storm.buildVisibility = BuildVisibility.shown;
 storm.category = Category.turret;

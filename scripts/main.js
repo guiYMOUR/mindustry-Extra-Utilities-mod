@@ -1,5 +1,6 @@
 const lib = require("blib");
 
+//require("blib");
 require("block/turret/T2duo");
 require("block/turret/T3duo");
 require("block/turret/T2scatter");
@@ -64,6 +65,7 @@ require("game/challengeMap/cmain");
 require("game/TD/tmain");
 
 require("tree");
+require("other/override");
 
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
@@ -80,5 +82,4 @@ const CoreSchematics = [
     }
 })();
 
-require("other/override");
 require("block/effect/pl");

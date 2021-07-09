@@ -43,8 +43,8 @@ const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
-const { tiDrill, drill, testDrill, slagE, T2CU } = require('block/production/drill');
-const { core } = require('block/effect/core');
+const { tiDrill, drill, shovel, testDrill, slagE, T2CU } = require('block/production/drill');
+const { core, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
 const { cure } = require('block/effect/cure');
@@ -60,7 +60,7 @@ const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
 const { start, sporeArea } = require('game/challengeMap/cmain');
-const { TD1, TD2 } = require('game/TD/tmain');
+const { TD1, TD2, TD3} = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -155,6 +155,7 @@ lib.addToResearch(DCF, { parent: 'force-projector',
 });
 lib.addToResearch(tiDrill, { parent: 'pneumatic-drill', });
 lib.addToResearch(drill, { parent: 'blast-drill', });
+lib.addToResearch(shovel, { parent: 'pneumatic-drill', });
 lib.addToResearch(testDrill, { parent: 'laser-drill', });
 lib.addToResearch(slagE, { parent: 'water-extractor', });
 lib.addToResearch(T2CU, { parent: 'cultivator', });
@@ -163,6 +164,7 @@ lib.addToResearch(core, { parent: 'core-shard',
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
     )
 });
+lib.addToResearch(cargo, { parent: 'vault', });
 lib.addToResearch(und, { parent: 'unloader', });
 lib.addToResearch(lu, { parent: 'liquid-tank', });
 lib.addToResearch(cure, { parent: 'mend-projector', });
@@ -201,5 +203,11 @@ lib.addToResearch(TD2, {
     parent: TD1.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(TD1)
+    )
+});
+lib.addToResearch(TD3, {
+    parent: TD1.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD2)
     )
 });

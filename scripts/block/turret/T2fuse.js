@@ -18,19 +18,7 @@ fuse2.ammoMultiplier = 4;
 fuse2.shootEffect = Fx.thoriumShoot;
 fuse2.smokeEffect = Fx.thoriumShoot;
 
-const T2fuse = extendContent(ItemTurret, "T2-fuse", {
-    canPlaceOn(tile, team){
-        return tile.block() == Blocks.fuse && tile.team() == team && lib.placeRule(this);
-    },
-    drawPlace(x, y, rotation, valid){
-        if(Vars.world.tile(x, y) == null) return;
-        this.drawPlaceText(Core.bundle.get(
-            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
-            "bar.btm-can" :
-            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
-        ), x, y, valid);
-    },
-});
+const T2fuse = extendContent(ItemTurret, "T2-fuse", {});
 lib.setBuildingSimple(T2fuse, ItemTurret.ItemTurretBuild, {});
 T2fuse.reloadTime = 35;
 T2fuse.shootShake = 4;
@@ -50,14 +38,12 @@ T2fuse.ammo(
     Items.thorium, fuse2
 );
 T2fuse.requirements = ItemStack.with(
-    Items.copper, 35,
-    Items.graphite, 35,
+    Items.copper, 260,
+    Items.graphite, 260,
     Items.titanium, 225,
-    Items.thorium, 20
+    Items.thorium, 120
 );
 T2fuse.buildVisibility = BuildVisibility.shown;
 T2fuse.category = Category.turret;
-
-T2fuse.replaceable = false;
 
 exports.T2fuse = T2fuse;

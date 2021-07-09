@@ -1,31 +1,13 @@
 //
 const lib = require("blib");
 //const tr = new Vec2();
-const { T2rip } = require("block/turret/T2ripple");
-
 const T3rip = extendContent(ItemTurret, "T3-ripple", {
     setStats(){
-        this.super$setStats();
-        
-        this.stats.remove(Stat.reload);
-        this.stats.add(Stat.reload, 14.25, StatUnit.none);
-    },
-    canPlaceOn(tile, team){
-        return tile.block() == T2rip && tile.team() == team && lib.placeRule(this);
-    },
-    canReplace(other){
-        if(other.alwaysReplace) return true;
-        return (other != this || this.rotate) && this.group != BlockGroup.none && other.group == this.group &&
-            (this.size == other.size || (this.size >= other.size && ((this.subclass != null && this.subclass == other.subclass) || this.group.anyReplace)));
-    },
-    drawPlace(x, y, rotation, valid){
-        if(Vars.world.tile(x, y) == null) return;
-        this.drawPlaceText(Core.bundle.get(
-            this.canReplace(Vars.world.tile(x, y).block()) && this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team()) ?
-            "bar.btm-can" :
-            lib.placeRule(this) ? "bar.btm-cannot-block" : "bar.btm-cannot-item"
-        ), x, y, valid);
-    },
+		this.super$setStats();
+		
+		this.stats.remove(Stat.reload);
+		this.stats.add(Stat.reload, 14.25, StatUnit.none);
+	},
 });
 lib.setBuildingSimple(T3rip, ItemTurret.ItemTurretBuild, {
     _shotCounter: 0,
@@ -70,16 +52,14 @@ T3rip.ammo(
             Items.plastanium, Bullets.artilleryPlastic
 );
 T3rip.requirements = ItemStack.with(
-    Items.copper, 100,
-    Items.graphite, 50,
-    Items.titanium, 55,
+    Items.copper, 300,
+    Items.graphite, 220,
+    Items.titanium, 155,
     Items.thorium, 100,
-    Items.silicon, 20,
-    Items.surgeAlloy, 65
+    Items.silicon, 80,
+    Items.surgeAlloy, 66
 );
 T3rip.buildVisibility = BuildVisibility.shown;
 T3rip.category = Category.turret;
-
-T3rip.replaceable = false;
 
 exports.T3rip = T3rip;

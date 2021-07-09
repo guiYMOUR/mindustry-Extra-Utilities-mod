@@ -7,10 +7,10 @@ th2.health = 2400;
 th2.itemDuration = 300;
 th2.powerProduction = 2400/60;
 th2.consumes.item(Items.thorium);
-th2.heating = 0.025;
+th2.heating = 0.024;
 th2.explosionRadius = 50;
 th2.explosionDamage = 2000;
-th2.consumes.liquid(Liquids.cryofluid, 0.025 / 0.5)/*.update(false)*/;
+th2.consumes.liquid(Liquids.cryofluid, 0.024 / 0.5)/*.update(false)*/;
 th2.requirements = ItemStack.with(
     Items.lead, 400,
     Items.silicon, 300,

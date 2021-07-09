@@ -1,4 +1,7 @@
-exports.placeRule = (b) => Vars.player.team().core().items.has(b.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources;
+/*exports.placeRule = (b) => {
+    if(Vars.player == null) return false;
+    return Vars.player.team().core().items.has(b.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources;
+};*/
 
 //function from abomb4's lib.js
 exports.loadSound = (() => {
