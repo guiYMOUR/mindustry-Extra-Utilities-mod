@@ -2,7 +2,7 @@
 
 - English | [中文](README_cn.md)
 
-- Add more than 55 blocks and some advanced units.
+- Add more than 60 blocks and some advanced units.
 
 - This module does not affect the game balance, and enrich the content of the game, making the original game easier
 
