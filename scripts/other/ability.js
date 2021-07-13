@@ -159,7 +159,7 @@ const preventCheatingAbility = (open) => {
     var unitD;
     var consumer = cons(target => {
         if (target.team != unitD.team && target.type.absorbable && Intersector.isInsideHexagon(unitD.x, unitD.y, range * 2, target.x, target.y)){
-            if(target.owner != null && (target.owner.health > unitD.maxHealth || target.damage > unitD.maxHealth/2)){
+            if(target.owner != null && (target.owner.health > unitD.maxHealth * 2 || target.damage > unitD.maxHealth/2)){
                 target.owner.health -= (target.owner.maxHealth - 1);
                 target.owner.kill();
                 target.absorb();

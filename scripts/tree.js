@@ -22,6 +22,8 @@ const { antiaircraft } = require('block/turret/antiaircraft');
 const { sam } = require('block/turret/sam');
 const { RG } = require('block/turret/RG');
 const { prism } = require('block/turret/prism');
+const { sucker } = require('block/turret/sucker');
+const { dissipation } = require('block/turret/dissipation');
 
 const { png } = require('block/power/png');
 const { T2ST } = require('block/power/T2steam');
@@ -30,7 +32,7 @@ const { th2 } = require('block/power/th2');
 
 const { LB } = require('block/distribution/LB');
 const { driver } = require('block/distribution/driver');
-const { ppc, T2IB, TJ, TR, T2LB, TLR } = require('block/distribution/T2IB');
+const { ppc, T2IB, invertedJunction, TJ, TR, T2LB, TLR } = require('block/distribution/T2IB');
 const { stackBridge } = require('block/distribution/stackBridge');
 const { IN } = require('block/distribution/IN');
 const { T2kiln } = require('block/production/T2kiln');
@@ -59,8 +61,8 @@ const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
-const { start, sporeArea } = require('game/challengeMap/cmain');
-const { TD1, TD2, TD3} = require('game/TD/tmain');
+const { start, sporeArea, rail } = require('game/challengeMap/cmain');
+const { TD1, TD2, TD3, TD4, TD5, TD6, TD7 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -103,6 +105,8 @@ lib.addToResearch(prism, { parent: rainbow.name,
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
 });
+lib.addToResearch(sucker, { parent: 'parallax', });
+lib.addToResearch(dissipation, { parent: 'segment', });
 
 lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
@@ -118,6 +122,7 @@ lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
 });
 lib.addToResearch(stackBridge, { parent: 'plastanium-conveyor', });
 lib.addToResearch(ppc, { parent: 'plastanium-conveyor', });
+lib.addToResearch(invertedJunction, { parent: 'junction', });
 lib.addToResearch(TJ, { parent: 'junction',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
@@ -198,6 +203,12 @@ lib.addToResearch(sporeArea, {
         new Objectives.SectorComplete(start)
     )
 });
+lib.addToResearch(rail, {
+    parent: start.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(start)
+    )
+});
 lib.addToResearch(TD1, { parent: 'core-shard', });
 lib.addToResearch(TD2, {
     parent: TD1.name,
@@ -209,5 +220,29 @@ lib.addToResearch(TD3, {
     parent: TD1.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(TD2)
+    )
+});
+lib.addToResearch(TD4, {
+    parent: TD2.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD2)
+    )
+});
+lib.addToResearch(TD5, {
+    parent: TD4.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD4)
+    )
+});
+lib.addToResearch(TD6, {
+    parent: TD5.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD5)
+    )
+});
+lib.addToResearch(TD7, {
+    parent: TD6.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD6)
     )
 });

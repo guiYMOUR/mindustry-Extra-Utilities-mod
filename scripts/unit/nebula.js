@@ -90,13 +90,13 @@ nebula.weapons.add(
 );
 nebula.abilities.add(ability.MendFieldAbility(180, 210, 10));
 //nebula.abilities.add(ability.pointDefenseAbility(25, -8, 10, 320, 40, "nebula-defense"), ability.pointDefenseAbility(-25, -8, 10, 320, 40, "nebula-defense"));
-nebula.armor = 15;
+nebula.armor = 16;
 nebula.flying = false;
 nebula.speed = 0.25;
 nebula.hitSize = 35;
 nebula.rotateSpeed = 1.8;
 nebula.shake = 3;
-nebula.health = 54000;
+nebula.health = 59000;
 nebula.mineSpeed = 7;
 nebula.mineTier = 3;
 nebula.buildSpeed = 3;

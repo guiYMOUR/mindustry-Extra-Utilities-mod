@@ -212,7 +212,7 @@ T2CU.hasLiquids = true;
 T2CU.hasPower = true;
 T2CU.hasItems = true;
 T2CU.consumes.power(1.5);
-T2CU.consumes.liquid(Liquids.water, 0.34);
+T2CU.consumes.liquid(Liquids.water, 20/60);
 T2CU.drawer = new DrawCultivator();
 T2CU.requirements = ItemStack.with(
     Items.copper, 40,

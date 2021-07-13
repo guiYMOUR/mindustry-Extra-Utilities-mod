@@ -22,6 +22,8 @@ require("block/turret/antiaircraft");
 require("block/turret/sam");
 require("block/turret/RG");
 require("block/turret/prism");
+require("block/turret/sucker");
+require("block/turret/dissipation");
 
 require("block/effect/DCF");
 require("block/power/png");
@@ -65,10 +67,43 @@ require("game/challengeMap/cmain");
 require("game/TD/tmain");
 
 require("tree");
-require("other/override");
 
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
+
+require("other/override");
+
+Events.on(EventType.ClientLoadEvent, cons(e => {
+    var dialog = new BaseDialog("Extra Utilities 2.4.21");
+
+    dialog.buttons.defaults().size(210, 64);
+    dialog.buttons.button("@close", run(() => {
+        dialog.hide();
+    })).size(210, 64);
+
+    dialog.cont.pane((() => {
+
+        var table = new Table();
+        table.add(Core.bundle.format("mod.btm.displayName")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.row();
+        table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(180).width(620).pad(3);
+        table.row();
+        table.add(Core.bundle.format("block.btm-inverted-junction.name") + "\n" + Core.bundle.format("block.btm-inverted-junction.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.row();
+        table.image(Core.atlas.find("btm-inverted-junction", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.row();
+        table.add(Core.bundle.format("block.btm-sucker.name") + "\n" + Core.bundle.format("block.btm-sucker.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.row();
+        table.image(Core.atlas.find("btm-sucker", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.row();
+        table.add(Core.bundle.format("block.btm-dissipation.name") + "\n" + Core.bundle.format("block.btm-dissipation.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.row();
+        table.image(Core.atlas.find("btm-dissipation", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.row();
+        return table;
+    })()).grow().center().maxWidth(620);
+    dialog.show();
+}));
 
 const CoreSchematics = [
 "bXNjaAF4nCWLWwqAMBAD05eI/ngRD1XXBQt9yFpEb6+lCQRmIHAYNGz2iTHxU8WvVIQx73yRhLOGkgGDJTEdPgfycd0lxIiRSr75LYJxq6m/AIce9VdD6X9sY9OlafIDyOMXfA=="

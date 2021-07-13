@@ -1,3 +1,4 @@
+/*all the advanced transport equipment is here*/
 const lib = require("blib");
 
 const ppc = extendContent(StackConveyor, "ppc", {});
@@ -29,6 +30,67 @@ T2IB.bufferCapacity = 25;
 T2IB.buildVisibility = BuildVisibility.shown;
 T2IB.category = Category.distribution;
 exports.T2IB = T2IB;
+
+const capacity = 6;
+const invertedJunction = extendContent(Junction, "inverted-junction", {});
+invertedJunction.buildType = prov(() => {
+    var loc = 1;
+    return new JavaAdapter(Junction.JunctionBuild, {
+        updateTile(){
+            for(var i = 0; i < 4; i++){
+                var p = (i + loc) % 4;
+                if(this.buffer.indexes[i] > 0){
+                    if(this.buffer.indexes[i] > capacity) this.buffer.indexes[i] = capacity;
+                    var l = this.buffer.buffers[i][0];
+                    var time = BufferItem.time(l);
+                    if(Time.time >= time + this.block.speed / this.timeScale || Time.time < time){
+                        var item = Vars.content.item(BufferItem.item(l));
+                        var dest = this.nearby(p);
+                        if(item == null || dest == null || !dest.acceptItem(this, item) || dest.team != this.team){
+                            continue;
+                        }
+                        dest.handleItem(this, item);
+                        java.lang.System.arraycopy(this.buffer.buffers[i], 1, this.buffer.buffers[i], 0, this.buffer.indexes[i] - 1);
+                        this.buffer.indexes[i] --;
+                    }
+                }
+            }
+        },
+        acceptItem(source, item){
+            var relative = source.relativeTo(this.tile);
+
+            if(relative == -1 || !this.buffer.accepts(relative)) return false;
+            var to = this.nearby((relative + loc) % 4);
+            return to != null && to.team == this.team;
+        },
+        buildConfiguration(table) {
+            table.button(new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find("btm-flip", Core.atlas.find("clear"))), Styles.clearTransi, run(() => { this.switchf() })).size(36).tooltip("switch");
+        },
+        switchf(){
+            loc = loc == 1 ? 3 : 1;
+            this.deselect();
+        },
+        write(write) {
+            this.super$write(write);
+            write.f(loc);
+        },
+        read(read, revision) {
+            this.super$read(read, revision);
+            loc = read.f();
+        },
+    }, invertedJunction);
+});
+invertedJunction.requirements = ItemStack.with(
+    Items.copper, 2
+);
+invertedJunction.buildVisibility = BuildVisibility.shown;
+invertedJunction.category = Category.distribution;
+invertedJunction.speed = 26;
+invertedJunction.capacity = capacity;
+invertedJunction.health = 30;
+invertedJunction.configurable = true;
+invertedJunction.buildCostMultiplier = 5;
+exports.invertedJunction = invertedJunction;
 
 const TJ = extendContent(Junction, "TJ", {});
 TJ.requirements = ItemStack.with(

@@ -2,9 +2,20 @@
 const ability = require("other/ability");
 const planet = require("game/challengeMap/cmain");
 
-const walkFloor = extendContent(Floor, "walkFloor", {});
-walkFloor.size = 1;
+const walkFloor = extendContent(Floor, "walkFloor", {
+    /*drawBase(tile){
+        Draw.rect(Core.atlas.find("btm-walkFloor"), tile.worldx(), tile.worldy());
+        var floor = tile.overlay();
+        if(floor != Blocks.air && floor != this){
+            floor.drawBase(tile);
+        }
+    },*/
+});
+//walkFloor.envEnabled = Env.space;
+walkFloor.solid = false;
+walkFloor.hasShadow = false;
 walkFloor.variants = 0;
+//walkFloor.cacheLayer = CacheLayer.space;
 walkFloor.placeableOn = false;
 
 const basicDamage = new BombBulletType(0, 0, "clear");
@@ -213,3 +224,28 @@ const TD3 = new SectorPreset("TD3", TD, 23);
 TD3.captureWave = 90;
 TD3.difficulty = 9;
 exports.TD3 = TD3;
+
+const TD4 = new SectorPreset("TD4", TD, 10);
+TD4.captureWave = 102;
+TD4.difficulty = 9;
+exports.TD4 = TD4;
+
+const TD5 = new SectorPreset("TD5", TD, 20);
+TD5.captureWave = 102;
+TD5.difficulty = 9;
+exports.TD5 = TD5;
+
+const TD6 = new SectorPreset("TD6", TD, 17);
+TD6.captureWave = 102;
+TD6.difficulty = 9;
+exports.TD6 = TD6;
+
+const TD7 = new SectorPreset("TD7", TD, 18);
+TD7.captureWave = 102;
+TD7.difficulty = 10;
+exports.TD7 = TD7;
+
+const TD8 = new SectorPreset("TD8", TD, 7);
+TD8.captureWave = 1;
+TD8.difficulty = 9;
+exports.TD8 = TD8;
