@@ -32,7 +32,7 @@ const { th2 } = require('block/power/th2');
 
 const { LB } = require('block/distribution/LB');
 const { driver } = require('block/distribution/driver');
-const { ppc, T2IB, invertedJunction, TJ, TR, T2LB, TLR } = require('block/distribution/T2IB');
+const { ppc, T2IB, invertedJunction, TJ, TIJ, TR, T2LB, TLR } = require('block/distribution/T2IB');
 const { stackBridge } = require('block/distribution/stackBridge');
 const { IN } = require('block/distribution/IN');
 const { T2kiln } = require('block/production/T2kiln');
@@ -128,6 +128,7 @@ lib.addToResearch(TJ, { parent: 'junction',
         new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
+lib.addToResearch(TIJ, { parent: TIJ.name, });
 lib.addToResearch(TR, { parent: 'router',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),

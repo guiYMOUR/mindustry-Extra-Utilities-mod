@@ -46,6 +46,7 @@
 ### Drill
 - Titanium Drill
 - High Energy drill
+- shovel
 - Beam Drill updated in advance
 - Slag Extractor
 

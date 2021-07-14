@@ -86,11 +86,15 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         var table = new Table();
         table.add(Core.bundle.format("mod.btm.displayName")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(180).width(620).pad(3);
+        table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(190).width(620).pad(3);
         table.row();
         table.add(Core.bundle.format("block.btm-inverted-junction.name") + "\n" + Core.bundle.format("block.btm-inverted-junction.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-inverted-junction", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.row();
+        table.add(Core.bundle.format("block.btm-titanium-inverted-junction.name") + "\n" + Core.bundle.format("block.btm-titanium-inverted-junction.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.row();
+        table.image(Core.atlas.find("btm-titanium-inverted-junction", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
         table.add(Core.bundle.format("block.btm-sucker.name") + "\n" + Core.bundle.format("block.btm-sucker.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();

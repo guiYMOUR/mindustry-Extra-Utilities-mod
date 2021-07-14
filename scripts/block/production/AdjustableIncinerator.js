@@ -24,6 +24,27 @@ ai.buildType = prov(() => {
     var choice1;
     var choice2;
     return new JavaAdapter(Incinerator.IncineratorBuild, {
+        configured(player, value){
+            this.super$configured(player, value);
+            //I started with an array, but was unable to save it successfully.
+            switch(value){
+                case 1:
+                    cI = cL = true;
+                    break;
+                case 2:
+                    cI = cL = false;
+                    break;
+                case 3:
+                    cI = true;
+                    cL = false;
+                    break;
+                case 4:
+                    cI = false;
+                    cL = true;
+                    break;
+                //default :
+            }
+        },
         draw(){
             this.super$draw();
             choice1 = cI ? loadRegion("c1t") : loadRegion("c1f");
@@ -55,6 +76,19 @@ ai.buildType = prov(() => {
             table.button(new Packages.arc.scene.style.TextureRegionDrawable(choice1), Styles.clearTransi, run(() => { this.switchItem() })).size(40).tooltip("switch mode");
             table.button(new Packages.arc.scene.style.TextureRegionDrawable(choice2), Styles.clearTransi, run(() => { this.switchLiquid() })).size(40).tooltip("switch mode");
         },
+        config(){
+            if(cI == cL){
+                if(cI){
+                    return 1;
+                } else {
+                    return 2;
+                }
+            } else if(cI && !cL){
+                return 3;
+            } else if(!cI && cL){
+                return 4;
+            }
+        },
         write(write) {
             this.super$write(write);
             write.bool(cI);
@@ -67,6 +101,7 @@ ai.buildType = prov(() => {
         },
     }, ai);
 });
+ai.saveConfig = true;
 ai.requirements = ItemStack.with(
     Items.lead, 8,
     Items.graphite, 5,
