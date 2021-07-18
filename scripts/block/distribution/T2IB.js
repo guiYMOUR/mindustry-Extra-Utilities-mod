@@ -33,11 +33,15 @@ T2IB.category = Category.distribution;
 exports.T2IB = T2IB;
 
 const invertedJunction = extendContent(Junction, "inverted-junction", {});
+invertedJunction.config(java.lang.Integer, lib.cons2((tile, int) => {
+    tile.setLoc(int);
+}));
 build.InvertedJunctionBuild(invertedJunction, "junction");
 invertedJunction.requirements = ItemStack.with(
     Items.copper, 2
 );
-invertedJunction.saveConfig = true;
+//invertedJunction.saveConfig = true;
+invertedJunction.sync = true;
 invertedJunction.buildVisibility = BuildVisibility.shown;
 invertedJunction.category = Category.distribution;
 invertedJunction.speed = 26;
@@ -62,9 +66,16 @@ TJ.buildCostMultiplier = 5;
 exports.TJ = TJ;
 
 const TIJ = extendContent(Junction, "titanium-inverted-junction", {});
+TIJ.config(java.lang.Integer, lib.cons2((tile, int) => {
+    tile.setLoc(int);
+}));
+/*TIJ.configClear(cons((tile) => {
+    tile.setLoc(1);
+}));*/
 build.InvertedJunctionBuild(TIJ, "btm-TJ");
+TIJ.sync = true;
 TIJ.requirements = TJ.requirements;
-TIJ.saveConfig = true;
+//TIJ.saveConfig = true;
 TIJ.buildVisibility = BuildVisibility.shown;
 TIJ.category = Category.distribution;
 TIJ.speed = TJ.speed;

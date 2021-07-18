@@ -1,6 +1,7 @@
 /*
 *@author <guiY>
 */
+const lib = require("blib");
 
 const loadRegionCache = {};
 const loadRegion = (name) => {
@@ -18,12 +19,19 @@ const loadRegion = (name) => {
 };
 
 const ai = extendContent(Incinerator, "adjustable-incinerator", {});
+ai.config(java.lang.Integer, lib.cons2((tile, value) => {
+    tile.setRecord(value);
+}));
 ai.buildType = prov(() => {
     var cI = true;
     var cL = true;
     var choice1;
     var choice2;
+    var record = 1;
     return new JavaAdapter(Incinerator.IncineratorBuild, {
+        setRecord(v){
+            record = v;
+        },
         configured(player, value){
             this.super$configured(player, value);
             //I started with an array, but was unable to save it successfully.
@@ -63,6 +71,19 @@ ai.buildType = prov(() => {
                 cI = true;
             }
             this.deselect();
+            if(cI == cL){
+                if(cI){
+                    record = 1;
+                } else {
+                    record = 2;
+                }
+            } else if(cI && !cL){
+                record = 3;
+            } else if(!cI && cL){
+                record = 4;
+            }
+            this.configure(record);
+            
         },
         switchLiquid(){
             if(cL){
@@ -71,6 +92,18 @@ ai.buildType = prov(() => {
                 cL = true;
             }
             this.deselect();
+            if(cI == cL){
+                if(cI){
+                    record = 1;
+                } else {
+                    record = 2;
+                }
+            } else if(cI && !cL){
+                record = 3;
+            } else if(!cI && cL){
+                record = 4;
+            }
+            this.configure(record);
         },
         buildConfiguration(table) {
             table.button(new Packages.arc.scene.style.TextureRegionDrawable(choice1), Styles.clearTransi, run(() => { this.switchItem() })).size(40).tooltip("switch mode");
@@ -79,29 +112,33 @@ ai.buildType = prov(() => {
         config(){
             if(cI == cL){
                 if(cI){
-                    return 1;
+                    record = 1;
                 } else {
-                    return 2;
+                    record = 2;
                 }
             } else if(cI && !cL){
-                return 3;
+                record = 3;
             } else if(!cI && cL){
-                return 4;
+                record = 4;
             }
+            return record;
         },
         write(write) {
             this.super$write(write);
             write.bool(cI);
             write.bool(cL);
+            write.f(record);
         },
         read(read, revision) {
             this.super$read(read, revision);
             cI = read.bool();
             cL = read.bool();
+            record = read.f();
         },
     }, ai);
 });
-ai.saveConfig = true;
+//ai.saveConfig = false;
+ai.sync = true;
 ai.requirements = ItemStack.with(
     Items.lead, 8,
     Items.graphite, 5,

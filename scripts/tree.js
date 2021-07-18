@@ -22,6 +22,7 @@ const { antiaircraft } = require('block/turret/antiaircraft');
 const { sam } = require('block/turret/sam');
 const { RG } = require('block/turret/RG');
 const { prism } = require('block/turret/prism');
+const { blackhole } = require('block/turret/blackhole');
 const { sucker } = require('block/turret/sucker');
 const { dissipation } = require('block/turret/dissipation');
 
@@ -62,7 +63,7 @@ const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
 const { start, sporeArea, rail } = require('game/challengeMap/cmain');
-const { TD1, TD2, TD3, TD4, TD5, TD6, TD7 } = require('game/TD/tmain');
+const { TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -105,6 +106,7 @@ lib.addToResearch(prism, { parent: rainbow.name,
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
 });
+lib.addToResearch(blackhole, { parent: sam.name, });
 lib.addToResearch(sucker, { parent: 'parallax', });
 lib.addToResearch(dissipation, { parent: 'segment', });
 
@@ -128,7 +130,7 @@ lib.addToResearch(TJ, { parent: 'junction',
         new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
-lib.addToResearch(TIJ, { parent: TIJ.name, });
+lib.addToResearch(TIJ, { parent: TJ.name, });
 lib.addToResearch(TR, { parent: 'router',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
@@ -245,5 +247,11 @@ lib.addToResearch(TD7, {
     parent: TD6.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(TD6)
+    )
+});
+lib.addToResearch(TD8, {
+    parent: TD6.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD3)
     )
 });

@@ -2,6 +2,9 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
     block.buildType = prov(() => {
         var loc = 1;
         return new JavaAdapter(Junction.JunctionBuild, {
+            setLoc(v){
+                loc = v;
+            },
             configured(player, value){
                 this.super$configured(player, value);
                 loc = value;
@@ -43,10 +46,19 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
             switchf(){
                 loc = loc == 1 ? 3 : 1;
                 this.deselect();
+                this.configure(loc);
             },
             config(){
                 return loc;
             },
+            /*onConfigureTileTapped(other){
+                if(this == other){
+                    this.deselect();
+                    this.configure(1);
+                    return false;
+                }
+                return true;
+            },*/
             write(write) {
                 this.super$write(write);
                 write.f(loc);

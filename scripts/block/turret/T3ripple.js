@@ -56,8 +56,8 @@ T3rip.requirements = ItemStack.with(
     Items.graphite, 220,
     Items.titanium, 155,
     Items.thorium, 100,
-    Items.silicon, 80,
-    Items.surgeAlloy, 66
+    Items.silicon, 85,
+    Items.surgeAlloy, 80
 );
 T3rip.buildVisibility = BuildVisibility.shown;
 T3rip.category = Category.turret;

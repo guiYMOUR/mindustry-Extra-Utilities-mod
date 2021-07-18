@@ -212,17 +212,17 @@ TD.alwaysUnlocked = true;
 const TD1 = new SectorPreset("TD1", TD, 2);
 TD1.alwaysUnlocked = true;
 TD1.captureWave = 50;
-TD1.difficulty = 3;
+TD1.difficulty = 6;
 exports.TD1 = TD1;
 
 const TD2 = new SectorPreset("TD2", TD, 22);
-TD2.captureWave = 80;
-TD2.difficulty = 6;
+TD2.captureWave = 102;
+TD2.difficulty = 9;
 exports.TD2 = TD2;
 
 const TD3 = new SectorPreset("TD3", TD, 23);
-TD3.captureWave = 90;
-TD3.difficulty = 9;
+TD3.captureWave = 120;
+TD3.difficulty = 6;
 exports.TD3 = TD3;
 
 const TD4 = new SectorPreset("TD4", TD, 10);
@@ -246,6 +246,6 @@ TD7.difficulty = 10;
 exports.TD7 = TD7;
 
 const TD8 = new SectorPreset("TD8", TD, 7);
-TD8.captureWave = 1;
-TD8.difficulty = 9;
+TD8.captureWave = 41;
+TD8.difficulty = 6;
 exports.TD8 = TD8;
