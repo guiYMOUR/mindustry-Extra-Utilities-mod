@@ -37,7 +37,7 @@ tera.weapons.add(
 tera.armor = 17;
 tera.flying = true;
 tera.speed = 0.7;
-tera.hitSize = 66;
+tera.hitSize = 68;
 tera.accel = 0.04;
 tera.rotateSpeed = 1;
 tera.baseRotateSpeed = 20;

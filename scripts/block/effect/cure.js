@@ -63,7 +63,7 @@ cure.requirements = ItemStack.with(
 );
 cure.buildVisibility = BuildVisibility.shown;
 cure.category = Category.effect;
-cure.consumes.power(2.5);
+cure.consumes.power(3);
 cure.buildCostMultiplier = 0.9;
 cure.size = 3;
 cure.reload = 240;

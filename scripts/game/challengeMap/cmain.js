@@ -17,6 +17,18 @@ pyratiteBlock.variants = 0;
 pyratiteBlock.solid = true;
 pyratiteBlock.playerUnmineable = true;
 
+const dark = extendContent(Floor, "dark-panel", {});
+dark.variants = 0;
+const light = extendContent(Floor, "light-dark-panel", {});
+light.variants = 0;
+light.attributes.set(Attribute.heat, 0.25);
+light.attributes.set(Attribute.water, -0.1);
+Object.assign(light, {
+    emitLight : true,
+    lightRadius : 30,
+    lightColor : Color.valueOf("bf92f955"),
+});
+
 const challenge = new JavaAdapter(Planet, {
     load() {
         this.meshLoader = prov(() => new HexMesh(challenge, 6));

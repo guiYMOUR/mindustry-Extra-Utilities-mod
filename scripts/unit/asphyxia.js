@@ -65,7 +65,7 @@ const lb = extend(BasicBulletType, {
             }
         }));
         Vars.indexer.allBuildings(b.x, b.y, range2, cons(other =>{
-            if(other.team != b.team){
+            if(other.block != null && other.team != b.team){
                 if(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation){
                     if(other.block instanceof PowerNode){
                         for(var i = 0; i < other.power.links.size; i++){

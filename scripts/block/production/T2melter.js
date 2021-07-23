@@ -3,16 +3,14 @@ const lib = require("blib");
 const T2melter = extendContent(AttributeSmelter, "T2melter", {});
 lib.setBuildingSimple(T2melter, AttributeSmelter.AttributeSmelterBuild, {
     draw(){
-        Draw.rect(Core.atlas.find("btm-T2melter-b"),this.x,this.y);
+        this.super$draw();
         Draw.color(this.liquids.current().color);
         Draw.alpha(this.liquids.total() / this.block.liquidCapacity);
         Draw.rect(Core.atlas.find("btm-T2melter-liquid"), this.x, this.y);
         Draw.color();
-        Draw.rect(Core.atlas.find("btm-T2melter-s"),this.x,this.y,90 + this.totalProgress * 2.5)
-        Draw.rect(Core.atlas.find("btm-T2melter-top"),this.x,this.y)
     },
 });
-T2melter.outputLiquid = new LiquidStack(Liquids.slag, 5);
+T2melter.outputLiquid = new LiquidStack(Liquids.slag, 5.5);
 T2melter.craftTime = 10;
 T2melter.size = 2;
 T2melter.health = 200*2*2;
@@ -23,7 +21,7 @@ T2melter.consumes.item(Items.scrap, 2);
 T2melter.requirements = ItemStack.with(
     Items.lead, 60,
     Items.titanium, 40,
-    Items.silicon, 25,
+    Items.silicon, 30,
     Items.graphite, 60
 );
 T2melter.itemCapacity = 10;

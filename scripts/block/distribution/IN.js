@@ -3,32 +3,45 @@ const lib = require("blib");
 
 const IN = extendContent(ExtendingItemBridge, "i-node", {
     drawPlace(x, y, rotation, valid){
-		Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range + 1) * Vars.tilesize, Pal.accent);
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range + 1) * Vars.tilesize, Pal.accent);
     },
     linkValid(tile, other, checkDouble){
-		if(other == null || tile == null || other == tile) return false;
-		if(Math.pow(other.x - tile.x, 2) + Math.pow(other.y - tile.y, 2) > Math.pow(range + 0.5, 2)) return false;
-		return ((other.block() == tile.block() && tile.block() == this) || (!(tile.block() instanceof ItemBridge) && other.block() == this))
+        if(other == null || tile == null || other == tile) return false;
+        if(Math.pow(other.x - tile.x, 2) + Math.pow(other.y - tile.y, 2) > Math.pow(range + 0.5, 2)) return false;
+        return ((other.block() == tile.block() && tile.block() == this) || (!(tile.block() instanceof ItemBridge) && other.block() == this))
             && (other.team == tile.team || tile.block() != this)
             && (!checkDouble || other.build.link != tile.pos());
-	},
+    },
 });
 lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
-	drawConfigure() {
-		const sin = Mathf.absin(Time.time, 6, 1);
+    /*checkIncoming(){
+    
+    },*/
+    updateTile(){
+        const other = Vars.world.build(this.link);
+        if(other != null){
+            if(!this.block.linkValid(this.tile, other.tile)){
+                this.link = -1;
+                //return;
+            }
+        }
+        this.super$updateTile();
+    },
+    drawConfigure(){
+        const sin = Mathf.absin(Time.time, 6, 1);
 
-		Draw.color(Pal.accent);
-		Lines.stroke(1);
-		Drawf.circles(this.x, this.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
-		const other = Vars.world.build(this.link);
-		if(other != null){
-			Drawf.circles(other.x, other.y, (this.block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
-			Drawf.arrow(this.x, this.y, other.x, other.y, this.block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
-		}
-		Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
-	},
-	draw(){
-	    //this.super$draw();
+        Draw.color(Pal.accent);
+        Lines.stroke(1);
+        Drawf.circles(this.x, this.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
+        const other = Vars.world.build(this.link);
+        if(other != null){
+            Drawf.circles(other.x, other.y, (this.block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
+            Drawf.arrow(this.x, this.y, other.x, other.y, this.block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
+        }
+        Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
+    },
+    draw(){
+        //this.super$draw();
         Draw.rect(Core.atlas.find("btm-i-node"),this.x,this.y);
         Draw.z(Layer.power);
         var bridgeRegion = Core.atlas.find("btm-i-node-bridge");
@@ -55,18 +68,26 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
             other.y, false);
         Draw.reset();
     },
+    acceptItem(source, item){
+        if(this.team != source.team || !this.block.hasItems) return false;
+        //var other = Vars.world.tile(this.link);
+        return /*other != null && this.block.linkValid(this.tile, other) && */this.items.total() < this.block.itemCapacity;
+    },
+    checkDump(to){
+        return true;
+    },
 });
 IN.hasPower = true;
-IN.consumes.power(1.5);
+IN.consumes.power(1);
 IN.size = 1;
 IN.requirements = ItemStack.with(
-    Items.copper, 150,
+    Items.copper, 110,
     Items.lead, 80,
-    Items.silicon, 110,
+    Items.silicon, 100,
     Items.graphite, 85,
     Items.titanium, 45,
     Items.thorium, 40,
-    Items.phaseFabric, 25
+    Items.phaseFabric, 18
 );
 IN.buildVisibility = BuildVisibility.shown;
 IN.category = Category.distribution;

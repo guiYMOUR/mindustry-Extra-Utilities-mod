@@ -4,12 +4,15 @@ T2CM.buildType = prov(() => {
     function getTotalProgress(){ return totalProgress; }
     function setTotalProgress(v){ totalProgress = v; }
     return new JavaAdapter(AttributeSmelter.AttributeSmelterBuild, {
+        limitProgress(){
+            totalProgress = totalProgress < Math.PI ? totalProgress + this.delta() * 0.025 : 0;
+        },
         updateTile(){
             //this.super$updateTile();
             if(this.consValid()){
                 var cl = this.block.consumes.get(ConsumeType.liquid);
                 var use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
-                totalProgress += this.delta();
+                this.limitProgress();
                 this.progress += use / cl.amount;
                 this.liquids.add(this.block.outputLiquid.liquid, use);
                 if(this.progress >= this.block.craftTime){
@@ -29,7 +32,7 @@ T2CM.buildType = prov(() => {
             Draw.alpha(this.liquids.get(this.block.outputLiquid.liquid) / this.block.liquidCapacity);
             Draw.rect(Core.atlas.find("btm-T2-CM-liquid"), this.x, this.y);
             Draw.color();
-            Draw.rect(Core.atlas.find("btm-T2-CM-s"), this.x, this.y, 0 + totalProgress * 2);
+            Draw.rect(Core.atlas.find("btm-T2-CM-s"), this.x, this.y, 30 + 90 * Math.sin(totalProgress));
             Draw.rect(Core.atlas.find("btm-T2-CM-a"),this.x,this.y);
         },
         write(write) {

@@ -1,5 +1,6 @@
 //
 const lib = require('blib');
+const effect = require("block/turret/blackhole");
 
 const chargeTime = 40;
 const chargeDelay = 30;
@@ -13,7 +14,7 @@ const chargeEffect = lib.newEffect(20, (e) => {
 const chargeSound = Sounds.lasercharge2;
 const chargeBeginEffect = lib.newEffect(chargeTime * 1.2, e => {
         Draw.color(Pal.surge, Color.valueOf("e5f3fe"), e.fout());
-        Fill.circle(e.x, e.y, e.fout() * 18 + 6);
+        Fill.circle(e.x, e.y, e.fout() * 21 + 7);
 
         Draw.color();
         Fill.circle(e.x, e.y, e.fout() * 3);
@@ -21,11 +22,11 @@ const chargeBeginEffect = lib.newEffect(chargeTime * 1.2, e => {
 
 const RGT = extend(BasicBulletType, {});
 RGT.sprite = "btm-gt";
-RGT.width = 36;
-RGT.height = 18;
-RGT.damage = 175;
+RGT.width = 40;
+RGT.height = 20;
+RGT.damage = 180;
 RGT.splashDamageRadius = 28;
-RGT.splashDamage = 125;
+RGT.splashDamage = 130;
 RGT.buildingDamageMultiplier = 0.2;
 RGT.lifetime = 60;
 RGT.speed = 8;
@@ -59,11 +60,11 @@ const RGS = extend(BasicBulletType, {
     }
 });
 RGS.sprite = "btm-gs";
-RGS.width = 36;
-RGS.height = 18;
-RGS.damage = 285;
+RGS.width = 40;
+RGS.height = 20;
+RGS.damage = 290;
 RGS.splashDamageRadius = 36;
-RGS.splashDamage = 255;
+RGS.splashDamage = 260;
 RGS.buildingDamageMultiplier = 0.15;
 RGS.lifetime = 72;
 RGS.speed = 8;
@@ -102,6 +103,7 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
         var vec = new Vec2();
         vec.trns(this.rotation, this.block.size * 8 / 2);
         chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
+        effect.aimShoot(Pal.surge, this.block.range, 1.2, chargeTime + 5, 14).at(this.x + vec.x, this.y + vec.y, this.rotation);
         chargeSound.at(this.x + vec.x, this.y + vec.y, 1);
             
         for(var i = 0; i < chargeEffects; i++){
@@ -111,16 +113,17 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
                 chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
             });
         }
-        
-
+        this.charging = true;
         Time.run(chargeTime, () => {
             if(!this.isValid() || !this.hasAmmo()) return;
-            vec.trns(this.rotation, this.block.size * 8 / 2);
-            this.recoil = this.block.recoilAmount;
+            this.charging = false;
+            this.block.tr.trns(this.rotation, this.block.size * 8 / 2);
             this.heat = 1;
             for(var i = 0; i < this.block.shots; i++){
                 Time.run(8 * i, () => {
-                    this.peekAmmo().create(this, this.team, this.x + vec.x, this.y + vec.y, this.rotation, 1 ,1)
+                    //this.peekAmmo().create(this, this.team, this.x + vec.x, this.y + vec.y, this.rotation, 1 ,1);
+                    this.bullet(type, this.rotation);
+                    //this.recoil = this.block.recoilAmount;
                     this.effects();
                 })
             }
@@ -134,8 +137,8 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
     },
     effects(){
         var tr = new Vec2();
-        var fshootEffect = this.block.shootEffect == Fx.none ? this.peekAmmo().shootEffect : this.block.shootEffect;
-        var fsmokeEffect = this.block.smokeEffect == Fx.none ? this.peekAmmo().smokeEffect : this.block.smokeEffect;
+        var fshootEffect = this.block.shootEffect;
+        var fsmokeEffect = this.block.smokeEffect;
         tr.trns(this.rotation, this.block.size * 8 / 2);
         fshootEffect.at(this.x + tr.x, this.y + tr.y, this.rotation);
         fsmokeEffect.at(this.x + tr.x, this.y + tr.y, this.rotation);
@@ -151,17 +154,17 @@ RG.shootSound = Sounds.laser;
 RG.reloadTime = 60 * 5;
 RG.shots = 5;
 RG.inaccuracy = 0;
-RG.size = 4;
+RG.size = 5;
 RG.ammoUseEffect = Fx.none;
 RG.restitution = 0.05;
 RG.recoilAmount = 6;
 RG.shootShake = 5;
 RG.ammoPerShot = 2;
-RG.range = 8 * 59.5;
+RG.range = 8 * 60;
 RG.liquidCapacity = 12;
 RG.coolantMultiplier = 1.1;
 RG.coolantUsage = 0.45;
-RG.health = 180 * 4 * 4;
+RG.health = 180 * 5 * 5;
 //RG.canOverdrive = false;
 RG.shootEffect = Fx.none;
 RG.smokeEffect = Fx.none;
@@ -172,9 +175,9 @@ RG.ammo(
 RG.requirements = ItemStack.with(
     //Items.copper, 500,
     Items.lead, 750,
-    Items.silicon, 650,
-    Items.graphite, 555,
-    Items.titanium, 325,
+    Items.silicon, 700,
+    Items.graphite, 585,
+    Items.titanium, 345,
     Items.plastanium, 220,
     Items.surgeAlloy, 350
 );

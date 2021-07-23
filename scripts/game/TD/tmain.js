@@ -2,15 +2,7 @@
 const ability = require("other/ability");
 const planet = require("game/challengeMap/cmain");
 
-const walkFloor = extendContent(Floor, "walkFloor", {
-    /*drawBase(tile){
-        Draw.rect(Core.atlas.find("btm-walkFloor"), tile.worldx(), tile.worldy());
-        var floor = tile.overlay();
-        if(floor != Blocks.air && floor != this){
-            floor.drawBase(tile);
-        }
-    },*/
-});
+const walkFloor = extendContent(Floor, "walkFloor", {});
 //walkFloor.envEnabled = Env.space;
 walkFloor.solid = false;
 walkFloor.hasShadow = false;
@@ -209,9 +201,15 @@ TD.atmosphereRadOut = 0.3;
 TD.startSector = 2;
 TD.alwaysUnlocked = true;
 
+const pd = new SectorPreset("preparation", TD, 25);
+pd.alwaysUnlocked = true;
+pd.captureWave = 1;
+pd.difficulty = 1;
+exports.pd = pd;
+
 const TD1 = new SectorPreset("TD1", TD, 2);
-TD1.alwaysUnlocked = true;
-TD1.captureWave = 50;
+//TD1.alwaysUnlocked = true;
+TD1.captureWave = 40;
 TD1.difficulty = 6;
 exports.TD1 = TD1;
 
@@ -249,3 +247,13 @@ const TD8 = new SectorPreset("TD8", TD, 7);
 TD8.captureWave = 41;
 TD8.difficulty = 6;
 exports.TD8 = TD8;
+
+const TD9 = new SectorPreset("TD9Unfinished", TD, 11);
+TD9.captureWave = 1;
+TD9.difficulty = 6;
+exports.TD9 = TD9;
+
+const TD10 = new SectorPreset("TD10Unfinished", TD, 16);
+TD10.captureWave = 1;
+TD10.difficulty = 6;
+exports.TD10 = TD10;

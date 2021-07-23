@@ -2,13 +2,10 @@
 /*
 *readme <Why don't I use this limit? A: I'm lazy.>
 */
-const force = 24;
+const force = 20;
 const scaledForce = 8;
 const sucker = extendContent(TractorBeamTurret, "sucker", {});
 sucker.buildType = prov(() => {
-    //var targetMap = [null, null, null, null, null];new ObjectMap(shots);
-    //var target;
-    //var pos = 0;
     return new JavaAdapter(TractorBeamTurret.TractorBeamBuild, {
         updateTile(){
             this.super$updateTile();

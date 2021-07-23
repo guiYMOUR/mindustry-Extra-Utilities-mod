@@ -60,8 +60,9 @@ const driver = extendContent(LiquidExtendingBridge, "ld", {
         if(other == null || tile == null || other == tile) return false;
         if(Math.pow(other.x - tile.x, 2) + Math.pow(other.y - tile.y, 2) > Math.pow(range + 0.5, 2)) return false;
         return ((other.block() == tile.block() && tile.block() == this) || (!(tile.block() instanceof ItemBridge) && other.block() == this))
-            && (other.team == tile.team || tile.block() != this)
+            && (other.team() == tile.team() || tile.block() != this)
             && (!checkDouble || other.build.link != tile.pos());
+        //return (other.block() == tile.block() && tile.block() == this) && other.team() == tile.team() && other.block() instanceof ItemBridge;
     },
     findLink(x, y){ return null },
 });
@@ -98,7 +99,11 @@ driver.buildType = prov(() => {
                 reload = Mathf.clamp(reload - this.edelta() / reloadTime);
             }
             const other = Vars.world.build(this.link);
-            if(other != null && this.block.linkValid(this.tile, other.tile)){
+            if(other != null/* && this.block.linkValid(this.tile, other.tile)*/){
+                if(!this.block.linkValid(this.tile, other.tile)){
+                    this.link = -1;
+                    return;
+                }
                 if(this.liquids.get(this.liquids.current()) > minDistribute){
                 if(Vars.world.build(other.link) == null || other.liquids.get(other.liquids.current()) < minDistribute){
                     other.setR(Mathf.slerpDelta(other.getR(), other.angleTo(this), 0.125 * other.power.status));

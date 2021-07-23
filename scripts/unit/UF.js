@@ -15,8 +15,8 @@ const unitF = extendContent(Reconstructor, "imaginary-reconstructor", {});
 unitF.size = 11;
 unitF.consumes.power(30);
 unitF.consumes.items(ItemStack.with(
-    Items.silicon, 600,
-    Items.titanium, 600,
+    Items.silicon, 800,
+    Items.titanium, 650,
     Items.plastanium, 350,
     Items.surgeAlloy, 300,
     Items.phaseFabric, 200
@@ -34,8 +34,8 @@ unitF.upgrades.addAll(
     unitType(UnitTypes.omura, nihilo),
 );
 unitF.requirements = ItemStack.with(
-    Items.silicon, 1000,
-    Items.graphite, 650,
+    Items.silicon, 1200,
+    Items.graphite, 850,
     Items.titanium, 600,
     Items.thorium, 500,
     Items.plastanium, 600,

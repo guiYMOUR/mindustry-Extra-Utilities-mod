@@ -58,7 +58,7 @@ const hole = extend(BasicBulletType, {
 });
 hole.lifetime = 138;
 Object.assign(hole, {
-    knockback: -3.1,
+    knockback: -2.6,
     splashDamage: 0,
     splashDamageRadius: 160,
     shootEffect: Fx.none,
@@ -84,7 +84,7 @@ Object.assign(missile, {
     width : 25,
     height : 25,
     shrinkY : 0,
-    damage : 500,
+    damage : 386,
     splashDamage : 500,
     splashDamageRadius : 88,
     homingPower : 1,
@@ -186,20 +186,20 @@ blackhole.buildType = prov(() => {
             this.reload = 0;
         },
         hasAmmo(){
-            return this.items.total() > 2;
+            return this.items.get(Items.blastCompound) > 2 && this.items.get(Items.phaseFabric) > 0;
         },
     }, blackhole);
 });
 Object.assign(blackhole, {
-    health : 180*4*4,
-    powerUse : 10, 
+    health : 180*5*5,
+    powerUse : 17, 
     shootType : missile,
-    size : 4,
+    size : 5,
     reloadTime : 180,
-    range : 328,
+    range : 336,
     recoilAmount : 6,
     shootSound : lib.loadSound("launch2"),
-    coolantMultiplier : 0.9,
+    coolantMultiplier : 0.7,
     coolantUsage : 0.8,
     shootShake : 5,
 });
@@ -208,13 +208,16 @@ blackhole.chargeBeginEffect = new Effect(120, cons(e => {
     Fill.circle(e.x, e.y, e.fout() * 12 + 4);
     Draw.color();
 }));
-blackhole.consumes.items(ItemStack.with(Items.blastCompound, 3));
+blackhole.consumes.items(ItemStack.with(
+    Items.blastCompound, 3,
+    Items.phaseFabric, 1
+));
 blackhole.requirements = ItemStack.with(
     Items.graphite, 750,
     Items.silicon, 700,
     Items.thorium, 420,
-    Items.plastanium, 220,
-    Items.surgeAlloy, 315
+    Items.plastanium, 250,
+    Items.surgeAlloy, 330
 );
 blackhole.buildVisibility = BuildVisibility.shown;
 blackhole.category = Category.turret;

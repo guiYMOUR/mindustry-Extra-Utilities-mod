@@ -40,7 +40,7 @@ Object.assign(lighthouse, {
     brightness : 0.8,
     radius : range + 40,
     size : 2,
-    alwaysUnlocked : true,
+    //alwaysUnlocked : true,
 });
 lighthouse.consumes.power(0.2);
 lighthouse.requirements = ItemStack.with(
@@ -50,3 +50,4 @@ lighthouse.requirements = ItemStack.with(
 );
 lighthouse.buildVisibility = BuildVisibility.lightingOnly;
 lighthouse.category = Category.effect;
+exports.lighthouse = lighthouse;

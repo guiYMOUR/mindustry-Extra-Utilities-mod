@@ -25,6 +25,7 @@ const { prism } = require('block/turret/prism');
 const { blackhole } = require('block/turret/blackhole');
 const { sucker } = require('block/turret/sucker');
 const { dissipation } = require('block/turret/dissipation');
+const { heal } = require('block/turret/heal');
 
 const { png } = require('block/power/png');
 const { T2ST } = require('block/power/T2steam');
@@ -46,12 +47,13 @@ const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
-const { tiDrill, drill, shovel, testDrill, slagE, T2CU } = require('block/production/drill');
+const { tiDrill, drill, shovel, testDrill, slagE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
 const { core, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
 const { cure } = require('block/effect/cure');
 const { unitA } = require('block/effect/unitA');
+const { lighthouse } = require('block/effect/lighthouse');
 const { clWall, clWallL, aws, awl } = require('block/defence/wall');
 
 const { unitF } = require('unit/UF');
@@ -63,7 +65,7 @@ const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
 const { start, sporeArea, rail } = require('game/challengeMap/cmain');
-const { TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8 } = require('game/TD/tmain');
+const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -96,7 +98,7 @@ lib.addToResearch(sam, { parent: 'scatter',
         new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
-lib.addToResearch(RG, { parent: 'salvo',
+lib.addToResearch(RG, { parent: 'foreshadow',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
@@ -109,6 +111,7 @@ lib.addToResearch(prism, { parent: rainbow.name,
 lib.addToResearch(blackhole, { parent: sam.name, });
 lib.addToResearch(sucker, { parent: 'parallax', });
 lib.addToResearch(dissipation, { parent: 'segment', });
+lib.addToResearch(heal, { parent: 'mend-projector', objectives: Seq.with(new Objectives.Research(Blocks.repairTurret)) });
 
 lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
@@ -167,6 +170,8 @@ lib.addToResearch(shovel, { parent: 'pneumatic-drill', });
 lib.addToResearch(testDrill, { parent: 'laser-drill', });
 lib.addToResearch(slagE, { parent: 'water-extractor', });
 lib.addToResearch(T2CU, { parent: 'cultivator', });
+lib.addToResearch(blastOilExtractor, { parent: 'oil-extractor', });
+lib.addToResearch(dustExtractor, { parent: 'pneumatic-drill', });
 lib.addToResearch(core, { parent: 'core-shard',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
@@ -176,7 +181,8 @@ lib.addToResearch(cargo, { parent: 'vault', });
 lib.addToResearch(und, { parent: 'unloader', });
 lib.addToResearch(lu, { parent: 'liquid-tank', });
 lib.addToResearch(cure, { parent: 'mend-projector', });
-lib.addToResearch(unitA, { parent: 'repair-point', });
+lib.addToResearch(unitA, { parent: 'overdrive-projector', });
+lib.addToResearch(lighthouse, { parent: 'illuminator', });
 lib.addToResearch(clWall, { parent: 'copper-wall-large', });
 lib.addToResearch(clWallL, { parent: clWall.name, });
 lib.addToResearch(aws, { parent: 'surge-wall-large', });
@@ -212,7 +218,15 @@ lib.addToResearch(rail, {
         new Objectives.SectorComplete(start)
     )
 });
-lib.addToResearch(TD1, { parent: 'core-shard', });
+lib.addToResearch(pd, { 
+    parent: 'core-shard', 
+});
+lib.addToResearch(TD1, { 
+    parent: pd.name, 
+    objectives: Seq.with(
+        new Objectives.SectorComplete(pd)
+    )
+});
 lib.addToResearch(TD2, {
     parent: TD1.name,
     objectives: Seq.with(

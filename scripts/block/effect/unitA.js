@@ -111,7 +111,7 @@ unitA.requirements = ItemStack.with(
 );
 unitA.buildVisibility = BuildVisibility.shown;
 unitA.category = Category.effect;
-unitA.consumes.power(10);
+unitA.consumes.power(12);
 unitA.buildCostMultiplier = 0.85;
 unitA.useTime = 330;
 unitA.size = 3;
