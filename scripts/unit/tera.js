@@ -34,7 +34,7 @@ tera.weapons.add(
         return w;
     })()
 );
-tera.armor = 17;
+tera.armor = 20;
 tera.flying = true;
 tera.speed = 0.7;
 tera.hitSize = 68;
@@ -48,15 +48,16 @@ tera.mineSpeed = 7;
 tera.mineTier = 10;
 tera.buildSpeed = 8;
 tera.itemCapacity = 600;
-tera.engineOffset = 36;
-tera.engineSize = 10;
+tera.engineOffset = 23;
+tera.engineSize = 19;
 tera.rotateShooting = true;
 tera.drawShields = false;
 tera.lowAltitude = true;
-tera.payloadCapacity = (6 * 6) * Vars.tilePayload;
+tera.payloadCapacity = (6.4 * 6.4) * Vars.tilePayload;
 tera.ammoCapacity = 1500;
 tera.ammoResupplyAmount = 20;
-tera.ammoType = AmmoTypes.power;
+tera.ammoType = new PowerAmmoType(1500);
 tera.commandLimit = 8;
+
 
 exports.tera = tera;

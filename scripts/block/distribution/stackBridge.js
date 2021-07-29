@@ -24,29 +24,7 @@ stackBridge.buildType = prov(() => {
             if(this.getLastItem() == null || !this.items.has(this.getLastItem())){
                 this.setLastItem(this.items.first());
             }
-            this.time += this.cycleSpeed * this.delta();
-            this.time2 += (this.cycleSpeed - 1) * this.delta();
-
-            this.checkIncoming();
-
-            var other = Vars.world.tile(this.link);
-            if(!this.block.linkValid(this.tile, other)){
-                for(var i = 0; i < 3; i++){
-                    this.dumpAccumulate();
-                }
-                this.uptime = 0;
-            }else{
-                other.build.incoming.add(this.tile.pos());
-
-                if(this.consValid() && Mathf.zero(1 - this.efficiency())){
-                    this.uptime = Mathf.lerpDelta(this.uptime, 1, 0.04);
-                }else{
-                    this.uptime = Mathf.lerpDelta(this.uptime, 0, 0.02);
-                }
-
-                this.updateTransport(other.build);
-            }
-            //this.super$updateTile();
+            this.super$updateTile();
         },
         updateTransport(other){
             if(this.items.total() >= this.block.itemCapacity && other != null && other.items.total() < this.block.itemCapacity){
@@ -54,6 +32,11 @@ stackBridge.buildType = prov(() => {
                 other.items.add(lastItem, other.getAmount());
                 Fx.plasticburn.at(this);
                 this.items.clear();
+            }
+        },
+        doDump(){
+            for(var i = 0; i < 3; i++){
+                this.dumpAccumulate();
             }
         },
         draw(){

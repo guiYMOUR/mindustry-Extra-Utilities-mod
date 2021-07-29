@@ -29,7 +29,7 @@ const f1E = extend(BasicBulletType, {
                 laser.create(b, b.x, b.y, b.rotation(), 1, 1);
             }
         }
-        if(Math.abs(b.owner.x - b.x) <= 2 && Math.abs(b.owner.y - b.y) <= 2){
+        if(Math.abs(b.owner.x - b.x) <= 8 && Math.abs(b.owner.y - b.y) <= 8){
             Fx.absorb.at(b.x, b.y);
             b.remove();
         }
@@ -86,7 +86,7 @@ f1.homingPower = 1;
 f1.sprite = "btm-f1";
 f1.hitEffect = Fx.none;
 f1.knockback = 0.8;
-f1.lifetime = 450;
+f1.lifetime = 360;
 f1.width = 8;
 f1.height = 8;
 f1.pierce = true;
@@ -106,7 +106,7 @@ const f2E = extend(BasicBulletType, {
                 bomb.create(b, b.x, b.y, b.rotation(), 1, 1);
             }
         }
-        if(Math.abs(b.owner.x - b.x) <= 2 && Math.abs(b.owner.y - b.y) <= 2){
+        if(Math.abs(b.owner.x - b.x) <= 8 && Math.abs(b.owner.y - b.y) <= 8){
             Fx.absorb.at(b.x, b.y);
             b.remove();
         }
@@ -163,7 +163,7 @@ f2.homingPower = 1;
 f2.sprite = "btm-f3";
 f2.hitEffect = Fx.none;
 f2.knockback = 0.8;
-f2.lifetime = 420;
+f2.lifetime = 360;
 f2.width = 8;
 f2.height = 8;
 f2.pierce = true;
@@ -183,7 +183,7 @@ const f3E = extend(BasicBulletType, {
                 Bullets.standardThorium.create(b, b.x, b.y, b.rotation(), 1, 1);
             }
         }
-        if(Math.abs(b.owner.x - b.x) <= 2 && Math.abs(b.owner.y - b.y) <= 2){
+        if(Math.abs(b.owner.x - b.x) <= 8 && Math.abs(b.owner.y - b.y) <= 8){
             Fx.absorb.at(b.x, b.y);
             b.remove();
         }
@@ -241,7 +241,7 @@ f3.homingPower = 1;
 f3.sprite = "btm-f2";
 f3.hitEffect = Fx.none;
 f3.knockback = 0.8;
-f3.lifetime = 420;
+f3.lifetime = 360;
 f3.width = 8;
 f3.height = 8;
 f3.pierce = true;
@@ -259,7 +259,7 @@ const swT2 = extendContent(ItemTurret, "T2-swarmer", {});
 lib.setBuildingSimple(swT2, ItemTurret.ItemTurretBuild, {
     shoot(type){
         this.super$shoot(type);
-        if(Mathf.chance(0.1)){
+        if(Mathf.chance(0.06)){
             for(var i = 0; i < 2; i ++){
                 var a = Math.floor(Math.random() * (bt.length));
                 bt[a].create(this, this.team, this.x, this.y, this.rotation + 45 * (i - 0.5), 1 ,1);
@@ -271,10 +271,11 @@ swT2.reloadTime = 25;
 swT2.shots = 6;
 swT2.burstSpacing = 5;
 swT2.inaccuracy = 10;
-swT2.range = 27 *8;
-swT2.xRand = 6;
-swT2.size = 2;
-swT2.health = 500 * 2 * 2;
+swT2.range = 28 *8;
+swT2.xRand = 10;
+swT2.size = 3;
+swT2.health = 300 * 3 * 3;
+swT2.shootSound = Sounds.missile;
 swT2.ammo(
     Items.blastCompound, Bullets.missileExplosive,
             Items.pyratite, Bullets.missileIncendiary,

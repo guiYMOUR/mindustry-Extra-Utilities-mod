@@ -1,19 +1,19 @@
 //Will be added in version 1.4 or 1.3.30 onwards
 const graphiteBlock = extendContent(StaticWall, "graphite", {});
 graphiteBlock.itemDrop = Items.graphite;
-graphiteBlock.variants = 0;
+graphiteBlock.variants = 2;
 graphiteBlock.solid = true;
 graphiteBlock.playerUnmineable = true;
 
 const thoriumBlock = extendContent(StaticWall, "thorium", {});
 thoriumBlock.itemDrop = Items.thorium;
-thoriumBlock.variants = 0;
+thoriumBlock.variants = 2;
 thoriumBlock.solid = true;
 thoriumBlock.playerUnmineable = true;
 
 const pyratiteBlock = extendContent(StaticWall, "pyratite", {});
 pyratiteBlock.itemDrop = Items.pyratite;
-pyratiteBlock.variants = 0;
+pyratiteBlock.variants = 2;
 pyratiteBlock.solid = true;
 pyratiteBlock.playerUnmineable = true;
 
@@ -56,3 +56,22 @@ const rail = new SectorPreset("rail", challenge, 58);
 rail.captureWave = 129;
 rail.difficulty = 10;
 exports.rail = rail;
+
+const Darkness = new SectorPreset("Darkness", challenge, 67);
+Darkness.captureWave = 60;
+Darkness.difficulty = 10;
+exports.Darkness = Darkness;
+
+const Colosseum = new SectorPreset("Colosseum", challenge, 98);
+Colosseum.captureWave = 120;
+Colosseum.difficulty = 10;
+exports.Colosseum = Colosseum;
+
+const RadiationIslands = new SectorPreset("RadiationIslands", challenge, 79);
+RadiationIslands.captureWave = 56;
+RadiationIslands.difficulty = 10;
+exports.RadiationIslands = RadiationIslands;
+
+const GlacialValley = new SectorPreset("GlacialValley", challenge, 58);
+GlacialValley.difficulty = 10;
+exports.GlacialValley = GlacialValley;

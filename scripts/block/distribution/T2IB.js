@@ -2,8 +2,21 @@
 const lib = require("blib");
 const build = require("block/distribution/invertedJunction");
 
+const alloyDuct = new Duct("alloy-duct");
+alloyDuct.requirements = ItemStack.with(
+    Items.metaglass, 2,
+    Items.surgeAlloy, 1,
+    Items.phaseFabric, 1
+);
+alloyDuct.health = 240;
+alloyDuct.buildVisibility = BuildVisibility.shown;
+alloyDuct.category = Category.distribution;
+alloyDuct.speed = 2;
+alloyDuct.placeableLiquid = true;
+exports.alloyDuct = alloyDuct;
+
 const ppc = extendContent(StackConveyor, "ppc", {});
-ppc.health = 100;
+ppc.health = 150;
 ppc.speed = 8 / 60;
 ppc.itemCapacity = 10;
 ppc.requirements = ItemStack.with(
@@ -98,6 +111,19 @@ TR.health = 80;
 TR.buildCostMultiplier = 4;
 exports.TR = TR;
 
+const conduit = extendContent(ArmoredConduit, "conduit", {});
+conduit.requirements = ItemStack.with(
+    Items.metaglass, 2,
+    Items.phaseFabric, 1
+);
+conduit.health = 220;
+conduit.buildVisibility = BuildVisibility.shown;
+conduit.category = Category.liquid;
+conduit.liquidCapacity = 24;
+conduit.liquidPressure = 1.08;
+conduit.placeableLiquid = true;
+exports.conduit = conduit;
+
 const T2LB = extendContent(LiquidExtendingBridge , "TLB",{});
 T2LB.requirements = ItemStack.with(
     Items.graphite, 8,
@@ -112,7 +138,7 @@ T2LB.hasPower = false;
 exports.T2LB = T2LB;
 
 const TLR = extendContent(LiquidRouter, "TLR", {});
-TLR.liquidCapacity = 20;
+TLR.liquidCapacity = 30;
 TLR.liquidPressure = 1.1;
 TLR.health = 90;
 TLR.requirements = ItemStack.with(

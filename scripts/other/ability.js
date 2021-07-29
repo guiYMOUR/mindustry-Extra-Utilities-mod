@@ -71,9 +71,9 @@ const MendFieldAbility = (range, reload, healP) => {
             Vars.indexer.eachBlock(unit, range, boolf(other => other.damaged()), cons(other => {
                 timer += Time.delta;
                 if(timer >= reload){
-                    timer = 0;
                     other.heal((healP/100) * other.maxHealth);
                     Fx.healBlockFull.at(other.x, other.y, other.block.size, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
+                    timer = 0;
                 }
             }));
         },

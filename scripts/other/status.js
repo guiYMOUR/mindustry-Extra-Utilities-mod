@@ -25,10 +25,12 @@ const speedUp = extend(StatusEffect, "speedUp", {
         this.opposite(speedDown);
     },*/
 });
+speedUp.color = Color.valueOf("ea8878");
 speedUp.buildSpeedMultiplier = 2;
 speedUp.speedMultiplier = 1.3;
 speedUp.reloadMultiplier = 2;
-speedUp.effect = Fx.none;
+speedUp.effectChance = 0.07;
+speedUp.effect = Fx.overclocked;
 exports.speedUp = speedUp;
 
 const speedDown = extend(StatusEffect, "speedDown", {
@@ -36,9 +38,11 @@ const speedDown = extend(StatusEffect, "speedDown", {
         this.opposite(speedUp);
     },*/
 });
+speedDown.color = Color.valueOf("8b9bb4");
 speedDown.speedMultiplier = 0.4;
 speedDown.reloadMultiplier = 0.5;
-speedDown.effect = Fx.none;
+speedDown.effectChance = 0.07;
+speedDown.effect = Fx.overclocked;
 exports.speedDown = speedDown;
 
 const weakness = extend(StatusEffect, "weakness", {});

@@ -1,4 +1,5 @@
 var ability = require("other/ability");
+const bullets = require("other/bullets");
 
 var spawnTime = 60 * 14;
 
@@ -68,7 +69,7 @@ nihilo.weapons.add(
         const w = new Weapon("btm-nihilo-m");
         w.shake = 3;
         w.shootY = 2;
-        w.bullet = Bullets.missileExplosive;
+        w.bullet = Bullets.missileSurge;
         w.rotate = true;
         w.rotateSpeed = 4;
         w.x = 24;
@@ -94,7 +95,7 @@ nihilo.weapons.add(
         w.shots = 4;
         w.inaccuracy = 12;
         w.velocityRnd = 0.2;
-        w.bullet = Bullets.artilleryPlastic;
+        w.bullet = bullets.artillerySurge;
         w.rotate = true;
         w.rotateSpeed = 4;
         w.x = 14.5;
@@ -152,7 +153,7 @@ nihilo.abilities.add(ability.TerritoryFieldAbility(120, 60 * 5, 220));
 nihilo.abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 6, 200));
 //nihilo.abilities.add(ability.pointDefenseAbility(0, -17, 8, 300, 40, "nihilo-defense"));
 nihilo.abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5, -35.5), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5, -35.5), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
-nihilo.armor = 17;
+nihilo.armor = 18;
 nihilo.drag = 0.2;
 nihilo.flying = false;
 nihilo.speed = 0.6;
@@ -163,6 +164,6 @@ nihilo.rotateShooting = false;
 //nihilo.canDrown = false;
 nihilo.health = 61000;
 nihilo.itemCapacity = 350;
-nihilo.rotateShooting = true;
 nihilo.commandLimit = 8;
+nihilo.ammoType = new ItemAmmoType(Items.surgeAlloy);
 exports.nihilo = nihilo;

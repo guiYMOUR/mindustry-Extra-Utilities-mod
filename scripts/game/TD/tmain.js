@@ -248,12 +248,17 @@ TD8.captureWave = 41;
 TD8.difficulty = 6;
 exports.TD8 = TD8;
 
-const TD9 = new SectorPreset("TD9Unfinished", TD, 11);
-TD9.captureWave = 1;
+const TD9 = new SectorPreset("TD9", TD, 11);
+TD9.captureWave = 51;
 TD9.difficulty = 6;
 exports.TD9 = TD9;
 
-const TD10 = new SectorPreset("TD10Unfinished", TD, 16);
-TD10.captureWave = 1;
-TD10.difficulty = 6;
+const TD10 = new SectorPreset("TD10", TD, 16);
+TD10.captureWave = 100;
+TD10.difficulty = 10;
 exports.TD10 = TD10;
+
+const TD11 = new SectorPreset("TD11Unfinished", TD, 0);
+TD11.captureWave = 1;
+TD11.difficulty = 6;
+exports.TD11 = TD11;

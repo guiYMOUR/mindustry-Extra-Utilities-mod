@@ -27,14 +27,14 @@ const { sucker } = require('block/turret/sucker');
 const { dissipation } = require('block/turret/dissipation');
 const { heal } = require('block/turret/heal');
 
-const { png } = require('block/power/png');
+const { arNode, png } = require('block/power/png');
 const { T2ST } = require('block/power/T2steam');
 const { T2ther } = require('block/power/T2ther');
 const { th2 } = require('block/power/th2');
 
 const { LB } = require('block/distribution/LB');
 const { driver } = require('block/distribution/driver');
-const { ppc, T2IB, invertedJunction, TJ, TIJ, TR, T2LB, TLR } = require('block/distribution/T2IB');
+const { alloyDuct, ppc, T2IB, invertedJunction, TJ, TIJ, TR, T2LB, TLR, conduit } = require('block/distribution/T2IB');
 const { stackBridge } = require('block/distribution/stackBridge');
 const { IN } = require('block/distribution/IN');
 const { T2kiln } = require('block/production/T2kiln');
@@ -51,6 +51,7 @@ const { tiDrill, drill, shovel, testDrill, slagE, T2CU, blastOilExtractor, dustE
 const { core, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
+const { speeder } = require('block/effect/speeder');
 const { cure } = require('block/effect/cure');
 const { unitA } = require('block/effect/unitA');
 const { lighthouse } = require('block/effect/lighthouse');
@@ -64,8 +65,8 @@ const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
-const { start, sporeArea, rail } = require('game/challengeMap/cmain');
-const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8 } = require('game/TD/tmain');
+const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
+const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -113,11 +114,13 @@ lib.addToResearch(sucker, { parent: 'parallax', });
 lib.addToResearch(dissipation, { parent: 'segment', });
 lib.addToResearch(heal, { parent: 'mend-projector', objectives: Seq.with(new Objectives.Research(Blocks.repairTurret)) });
 
+lib.addToResearch(arNode, { parent: 'power-node', });
 lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
 lib.addToResearch(T2ther, { parent: 'thermal-generator', });
 lib.addToResearch(th2, { parent: 'thorium-reactor', });
 
+lib.addToResearch(conduit, { parent: 'plated-conduit', });
 lib.addToResearch(LB, { parent: 'phase-conduit', });
 lib.addToResearch(driver, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
@@ -125,6 +128,7 @@ lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
         new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
+lib.addToResearch(alloyDuct, { parent: 'armored-conveyor', });
 lib.addToResearch(stackBridge, { parent: 'plastanium-conveyor', });
 lib.addToResearch(ppc, { parent: 'plastanium-conveyor', });
 lib.addToResearch(invertedJunction, { parent: 'junction', });
@@ -180,6 +184,8 @@ lib.addToResearch(core, { parent: 'core-shard',
 lib.addToResearch(cargo, { parent: 'vault', });
 lib.addToResearch(und, { parent: 'unloader', });
 lib.addToResearch(lu, { parent: 'liquid-tank', });
+lib.addToResearch(speeder, { parent: 'force-projector', });
+//lib.addToResearch(Blocks.overdriveProjector, { parent: speeder.name, });
 lib.addToResearch(cure, { parent: 'mend-projector', });
 lib.addToResearch(unitA, { parent: 'overdrive-projector', });
 lib.addToResearch(lighthouse, { parent: 'illuminator', });
@@ -218,6 +224,31 @@ lib.addToResearch(rail, {
         new Objectives.SectorComplete(start)
     )
 });
+lib.addToResearch(RadiationIslands, {
+    parent: start.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(start)
+    )
+});
+lib.addToResearch(Darkness, {
+    parent: start.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(start)
+    )
+});
+lib.addToResearch(Colosseum, {
+    parent: Darkness.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(Darkness)
+    )
+});
+lib.addToResearch(GlacialValley, {
+    parent: sporeArea.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(sporeArea)
+    )
+});
+
 lib.addToResearch(pd, { 
     parent: 'core-shard', 
 });
@@ -267,5 +298,17 @@ lib.addToResearch(TD8, {
     parent: TD6.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(TD3)
+    )
+});
+lib.addToResearch(TD9, {
+    parent: TD8.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD8)
+    )
+});
+lib.addToResearch(TD10, {
+    parent: TD7.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD7)
     )
 });

@@ -50,6 +50,7 @@ require("block/distribution/driver");
 require("block/effect/core");
 require("block/effect/und");
 require("block/effect/LiquidUnloader");
+require("block/effect/speeder");
 require("block/effect/cure");
 require("block/effect/unitA");
 require("block/effect/lighthouse");
@@ -105,6 +106,7 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-dissipation", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();*/
+        table.add(Core.bundle.format("mod.btm.mapMaker")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         return table;
     })()).grow().center().maxWidth(620);
     dialog.show();

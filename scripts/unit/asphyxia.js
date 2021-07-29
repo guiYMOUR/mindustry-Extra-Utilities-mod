@@ -42,10 +42,11 @@ sapper.knockback = -1;
 const lb = extend(BasicBulletType, {
     update(b){
         this.super$update(b);
+        const findAngle = 30;
         var range = this.homingRange;
         if(b.timer.get(1, 5)){
             Units.nearbyEnemies(b.team, b.x - range, b.y - range, range * 2, range * 2, cons(other => {
-                if(other.within(b, range)){
+                if(other.within(b, range) && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)){
                     other.damage(this.damage/12);
                     other.apply(this.status, 5);
                     Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
@@ -132,7 +133,7 @@ asphyxia.weapons.add(
     (() =>{
         const w = new Weapon("btm-asphyxia-l");
         w.x = 14;
-        w.y = -6;
+        w.y = -5;
         w.reload = 60;
         w.rotate = true;
         w.bullet = lb;
@@ -154,7 +155,7 @@ asphyxia.weapons.add(
         w.rotate = true;
         w.rotateSpeed = 3;
         w.x = 0;
-        w.y = -10;
+        w.y = -12;
         w.chargeSound = Sounds.lasercharge2;
         w.firstShotDelay = 49;
         w.recoil = 3;
@@ -164,8 +165,8 @@ asphyxia.weapons.add(
 asphyxia.weapons.add(
     (() =>{
         const w = new Weapon("btm-asphyxia-f");
-        w.x = 10;
-        w.y = 11;
+        w.x = 9;
+        w.y = 8;
         w.reload = 9;
         w.rotate = true;
         w.bullet = sapper;
@@ -175,9 +176,9 @@ asphyxia.weapons.add(
 );
 asphyxia.weapons.add(
     (() =>{
-        const w = new Weapon("btm-asphyxia-b");
-        w.x = 15;
-        w.y = 7;
+        const w = new Weapon("btm-asphyxia-f");
+        w.x = 14;
+        w.y = 6;
         w.reload = 14;
         w.rotate = true;
         w.bullet = sapper;
@@ -214,7 +215,7 @@ asphyxia.visualElevation = 0.95;
 asphyxia.allowLegStep = true;
 asphyxia.groundLayer = Layer.legUnit;
 asphyxia.commandLimit = 8;
-asphyxia.ammoType = AmmoTypes.powerHigh;
+asphyxia.ammoType = new PowerAmmoType(2300);
 asphyxia.legSplashDamage = 90;
 asphyxia.legSplashRange = 60;
 exports.asphyxia = asphyxia;

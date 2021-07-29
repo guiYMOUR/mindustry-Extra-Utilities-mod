@@ -1,5 +1,28 @@
 var ability = require("other/ability");
 
+function casingContinue(lifetime, shots){
+    return new Effect(lifetime, cons(e => {
+        Draw.z(Layer.bullet);
+        for(var a = 0; a < shots; a++){
+            var time = lifetime / shots;
+            e.scaled(time * a, cons(b => {
+                Draw.color(Pal.lightOrange, Pal.lightishGray, Pal.lightishGray, b.fin());
+                Draw.alpha(b.fout(0.5));
+                var rot = Math.abs(e.rotation) + 90;
+                var i = -Mathf.sign(e.rotation);
+                var len = (4 + b.finpow() * 9) * i;
+                var lr = rot + Mathf.randomSeedRange(e.id + i + 6, 20 * b.fin()) * i;
+                Draw.rect(Core.atlas.find("casing"),
+                e.x + Angles.trnsx(lr, len) + Mathf.randomSeedRange(e.id + i + 7, 3 * b.fin()),
+                e.y + Angles.trnsy(lr, len) + Mathf.randomSeedRange(e.id + i + 8, 3 * b.fin()),
+                3, 6,
+                rot + e.fin() * 50 * i
+                );
+            }));
+        }
+    }));
+}
+
 const spark = extend(ShrapnelBulletType, {
     draw(b){
         var realLength = b.fdata;
@@ -50,7 +73,7 @@ suzerain.weapons.add(
         w.bullet = spark;
         w.rotate = true;
         w.rotateSpeed = 2;
-        w.x = 9;
+        w.x = 15;
         w.y = -2;
         w.shootSound = Sounds.railgun;
         w.reload = 27;
@@ -61,15 +84,17 @@ suzerain.weapons.add(
 suzerain.weapons.add(
     (() => {
         const w = new Weapon("btm-suzerain-weapon");
+        const shots = 5;
         w.shake = 4;
         w.shootY = 11;
         w.top = false;
-        w.shots = 5;
+        w.shots = shots;
         w.inaccuracy = 1;
         w.shotDelay = 3;
+        w.ejectEffect = casingContinue(90, shots);
         w.bullet = Bullets.standardThoriumBig;
         w.rotate = false;
-        w.x = 23;
+        w.x = 30;
         w.y = 1;
         w.shootSound = Sounds.bang;
         w.reload = 24;
@@ -78,12 +103,12 @@ suzerain.weapons.add(
     })()
 );
 
-suzerain.abilities.add(ability.TerritoryFieldAbility(150, 60 * 4, 200), ability.preventCheatingAbility(true));
+suzerain.abilities.add(ability.TerritoryFieldAbility(150, 60 * 4, 216), ability.preventCheatingAbility(true));
 suzerain.abilities.add(new ShieldRegenFieldAbility(200, 800, 60 * 6, 200));
 suzerain.armor = 16;
 suzerain.flying = false;
 suzerain.speed = 0.3;
-suzerain.hitSize = 26;
+suzerain.hitSize = 31;
 suzerain.rotateSpeed = 1.8;
 suzerain.canDrown = false;
 suzerain.mechStepParticles = true;
@@ -94,4 +119,5 @@ suzerain.health = 62000;
 suzerain.itemCapacity = 300;
 suzerain.rotateShooting = true;
 suzerain.commandLimit = 8;
+suzerain.ammoType = new ItemAmmoType(Items.thorium);
 exports.suzerain = suzerain;

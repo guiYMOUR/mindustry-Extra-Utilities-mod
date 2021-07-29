@@ -1,4 +1,19 @@
 const lib = require("blib");
+
+const arNode = extendContent(PowerNode, "ar-node", {});
+arNode.maxNodes = 8;
+arNode.laserRange = 8.5;
+arNode.health = 130;
+arNode.placeableLiquid = true;
+arNode.requirements = ItemStack.with(
+    Items.lead, 5,
+    Items.metaglass, 2,
+    Items.plastanium, 1
+);
+arNode.buildVisibility = BuildVisibility.shown;
+arNode.category = Category.power;
+exports.arNode = arNode;
+
 const emptyLightColor = Color.valueOf("f8c266");//f7bd5d
 const fullLightColor = Color.valueOf("fb9567");
 

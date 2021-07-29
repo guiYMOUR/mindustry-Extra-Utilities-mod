@@ -109,7 +109,7 @@ apocalypse.weapons.add(
         return w;
     })()
 );
-apocalypse.armor = 14;
+apocalypse.armor = 15;
 apocalypse.flying = true;
 apocalypse.speed = 0.51;
 apocalypse.hitSize = 62;
@@ -129,5 +129,6 @@ apocalypse.commandLimit = 8;
 apocalypse.destructibleWreck = false;
 apocalypse.targetFlag = BlockFlag.reactor;
 apocalypse.immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting);
+apocalypse.ammoType = new ItemAmmoType(Items.pyratite);
 
 exports.apocalypse = apocalypse;

@@ -22,7 +22,8 @@ swMin.inaccuracy = 10;
 swMin.range = 26 *8;
 swMin.xRand = 4;
 swMin.size = 2;
-swMin.health = 200 * 2 * 2;
+swMin.health = 250 * 2 * 2;
+swMin.shootSound = Sounds.missile;
 swMin.ammo(
     Items.graphite, m,
     Items.blastCompound, Bullets.missileExplosive,

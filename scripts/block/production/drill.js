@@ -278,10 +278,8 @@ const absorbEffect = new Effect(38, cons(e => {
     Draw.color(Items.sand.color);
     Angles.randLenVectors(e.id, 2, 1 + 20 * e.fout(), e.rotation, 120, new Floatc2({
         get: (x, y) => {
-            for(var i = 0; i < 6; i++){
-                Fill.circle(e.x + x, e.y + y, e.fout() * 3 + 1);
-                Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
-            }
+            Fill.circle(e.x + x, e.y + y, e.fout() * 3 + 1);
+            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
         }
     }));
 }));
@@ -294,9 +292,33 @@ const dustExtractor = extendContent(GenericCrafter, "dust-extractor", {
 });
 dustExtractor.buildType = prov(() => {
     return new JavaAdapter(GenericCrafter.GenericCrafterBuild, {
-        edelta(){
+        updateTile(){
             var boost = this.liquids.total() > 1 ? boof : 1;
-            return this.efficiency() * this.delta() * boost;
+            if(this.consValid()){
+                this.progress += this.getProgressIncrease(this.block.craftTime/boost);
+                this.totalProgress += this.delta();
+                this.warmup = Mathf.approachDelta(this.warmup, 1, this.block.warmupSpeed);
+                if(Mathf.chanceDelta(this.block.updateEffectChance)){
+                    this.block.updateEffect.at(this.getX() + Mathf.range(this.block.size * 4), this.getY() + Mathf.range(this.block.size * 4));
+                }
+            }else{
+                this.warmup = Mathf.approachDelta(this.warmup, 0, this.block.warmupSpeed);
+            }
+            if(this.progress >= 1){
+                this.consume();
+                if(this.block.outputItem != null){
+                    for(var i = 0; i < this.block.outputItem.amount; i++){
+                        this.offload(this.block.outputItem.item);
+                    }
+                }
+                for(var i = 0; i < 3; i++){
+                    this.block.craftEffect.at(this.x, this.y);
+                }
+                this.progress %= 1;
+            }
+            if(this.block.outputItem != null && this.timer.get(this.block.timerDump, this.block.dumpTime / this.timeScale)){
+                this.dump(this.block.outputItem.item);
+            }
         },
     }, dustExtractor);
 });

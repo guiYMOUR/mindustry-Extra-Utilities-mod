@@ -7,6 +7,22 @@ UnitTypes.corvus.buildSpeed = 2;
 Blocks.cultivator.consumes.liquid(Liquids.water, 15 / 60);
 Blocks.duct.buildVisibility = BuildVisibility.shown;
 Blocks.ductBridge.buildVisibility = BuildVisibility.shown;
+//if Anuke sees this, I hope he can change it early, it will cause the game to crash
+Blocks.ductBridge.buildType = prov(() => {
+    return new JavaAdapter(DuctBridge.DuctBridgeBuild, {
+        findLink(){
+            for(var i = 1; i <= this.block.range; i++){
+                var other = this.tile.nearby(Geometry.d4x[this.rotation] * i, Geometry.d4y[this.rotation] * i);
+                
+                if(other != null && other.build instanceof DuctBridge.DuctBridgeBuild && other.build.team == this.team){
+                    return other.build;
+                }
+            }
+            return null;
+        },
+    }, Blocks.ductBridge);
+});
+
 Blocks.ductRouter.buildVisibility = BuildVisibility.shown;
 
 lib.addToResearch(Blocks.ductBridge, { parent: 'bridge-conveyor', });

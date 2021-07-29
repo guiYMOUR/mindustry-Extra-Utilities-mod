@@ -114,5 +114,5 @@ nebula.visualElevation = 0.2;
 nebula.allowLegStep = true;
 nebula.groundLayer = Layer.legUnit;
 nebula.commandLimit = 8;
-nebula.ammoType = AmmoTypes.powerHigh;
+nebula.ammoType = new PowerAmmoType(1800);
 exports.nebula = nebula;

@@ -1,6 +1,6 @@
 //
 const lib = require("blib");
-//const tr = new Vec2();
+
 const T2rip = extendContent(ItemTurret, "T2-ripple", {
     setStats(){
         this.super$setStats();
@@ -8,24 +8,24 @@ const T2rip = extendContent(ItemTurret, "T2-ripple", {
         this.stats.remove(Stat.reload);
         this.stats.add(Stat.reload, 7.93, StatUnit.none);
     },
-    /*canPlaceOn(tile, team){
-        return tile.block() == Blocks.ripple && tile.team() == team;
-    },*/
 });
 lib.setBuildingSimple(T2rip, ItemTurret.ItemTurretBuild, {
-    //_tr: new Vec2(),
-    _shotCounter: 0,
     shoot(type){
         this.super$shoot(type);
-        
-        var i = (this._shotCounter % this.block.shots) - (this.block.shots - 1)/2;
-
-        //this._tr.trns(this.rotation - 90, this.block.spread * i + Mathf.range(0), this.block.size * 8 / 2);
         for(var i = 0; i < 3; i++){
             this.bullet(type, this.rotation + Mathf.range(this.block.inaccuracy))
         }
-        this._shotCounter ++;
-    }
+    },
+    draw(){
+        this.super$draw();
+        var i = this.shotCounter % this.block.shots;
+        if(this.heat <= 0.00001) return;
+        Draw.color(this.block.heatColor, this.heat);
+        Draw.blend(Blending.additive);
+        Draw.rect(Core.atlas.find("btm-T2-ripple-heat-" + i), this.x + this.block.tr2.x, this.y + this.block.tr2.y, this.rotation - 90);
+        Draw.blend();
+        Draw.color();
+    },
 });
 T2rip.reloadTime = 30;
 T2rip.shots = 2;
@@ -63,7 +63,5 @@ T2rip.requirements = ItemStack.with(
 );
 T2rip.buildVisibility = BuildVisibility.shown;
 T2rip.category = Category.turret;
-
-//T2rip.replaceable = false;
 
 exports.T2rip = T2rip;

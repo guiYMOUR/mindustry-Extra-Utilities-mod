@@ -2,8 +2,8 @@
 const lib = require("blib");
 const T2duo = extendContent(ItemTurret, "T2-duo", {});
 lib.setBuildingSimple(T2duo, ItemTurret.ItemTurretBuild, {});
-T2duo.spread = 2;
-T2duo.shots = 3;
+T2duo.spread = 4;
+T2duo.shots = 2;
 T2duo.alternate = true;
 T2duo.reloadTime = 13;
 T2duo.restitution = 0.03;
