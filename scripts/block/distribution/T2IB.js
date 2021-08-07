@@ -18,6 +18,7 @@ exports.alloyDuct = alloyDuct;
 const ppc = extendContent(StackConveyor, "ppc", {});
 ppc.health = 150;
 ppc.speed = 8 / 60;
+ppc.recharge = 1;
 ppc.itemCapacity = 10;
 ppc.requirements = ItemStack.with(
     Items.silicon, 1,

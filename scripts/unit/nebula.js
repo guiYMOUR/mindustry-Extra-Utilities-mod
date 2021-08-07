@@ -52,11 +52,12 @@ nebula.weapons.add(
     (() =>{
         const w = new PointDefenseWeapon("btm-nebula-defense");
         w.x = 24;
-        w.y = -8;
+        w.y = 2;
         w.reload = 8;
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
         w.mirror = false;
+        w.shootSound = Sounds.lasershoot;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;
@@ -72,11 +73,12 @@ nebula.weapons.add(
     (() =>{
         const w = new PointDefenseWeapon("btm-nebula-defense");
         w.x = -24;
-        w.y = -8;
+        w.y = 2;
         w.reload = 8;
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
         w.mirror = false;
+        w.shootSound = Sounds.lasershoot;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;
@@ -88,12 +90,30 @@ nebula.weapons.add(
         return w;
     })()
 );
+for(var x of [9, -9]){
+    nebula.weapons.add(
+        (() =>{
+            const w = new RepairBeamWeapon("btm-nebula-heal");
+            w.x = x;
+            w.y = -14;
+            w.beamWidth = 0.8;
+            w.repairSpeed = 1.5;
+            w.mirror = false;
+            w.bullet = (() => {
+            const b = new BulletType();
+                b.maxRange = 200;
+                return b;
+            })()
+            return w;
+        })()
+    );
+}
 nebula.abilities.add(ability.MendFieldAbility(180, 210, 10));
 //nebula.abilities.add(ability.pointDefenseAbility(25, -8, 10, 320, 40, "nebula-defense"), ability.pointDefenseAbility(-25, -8, 10, 320, 40, "nebula-defense"));
 nebula.armor = 16;
 nebula.flying = false;
 nebula.speed = 0.25;
-nebula.hitSize = 35;
+nebula.hitSize = 41;
 nebula.rotateSpeed = 1.8;
 nebula.shake = 3;
 nebula.health = 59000;
@@ -114,5 +134,5 @@ nebula.visualElevation = 0.2;
 nebula.allowLegStep = true;
 nebula.groundLayer = Layer.legUnit;
 nebula.commandLimit = 8;
-nebula.ammoType = new PowerAmmoType(1800);
+nebula.ammoType = new PowerAmmoType(3800);
 exports.nebula = nebula;

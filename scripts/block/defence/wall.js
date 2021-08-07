@@ -1,3 +1,6 @@
+const items = require("game/items");
+const bullets = require("other/bullets");
+
 const absorbDamageChance = 0.08;
 const cor1 = Color.valueOf("b9ff00");
 const cor2 = Color.valueOf("b9ff22");
@@ -39,22 +42,16 @@ const aws = extendContent(Wall,"allWallSmall",{
     },
 });
 aws.size = 1;
-aws.health = 1180;
+aws.health = 1280;
 aws.lightningChance = 0.06;
-aws.chanceDeflect = 15;
+aws.chanceDeflect = 20;
 aws.flashHit = true;
 aws.absorbLasers = true;
 aws.insulated = true;
+aws.buildCostMultiplier = 3;
 
 aws.buildType = prov(() => {
     return new JavaAdapter(Wall.WallBuild, {
-        /*damage(damage){
-            this.super$damage(damage);
-            if(Mathf.chance(absorbDamageChance)){
-                this.health = Math.min(this.health + damage * 2, this.maxHealth);
-                Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
-            }
-        },*/
         handleDamage(amount){
             if(Mathf.chance(absorbDamageChance)){
                 //this.health = Math.min(this.health + damage * 2, this.maxHealth);
@@ -82,22 +79,16 @@ const awl = extendContent(Wall,"allWallLarge",{
     },
 });
 awl.size = 2;
-awl.health = 1180 * 4;
+awl.health = 1280 * 4;
 awl.lightningChance = 0.06;
-awl.chanceDeflect = 15;
+awl.chanceDeflect = 20;
 awl.flashHit = true;
 awl.absorbLasers = true;
 awl.insulated = true;
+awl.buildCostMultiplier = 3;
 
 awl.buildType = prov(() => {
     return new JavaAdapter(Wall.WallBuild, {
-        /*damage(damage){
-            this.super$damage(damage);
-            if(Mathf.chance(absorbDamageChance)){
-                this.health = Math.min(this.health + damage * 4, this.maxHealth);
-                Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
-            }
-        },*/
         handleDamage(amount){
             if(Mathf.chance(absorbDamageChance)){
                 //this.health = Math.min(this.health + damage * 4, this.maxHealth);
@@ -117,3 +108,152 @@ awl.requirements = ItemStack.with(
 awl.buildVisibility = BuildVisibility.shown;
 awl.category = Category.defense;
 exports.awl = awl;
+
+const chargeChance = 0.8;
+const rws = extendContent(Wall,"rws",{
+    setBars(){
+        this.super$setBars();
+        this.bars.add("charge", func(entity => {
+            var bar = new Bar(prov(() => Core.bundle.get("bar.btm-charge")), prov(() => items.lightninAlloy.color), floatp(() => entity.getCharge()));
+            return bar;
+        }));
+    },
+    setStats() {
+        this.super$setStats();
+        this.stats.add(Stat.abilities, Core.bundle.format("stat.btm-charge", 160, chargeChance * 100));
+    },
+});
+rws.size = 1;
+rws.health = 1100;
+rws.lightningChance = 0.06;
+rws.chanceDeflect = 10;
+rws.flashHit = true;
+rws.absorbLasers = true;
+rws.insulated = true;
+rws.update = true;
+rws.placeableLiquid = true;
+rws.buildType = prov(() => {
+    var damage = 0;
+    var shieldBullet = null;
+    var shieldLife = 0;
+    var acceptDamage = true;
+    const max = 160;
+    const lifetime = 150;
+    return new JavaAdapter(Wall.WallBuild, {
+        multDamage(v){
+            if(Mathf.chance(chargeChance)) damage += v;
+            if(damage > max){
+                shieldBullet = bullets.shieldBullet({ splashDamageRadius : this.block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
+                shieldLife = lifetime;
+                acceptDamage = false;
+                damage = 0;
+            }
+        },
+        getCharge(){
+            return damage / max;
+        },
+        updateTile(){
+            this.timeScale = this.getCharge();
+            if(shieldLife > 0){
+                if(shieldBullet != null){
+                    shieldBullet.set(this.x, this.y);
+                    shieldBullet.time = 0;
+                }
+                shieldLife -= Time.delta;
+            } else {
+                shieldBullet = null;
+                acceptDamage = true;
+            }
+        },
+        handleDamage(amount){
+            if(acceptDamage){
+                this.multDamage(amount);
+            }
+            return amount;
+        },
+    }, rws);
+});
+rws.requirements = ItemStack.with(
+    items.lightninAlloy, 6
+);
+rws.buildVisibility = BuildVisibility.shown;
+rws.category = Category.defense;
+exports.rws = rws;
+
+const rwl = extendContent(Wall,"rwl",{
+    setBars(){
+        this.super$setBars();
+        this.bars.add("charge", func(entity => {
+            var bar = new Bar(prov(() => Core.bundle.get("bar.btm-charge")), prov(() => items.lightninAlloy.color), floatp(() => entity.getCharge()));
+            return bar;
+        }));
+    },
+    setStats() {
+        this.super$setStats();
+        this.stats.add(Stat.abilities, Core.bundle.format("stat.btm-charge", 160*4, chargeChance * 100));
+    },
+});
+rwl.size = 2;
+rwl.health = 1100*4;
+rwl.lightningChance = 0.06;
+rwl.chanceDeflect = 10;
+rwl.flashHit = true;
+rwl.absorbLasers = true;
+rwl.insulated = true;
+rwl.update = true;
+rwl.placeableLiquid = true;
+rwl.buildType = prov(() => {
+    var damage = 0;
+    var shieldBullet = null;
+    var shieldLife = 0;
+    var acceptDamage = true;
+    const max = 160*4;
+    const lifetime = 150;
+    return new JavaAdapter(Wall.WallBuild, {
+        multDamage(v){
+            if(Mathf.chance(chargeChance)) damage += v;
+            if(damage > max){
+                shieldBullet = bullets.shieldBullet({ splashDamageRadius : this.block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
+                shieldLife = lifetime;
+                acceptDamage = false;
+                damage = 0;
+            }
+        },
+        getCharge(){
+            return damage / max;
+        },
+        updateTile(){
+            this.timeScale = this.getCharge()
+            if(shieldLife > 0){
+                if(shieldBullet != null){
+                    shieldBullet.set(this.x, this.y);
+                    shieldBullet.time = 0;
+                }
+                shieldLife -= Time.delta;
+            } else {
+                shieldBullet = null;
+                acceptDamage = true;
+            }
+        },
+        handleDamage(amount){
+            if(acceptDamage){
+                this.multDamage(amount);
+            }
+            return amount;
+        },
+        write(write) {
+            this.super$write(write);
+            write.f(damage);
+        },
+        read(read, revision) {
+            this.super$read(read, revision);
+            damage = read.f();
+        },
+    }, rwl);
+});
+rwl.requirements = ItemStack.with(
+    items.lightninAlloy, 24
+);
+rwl.buildVisibility = BuildVisibility.shown;
+rwl.category = Category.defense;
+exports.rwl = rwl;

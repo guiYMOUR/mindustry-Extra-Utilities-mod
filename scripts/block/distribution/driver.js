@@ -215,10 +215,10 @@ driver.consumes.power(1.8);
 driver.size = 2;
 driver.liquidCapacity = 300;
 driver.requirements = ItemStack.with(
-    Items.metaglass, 70,
-    Items.silicon, 77,
-    Items.titanium, 60,
-    Items.thorium, 35
+    Items.metaglass, 85,
+    Items.silicon, 80,
+    Items.titanium, 80,
+    Items.thorium, 55
 );
 driver.buildVisibility = BuildVisibility.shown;
 driver.category = Category.liquid;

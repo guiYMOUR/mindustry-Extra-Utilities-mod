@@ -23,7 +23,45 @@ function eff1(color, fout, rad){
         }
     }));
 };
-const drill = extendContent(Drill, "drill", {});
+
+function filter(liquid){
+    return liquid.temperature <= 0.5 && liquid.flammability < 0.1;
+};
+function boosters(speed, maxUsed, multiplier, baseTime){
+    return new JavaAdapter(StatValue, {
+        display(table){
+            table.row();
+            table.table(cons(c => {
+                for(var i = 0; i < Vars.content.liquids().size; i++){
+                    var liquid = Vars.content.liquids().get(i);
+                    if(!filter(liquid)) continue;
+
+                    c.image(liquid.uiIcon).size(3 * 8).padRight(4).right().top();
+                    c.add(liquid.localizedName).padRight(10).left().top();
+                    c.table(Tex.underline, cons(bt => {
+                        bt.left().defaults().padRight(3).left();
+
+                        var speedRate = (baseTime ? 1 : 0) + maxUsed * multiplier * liquid.heatCapacity;
+                        var standardSpeed = baseTime ? speed : speed / (maxUsed * multiplier * 0.4);
+                        var result = standardSpeed / (speed / speedRate);
+                        bt.add(Core.bundle.format("stat.btm-drillSpeed", Strings.autoFixed(result, 2)));
+                    })).left().padTop(-9);
+                    c.row();
+                }
+            })).colspan(table.getColumns());
+            table.row();
+        }
+    });
+}
+
+const drill = extendContent(Drill, "drill", {
+    setStats(){
+        this.super$setStats();
+        this.stats.add(Stat.booster, boosters(this.drillTime, this.consumes.get(ConsumeType.liquid).amount, this.liquidBoostIntensity, false));
+        this.stats.remove(Stat.boostEffect);
+    },
+});
+
 drill.buildType = prov(() => {
     var work = false;
     return new JavaAdapter(Drill.DrillBuild, {
@@ -41,8 +79,9 @@ drill.buildType = prov(() => {
                 if(this.cons.optionalValid()){
                     speed = this.block.liquidBoostIntensity;
                 }
-                speed *= this.efficiency();
-                this.lastDrillSpeed = (speed * this.dominantItems * this.warmup) / (this.block.drillTime + this.block.hardnessDrillMultiplier * this.dominantItem.hardness);
+                speed *= (this.efficiency() * (1 + (this.liquids.current().heatCapacity - 0.4) * 0.9) * this.block.liquidBoostIntensity * 0.3087 * Mathf.num(work));
+                //limit display
+                this.lastDrillSpeed = Math.min((speed * this.dominantItems * this.warmup) / (this.block.drillTime + this.block.hardnessDrillMultiplier * this.dominantItem.hardness), 60);
                 this.warmup = Mathf.lerpDelta(this.warmup, speed, this.block.warmupSpeed);
                 this.progress += this.delta() * this.dominantItems * speed * this.warmup;
                 if(Mathf.chanceDelta(this.block.updateEffectChance * this.warmup))
@@ -71,10 +110,6 @@ drill.buildType = prov(() => {
                 work = false;
             }
         },
-        efficiency(){
-            if(!this.enabled) return 0;
-            return this.power.status / (this.liquids.current().temperature * 2.05) * Mathf.num(work);
-        },
         write(write) {
             this.super$write(write);
             write.bool(work);
@@ -95,19 +130,20 @@ drill.requirements = ItemStack.with(
 );
 drill.buildVisibility = BuildVisibility.shown;
 drill.category = Category.production;
-drill.drillTime = 210;
+drill.drillTime = 80;
 drill.size = 4;
 drill.drawRim = true;
 drill.hasPower = true;
-drill.tier = 8;
+drill.tier = 10;
+drill.hardnessDrillMultiplier = 0;
 drill.updateEffect = Fx.pulverizeRed;
 drill.updateEffectChance = 0.01;
 drill.drillEffect = Fx.none;
-drill.rotateSpeed = 5;
+drill.rotateSpeed = 7;
 drill.warmupSpeed = 0.01;
 drill.liquidBoostIntensity = 1.8;
 drill.consumes.power(4);
-drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 0.1));
+drill.consumes.add(new ConsumeLiquidFilter(boolf(liquid => filter(liquid)), 0.1));
 drill.buildCostMultiplier = 0.6;
 exports.drill = drill;
 

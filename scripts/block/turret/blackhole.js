@@ -1,4 +1,5 @@
 const lib = require("blib");
+const items = require("game/items");
 
 function aimShoot(color, length, width, lifetime, spacing){
     return new Effect(lifetime, length * 2, cons(e => {
@@ -58,7 +59,7 @@ const hole = extend(BasicBulletType, {
 });
 hole.lifetime = 138;
 Object.assign(hole, {
-    knockback: -2.6,
+    knockback: -2.7,
     splashDamage: 0,
     splashDamageRadius: 160,
     shootEffect: Fx.none,
@@ -186,7 +187,7 @@ blackhole.buildType = prov(() => {
             this.reload = 0;
         },
         hasAmmo(){
-            return this.items.get(Items.blastCompound) > 2 && this.items.get(Items.phaseFabric) > 0;
+            return this.items.get(items.lightninAlloy) > 1;
         },
     }, blackhole);
 });
@@ -209,15 +210,14 @@ blackhole.chargeBeginEffect = new Effect(120, cons(e => {
     Draw.color();
 }));
 blackhole.consumes.items(ItemStack.with(
-    Items.blastCompound, 3,
-    Items.phaseFabric, 1
+    items.lightninAlloy, 2
 ));
 blackhole.requirements = ItemStack.with(
     Items.graphite, 750,
     Items.silicon, 700,
     Items.thorium, 420,
     Items.plastanium, 250,
-    Items.surgeAlloy, 330
+    items.lightninAlloy, 175
 );
 blackhole.buildVisibility = BuildVisibility.shown;
 blackhole.category = Category.turret;

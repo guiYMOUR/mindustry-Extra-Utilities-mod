@@ -53,6 +53,7 @@ nihilo.weapons.add(
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
         w.mirror = false;
+        w.shootSound = Sounds.lasershoot;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;
@@ -153,12 +154,12 @@ nihilo.abilities.add(ability.TerritoryFieldAbility(120, 60 * 5, 220));
 nihilo.abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 6, 200));
 //nihilo.abilities.add(ability.pointDefenseAbility(0, -17, 8, 300, 40, "nihilo-defense"));
 nihilo.abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5, -35.5), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5, -35.5), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
-nihilo.armor = 18;
+nihilo.armor = 19;
 nihilo.drag = 0.2;
 nihilo.flying = false;
 nihilo.speed = 0.6;
 nihilo.accel = 0.2;
-nihilo.hitSize = 55;
+nihilo.hitSize = 60;
 nihilo.rotateSpeed = 0.9;
 nihilo.rotateShooting = false;
 //nihilo.canDrown = false;

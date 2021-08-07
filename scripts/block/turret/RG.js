@@ -1,5 +1,6 @@
 //
 const lib = require('blib');
+const items = require("game/items");
 const effect = require("block/turret/blackhole");
 
 const chargeTime = 40;
@@ -179,7 +180,7 @@ RG.requirements = ItemStack.with(
     Items.graphite, 585,
     Items.titanium, 345,
     Items.plastanium, 220,
-    Items.surgeAlloy, 350
+    items.lightninAlloy, 180
 );
 RG.consumes.powerCond(15, boolf(b => b.isActive()));
 RG.buildVisibility = BuildVisibility.shown;

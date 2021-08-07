@@ -11,12 +11,13 @@ const status = require("other/status");
 const unitA = extendContent(OverdriveProjector , "unitA", {
     drawPlace(x, y, rotation, valid) {
         this.super$drawPlace(x, y, rotation, valid);
-        Drawf.dashCircle(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange * 0.6, Pal.accent);
+        //Drawf.dashCircle(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange * 0.6, Pal.accent);
         Drawf.dashCircle(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange, Color.valueOf("ff0000"));
     },
     setStats(){
         this.super$setStats();
         this.stats.add(Stat.damage, "120(+100phase)");
+        this.stats.add(Stat.range, unitRange / Vars.tilesize, StatUnit.blocks);
     },
 });
 unitA.buildType = prov(() => {
@@ -30,7 +31,7 @@ unitA.buildType = prov(() => {
         updateTile(){
             this.super$updateTile();
             phaseHeatU = Mathf.lerpDelta(phaseHeatU, Mathf.num(this.cons.optionalValid()), 0.1);
-            var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost * 0.6;
+            var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost;
             Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                 other.apply(status.speedUp, 30);
             }));
@@ -83,8 +84,8 @@ unitA.buildType = prov(() => {
         },
         drawSelect(){
             this.super$drawSelect();
-            var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost * 0.6;
-            Drawf.dashCircle(this.x, this.y, realRange, Pal.shield);
+            /*var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost;
+            Drawf.dashCircle(this.x, this.y, realRange, Pal.shield);*/
             var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost * 1.2;
             Drawf.dashCircle(this.x, this.y, realR, Color.valueOf("ff0000"));
         },
@@ -101,25 +102,24 @@ unitA.buildType = prov(() => {
     }, unitA);
 });
 unitA.requirements = ItemStack.with(
-    Items.copper, 230,
-    Items.lead, 200,
-    Items.silicon, 180,
-    Items.titanium, 100,
-    Items.thorium, 80,
+    Items.lead, 220,
+    Items.silicon, 170,
+    Items.titanium, 150,
+    Items.thorium, 95,
     Items.plastanium, 80,
-    Items.surgeAlloy, 180
+    Items.surgeAlloy, 150
 );
 unitA.buildVisibility = BuildVisibility.shown;
 unitA.category = Category.effect;
-unitA.consumes.power(12);
+unitA.consumes.power(11);
 unitA.buildCostMultiplier = 0.85;
 unitA.useTime = 330;
 unitA.size = 3;
 unitA.reload = 60;
-unitA.range = unitRange * 0.8;
+unitA.range = unitRange * 0.6;
 unitA.phaseRangeBoost = 56;
-unitA.speedBoost = 1.8;
-unitA.speedBoostPhase = 0.65;
+unitA.speedBoost = 1.75;
+unitA.speedBoostPhase = 0.604;
 unitA.health = 700;
 unitA.consumes.item(Items.phaseFabric).boost();
 exports.unitA = unitA;

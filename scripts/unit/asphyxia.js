@@ -28,7 +28,7 @@ asl.incendAmount = 1;
 asl.colors = [Pal.sapBullet, Pal.sapBullet, Pal.sapBulletBack];
 
 const sapper = new SapBulletType();
-sapper.sapStrength = 0.85;
+sapper.sapStrength = 0.9;
 sapper.length = 88;
 sapper.damage = 40;
 sapper.shootEffect = Fx.shootSmall;
@@ -39,93 +39,107 @@ sapper.width = 0.55;
 sapper.lifetime = 30;
 sapper.knockback = -1;
 
-const lb = extend(BasicBulletType, {
-    update(b){
-        this.super$update(b);
-        const findAngle = 30;
-        var range = this.homingRange;
-        if(b.timer.get(1, 5)){
+const lineBullet = (() => {
+    const maxFind = 12;
+    var unitTarget = new Seq();
+    const lb = extend(BasicBulletType, {
+    //_unitTarget : new Seq(),
+        update(b){
+            this.super$update(b);
+            //const findAngle = 30;
+            //I added a limit, so this can be removed.↑↑↑
+            var range = this.homingRange;
             Units.nearbyEnemies(b.team, b.x - range, b.y - range, range * 2, range * 2, cons(other => {
-                if(other.within(b, range) && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)){
-                    other.damage(this.damage/12);
+                if(other.within(b, range)/* && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)*/){
+                    unitTarget.add(other);
+                }
+            }));
+            unitTarget.sort(floatf(u => u.dst2(b.x, b.y)));
+            var find = Math.min(maxFind, unitTarget.size);
+            if(b.timer.get(1, 5)){
+                for(var a = 0; a < find; a++){
+                    var other = unitTarget.get(a);
+                    if(other == null) continue;
+                    other.damage(this.damage/6);
                     other.apply(this.status, 5);
                     Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
                     Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
                 }
-            }));
-        }
-    },
-    hit(b){
-        var range2 = this.splashDamageRadius
-        Units.nearbyEnemies(b.team, b.x - range2, b.y - range2, range2 * 2, range2 * 2, cons(other => {
-            if(other.within(b, range2)){
-                other.damage(this.splashDamage);
-                other.apply(this.status, 60);
-                Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
-                Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
             }
-        }));
-        Vars.indexer.allBuildings(b.x, b.y, range2, cons(other =>{
-            if(other.block != null && other.team != b.team){
-                if(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation){
-                    if(other.block instanceof PowerNode){
-                        for(var i = 0; i < other.power.links.size; i++){
-                            var link = Vars.world.build(other.power.links.get(i));
-                            if(link == null || !other.block.linkValid(other, link)) return;
-                            other.power.graph.removeList(link);
-                            other.power.graph.remove(link);
-                            link.power.graph.removeList(other);
-                            link.power.graph.remove(other);
-                            other.power.links.removeValue(link.pos());
-                            link.power.links.removeValue(other.pos());
-                        }
-                    //other.kill();
-                    } else {
-                        other.damage(this.splashDamage * 1.5);
-                        Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
-                        Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
-                    }
-                } else {
+            unitTarget.clear();
+        },
+        hit(b){
+            var range2 = this.splashDamageRadius
+            Units.nearbyEnemies(b.team, b.x - range2, b.y - range2, range2 * 2, range2 * 2, cons(other => {
+                if(other.within(b, range2)){
                     other.damage(this.splashDamage);
+                    other.apply(this.status, 60);
+                    Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
+                    Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
                 }
-            }
-        }));
-        new Effect(18, cons(e => {
-            Draw.color(Pal.sapBulletBack);
-            Lines.stroke(e.fout() * 2 + 0.2);
-            Lines.circle(e.x, e.y, e.fin() * range2);
-        })).at(b);
-        Sounds.spark.at(b);
-    },
-});
-lb.width = 28;
-lb.height = 18;
-lb.frontColor = Pal.sapBullet;
-lb.backColor = Pal.sapBulletBack;
-lb.lifetime = 150;
-lb.speed = 2;
-lb.trailLength = 18;
-lb.trailWidth = 8;
-lb.trailColor = Pal.sapBulletBack;
-lb.trailInterval = 3;
-lb.damage = 120;
-lb.splashDamage = 100;
-lb.splashDamageRadius = 100;
-lb.hitShake = 4;
-lb.collidesTiles = false;
-lb.trailRotation = true;
-lb.status = StatusEffects.sapped;
-lb.trailEffect = new Effect(16, cons(e => {
-    Draw.color(Pal.sapBulletBack);
-    for(var s in Mathf.signs){
-        Drawf.tri(e.x, e.y, 4, 30 * e.fslope(), e.rotation + 90*s);
-    }
-}));
-lb.despawnEffect = Fx.none;
-//lb.despawnSound = Sounds.spark;
-lb.homingPower = 0.08;
-lb.homingRange = 256;
-lb.homingDelay = 30;
+            }));
+            Vars.indexer.allBuildings(b.x, b.y, range2, cons(other =>{
+                if(other.block != null && other.team != b.team){
+                    if(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation){
+                        if(other.block instanceof PowerNode){
+                            for(var i = 0; i < other.power.links.size; i++){
+                                var link = Vars.world.build(other.power.links.get(i));
+                                if(link == null || !other.block.linkValid(other, link)) return;
+                                other.power.graph.removeList(link);
+                                other.power.graph.remove(link);
+                                link.power.graph.removeList(other);
+                                link.power.graph.remove(other);
+                                other.power.links.removeValue(link.pos());
+                                link.power.links.removeValue(other.pos());
+                            }
+                    //other.kill();
+                        } else {
+                            other.damage(this.splashDamage * 1.5);
+                            Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
+                            Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
+                        }
+                    } else {
+                        other.damage(this.splashDamage);
+                    }
+                }
+            }));
+            new Effect(18, cons(e => {
+                Draw.color(Pal.sapBulletBack);
+                Lines.stroke(e.fout() * 2 + 0.2);
+                Lines.circle(e.x, e.y, e.fin() * range2);
+            })).at(b);
+            Sounds.spark.at(b);
+        },
+    });
+    lb.width = 28;
+    lb.height = 18;
+    lb.frontColor = Pal.sapBullet;
+    lb.backColor = Pal.sapBulletBack;
+    lb.lifetime = 150;
+    lb.speed = 2;
+    lb.trailLength = 18;
+    lb.trailWidth = 8;
+    lb.trailColor = Pal.sapBulletBack;
+    lb.trailInterval = 3;
+    lb.damage = 120;
+    lb.splashDamage = 100;
+    lb.splashDamageRadius = 100;
+    lb.hitShake = 4;
+    lb.collidesTiles = false;
+    lb.trailRotation = true;
+    lb.status = StatusEffects.sapped;
+    lb.trailEffect = new Effect(16, cons(e => {
+        Draw.color(Pal.sapBulletBack);
+        for(var s in Mathf.signs){
+            Drawf.tri(e.x, e.y, 4, 30 * e.fslope(), e.rotation + 90*s);
+        }
+    }));
+    lb.despawnEffect = Fx.none;
+    lb.homingPower = 0.08;
+    lb.homingRange = 256;
+    lb.homingDelay = 30;
+    return lb;
+})();
 
 const asphyxia = extendContent(UnitType, 'asphyxia', {});
 asphyxia.constructor = prov(() => extend(UnitTypes.toxopid.constructor.get().class, {}));
@@ -136,7 +150,7 @@ asphyxia.weapons.add(
         w.y = -5;
         w.reload = 60;
         w.rotate = true;
-        w.bullet = lb;
+        w.bullet = lineBullet;
         w.shootSound = Sounds.bang;
         return w;
     })()
@@ -190,11 +204,11 @@ asphyxia.weapons.add(
 asphyxia.armor = 15;
 asphyxia.flying = false;
 asphyxia.speed = 0.4;
-asphyxia.hitSize = 32;
+asphyxia.hitSize = 33;
 asphyxia.lightRadius = 160;
 asphyxia.rotateSpeed = 1.8;
 asphyxia.landshake = 1.1;
-asphyxia.health = 59000;
+asphyxia.health = 60000;
 asphyxia.buildSpeed = 1.5;
 asphyxia.itemCapacity = 300;
 asphyxia.rotateShooting = true;
@@ -215,7 +229,7 @@ asphyxia.visualElevation = 0.95;
 asphyxia.allowLegStep = true;
 asphyxia.groundLayer = Layer.legUnit;
 asphyxia.commandLimit = 8;
-asphyxia.ammoType = new PowerAmmoType(2300);
+asphyxia.ammoType = new PowerAmmoType(3000);
 asphyxia.legSplashDamage = 90;
 asphyxia.legSplashRange = 60;
 exports.asphyxia = asphyxia;

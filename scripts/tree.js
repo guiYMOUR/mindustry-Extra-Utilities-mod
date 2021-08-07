@@ -1,5 +1,6 @@
 //The single quotation mark is used because it looks comfortable.
 const lib = require('blib');
+const items = require('game/items');
 
 const { T2duo } = require('block/turret/T2duo');
 const { T3duo } = require('block/turret/T3duo');
@@ -9,6 +10,7 @@ const { sakura } = require('block/turret/sakura');
 const { rainbow } = require('block/turret/rainbow');
 const { hurricane } = require('block/turret/hurricane');
 const { ms } = require('block/turret/ms');
+const { sunburst } =require('block/turret/sunburst');
 const { T2lan } = require('block/turret/T2lancer');
 const { stinger } = require('block/turret/stinger');
 const { swT2 } = require('block/turret/T2swarmer');
@@ -31,6 +33,7 @@ const { arNode, png } = require('block/power/png');
 const { T2ST } = require('block/power/T2steam');
 const { T2ther } = require('block/power/T2ther');
 const { th2 } = require('block/power/th2');
+const { LG } = require('block/power/LightninGenerator');
 
 const { LB } = require('block/distribution/LB');
 const { driver } = require('block/distribution/driver');
@@ -45,6 +48,7 @@ const { T2SA } = require('block/production/T2SA');
 const { T2CM } = require('block/production/T2CM');
 const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
+const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
 const { tiDrill, drill, shovel, testDrill, slagE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
@@ -55,7 +59,7 @@ const { speeder } = require('block/effect/speeder');
 const { cure } = require('block/effect/cure');
 const { unitA } = require('block/effect/unitA');
 const { lighthouse } = require('block/effect/lighthouse');
-const { clWall, clWallL, aws, awl } = require('block/defence/wall');
+const { clWall, clWallL, aws, awl, rws, rwl } = require('block/defence/wall');
 
 const { unitF } = require('unit/UF');
 const { suzerain } = require('unit/suzerain');
@@ -66,7 +70,7 @@ const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 
 const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
-const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10 } = require('game/TD/tmain');
+const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -80,6 +84,7 @@ lib.addToResearch(sakura, { parent: shotgun.name, });
 lib.addToResearch(rainbow, { parent: shotgun.name, });
 lib.addToResearch(hurricane, { parent: 'arc', });
 lib.addToResearch(ms, { parent: hurricane.name, });
+lib.addToResearch(sunburst, { parent: hurricane.name, });
 lib.addToResearch(T2lan, { parent: 'lancer', });
 lib.addToResearch(stinger, { parent: T2lan.name, });
 lib.addToResearch(swT2, { parent: 'swarmer', });
@@ -119,6 +124,7 @@ lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
 lib.addToResearch(T2ther, { parent: 'thermal-generator', });
 lib.addToResearch(th2, { parent: 'thorium-reactor', });
+lib.addToResearch(LG, { parent: 'impact-reactor', });
 
 lib.addToResearch(conduit, { parent: 'plated-conduit', });
 lib.addToResearch(LB, { parent: 'phase-conduit', });
@@ -162,6 +168,7 @@ lib.addToResearch(T2SA, { parent: 'alloy-smelter', });
 lib.addToResearch(T2CM, { parent: 'cryofluid-mixer', });
 lib.addToResearch(GC, { parent: 'pyratite-mixer', });
 lib.addToResearch(pu, { parent: 'pulverizer', });
+lib.addToResearch(LA, { parent: T2SA.name, });
 lib.addToResearch(ai, { parent: 'incinerator', });
 lib.addToResearch(DCF, { parent: 'force-projector',
     objectives: Seq.with(
@@ -193,6 +200,8 @@ lib.addToResearch(clWall, { parent: 'copper-wall-large', });
 lib.addToResearch(clWallL, { parent: clWall.name, });
 lib.addToResearch(aws, { parent: 'surge-wall-large', });
 lib.addToResearch(awl, { parent: aws.name, });
+lib.addToResearch(rws, { parent: aws.name, });
+lib.addToResearch(rwl, { parent: rws.name, });
 
 lib.addToResearch(unitF, { parent: 'tetrative-reconstructor',
     objectives: Seq.with(
@@ -205,6 +214,8 @@ lib.addToResearch(apocalypse, { parent: 'eclipse',objectives: Seq.with( new Obje
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives.Research(unitF) ) });
+
+lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });
 
 lib.addToResearch(start, {
     parent: SectorPresets.planetaryTerminal.name,
@@ -310,5 +321,11 @@ lib.addToResearch(TD10, {
     parent: TD7.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(TD7)
+    )
+});
+lib.addToResearch(TD11, {
+    parent: TD9.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD9)
     )
 });

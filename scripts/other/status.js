@@ -29,6 +29,7 @@ speedUp.color = Color.valueOf("ea8878");
 speedUp.buildSpeedMultiplier = 2;
 speedUp.speedMultiplier = 1.3;
 speedUp.reloadMultiplier = 2;
+speedUp.damage = -0.1;
 speedUp.effectChance = 0.07;
 speedUp.effect = Fx.overclocked;
 exports.speedUp = speedUp;

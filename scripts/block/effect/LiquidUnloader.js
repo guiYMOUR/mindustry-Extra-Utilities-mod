@@ -23,7 +23,7 @@ lu.buildType = prov(() => {
                 var pos = (offset + i) % this.proximity.size;
                 var other = this.proximity.get(pos);
 
-                if(other.interactable(this.team) && other.block.hasLiquids && this.source != null && other.liquids.get(this.source) > 0){
+                if(other.interactable(this.team) && other.block.hasLiquids && !(other instanceof LiquidBlock.LiquidBuild && other.block.size == 1) && this.source != null && other.liquids.get(this.source) > 0){
                     dumpingTo = other;
                     if(this.liquids.total() < this.block.liquidCapacity){
                         var amount = Math.min(speed, other.liquids.get(this.source));

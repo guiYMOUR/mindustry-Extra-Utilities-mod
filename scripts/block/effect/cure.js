@@ -5,6 +5,12 @@ const cure = extendContent(MendProjector , "cure", {
         this.super$drawPlace(x, y, rotation, valid);
         Drawf.circles(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, unitRange, Pal.accent);
     },
+    setStats(){
+        this.super$setStats();
+        this.stats.remove(Stat.range);
+        this.stats.add(Stat.range, unitRange / Vars.tilesize, StatUnit.blocks);
+        this.stats.add(Stat.range, this.range / Vars.tilesize, StatUnit.blocks);
+    },
 });
 cure.buildType = prov(() => {
     var wasHealed = false;

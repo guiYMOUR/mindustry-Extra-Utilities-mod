@@ -19,7 +19,7 @@ T2kiln.requirements = ItemStack.with(
     Items.graphite, 50,
     Items.titanium, 90
 );
-T2kiln.itemCapacity = 10;
+T2kiln.itemCapacity = 16;
 T2kiln.boostScale = 0.4;
 T2kiln.buildVisibility = BuildVisibility.shown;
 T2kiln.category = Category.crafting;

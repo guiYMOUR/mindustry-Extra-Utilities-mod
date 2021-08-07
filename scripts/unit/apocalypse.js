@@ -27,8 +27,8 @@ r.pierceDamageFactor = 0.5;
 
 const apocalypse = extendContent(UnitType, "apocalypse", {});
 var color = Color.valueOf("#FFA665");
-apocalypse.abilities.add(ability.LightningFieldAbility(54, 90, 192, color));
 apocalypse.abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5));
+apocalypse.abilities.add(ability.LightningFieldAbility(54, 90, 192, color, 22));
 apocalypse.constructor = prov(() => extend(UnitTypes.eclipse.constructor.get().class, {}));
 apocalypse.weapons.add(
     (() => {

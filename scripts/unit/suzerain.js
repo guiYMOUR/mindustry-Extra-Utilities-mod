@@ -50,20 +50,20 @@ spark.shootEffect = Fx.sparkShoot;
 spark.smokeEffect = Fx.sparkShoot;
 
 const suzerain = extendContent(UnitType, 'suzerain', {
-    //我摊牌了，这个木大
+    /*//我摊牌了，这个木大
     remove(){
         if(this.constructor.get().healthf() < 100/61000){
             this.super$remove();
         }
     },
-    //kill(){    },
+    //kill(){    },*/
 });
 suzerain.constructor = prov(() => extend(UnitTypes.reign.constructor.get().class, {
-    remove(){
+    /*remove(){
         if(this.healthf() < 100/61000){
             this.super$remove();
         }
-    },
+    },*/
 }));
 suzerain.weapons.add(
     (() => {
@@ -108,14 +108,15 @@ suzerain.abilities.add(new ShieldRegenFieldAbility(200, 800, 60 * 6, 200));
 suzerain.armor = 16;
 suzerain.flying = false;
 suzerain.speed = 0.3;
-suzerain.hitSize = 31;
+suzerain.hitSize = 40;
 suzerain.rotateSpeed = 1.8;
 suzerain.canDrown = false;
 suzerain.mechStepParticles = true;
 suzerain.mechStepShake = 1;
 suzerain.mechFrontSway = 1.9;
 suzerain.mechSideSway = 0.6;
-suzerain.health = 62000;
+suzerain.singleTarget = true;
+suzerain.health = 63000;
 suzerain.itemCapacity = 300;
 suzerain.rotateShooting = true;
 suzerain.commandLimit = 8;

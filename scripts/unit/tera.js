@@ -30,7 +30,7 @@ tera.weapons.add(
         w.rotateSpeed = 2;
         w.shootSound = Sounds.laser;
         w.x = 25;
-        w.y = -6;
+        w.y = -5;
         return w;
     })()
 );
@@ -48,14 +48,14 @@ tera.mineSpeed = 7;
 tera.mineTier = 10;
 tera.buildSpeed = 8;
 tera.itemCapacity = 600;
-tera.engineOffset = 23;
-tera.engineSize = 19;
+tera.engineOffset = 25;
+tera.engineSize = 12;
 tera.rotateShooting = true;
 tera.drawShields = false;
 tera.lowAltitude = true;
 tera.payloadCapacity = (6.4 * 6.4) * Vars.tilePayload;
-tera.ammoCapacity = 1500;
-tera.ammoResupplyAmount = 20;
+tera.ammoCapacity = 2;
+//tera.ammoResupplyAmount = 20;
 tera.ammoType = new PowerAmmoType(1500);
 tera.commandLimit = 8;
 

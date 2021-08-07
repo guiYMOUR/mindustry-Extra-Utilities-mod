@@ -1,4 +1,5 @@
 const lib = require('blib');
+const items = require("game/items");
 
 const shieldHealth = 2400;
 const brokenReload = 3;
@@ -90,7 +91,7 @@ DCF.requirements = ItemStack.with(
     Items.thorium, 400,
     Items.plastanium, 300,
     Items.phaseFabric, 250,
-    Items.surgeAlloy, 300
+    items.lightninAlloy, 150
 );
 DCF.buildVisibility = BuildVisibility.shown;
 DCF.category = Category.effect;

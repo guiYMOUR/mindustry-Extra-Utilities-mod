@@ -55,7 +55,7 @@ T2ther.requirements = ItemStack.with(
 );
 T2ther.buildVisibility = BuildVisibility.shown;
 T2ther.category = Category.power;
-T2ther.powerProduction = 282/60;
+T2ther.powerProduction = 276/60;
 T2ther.generateEffect = Fx.none;
 T2ther.size = 3;
 T2ther.floating = true;

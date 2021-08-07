@@ -1,3 +1,5 @@
+const items = require("game/items");
+
 const { suzerain } = require("unit/suzerain");
 const { nebula } = require("unit/nebula");
 const { asphyxia } = require("unit/asphyxia");
@@ -15,11 +17,11 @@ const unitF = extendContent(Reconstructor, "imaginary-reconstructor", {});
 unitF.size = 11;
 unitF.consumes.power(30);
 unitF.consumes.items(ItemStack.with(
-    Items.silicon, 800,
-    Items.titanium, 650,
-    Items.plastanium, 350,
-    Items.surgeAlloy, 300,
-    Items.phaseFabric, 200
+    Items.silicon, 900,
+    Items.titanium, 750,
+    Items.plastanium, 450,
+    Items.phaseFabric, 250,
+    items.lightninAlloy, 180
 ));
 unitF.consumes.liquid(Liquids.cryofluid, 4);
 unitF.constructTime = 60 * 60 * 3.8;
@@ -34,13 +36,13 @@ unitF.upgrades.addAll(
     unitType(UnitTypes.omura, nihilo),
 );
 unitF.requirements = ItemStack.with(
-    Items.silicon, 1200,
-    Items.graphite, 850,
-    Items.titanium, 600,
-    Items.thorium, 500,
+    Items.silicon, 6000,
+    Items.graphite, 3500,
+    Items.titanium, 1000,
+    Items.thorium, 800,
     Items.plastanium, 600,
-    Items.surgeAlloy, 500,
-    Items.phaseFabric, 350
+    Items.phaseFabric, 350,
+    items.lightninAlloy, 200
 );
 unitF.buildCostMultiplier = 0.8;
 unitF.buildVisibility = BuildVisibility.shown;

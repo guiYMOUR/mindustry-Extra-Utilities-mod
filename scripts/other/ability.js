@@ -47,7 +47,6 @@ const TerritoryFieldAbility = (damage, reload, range) => {
         },
         draw(unit) {
             Draw.color(unit.team.color);
-
             Lines.stroke(1.5);
             Draw.alpha(0.09);
             Fill.circle(unit.x, unit.y, range);
@@ -213,16 +212,18 @@ const sectorRad = 0.14;
 const blinkScl = 20;
 const rotateSpeed = 0.5;
 const effectRadius = 10;
-const LightningFieldAbility = (damage, reload, range, color) => {
+const LightningFieldAbility = (damage, reload, range, color, maxFind) => {
     var x = 0;
     var y = 0;
     var timer = 0;
     var curStroke = 0;
     var find = false;
+    var target = new Seq();
+    //const maxFind = 18;
     const chargeTime = 20;
     var ability = new JavaAdapter(Ability, {
         localized() {
-            return Core.bundle.get("ability.btm-LightningFieldAbility");
+            return Core.bundle.format("ability.btm-LightningFieldAbility", damage, range/Vars.tilesize, maxFind);
         },
         draw(unit){
             Draw.z(Layer.bullet - 0.001);
@@ -260,32 +261,33 @@ const LightningFieldAbility = (damage, reload, range, color) => {
             //Lock multiple (group friend selection)
             if(timer >= reload){
                 find = false;
-                Units.nearbyEnemies(unit.team, unit.x - range, unit.y - range, range * 2, range * 2, cons(other => {
-                    if(other.within(unit.x, unit.y, range)){
-                        find = true;
-                        new Effect(chargeTime, cons(e => {
-                            Draw.color(color);
-                            Lines.circle(e.x, e.y, e.fout() * 54);
-                            Draw.reset();
-                        })).at(unit);
-                        Time.run(chargeTime, () => {
-                            if(!unit.isValid()) return;
-                            new Effect(12, cons(e => {
-                                Draw.color(color);
-                                Lines.circle(e.x, e.y, e.fin() * range);
-                                Draw.reset();
-                            })).at(unit);
-                            Fx.chainLightning.at(unit.x, unit.y, 0, color, other);
-                            other.apply(StatusEffects.unmoving, 30);
-                            for(var i = 0; i < 4; i++){
-                                Lightning.create(unit.team, color, damage/4, other.x, other.y, Mathf.range(180), 10);
-                            }
-                        });
-                        timer = 0;
+                target.clear();
+                Units.nearby(null, unit.x, unit.y, range, cons(other => {
+                    if(other.team != unit.team){
+                        target.add(other);
                     }
                 }));
+                target.sort(floatf(u => u.dst2(unit.x, unit.y)));
+                var max = Math.min(maxFind, target.size);
+                for(var a = 0; a < max; a++){
+                    var other = target.get(a);
+                    //if(other == null) continue;
+                    find = true;
+                    new Effect(12, cons(e => {
+                            Draw.color(color);
+                            Lines.circle(e.x, e.y, e.fin() * range);
+                            Draw.reset();
+                        })).at(unit);
+                        Fx.chainLightning.at(unit.x, unit.y, 0, color, other);
+                        other.apply(StatusEffects.unmoving, 30);
+                        for(var i = 0; i < 4; i++){
+                            Lightning.create(unit.team, color, damage/4, other.x, other.y, Mathf.range(180), 10);
+                        }
+                    timer = 0
+                }
                 //timer = 0;
             }
+            //target.clear();
             //Lock single (my initial choice)
             /*Units.nearbyEnemies(unit.team, unit.x - range, unit.y - range, range * 2, range * 2, cons(other => {
                 if(other.within(unit, range)){

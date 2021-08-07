@@ -1,6 +1,7 @@
 const cor = Color.valueOf("e5f3fe");
 const liC = Color.valueOf("bf92f9");
 var lib = require("blib");
+const items = require("game/items");
 //var plasmaRegions = [];
 
 const MS = extend(BasicBulletType,{
@@ -116,7 +117,7 @@ storm.requirements = ItemStack.with(
     //Items.titanium, 385,
     Items.plastanium, 350,
     Items.thorium, 350,
-    Items.surgeAlloy, 295
+    items.lightninAlloy, 190
 );
 storm.buildVisibility = BuildVisibility.shown;
 storm.category = Category.turret;

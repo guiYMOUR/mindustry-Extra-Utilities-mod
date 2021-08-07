@@ -1,4 +1,5 @@
 const lib = require("blib");
+const items = require("game/items");
 const angleShiftStrength = 7;
 const shiftAngel = 55;
 const sideOffset = 3;
@@ -7,13 +8,13 @@ const shootDuration = 480;
 const firingMoveFract = 0.25;
 const reloadTime = 240;
 
-const shiftSpeed = 2;
+const shiftSpeed = 1.8;
 var rainbowRegions = [];
 
 const prism = extendContent(PowerTurret, "prism", {
     load(){
         this.super$load();
-        for(var i = 0; i < 16; i++){
+        for(var i = 0; i < 8; i++){
             rainbowRegions[i] = Core.atlas.find("btm-prism-rainbow-" + (i + 1));
         }
     },
@@ -41,8 +42,8 @@ prism.buildType = prov(() => {
             this.super$draw();
             tr2.trns(this.rotation, -this.recoil);
             Draw.blend(Blending.additive);
-            for(var h = 0; h < 16; h++){
-                Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 16))));
+            for(var h = 0; h < 8; h++){
+                Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 8))));
                 Draw.rect(rainbowRegions[h], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
             }
             Draw.blend();
@@ -133,9 +134,9 @@ prism.buildType = prov(() => {
 prism.shootEffect = Fx.shootBigSmoke2;
 prism.shootCone = 40;
 prism.recoilAmount = 4;
-prism.size = 4;
+prism.size = 5;
 prism.shootShake = 2;
-prism.range = 28 * 8;
+prism.range = 29 * 8;
 prism.reloadTime = reloadTime;
 prism.powerUse = 20;
 prism.shootSound = lib.loadSound("prismS");
@@ -167,7 +168,7 @@ prism.shootType = (() => {
     cl.strokes = [1.2, 1.1, 1, 0.9];
     cl.tscales = [1, 0.74, 0.5, 0.24];
     cl.lenscales = [0.92, 1, 1.017, 1.025];
-    cl.length = 31 * 8;
+    cl.length = 32 * 8;
     cl.hitEffect = new Effect(16, cons(e => {
         Draw.blend(Blending.additive);
         Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
@@ -184,7 +185,7 @@ prism.shootType = (() => {
     cl.incendChance = 0;
     return cl;
 })();
-prism.health = 200 * 4 * 4;
+prism.health = 200 * 5 * 5;
 prism.coolantMultiplier = 1;
 prism.consumes.add(new ConsumeCoolant(0.5));
 prism.requirements = ItemStack.with(
@@ -192,7 +193,7 @@ prism.requirements = ItemStack.with(
     Items.silicon, 550,
     Items.metaglass, 430,
     Items.thorium, 385,
-    Items.surgeAlloy, 320
+    items.lightninAlloy, 200
 );
 prism.buildVisibility = BuildVisibility.shown;
 prism.category = Category.turret;

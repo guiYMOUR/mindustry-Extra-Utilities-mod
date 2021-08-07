@@ -258,7 +258,7 @@ TD10.captureWave = 100;
 TD10.difficulty = 10;
 exports.TD10 = TD10;
 
-const TD11 = new SectorPreset("TD11Unfinished", TD, 0);
-TD11.captureWave = 1;
-TD11.difficulty = 6;
+const TD11 = new SectorPreset("TD11", TD, 0);
+TD11.captureWave = 100;
+TD11.difficulty = 9;
 exports.TD11 = TD11;

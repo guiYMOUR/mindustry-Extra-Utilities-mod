@@ -29,6 +29,11 @@ Object.assign(light, {
     lightColor : Color.valueOf("bf92f955"),
 });
 
+/*function child(parent, grid){
+    const s = new Sector(parent, grid);
+    s.threat = 0.7;
+    return s;
+}*/
 const challenge = new JavaAdapter(Planet, {
     load() {
         this.meshLoader = prov(() => new HexMesh(challenge, 6));

@@ -9,6 +9,7 @@ require("block/turret/sakura");
 require("block/turret/rainbow");
 require("block/turret/hurricane");
 require("block/turret/ms");
+require("block/turret/sunburst");
 require("block/turret/T2lancer");
 require("block/turret/stinger");
 require("block/turret/miniswarmer");
@@ -32,6 +33,8 @@ require("block/power/png");
 require("block/power/T2steam");
 require("block/power/T2ther");
 require("block/power/th2");
+require("block/power/LightninGenerator");
+
 require("block/production/drill");
 require("block/production/T2kiln");
 require("block/production/T2melter");
@@ -41,7 +44,9 @@ require("block/production/T2CM");
 require("block/production/T2SA");
 require("block/power/GeneratorCrafter");
 require("block/production/T2pulverize");
+require("block/production/LA");
 require("block/production/AdjustableIncinerator");
+
 require("block/distribution/T2IB");
 require("block/distribution/stackBridge");
 require("block/distribution/IN");
@@ -64,6 +69,7 @@ require("unit/apocalypse");
 require("unit/tera");
 require("unit/nihilo");
 
+require("game/items");
 require("other/status");
 
 //re-coming soon...
@@ -76,7 +82,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.40");
+    var dialog = new BaseDialog("Extra Utilities 2.4.50");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -90,22 +96,26 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(200).width(620).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-heal.name") + "\n" + Core.bundle.format("block.btm-heal.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("item.btm-lightnin-alloy.name") + "\n" + Core.bundle.format("item.btm-lightnin-alloy.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-heal", Core.atlas.find("clear"))).fillX().height(96).width(96).pad(3);
+        table.image(Core.atlas.find("btm-lightnin-alloy", Core.atlas.find("clear"))).fillX().height(96).width(96).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-blast-oil-extractor.name") + "\n" + Core.bundle.format("block.btm-blast-oil-extractor.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-LA.name") + "\n" + Core.bundle.format("block.btm-LA.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-blast-oil-extractor-full", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
+        table.image(Core.atlas.find("btm-LA", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-dust-extractor.name") + "\n" + Core.bundle.format("block.btm-dust-extractor.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-lightnin-generator.name") + "\n" + Core.bundle.format("block.btm-lightnin-generator.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-dust-extractor", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.image(Core.atlas.find("btm-lightnin-generator", Core.atlas.find("clear"))).fillX().height(160).width(160).pad(3);
         table.row();
-        /*table.add(Core.bundle.format("block.btm-dissipation.name") + "\n" + Core.bundle.format("block.btm-dissipation.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-rws.name") + "\n" + Core.bundle.format("block.btm-rws.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-dissipation", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
-        table.row();*/
+        table.image(Core.atlas.find("btm-rws", Core.atlas.find("clear"))).fillX().height(32).width(32).pad(3);
+        table.row();
+        table.add(Core.bundle.format("block.btm-rwl.name") + "\n" + Core.bundle.format("block.btm-rwl.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.row();
+        table.image(Core.atlas.find("btm-rwl", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.row();
         table.add(Core.bundle.format("mod.btm.mapMaker")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         return table;
     })()).grow().center().maxWidth(620);
