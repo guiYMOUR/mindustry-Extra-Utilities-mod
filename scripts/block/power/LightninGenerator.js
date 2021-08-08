@@ -158,7 +158,7 @@ Object.assign(LG, {
     hasLiquids : true,
     heating : 0.04,
     explosionRadius : 75,
-    explosionDamage : 4500,
+    explosionDamage : 5000,
     coolantPower : 0.1,
 });
 LG.consumes.item(items.lightninAlloy);

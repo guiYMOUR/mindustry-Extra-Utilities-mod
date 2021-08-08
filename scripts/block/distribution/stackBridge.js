@@ -56,7 +56,7 @@ stackBridge.buildType = prov(() => {
         },
     }, stackBridge);
 });
-stackBridge.itemCapacity = 10;
+stackBridge.itemCapacity = 20;
 stackBridge.size = 1;
 stackBridge.range = 8;
 stackBridge.requirements = ItemStack.with(

@@ -5,6 +5,7 @@ const items = require('game/items');
 const { T2duo } = require('block/turret/T2duo');
 const { T3duo } = require('block/turret/T3duo');
 const { T2scatter } = require('block/turret/T2scatter');
+const { T2scorch } = require('block/turret/T2scorch');
 const { shotgun } = require('block/turret/shotgun');
 const { sakura } = require('block/turret/sakura');
 const { rainbow } = require('block/turret/rainbow');
@@ -75,6 +76,7 @@ const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11 } = require(
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
 lib.addToResearch(T2scatter, { parent: 'scatter', });
+lib.addToResearch(T2scorch, { parent: 'scorch', });
 lib.addToResearch(shotgun, { parent: 'duo',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),

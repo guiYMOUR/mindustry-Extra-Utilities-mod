@@ -56,7 +56,7 @@ m.hitEffect = (() => {
     return e;
 })();
 m.fragBullet = (() => {
-    const mf = new MissileBulletType(3.9, 28);
+    const mf = new MissileBulletType(3.9, 34);
     Object.assign(mf, {
         homingPower : 0.2,
         weaveMag : 4,
@@ -64,7 +64,7 @@ m.fragBullet = (() => {
         lifetime : 60,
         shootEffect : Fx.shootHeal,
         smokeEffect : Fx.hitLaser,
-        splashDamage : 34,
+        splashDamage : 38,
         splashDamageRadius : 20,
         frontColor : Color.white,
         hitSound : Sounds.none,

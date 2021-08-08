@@ -1,3 +1,8 @@
+/*
+* @author <guiY>
+* @readme <bulletTypes>
+*/
+
 const items = require("game/items");
 
 exports.artillerySurge = new ArtilleryBulletType(2.8, 20, "shell");
@@ -94,3 +99,87 @@ const shieldBullet = (() => {
     }
 })();
 exports.shieldBullet = shieldBullet;
+
+function flameShoot(colorBegin, colorTo, colorEnd, length, cone, number, lifetime){
+    return new Effect(lifetime, 80, cons(e => {
+        Draw.color(colorBegin, colorTo, colorEnd, e.fin());
+        Angles.randLenVectors(e.id, number, e.finpow() * length, e.rotation, cone, (x, y) => {
+            Fill.circle(e.x + x, e.y + y, 0.65 + e.fout() * 1.5);
+        });
+    }));
+}
+//flameBullet
+const flame = (() => {
+    return (object) => {
+        const options = Object.assign({
+            //not in bullet
+            flameLength : 88,//real flame range
+            flameCone : 10,
+            particleNumber : 72,
+            //flameColors▼
+            colorBegin : Pal.lightFlame,
+            colorTo : Pal.darkFlame,
+            colorEnd : Color.gray,
+            //in bullet
+            ammoMultiplier : 3,
+            lifetime : 22,
+            hitEffect : Fx.none,
+            smokeEffect : Fx.none,
+            trailEffect : Fx.none,
+            despawnEffect : Fx.none,
+            damage : 20,
+            speed : 0,
+            pierce : true,
+            collidesAir : false,
+            absorbable : false,
+            hittable : false,
+            keepVelocity : false,
+            status : StatusEffects.burning,
+            statusDuration : 60 * 4,
+            buildingDamageMultiplier : 0.4,
+        }, object);
+        options.shootEffect = flameShoot(options.colorBegin, options.colorTo, options.colorEnd, options.flameLength/0.75, options.flameCone, options.particleNumber, options.lifetime + 10);
+        //Define a bullet▼
+        const f = extend(BulletType, {
+            //draw hitsize
+            hit(b){
+                if(this.absorbable && b.absorbed) return;
+                //let's step by step
+                //unit▼
+                Units.nearbyEnemies(b.team, b.x, b.y, options.flameLength, cons(unit =>{
+                    if(Angles.within(b.rotation(), b.angleTo(unit), options.flameCone) && unit.checkTarget(this.collidesAir, this.collidesGround)){
+                        Fx.hitFlameSmall.at(unit);
+                        unit.damage(this.damage * this.ammoMultiplier);
+                        unit.apply(this.status, this.statusDuration);
+                    }
+                }));
+                //block▼
+                Vars.indexer.allBuildings(b.x, b.y, options.flameLength, cons(other => {
+                    if(other.team != b.team && Angles.within(b.rotation(), b.angleTo(other), options.flameCone)){
+                        Fx.hitFlameSmall.at(other);
+                        other.damage(this.damage * options.buildingDamageMultiplier * this.ammoMultiplier);
+                    }
+                }));
+            },
+        });
+        f.ammoMultiplier = options.ammoMultiplier;
+        f.lifetime = options.lifetime;
+        f.shootEffect = options.shootEffect;
+        f.hitEffect = options.hitEffect;
+        f.smokeEffect = options.smokeEffect;
+        f.trailEffect = options.trailEffect;
+        f.despawnEffect = options.despawnEffect;
+        f.damage = options.damage;
+        f.speed = options.speed;
+        f.pierce = options.pierce;
+        f.collidesAir = options.collidesAir;
+        f.absorbable = options.absorbable;
+        f.hittable = options.hittable;
+        f.keepVelocity = options.keepVelocity;
+        f.status = options.status;
+        f.statusDuration = options.statusDuration;
+        f.despawnHit = true;
+        return f;
+    }
+})();
+exports.flame = flame;

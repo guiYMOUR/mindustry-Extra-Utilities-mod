@@ -11,7 +11,7 @@ const core = extendContent(CoreBlock, "core", {
         if(!this.canPlaceOn(Vars.world.tile(x, y), Vars.player.team())){
             this.drawPlaceText(
                 Core.bundle.get(
-                    (Vars.player.team().core() != null && Vars.player.team().core().items.has(this.requirements, Vars.state.rules.buildCostMultiplier)) || Vars.state.rules.infiniteResources ? "bar.btm-limitCore" : "bar.noresources"
+                    "bar.btm-limitCore"
                 )
             , x, y, valid);
         }

@@ -4,6 +4,7 @@ const lib = require("blib");
 require("block/turret/T2duo");
 require("block/turret/T3duo");
 require("block/turret/T2scatter");
+require("block/turret/T2scorch");
 require("block/turret/shotgun");
 require("block/turret/sakura");
 require("block/turret/rainbow");

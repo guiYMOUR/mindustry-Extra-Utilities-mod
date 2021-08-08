@@ -1,7 +1,7 @@
 const items = require("game/items");
 const bullets = require("other/bullets");
 
-const absorbDamageChance = 0.08;
+const absorbDamageChance = 0.1;
 const cor1 = Color.valueOf("b9ff00");
 const cor2 = Color.valueOf("b9ff22");
 
@@ -48,16 +48,21 @@ aws.chanceDeflect = 20;
 aws.flashHit = true;
 aws.absorbLasers = true;
 aws.insulated = true;
+aws.update = true;
 aws.buildCostMultiplier = 3;
 
 aws.buildType = prov(() => {
+    var damageAbsorb = 0;
     return new JavaAdapter(Wall.WallBuild, {
-        handleDamage(amount){
-            if(Mathf.chance(absorbDamageChance)){
-                //this.health = Math.min(this.health + damage * 2, this.maxHealth);
-                this.heal(amount * 2);
+        updateTile(){
+            if(damageAbsorb > 0){
+                this.heal(damageAbsorb * 2);
                 Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
+                damageAbsorb = 0;
             }
+        },
+        handleDamage(amount){
+            if(Mathf.chance(absorbDamageChance)) damageAbsorb += amount;
             return amount;
         },
     }, aws);
@@ -85,16 +90,21 @@ awl.chanceDeflect = 20;
 awl.flashHit = true;
 awl.absorbLasers = true;
 awl.insulated = true;
+awl.update = true;
 awl.buildCostMultiplier = 3;
 
 awl.buildType = prov(() => {
+    var damageAbsorb = 0;
     return new JavaAdapter(Wall.WallBuild, {
-        handleDamage(amount){
-            if(Mathf.chance(absorbDamageChance)){
-                //this.health = Math.min(this.health + damage * 4, this.maxHealth);
-                this.heal(amount * 4);
+        updateTile(){
+            if(damageAbsorb > 0){
+                this.heal(damageAbsorb * 4);
                 Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
+                damageAbsorb = 0;
             }
+        },
+        handleDamage(amount){
+            if(Mathf.chance(absorbDamageChance)) damageAbsorb += amount;
             return amount;
         },
     }, awl);
@@ -120,7 +130,7 @@ const rws = extendContent(Wall,"rws",{
     },
     setStats() {
         this.super$setStats();
-        this.stats.add(Stat.abilities, Core.bundle.format("stat.btm-charge", 160, chargeChance * 100));
+        this.stats.add(Stat.abilities, Core.bundle.format("stat.btm-charge", 180, chargeChance * 100));
     },
 });
 rws.size = 1;
@@ -137,7 +147,7 @@ rws.buildType = prov(() => {
     var shieldBullet = null;
     var shieldLife = 0;
     var acceptDamage = true;
-    const max = 160;
+    const max = 180;
     const lifetime = 150;
     return new JavaAdapter(Wall.WallBuild, {
         multDamage(v){
@@ -190,7 +200,7 @@ const rwl = extendContent(Wall,"rwl",{
     },
     setStats() {
         this.super$setStats();
-        this.stats.add(Stat.abilities, Core.bundle.format("stat.btm-charge", 160*4, chargeChance * 100));
+        this.stats.add(Stat.abilities, Core.bundle.format("stat.btm-charge", 180*4, chargeChance * 100));
     },
 });
 rwl.size = 2;
@@ -207,7 +217,7 @@ rwl.buildType = prov(() => {
     var shieldBullet = null;
     var shieldLife = 0;
     var acceptDamage = true;
-    const max = 160*4;
+    const max = 180*4;
     const lifetime = 150;
     return new JavaAdapter(Wall.WallBuild, {
         multDamage(v){
