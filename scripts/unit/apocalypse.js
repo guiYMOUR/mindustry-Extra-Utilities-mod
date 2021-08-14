@@ -25,7 +25,7 @@ r.smokeEffect = Fx.shootBig2;
 r.damage = 986;
 r.pierceDamageFactor = 0.5;
 
-const apocalypse = extendContent(UnitType, "apocalypse", {});
+const apocalypse = new UnitType("apocalypse");
 var color = Color.valueOf("#FFA665");
 apocalypse.abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5));
 apocalypse.abilities.add(ability.LightningFieldAbility(54, 90, 192, color, 22));
@@ -117,17 +117,15 @@ apocalypse.accel = 0.04;
 apocalypse.rotateSpeed = 1;
 apocalypse.baseRotateSpeed = 20;
 apocalypse.drag = 0.018;
-apocalypse.shake = 3;
 apocalypse.health = 60000;
 apocalypse.lowAltitude = true;
 apocalypse.itemCapacity = 320;
 apocalypse.engineOffset = 41;
 apocalypse.engineSize = 11;
 apocalypse.rotateShooting = true;
-//apocalypse.drawShields = false;
 apocalypse.commandLimit = 8;
 apocalypse.destructibleWreck = false;
-apocalypse.targetFlag = BlockFlag.reactor;
+apocalypse.targetFlags = UnitTypes.eclipse.targetFlags;
 apocalypse.immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting);
 apocalypse.ammoType = new ItemAmmoType(Items.pyratite);
 

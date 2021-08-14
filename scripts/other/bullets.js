@@ -183,3 +183,143 @@ const flame = (() => {
     }
 })();
 exports.flame = flame;
+
+const unitHealCone =(() => {
+    function posx(x, y, length, angle){
+        var a = (Math.PI * angle)/180;
+        var cos = Math.cos(a);
+        var px = x + length * cos;
+        return px;
+    }
+    function posy(x, y, length, angle){
+        var a = (Math.PI * angle)/180;
+        var sin = Math.sin(a);
+        var py = y + length * sin;
+        return py;
+    }
+    return (object) => {
+        const options = Object.assign({
+            lifetime : 180,
+            healPercent : 12,
+            findRange : 176,
+            findAngle : 46,
+        }, object);
+        const hb = extend(BasicBulletType,{
+            range(){
+                return options.findRange;
+            },
+            update(b){
+                const ratio = 60 * 100;
+                Units.nearby(b.team, b.x, b.y, options.findRange, cons(unit =>{
+                    if(unit.damaged() && Angles.within(b.rotation(), b.angleTo(unit), options.findAngle/2)){
+                        unit.heal((unit.maxHealth < 1000 ? 1000 : unit.maxHealth) * (this.healPercent/ratio));
+                    }
+                }));
+                Vars.indexer.eachBlock(b, options.findRange, boolf(other => other.damaged() && Angles.within(b.rotation(), b.angleTo(other), options.findAngle/2)), cons(other => {
+                    other.heal((this.healPercent/ratio) * other.maxHealth);
+                    Fx.healBlockFull.at(other.x, other.y, !(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5, Pal.heal);
+                }));
+            },
+            draw(b){
+                const range = options.findRange;
+                const angle = options.findAngle;
+                Draw.color(Pal.heal);
+                Draw.z(Layer.buildBeam);
+                Draw.alpha(0.8);
+                Fill.circle(b.x, b.y, 4);
+                for(var i = b.rotation() - angle/2; i < b.rotation() + angle/2; i+=2){
+                    var px1 = posx(b.x, b.y, range, i);
+                    var py1 = posy(b.x, b.y, range, i);
+                    var px2 = posx(b.x, b.y, range, i+2);
+                    var py2 = posy(b.x, b.y, range, i+2);
+                    Fill.tri(b.x, b.y, px1, py1, px2, py2);
+                }
+                Draw.alpha(1);
+                Draw.z();
+            },
+        });
+        const fadeEffect = new Effect(15, cons(e =>{
+            const range = options.findRange * e.fout();
+            const angle = options.findAngle;
+            Draw.color(Pal.heal);
+            Draw.z(Layer.buildBeam);
+            Draw.alpha(0.8);
+            for(var i = e.rotation - angle/2; i < e.rotation + angle/2; i+=2){
+                var px1 = posx(e.x, e.y, range, i);
+                var py1 = posy(e.x, e.y, range, i);
+                var px2 = posx(e.x, e.y, range, i+2);
+                var py2 = posy(e.x, e.y, range, i+2);
+                Fill.tri(e.x, e.y, px1, py1, px2, py2);
+            }
+        }));
+        Object.assign(hb, {
+            speed : 0,
+            lifetime : options.lifetime,
+            damage : 0,
+            collides: false,
+            collidesAir: false,
+            collidesGround: false,
+            absorbable: false,
+            hittable: false,
+            keepVelocity: false,
+            despawnEffect : fadeEffect,
+            shootEffect : Fx.none,
+            smokeEffect : Fx.none,
+            healPercent : options.healPercent,
+        });
+        return hb;
+    }
+})();
+exports.unitHealCone = unitHealCone;
+
+const eff1 = new Effect(10, cons(e => {
+        Draw.color(Color.white, Pal.heal, e.fin());
+        Lines.stroke(e.fout() * 2 + 0.2);
+        Lines.circle(e.x, e.y, e.fin() * 13);
+}));
+const antiMissileBullet = extend(BasicBulletType, {
+    range(){
+        return this.homingRange * 2.5;
+    },
+    update(b){
+        var target;
+        target = Groups.bullet.intersect(b.x - this.homingRange, b.y - this.homingRange, this.homingRange*2, this.homingRange*2).min(other => other.team != b.team && (other.type.homingPower > 0 || other instanceof MissileBulletType), other => other.dst2(b.x, b.y));
+        if(target != null){
+            b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), 30));
+            if(b.within(target.x, target.y, target.type.homingRange)){
+                target.vel.setAngle(Angles.moveToward(target.rotation(), target.angleTo(b), target.type.homingPower * Time.delta * 50));
+            }
+            if(target.within(b.x, b.y, this.splashDamageRadius * target.type.speed)){
+                target.remove();
+                b.remove();
+            }
+        }
+        if(Mathf.chanceDelta(this.trailChance)){
+            this.trailEffect.at(b.x, b.y, this.trailParam, this.trailColor);
+        }
+    },
+});
+Object.assign(antiMissileBullet, {
+    sprite : "btm-anti",
+    shrinkY : 0,
+    width : 8,
+    height: 9,
+    trailChance : 0.8,
+    trailColor : Color.valueOf("6f6f6f"),
+    damage : 0,
+    speed : 15,
+    hitEffect : Fx.blastExplosion,
+    shootEffect : eff1,
+    smokeEffect : Fx.none,
+    splashDamage : 0,
+    splashDamageRadius : 8,
+    lifetime : Math.ceil((48*12)/15),
+    homingRange : 48*6,
+    absorbable : false,
+    hittable : false,
+    collides : false,
+    collidesTiles : false,
+    collidesAir : false,
+    collidesGround : false,
+});
+exports.antiMissileBullet = antiMissileBullet;

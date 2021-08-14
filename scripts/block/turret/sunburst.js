@@ -12,6 +12,7 @@ Object.assign(m, {
     height : 12,
     shrinkY : 0,
     drag : -0.003,
+    homingPower : 0.08,
     homingRange : 60,
     keepVelocity : false,
     lightRadius : 60,

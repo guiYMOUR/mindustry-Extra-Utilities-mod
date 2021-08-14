@@ -1,5 +1,6 @@
 /*
 * @author <guiY>
+* @abilities
 */
 
 const status = require("other/status");
@@ -71,7 +72,7 @@ const MendFieldAbility = (range, reload, healP) => {
                 timer += Time.delta;
                 if(timer >= reload){
                     other.heal((healP/100) * other.maxHealth);
-                    Fx.healBlockFull.at(other.x, other.y, other.block.size, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
+                    Fx.healBlockFull.at(other.x, other.y, !(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
                     timer = 0;
                 }
             }));
@@ -90,67 +91,6 @@ const MendFieldAbility = (range, reload, healP) => {
     return ability;
 };
 exports.MendFieldAbility = MendFieldAbility;
-
-//In 7.0 I'll remove it.
-/*const pointDefenseAbility = (px, py, reloadTime, range, bulletDamage, sprite) => {
-    const color = Color.white;
-    var target = null;
-    var reload = 0;
-    var rotation = 90;
-    var timer = 90;
-    var ability = new JavaAdapter(Ability, {
-        localized() {
-            return Core.bundle.get("ability.btm-pointDefenseAbility");
-        },
-        update(unit) {
-            var x = unit.x + Angles.trnsx(unit.rotation, py, px);
-            var y = unit.y + Angles.trnsy(unit.rotation, py, px);
-            target = Groups.bullet.intersect(unit.x - range, unit.y - range, range*2, range*2).min(b => b.team != unit.team && b.type.hittable, b => b.dst2(unit));
-
-            if(target != null && !target.isAdded()){
-                target = null;
-            }
-            if(target == null){
-                if(timer >= 90){
-                    rotation = Angles.moveToward(rotation, unit.rotation, 3);
-                }else{
-                    timer += Time.delta;
-                }
-            }
-            if(target != null && target.within(unit, range) && target.team != unit.team && target.type != null && target.type.hittable){
-                timer = 0;
-                reload += Time.delta;
-                //var dest = unit.angleTo(target);
-                var dest = target.angleTo(x, y) - 180;
-                rotation = Angles.moveToward(rotation, dest, 20);
-                if(Angles.within(rotation, dest, 3) && reload >= reloadTime){
-                    if(target.damage > bulletDamage){
-                        target.damage = target.damage - bulletDamage;
-                    }else{
-                        target.remove();
-                    }
-                    Tmp.v1.trns(rotation, 6);
-                    Fx.pointBeam.at(x + Tmp.v1.x, y + Tmp.v1.y, rotation, color, new Vec2().set(target));
-                    Fx.sparkShoot.at(x + Tmp.v1.x, y + Tmp.v1.y, rotation, color);
-                    Fx.pointHit.at(target.x, target.y, color);
-                    Sounds.lasershoot.at(x, y, Mathf.random(0.9, 1.1));
-                    reload = 0;
-                }
-            }
-        },
-        copy() {
-            return pointDefenseAbility(px, py, reloadTime, range, bulletDamage, sprite);
-        },
-        draw(unit){
-            var x = unit.x + Angles.trnsx(unit.rotation, py, px);
-            var y = unit.y + Angles.trnsy(unit.rotation, py, px);
-            var region = Core.atlas.find("btm-" + sprite);
-            Draw.rect(region, x, y, rotation - 90);
-        },
-    });
-    return ability;
-};
-exports.pointDefenseAbility = pointDefenseAbility;*/
 
 //Prevent players from using cheat mod(only certain aspects)
 const preventCheatingAbility = (open) => {
@@ -321,9 +261,105 @@ const LightningFieldAbility = (damage, reload, range, color, maxFind) => {
             }
         },
         copy() {
-            return LightningFieldAbility(damage, reload, range, color);
+            return LightningFieldAbility(damage, reload, range, color, maxFind);
         },
     });
     return ability;
 };
 exports.LightningFieldAbility = LightningFieldAbility;
+
+const BatteryAbility = (capacity, shieldRange, range, px, py) => {
+    var amount = 0;
+    var target = null;
+    var timerRetarget = 0;
+    var paramUnit;
+    const absorb = new Effect(20, cons(e => {
+            Draw.color(Pal.heal);
+            Lines.stroke(e.fslope() * 2.5);
+            Lines.poly(e.x, e.y, 6, 3 * e.fout() + 9);
+            const d = new Floatc2({get(x, y){
+                Lines.poly(e.x + x, e.y + y, 6, 2 * e.fout() + 2);
+            }})
+            Angles.randLenVectors(e.id, 2, 32 * e.fin(), 0, 360,d);
+    }));
+    var shieldConsumer = cons(trait => {
+        if(trait.team != paramUnit.team && trait.type.absorbable && Intersector.isInsideHexagon(paramUnit.x, paramUnit.y, shieldRange * 2, trait.getX(), trait.getY()) && paramUnit.shield > 0){
+            trait.absorb();
+            absorb.at(trait);
+            paramUnit.shield = Math.max(paramUnit.shield - trait.damage, 0);
+        }
+    });
+    function setupColor(satisfaction){
+        Draw.color(Color.white, Pal.powerLight, (1 - satisfaction) * 0.86 + Mathf.absin(3, 0.1));
+        Draw.alpha(Renderer.laserOpacity);
+    }
+    var ability = new JavaAdapter(Ability, {
+        findTarget(unit){
+            if(target != null) return;
+            Vars.indexer.allBuildings(unit.x, unit.y, range, cons(other =>{
+                if(other.block != null && other.team == unit.team && other.block instanceof PowerNode){
+                    target = other;
+                }
+            }));
+        },
+        updateTarget(unit){
+            timerRetarget += Time.delta;
+            if(timerRetarget > 5){
+                target = null;
+                this.findTarget(unit);
+                timerRetarget = 0;
+            }
+        },
+        localized() {
+            return Core.bundle.format("ability.btm-BatteryAbility", capacity, range/8);
+        },
+        draw(unit){
+            var x = unit.x + Angles.trnsx(unit.rotation, py, px);
+            var y = unit.y + Angles.trnsy(unit.rotation, py, px);
+            if(unit.shield > 0){
+                Draw.color(Pal.heal);
+                Draw.z(Layer.effect);
+                Lines.stroke(1.5);
+                Lines.poly(unit.x, unit.y, 6, shieldRange);
+            }
+            if(target == null || target.block == null) return;
+            if(Mathf.zero(Renderer.laserOpacity)) return;
+            Draw.z(Layer.power);
+            setupColor(target.power.graph.getSatisfaction());
+            target.block.drawLaser(unit.team, x, y, target.x, target.y, 2, target.block.size);
+        },
+        update(unit) {
+            paramUnit = unit;
+            this.updateTarget(unit);
+            Groups.bullet.intersect(unit.x - shieldRange, unit.y - shieldRange, shieldRange * 2, shieldRange * 2, shieldConsumer);
+            amount = unit.shield * 10;
+            if(Vars.state.rules.unitAmmo && amount > 0){
+                Units.nearby(unit.team, unit.x, unit.y, range, cons(other => {
+                    if(other.type.ammoType instanceof PowerAmmoType){
+                        var powerPerAmmo = other.type.ammoType.totalPower / other.type.ammoCapacity;
+                        var ammoRequired = other.type.ammoCapacity - other.ammo;
+                        var powerRequired = ammoRequired * powerPerAmmo;
+                        var powerTaken = Math.min(amount, powerRequired);
+                        if(powerTaken > 1){
+                            unit.shield -= powerTaken / 10;
+                            other.ammo += powerTaken / powerPerAmmo;
+                            Fx.itemTransfer.at(unit.x, unit.y, Math.max(powerTaken / 100, 1), Pal.power, other);
+                        }
+                    }
+                }));
+            }
+            if(target == null || target.block == null) return;
+            var g = target.power.graph;
+            if(g.getPowerBalance() > 0) amount = Math.min(amount + (g.getLastPowerProduced()), capacity);
+            unit.shield = amount / 10;
+        },
+        displayBars(unit, bars){
+            bars.add(new Bar(Core.bundle.format("bar.btm-unitBattery"), Pal.power, () => amount / capacity)).row();
+        },
+        copy() {
+            return BatteryAbility(capacity, shieldRange, range, px, py);
+        },
+    });
+    return ability;
+};
+exports.BatteryAbility = BatteryAbility;

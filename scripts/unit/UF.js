@@ -6,6 +6,7 @@ const { asphyxia } = require("unit/asphyxia");
 const { apocalypse } = require("unit/apocalypse");
 const { tera } = require("unit/tera");
 const { nihilo } = require("unit/nihilo");
+const { narwhal } = require("unit/narwhal");
 var unitType = (unitFrom, unitTo) => {
     var a = java.util.Arrays.copyOf(Blocks.tetrativeReconstructor.upgrades.get(0), 2);
     a[0] = unitFrom;
@@ -34,6 +35,7 @@ unitF.upgrades.addAll(
     unitType(UnitTypes.eclipse, apocalypse),
     unitType(UnitTypes.oct, tera),
     unitType(UnitTypes.omura, nihilo),
+    unitType(UnitTypes.navanax, narwhal),
 );
 unitF.requirements = ItemStack.with(
     Items.silicon, 6000,

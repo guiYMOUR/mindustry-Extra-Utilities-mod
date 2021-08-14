@@ -42,7 +42,7 @@ r.smokeEffect = Fx.shootBig2;
 r.damage = 1350;
 r.pierceDamageFactor = 0.6;
 
-const nihilo = extendContent(UnitType, 'nihilo', {});
+const nihilo = new UnitType("nihilo");
 nihilo.constructor = prov(() => extend(UnitTypes.omura.constructor.get().class, {}));
 nihilo.weapons.add(
     (() =>{
@@ -117,6 +117,8 @@ nihilo.weapons.add(
         w.top = false;
         w.rotate = true;
         w.rotateSpeed = 8;
+        w.controllable = false;
+        w.autoTarget = true;
         w.x = 0;
         w.y = 38;
         w.ejectEffect = Fx.none;

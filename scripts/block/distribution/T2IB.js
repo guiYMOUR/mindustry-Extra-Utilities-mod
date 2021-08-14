@@ -15,6 +15,7 @@ alloyDuct.speed = 2;
 alloyDuct.placeableLiquid = true;
 exports.alloyDuct = alloyDuct;
 
+//Blocks.plastaniumConveyor.recharge = 1;
 const ppc = extendContent(StackConveyor, "ppc", {});
 ppc.health = 150;
 ppc.speed = 8 / 60;

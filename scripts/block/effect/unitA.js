@@ -82,6 +82,12 @@ unitA.buildType = prov(() => {
                 timer = 0;
             }
         },
+        draw(){
+            this.super$draw();
+            Draw.color(Items.phaseFabric.color);
+            Draw.alpha(phaseHeatU);
+            Draw.rect(Core.atlas.find("btm-unitA-light"), this.x, this.y);
+        },
         drawSelect(){
             this.super$drawSelect();
             /*var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost;

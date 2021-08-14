@@ -52,7 +52,7 @@ hugeDamage.hitEffect = new Effect(60, cons(e => {
     }
 }));
 
-const enemy1 = extendContent(UnitType, 'enemy1', {});
+const enemy1 = new UnitType("enemy1");
 enemy1.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
 enemy1.defaultController = prov(() => new SuicideAI());
 enemy1.targetAir = false;
@@ -76,7 +76,7 @@ enemy1.armor = 1;
 enemy1.abilities.add(ability.healthDisplay(10, 15, 2));
 enemy1.alwaysUnlocked = true;
 
-const enemy2 = extendContent(UnitType, 'enemy2', {});
+const enemy2 = new UnitType("enemy2");
 enemy2.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
 enemy2.defaultController = prov(() => new SuicideAI());
 enemy2.targetAir = false;
@@ -102,7 +102,7 @@ enemy2.abilities.add(ability.healthDisplay(12, 15, 2));
 enemy2.abilities.add(new ForceFieldAbility(36, 1, 180, 60 * 10));
 enemy2.alwaysUnlocked = true;
 
-const enemy3 = extendContent(UnitType, 'enemy3', {});
+const enemy3 = new UnitType("enemy3");
 enemy3.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
 enemy3.defaultController = prov(() => new SuicideAI());
 enemy3.targetAir = false;
@@ -127,7 +127,7 @@ enemy3.abilities.add(new RepairFieldAbility(60, 60 * 3, 64));
 enemy3.abilities.add(ability.healthDisplay(14, 22, 3));
 enemy3.alwaysUnlocked = true;
 
-const boss1 = extendContent(UnitType, 'boss1', {});
+const boss1 = new UnitType("boss1");
 boss1.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
 boss1.defaultController = prov(() => new SuicideAI());
 boss1.targetAir = false;
@@ -154,7 +154,7 @@ boss1.abilities.add(ability.healthDisplay(18, 30, 4));
 boss1.abilities.add(new ForceFieldAbility(80, 2.2, 600, 60 * 15));
 boss1.alwaysUnlocked = true;
 
-const boss2 = extendContent(UnitType, 'boss2', {});
+const boss2 = new UnitType("boss2");
 boss2.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
 boss2.defaultController = prov(() => new SuicideAI());
 boss2.targetAir = false;

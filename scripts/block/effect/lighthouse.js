@@ -19,10 +19,10 @@ lighthouse.buildType = prov(() => {
             Vars.indexer.allBuildings(this.x, this.y, range2, cons(other => {
                 if(other.team == this.team){
                     if(other.within(this, range)){
-                    Drawf.light(this.team, other.x, other.y, other.block.size * (range / 2) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
+                    Drawf.light(this.team, other.x, other.y, (!(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5) * (range / 2) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
                     }
                 } else {
-                    Drawf.light(this.team, other.x, other.y, other.block.size * (range / 4) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
+                    Drawf.light(this.team, other.x, other.y, (!(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5) * (range / 4) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
                 }
             }));
             Units.nearbyEnemies(this.team, this.x, this.y, range2, cons(unit =>{

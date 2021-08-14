@@ -2,7 +2,7 @@ const lib = require("blib");
 const mb = extend(BasicBulletType, {
     update(b){
         if(b.time < this.homingDelay/b.owner.reloadSpeed()){
-            b.vel.trns(b.owner.rotation, 0.1);
+            b.initVel(b.owner.rotation, 0.1);
         } else {
             var target = Units.closestTarget(b.team, b.x, b.y, this.homingRange,
                 boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir)),
@@ -10,9 +10,9 @@ const mb = extend(BasicBulletType, {
             );
             if(target != null) {
                 b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(target), this.homingPower));
-                b.vel.trns(b.rotation(), this.speed);
+                b.initVel(b.rotation(), this.speed);
             } else {
-                b.vel.trns(b.owner.rotation, this.speed);
+                b.initVel(b.owner.rotation, this.speed);
             }
             if(Mathf.chanceDelta(this.trailChance)){
                 this.trailEffect.at(b.x, b.y, this.trailParam, this.trailColor);

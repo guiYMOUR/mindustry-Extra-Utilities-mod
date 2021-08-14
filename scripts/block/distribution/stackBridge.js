@@ -30,12 +30,15 @@ stackBridge.buildType = prov(() => {
             if(this.items.total() >= this.block.itemCapacity && other != null && other.items.total() < this.block.itemCapacity){
                 other.setAmount(this.items.total());
                 other.items.add(lastItem, other.getAmount());
+                Fx.itemTransfer.at(this.x, this.y, 2, lastItem.color, other);
                 Fx.plasticburn.at(this);
                 this.items.clear();
             }
         },
         doDump(){
-            for(var i = 0; i < 3; i++){
+            for(var i = 0; i < 4; i++){
+                var other = this.nearby(i);
+                if(other instanceof StackConveyor.StackConveyorBuild && other.link == -1) other.cooldown = 0;
                 this.dumpAccumulate();
             }
         },

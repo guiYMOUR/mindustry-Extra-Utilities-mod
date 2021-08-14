@@ -44,7 +44,7 @@ const hb = extend(BasicBulletType,{
         }));
         Vars.indexer.eachBlock(b, findRange, boolf(other => other.damaged() && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)), cons(other => {
             other.heal((this.healPercent/ratio) * other.maxHealth);
-            Fx.healBlockFull.at(other.x, other.y, other.block.size, Pal.heal);
+            Fx.healBlockFull.at(other.x, other.y, !(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5, Pal.heal);
         }));
     },
     draw(b){

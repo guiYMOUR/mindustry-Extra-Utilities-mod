@@ -29,7 +29,7 @@ r.smokeEffect = Fx.shootBig2;
 r.damage = 1550;
 r.pierceDamageFactor = 0.5;
 
-const nebula = extendContent(UnitType, 'nebula', {});
+const nebula = new UnitType("nebula");
 nebula.constructor = prov(() => extend(UnitTypes.corvus.constructor.get().class, {}));
 nebula.weapons.add(
     (() => {
@@ -115,14 +115,13 @@ nebula.flying = false;
 nebula.speed = 0.25;
 nebula.hitSize = 41;
 nebula.rotateSpeed = 1.8;
-nebula.shake = 3;
 nebula.health = 59000;
 nebula.mineSpeed = 7;
 nebula.mineTier = 3;
 nebula.buildSpeed = 3;
 nebula.itemCapacity = 300;
 nebula.rotateShooting = true;
-nebula.drawShields =false;
+nebula.drawShields = false;
 nebula.legCount = 6;
 nebula.legLength = 22;
 nebula.legBaseOffset = 11;

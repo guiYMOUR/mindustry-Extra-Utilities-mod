@@ -69,6 +69,7 @@ require("unit/asphyxia");
 require("unit/apocalypse");
 require("unit/tera");
 require("unit/nihilo");
+require("unit/narwhal");
 
 require("game/items");
 require("other/status");
@@ -83,7 +84,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.50");
+    var dialog = new BaseDialog("Extra Utilities 2.4.60");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -97,15 +98,15 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(200).width(620).pad(3);
         table.row();
-        table.add(Core.bundle.format("item.btm-lightnin-alloy.name") + "\n" + Core.bundle.format("item.btm-lightnin-alloy.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-T2scorch.name") + "\n" + Core.bundle.format("block.btm-T2scorch.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-lightnin-alloy", Core.atlas.find("clear"))).fillX().height(96).width(96).pad(3);
+        table.image(Core.atlas.find("btm-T2scorch", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-LA.name") + "\n" + Core.bundle.format("block.btm-LA.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("unit.btm-narwhal.name") + "\n" + Core.bundle.format("unit.btm-narwhal.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-LA", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
+        table.image(Core.atlas.find("btm-narwhal-full", Core.atlas.find("clear"))).fillX().height(224).width(160).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-lightnin-generator.name") + "\n" + Core.bundle.format("block.btm-lightnin-generator.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        /*table.add(Core.bundle.format("block.btm-lightnin-generator.name") + "\n" + Core.bundle.format("block.btm-lightnin-generator.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-lightnin-generator", Core.atlas.find("clear"))).fillX().height(160).width(160).pad(3);
         table.row();
@@ -116,7 +117,7 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.add(Core.bundle.format("block.btm-rwl.name") + "\n" + Core.bundle.format("block.btm-rwl.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-rwl", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
-        table.row();
+        table.row();*/
         table.add(Core.bundle.format("mod.btm.mapMaker")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         return table;
     })()).grow().center().maxWidth(620);

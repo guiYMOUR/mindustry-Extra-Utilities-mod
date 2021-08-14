@@ -142,7 +142,7 @@ DCF.buildType = prov(() => {
                 r = 0;
                 Vars.indexer.eachBlock(this, range, boolf(other => other.damaged()), cons(other => {
                     other.heal(cureRatio * other.maxHealth);
-                    Fx.healBlockFull.at(other.x, other.y, other.block.size, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
+                    Fx.healBlockFull.at(other.x, other.y, !(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5, Tmp.c1.set(baseColor).lerp(phaseColor, 0.3));
                 }));
             }
             for (var i = 0; i < links.size; i++){
@@ -180,7 +180,7 @@ DCF.buildType = prov(() => {
                 var pos = links.get(i);
                 if (linkValid(this, pos) && ab == 1) {
                     var linkTarget = Vars.world.build(pos);
-                    const realRange = linkTarget.block.size * 30 * 1.9;
+                    const realRange = !(linkTarget instanceof PayloadSource.PayloadSourceBuild) ? linkTarget.block.size * 30 * 1.9 : 285;
                     Groups.bullet.intersect(linkTarget.x - realRange, linkTarget.y - realRange, realRange * 2, realRange * 2, cons(trait =>{
                         if(trait.type.absorbable && trait.team != linkTarget.team && Intersector.isInsideHexagon(trait.getX(), trait.getY(), realRange, linkTarget.x, linkTarget.y) ){
                              trait.absorb();
@@ -212,7 +212,7 @@ DCF.buildType = prov(() => {
                 if (linkValid(this, pos) && ab != 0) {
                     var linkTarget = Vars.world.build(pos);
                     if(linkTarget == null) return;
-                    const fxRangeOther = linkTarget.block.size * 30 * 0.8;
+                    const fxRangeOther = !(linkTarget instanceof PayloadSource.PayloadSourceBuild) ? linkTarget.block.size * 30 * 0.8 : 120;
                     Fx.forceShrink.at(linkTarget.x, linkTarget.y, fxRangeOther, cor);
                 }
             }
@@ -246,7 +246,7 @@ DCF.buildType = prov(() => {
                 var pos = links.get(i);
                 if (linkValid(this, pos) && ab == 1) {
                     var linkTarget = Vars.world.build(pos);
-                    const radius = linkTarget.block.size * 30 * 0.8;
+                    const radius = !(linkTarget instanceof PayloadSource.PayloadSourceBuild) ? linkTarget.block.size * 30 * 0.8 : 120;
                     Draw.z(Layer.shields);
 
                     Draw.color(cor/*, Color.white, Mathf.clamp(0)*/);
@@ -277,7 +277,7 @@ DCF.buildType = prov(() => {
                 var pos = links.get(i);
                 if (linkValid(this, pos)) {
                     var linkTarget = Vars.world.build(pos);
-                    Drawf.square(linkTarget.x, linkTarget.y, linkTarget.block.size * tilesize / 2 + 1, cor);
+                    Drawf.square(linkTarget.x, linkTarget.y, (!(linkTarget instanceof PayloadSource.PayloadSourceBuild) ? linkTarget.block.size : 5) * tilesize / 2 + 1, cor);
                 }
             }
             Drawf.dashCircle(this.x, this.y, range, cor);

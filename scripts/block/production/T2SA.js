@@ -1,7 +1,14 @@
 const lib = require("blib");
 
 const T2SA = extendContent(AttributeCrafter, "T2-SA", {});
-lib.setBuildingSimple(T2SA, AttributeCrafter.AttributeCrafterBuild, {});
+lib.setBuildingSimple(T2SA, AttributeCrafter.AttributeCrafterBuild, {
+    draw(){
+        this.super$draw();
+        Draw.color(Pal.surge);
+        Draw.alpha(this.power.status);
+        Draw.rect(Core.atlas.find("btm-T2-SA-light"),this.x,this.y);
+    },
+});
 T2SA.craftEffect = Fx.smeltsmoke;
 T2SA.outputItem = new ItemStack(Items.surgeAlloy, 5);
 T2SA.craftTime = 84;

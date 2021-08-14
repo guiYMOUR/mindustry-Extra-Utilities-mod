@@ -82,17 +82,7 @@ const lineBullet = (() => {
                 if(other.block != null && other.team != b.team){
                     if(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation){
                         if(other.block instanceof PowerNode){
-                            for(var i = 0; i < other.power.links.size; i++){
-                                var link = Vars.world.build(other.power.links.get(i));
-                                if(link == null || !other.block.linkValid(other, link)) return;
-                                other.power.graph.removeList(link);
-                                other.power.graph.remove(link);
-                                link.power.graph.removeList(other);
-                                link.power.graph.remove(other);
-                                other.power.links.removeValue(link.pos());
-                                link.power.links.removeValue(other.pos());
-                            }
-                    //other.kill();
+                            other.onConfigureTileTapped(other);
                         } else {
                             other.damage(this.splashDamage * 1.5);
                             Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
@@ -141,7 +131,7 @@ const lineBullet = (() => {
     return lb;
 })();
 
-const asphyxia = extendContent(UnitType, 'asphyxia', {});
+const asphyxia = new UnitType("asphyxia");
 asphyxia.constructor = prov(() => extend(UnitTypes.toxopid.constructor.get().class, {}));
 asphyxia.weapons.add(
     (() =>{
@@ -207,12 +197,11 @@ asphyxia.speed = 0.4;
 asphyxia.hitSize = 33;
 asphyxia.lightRadius = 160;
 asphyxia.rotateSpeed = 1.8;
-asphyxia.landshake = 1.1;
+asphyxia.landShake = 1.5;
 asphyxia.health = 60000;
 asphyxia.buildSpeed = 1.5;
 asphyxia.itemCapacity = 300;
 asphyxia.rotateShooting = true;
-asphyxia.drawShields =false;
 asphyxia.legCount = 8;
 asphyxia.legLength = 78;
 asphyxia.legBaseOffset = 8;

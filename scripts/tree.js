@@ -69,6 +69,7 @@ const { apocalypse } = require('unit/apocalypse');
 const { tera } = require('unit/tera');
 const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
+const { narwhal } = require('unit/narwhal');
 
 const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
 const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11 } = require('game/TD/tmain');
@@ -216,6 +217,7 @@ lib.addToResearch(apocalypse, { parent: 'eclipse',objectives: Seq.with( new Obje
 lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives.Research(unitF) ) });
+lib.addToResearch(narwhal, { parent: 'navanax',objectives: Seq.with( new Objectives.Research(unitF) ) });
 
 lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });
 
