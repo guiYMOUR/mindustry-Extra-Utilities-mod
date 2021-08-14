@@ -38,7 +38,7 @@
 
 ### Distribution
 - More Transport equipment for titanium manufacture
-- Plastanium Bridge(bug)
+- Plastanium Bridge<strike>(bug)</strike>
 - Item Node
 - Liquid Node
 - Liquid Mass Driver
