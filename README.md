@@ -64,12 +64,13 @@
 
 ### Unit
 - Imaginary Reconstructor
-- suzerain
+- Auzerain
 - Nebula
-- asphyxia
-- apocalypse
+- Asphyxia
+- Apocalypse
 - Tera
 - Nihilo
+- Narwhal
 
 ### Ability
 - Territory Field
