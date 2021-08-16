@@ -130,6 +130,7 @@ drill.requirements = ItemStack.with(
 );
 drill.buildVisibility = BuildVisibility.shown;
 drill.category = Category.production;
+drill.itemCapacity = 20;
 drill.drillTime = 80;
 drill.size = 4;
 drill.drawRim = true;

@@ -2,12 +2,13 @@
 * @author <guiY>
 * @DefAI
 */
+
 const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
     return extend(DefenderAI, {
         updateMovement(){
             if(this.target != null){
                 var shoot = false;
-                if(this.target.within(this.unit, this.unit.type.range) && this.target.damaged() && ((shotUnit && this.target instanceof Unit) || (findBuild && this.target instanceof Building))){
+                if(this.target.within(this.unit, this.unit.type.range) && this.target.damaged() && this.target.team == this.unit.team && ((shotUnit && this.target instanceof Unit) || (findBuild && this.target instanceof Building))){
                     this.unit.aim(this.target);
                     shoot = true;
                 }
@@ -15,13 +16,30 @@ const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
             } else if(this.target == null){
                 this.unit.controlWeapons(false);
             }
-            if(this.target != null){
-                if(!this.target.within(this.unit, this.unit.type.range * 0.65) && this.target.team == this.unit.team){
-                    this.moveTo(this.target, this.unit.type.range * 0.65);
+            if(this.target != null){//move to reach the target
+                if(this.unit.type.flying){
+                    if(!this.target.within(this.unit, this.unit.type.range * 0.65)){
+                        this.moveTo(this.target, this.unit.type.range * 0.65);
+                    }
+                    this.unit.lookAt(this.target);
+                } else {
+                    if(!this.target.within(this.unit, this.unit.type.range * 0.7)){
+                        this.moveTo(this.target, this.unit.type.range * 0.7);
+                        if(!this.target.within(this.unit, this.unit.type.range * 1.2)){
+                            if(this.unit.type.canBoost){
+                                this.unit.elevation = Mathf.approachDelta(this.unit.elevation, 1, this.unit.type.riseSpeed);
+                            }
+                        }
+                    }
+                    if(this.target.within(this.unit, this.unit.type.range * 1.2)){
+                        if(this.unit.type.canBoost && this.unit.elevation > 0.001 && !this.unit.onSolid()){
+                            this.unit.elevation = Mathf.approachDelta(this.unit.elevation, 0, this.unit.type.riseSpeed);
+                        }
+                    }
+                    this.unit.lookAt(this.target);
                 }
-                this.unit.lookAt(this.target);
             }
-            if(!shotUnit && (this.target == null || this.target instanceof Unit)){
+            if(!shotUnit && (this.target == null || this.target instanceof Unit || this.target.team != this.unit.team)){//auto attack
                 var shootA = false;
                 var air = this.unit.type.targetAir;
                 var ground = this.unit.type.targetGround;
@@ -41,7 +59,8 @@ const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
                     var build = Units.findAllyTile(this.unit.team, x, y, Math.max(range, 400), boolf(other => other.damaged()));
                     if(build != null) return build;
                 }
-                return Units.closest(this.unit.team, x, y, Math.max(range, 400), boolf(u => !u.dead && u.type != this.unit.type), (u, tx, ty) => -u.maxHealth + Mathf.dst2(u.x, u.y, tx, ty) / 6400);
+                var strong = Units.closest(this.unit.team, x, y, Math.max(range, 400), boolf(u => !u.dead && u.type != this.unit.type), (u, tx, ty) => -u.maxHealth + Mathf.dst2(u.x, u.y, tx, ty) / 6400);
+                if(strong != null) return strong;
             }
             var block = this.targetFlag(this.unit.x, this.unit.y, BlockFlag.rally, false);
             if(block != null) return block;

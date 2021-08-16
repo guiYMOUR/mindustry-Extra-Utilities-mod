@@ -162,6 +162,7 @@ Object.assign(LG, {
     coolantPower : 0.1,
 });
 LG.consumes.item(items.lightninAlloy);
+LG.liquidCapacity = 60;
 LG.consumes.liquid(Liquids.cryofluid, 0.04 / 0.1).update = false;
 LG.requirements = ItemStack.with(
     Items.metaglass, 600,

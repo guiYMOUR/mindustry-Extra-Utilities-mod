@@ -262,3 +262,13 @@ const TD11 = new SectorPreset("TD11", TD, 0);
 TD11.captureWave = 100;
 TD11.difficulty = 9;
 exports.TD11 = TD11;
+
+const TD12 = new SectorPreset("TD12", TD, 6);
+TD12.captureWave = 101;
+TD12.difficulty = 7;
+exports.TD12 = TD12;
+
+const TD13 = new SectorPreset("TD13", TD, 24);
+TD13.captureWave = 101;
+TD13.difficulty = 8;
+exports.TD13 = TD13;

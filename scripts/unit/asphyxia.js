@@ -173,6 +173,8 @@ asphyxia.weapons.add(
         w.y = 8;
         w.reload = 9;
         w.rotate = true;
+        w.autoTarget = true;
+        w.controllable = false;
         w.bullet = sapper;
         w.shootSound = Sounds.sap;
         return w;
@@ -185,6 +187,8 @@ asphyxia.weapons.add(
         w.y = 6;
         w.reload = 14;
         w.rotate = true;
+        w.autoTarget = true;
+        w.controllable = false;
         w.bullet = sapper;
         w.shootSound = Sounds.sap;
         return w;

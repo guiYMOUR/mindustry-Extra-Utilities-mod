@@ -72,7 +72,7 @@ const { nihilo } = require('unit/nihilo');
 const { narwhal } = require('unit/narwhal');
 
 const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
-const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11 } = require('game/TD/tmain');
+const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11, TD12, TD13 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
@@ -331,5 +331,17 @@ lib.addToResearch(TD11, {
     parent: TD9.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(TD9)
+    )
+});
+lib.addToResearch(TD12, {
+    parent: TD1.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD1)
+    )
+});
+lib.addToResearch(TD13, {
+    parent: TD12.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(TD12)
     )
 });
