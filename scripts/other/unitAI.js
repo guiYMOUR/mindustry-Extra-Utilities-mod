@@ -26,13 +26,13 @@ const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
                     if(!this.target.within(this.unit, this.unit.type.range * 0.7)){
                         this.moveTo(this.target, this.unit.type.range * 0.7);
                         if(!this.target.within(this.unit, this.unit.type.range * 1.2)){
-                            if(this.unit.type.canBoost){
+                            if(this.unit.type.canBoost || (this.unit.pathType() == Pathfinder.costNaval && !this.unit.floorOn().isLiquid)){
                                 this.unit.elevation = Mathf.approachDelta(this.unit.elevation, 1, this.unit.type.riseSpeed);
                             }
                         }
                     }
                     if(this.target.within(this.unit, this.unit.type.range * 1.2)){
-                        if(this.unit.type.canBoost && this.unit.elevation > 0.001 && !this.unit.onSolid()){
+                        if(this.unit.type.canBoost && this.unit.elevation > 0.001 && !this.unit.onSolid() && !(this.unit.pathType() == Pathfinder.costNaval && !this.unit.floorOn().isLiquid)){
                             this.unit.elevation = Mathf.approachDelta(this.unit.elevation, 0, this.unit.type.riseSpeed);
                         }
                     }

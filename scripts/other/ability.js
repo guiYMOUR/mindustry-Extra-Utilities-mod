@@ -363,3 +363,55 @@ const BatteryAbility = (capacity, shieldRange, range, px, py) => {
     return ability;
 };
 exports.BatteryAbility = BatteryAbility;
+
+const propeller = (px, py, sprite, length, speed) => {
+    var rot = 0;
+    var wind = new Effect(30, cons(e => {
+        Draw.z(Layer.debris);
+        Draw.color(e.color);
+        Fill.circle(e.x, e.y, e.fout() * 6 + 0.3);
+        Draw.z();
+    }));
+    var ability = new JavaAdapter(Ability, {
+        localized() {
+            return "";
+        },
+        update(unit){
+            if(unit.pathType() == Pathfinder.costNaval && !unit.floorOn().isLiquid){
+                unit.elevation = 1;
+            }
+            var realSpeed = unit.elevation * speed * Time.delta;
+            rot += realSpeed;
+            var out = unit.elevation * length;
+            var x = unit.x + Angles.trnsx(unit.rotation, px, py) + Angles.trnsx(unit.rotation, 0, out);
+            var y = unit.y + Angles.trnsy(unit.rotation, px, py) + Angles.trnsy(unit.rotation, 0, out);
+            if(!unit.moving() && unit.isFlying()){
+                var floor = Vars.world.floorWorld(x, y);
+                if(floor != null) wind.at(x + Mathf.range(8), y + Mathf.range(8), floor.mapColor);
+            }
+        },
+        draw(unit) {
+            Draw.mixcol(Color.white, unit.hitTime);
+            Draw.z(Math.max(Layer.groundUnit - 1, unit.elevation * Layer.flyingUnitLow));
+            var out = unit.elevation * length;
+            var x = unit.x + Angles.trnsx(unit.rotation, px, py) + Angles.trnsx(unit.rotation, 0, out);
+            var y = unit.y + Angles.trnsy(unit.rotation, px, py) + Angles.trnsy(unit.rotation, 0, out);
+            Draw.rect(Core.atlas.find("btm-wing-s"),x, y, unit.rotation + rot * 2);//why not Time.time ? I Don't Know. ha~
+            Draw.rect(Core.atlas.find(sprite),x, y, unit.rotation - 90);
+            Draw.mixcol();
+            Draw.z(Math.min(Layer.darkness, Layer.groundUnit - 1));
+            if(unit.isFlying()){
+                Draw.color(Pal.shadow);
+                var e = Math.max(unit.elevation, unit.type.visualElevation);
+                Draw.rect(Core.atlas.find(sprite), x + unit.type.shadowTX * e, y + unit.type.shadowTY * e, unit.rotation - 90);
+                Draw.color();
+            }
+            Draw.z();
+        },
+        copy() {
+            return propeller(px, py, sprite, length, speed);
+        },
+    });
+    return ability;
+};
+exports.propeller = propeller;

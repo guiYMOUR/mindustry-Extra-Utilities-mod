@@ -71,6 +71,8 @@ const { nebula } = require('unit/nebula');
 const { nihilo } = require('unit/nihilo');
 const { narwhal } = require('unit/narwhal');
 
+const { winglet } = require('unit/AirSapper/winglet');
+
 const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
 const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11, TD12, TD13 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
@@ -218,6 +220,8 @@ lib.addToResearch(tera, { parent: 'oct',objectives: Seq.with( new Objectives.Res
 lib.addToResearch(nebula, { parent: 'corvus',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives.Research(unitF) ) });
 lib.addToResearch(narwhal, { parent: 'navanax',objectives: Seq.with( new Objectives.Research(unitF) ) });
+
+lib.addToResearch(winglet, { parent: 'flare', });
 
 lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });
 

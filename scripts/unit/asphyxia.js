@@ -28,7 +28,7 @@ asl.incendAmount = 1;
 asl.colors = [Pal.sapBullet, Pal.sapBullet, Pal.sapBulletBack];
 
 const sapper = new SapBulletType();
-sapper.sapStrength = 0.9;
+sapper.sapStrength = 1.5;
 sapper.length = 88;
 sapper.damage = 40;
 sapper.shootEffect = Fx.shootSmall;

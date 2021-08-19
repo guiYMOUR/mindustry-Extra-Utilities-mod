@@ -122,11 +122,12 @@ Object.assign(sunburst, {
     inaccuracy : 0,
     rotateSpeed : 6,
     shootSound : Sounds.missile,
+    placeableLiquid : true,
 });
 sunburst.requirements = ItemStack.with(
     Items.lead, 150,
     Items.silicon, 145,
-    item, 35
+    item, 36
 );
 sunburst.buildVisibility = BuildVisibility.shown;
 sunburst.category = Category.turret;

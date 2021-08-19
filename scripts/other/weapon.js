@@ -8,6 +8,7 @@ const healProjectorWeapon = (() => {
     return (object) => {
         const options = Object.assign({
             targetBuildings : true,
+            flyShoot : false,
             
             name : "",
             reload : 90,
@@ -33,6 +34,11 @@ const healProjectorWeapon = (() => {
                 var reloadNeed = Math.floor(healTime/(options.bullet.lifetime/60));
                 var reloadRest = Math.floor(reloadNeed * options.reload/60);
                 w.add("[lightgray]" + Stat.repairTime.localized() + ": " + (options.mirror ? "1/2x " : "") + "[white]" + (3 * (healTime + reloadRest)) + " " + StatUnit.seconds.localized());
+                if(options.flyShoot){
+                    w.row();
+                    var func = options.autoTarget && !options.controllable ? "auto" : "operation";
+                    w.add("fly only & " + func);
+                }
             },
             findTarget(unit, x, y, range, air, ground){
                 var out = Units.closest(unit.team, x, y, range, boolf(u => u != unit && u.damaged()));
@@ -43,84 +49,88 @@ const healProjectorWeapon = (() => {
                 return !(target.within(unit, range + unit.hitSize/2) && target.team == unit.team && target.damaged() && target.isValid());
             },
             update(unit, mount){//for narwhal(Heart for narwhal!!!)为海辅(鲸歌)献上心脏!!!
-                var can = !unit.disarmed;
+                /*if(!options.flyShoot){
+                    this.super$update(unit, mount);
+                } else {*/
+                    var can = options.flyShoot ? (!unit.disarmed) && unit.isFlying() : unit.canShoot();
                 mount.reload = Math.max(mount.reload - Time.delta * unit.reloadMultiplier, 0);
-                var
-                weaponRotation = unit.rotation - 90 + (this.rotate ? mount.rotation : 0),
-                mountX = unit.x + Angles.trnsx(unit.rotation - 90, this.x, this.y),
-                mountY = unit.y + Angles.trnsy(unit.rotation - 90, this.x, this.y),
-                bulletX = mountX + Angles.trnsx(weaponRotation, this.shootX, this.shootY),
-                bulletY = mountY + Angles.trnsy(weaponRotation, this.shootX, this.shootY),
-                shootAngle = this.rotate ? weaponRotation + 90 : Angles.angle(bulletX, bulletY, mount.aimX, mount.aimY) + (unit.rotation - unit.angleTo(mount.aimX, mount.aimY));
-                if(!this.controllable && this.autoTarget){
-                    if((mount.retarget -= Time.delta) <= 0){
-                        mount.target = this.findTarget(unit, mountX, mountY, this.bullet.range(), this.bullet.collidesAir, this.bullet.collidesGround);
-                        mount.retarget = mount.target == null ? this.targetInterval : this.targetSwitchInterval;
-                    }
-                    if(mount.target != null && this.checkTarget(unit, mount.target, mountX, mountY, this.bullet.range())){
+                    var
+                    weaponRotation = unit.rotation - 90 + (this.rotate ? mount.rotation : 0),
+                    mountX = unit.x + Angles.trnsx(unit.rotation - 90, this.x, this.y),
+                    mountY = unit.y + Angles.trnsy(unit.rotation - 90, this.x, this.y),
+                    bulletX = mountX + Angles.trnsx(weaponRotation, this.shootX, this.shootY),
+                    bulletY = mountY + Angles.trnsy(weaponRotation, this.shootX, this.shootY),
+                    shootAngle = this.rotate ? weaponRotation + 90 : Angles.angle(bulletX, bulletY, mount.aimX, mount.aimY) + (unit.rotation - unit.angleTo(mount.aimX, mount.aimY));
+                    if(!this.controllable && this.autoTarget){
+                        if((mount.retarget -= Time.delta) <= 0){
+                            mount.target = this.findTarget(unit, mountX, mountY, this.bullet.range(), this.bullet.collidesAir, this.bullet.collidesGround);
+                            mount.retarget = mount.target == null ? this.targetInterval : this.targetSwitchInterval;
+                        }
+                        if(mount.target != null && this.checkTarget(unit, mount.target, mountX, mountY, this.bullet.range())){
                         mount.target = null;
+                        }
+                        var shoot = false;
+                        if(mount.target != null){
+                            shoot = mount.target.within(mountX, mountY, this.bullet.range() + Math.abs(this.shootY) + (mount.target instanceof Sized ? mount.target.hitSize/2 : 0)) && can;
+                            if(this.predictTarget){
+                                var to = Predict.intercept(unit, mount.target, this.bullet.speed);
+                                mount.aimX = to.x;
+                                mount.aimY = to.y;
+                            }else{
+                                mount.aimX = mount.target.x;
+                                mount.aimY = mount.target.y;
+                            }
+                        }
+                        mount.shoot = mount.rotate = shoot;
                     }
-                    var shoot = false;
-                    if(mount.target != null){
-                        shoot = mount.target.within(mountX, mountY, this.bullet.range() + Math.abs(this.shootY) + (mount.target instanceof Sized ? mount.target.hitSize/2 : 0)) && can;
-                        if(this.predictTarget){
-                            var to = Predict.intercept(unit, mount.target, this.bullet.speed);
-                            mount.aimX = to.x;
-                            mount.aimY = to.y;
+                    if(this.continuous && mount.bullet != null){
+                        if(!mount.bullet.isAdded() || mount.bullet.time >= mount.bullet.lifetime || mount.bullet.type != this.bullet){
+                            mount.bullet = null;
                         }else{
-                            mount.aimX = mount.target.x;
-                            mount.aimY = mount.target.y;
+                            mount.bullet.rotation(weaponRotation + 90);
+                            mount.bullet.set(bulletX, bulletY);
+                            mount.reload = this.reload;
+                            unit.vel.add(Tmp.v1.trns(unit.rotation + 180, mount.bullet.type.recoil));
+                            if(this.shootSound != Sounds.none && !Vars.headless){
+                                if(mount.sound == null) mount.sound = new SoundLoop(this.shootSound, 1);
+                                mount.sound.update(bulletX, bulletY, true);
+                            }
+                        }
+                    } else {
+                        mount.heat = Math.max(mount.heat - Time.delta * unit.reloadMultiplier / mount.weapon.cooldownTime, 0);
+                        if(mount.sound != null){
+                            mount.sound.update(bulletX, bulletY, false);
                         }
                     }
-                    mount.shoot = mount.rotate = shoot;
-                }
-                if(this.continuous && mount.bullet != null){
-                    if(!mount.bullet.isAdded() || mount.bullet.time >= mount.bullet.lifetime || mount.bullet.type != this.bullet){
-                        mount.bullet = null;
-                    }else{
-                        mount.bullet.rotation(weaponRotation + 90);
-                        mount.bullet.set(bulletX, bulletY);
+                    if(this.otherSide != -1 && this.alternate && mount.side == this.flipSprite &&
+                    mount.reload + Time.delta * unit.reloadMultiplier > this.reload/2 && mount.reload <= this.reload/2){
+                        unit.mounts[this.otherSide].side = !unit.mounts[this.otherSide].side;
+                        mount.side = !mount.side;
+                    }
+                    if(this.rotate && (mount.rotate || mount.shoot) && can){
+                        var axisX = unit.x + Angles.trnsx(unit.rotation - 90,  this.x, this.y),
+                        axisY = unit.y + Angles.trnsy(unit.rotation - 90,  this.x, this.y);
+                        mount.targetRotation = Angles.angle(axisX, axisY, mount.aimX, mount.aimY) - unit.rotation;
+                        mount.rotation = Angles.moveToward(mount.rotation, mount.targetRotation, this.rotateSpeed * Time.delta);
+                    }else if(!this.rotate){
+                        mount.rotation = 0;
+                        mount.targetRotation = unit.angleTo(mount.aimX, mount.aimY);
+                    }
+                    if(mount.shoot &&
+                    can &&
+                    (!this.useAmmo || unit.ammo > 0 || !Vars.state.rules.unitAmmo || unit.team.rules().infiniteAmmo) &&
+                    (!this.alternate || mount.side == this.flipSprite) &&
+                    unit.vel.len() >= mount.weapon.minShootVelocity &&
+                    mount.reload <= 0.0001 &&
+                    Angles.within(this.rotate ? mount.rotation : unit.rotation, mount.targetRotation, mount.weapon.shootCone)
+                    ){
+                        this.shoot(unit, mount, bulletX, bulletY, mount.aimX, mount.aimY, mountX, mountY, shootAngle, Mathf.sign(this.x));
                         mount.reload = this.reload;
-                        unit.vel.add(Tmp.v1.trns(unit.rotation + 180, mount.bullet.type.recoil));
-                        if(this.shootSound != Sounds.none && !Vars.headless){
-                            if(mount.sound == null) mount.sound = new SoundLoop(this.shootSound, 1);
-                            mount.sound.update(bulletX, bulletY, true);
+                        if(this.useAmmo){
+                            unit.ammo--;
+                            if(unit.ammo < 0) unit.ammo = 0;
                         }
-                    }
-                } else {
-                    mount.heat = Math.max(mount.heat - Time.delta * unit.reloadMultiplier / mount.weapon.cooldownTime, 0);
-                    if(mount.sound != null){
-                        mount.sound.update(bulletX, bulletY, false);
-                    }
-                }
-                if(this.otherSide != -1 && this.alternate && mount.side == this.flipSprite &&
-                mount.reload + Time.delta * unit.reloadMultiplier > this.reload/2 && mount.reload <= this.reload/2){
-                    unit.mounts[this.otherSide].side = !unit.mounts[this.otherSide].side;
-                    mount.side = !mount.side;
-                }
-                if(this.rotate && (mount.rotate || mount.shoot) && can){
-                    var axisX = unit.x + Angles.trnsx(unit.rotation - 90,  this.x, this.y),
-                    axisY = unit.y + Angles.trnsy(unit.rotation - 90,  this.x, this.y);
-                    mount.targetRotation = Angles.angle(axisX, axisY, mount.aimX, mount.aimY) - unit.rotation;
-                    mount.rotation = Angles.moveToward(mount.rotation, mount.targetRotation, this.rotateSpeed * Time.delta);
-                }else if(!this.rotate){
-                    mount.rotation = 0;
-                    mount.targetRotation = unit.angleTo(mount.aimX, mount.aimY);
-                }
-                if(mount.shoot &&
-                can &&
-                (!this.useAmmo || unit.ammo > 0 || !Vars.state.rules.unitAmmo || unit.team.rules().infiniteAmmo) &&
-                (!this.alternate || mount.side == this.flipSprite) &&
-                unit.vel.len() >= mount.weapon.minShootVelocity &&
-                mount.reload <= 0.0001 &&
-                Angles.within(this.rotate ? mount.rotation : unit.rotation, mount.targetRotation, mount.weapon.shootCone)
-                ){
-                    this.shoot(unit, mount, bulletX, bulletY, mount.aimX, mount.aimY, mountX, mountY, shootAngle, Mathf.sign(this.x));
-                    mount.reload = this.reload;
-                    if(this.useAmmo){
-                        unit.ammo--;
-                        if(unit.ammo < 0) unit.ammo = 0;
-                    }
+                    //}
                 }
             },
         });

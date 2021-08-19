@@ -44,6 +44,7 @@ tera.weapons.add(
             mirror : false,
             x : 0,
             y : 15,
+            shootY : 1,
             autoTarget : true,
             controllable : false,
             rotate : true,

@@ -28,3 +28,6 @@ Blocks.ductRouter.buildVisibility = BuildVisibility.shown;
 lib.addToResearch(Blocks.ductBridge, { parent: 'bridge-conveyor', });
 lib.addToResearch(Blocks.ductRouter, { parent: 'router', });
 lib.addToResearch(Blocks.duct, { parent: 'conveyor', });
+
+const { winglet } = require("unit/AirSapper/winglet");
+Blocks.airFactory.plans.add(new UnitFactory.UnitPlan(winglet, 60 * 30, ItemStack.with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));

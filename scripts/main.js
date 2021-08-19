@@ -70,6 +70,8 @@ require("unit/apocalypse");
 require("unit/tera");
 require("unit/nihilo");
 require("unit/narwhal");
+//air sapper
+require("unit/AirSapper/winglet");
 
 require("game/items");
 require("other/status");
