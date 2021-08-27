@@ -26,6 +26,7 @@ winglet.weapons.add(
     })()
 );
 winglet.flying = true;
+winglet.hitSize = 9;
 winglet.speed = 3;
 winglet.accel = 0.04;
 winglet.drag = 0.02;

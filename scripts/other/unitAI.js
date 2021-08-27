@@ -18,8 +18,8 @@ const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
             }
             if(this.target != null){//move to reach the target
                 if(this.unit.type.flying){
-                    if(!this.target.within(this.unit, this.unit.type.range * 0.65)){
-                        this.moveTo(this.target, this.unit.type.range * 0.65);
+                    if(!this.target.within(this.unit, this.unit.type.range * 0.7)){
+                        this.moveTo(this.target, this.unit.type.range * 0.7);
                     }
                     this.unit.lookAt(this.target);
                 } else {
@@ -74,3 +74,60 @@ const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
     });
 }
 exports.DefenderHealAI = DefenderHealAI;
+
+const Firefighter = (retreatDst, fleeRange, retreatDelay) => {
+    var avoid = null;
+    var retreatTimer = 0;
+    return extend(AIController, {
+        updateTargeting(){
+            var result = null;
+            var realRange = Math.max(this.unit.type.range, 800);
+            result = Groups.bullet.intersect(this.unit.x - realRange, this.unit.y - realRange, realRange*2, realRange*2).min(b => b.type == Bullets.fireball, b => b.dst2(this.unit.x, this.unit.y));
+            if(result != null){
+                var enemyBuild = null;
+                Vars.indexer.allBuildings(result.x, result.y, 64, cons(other =>{
+                    if(other.team != this.unit.team){
+                        enemyBuild = other;
+                    }
+                }));
+                if(enemyBuild == null) this.target = result;
+            } else {
+                this.super$updateTargeting();
+            }
+        },
+        updateMovement(){
+            if(this.target != null){
+                var shoot = false;
+                if(this.target.within(this.unit, Math.max(this.unit.type.range, 80))){
+                    this.unit.aim(this.target);
+                    shoot = true;
+                }
+                this.unit.controlWeapons(shoot);
+            } else if(this.target == null){
+                this.unit.controlWeapons(false);
+            }
+            if(this.target != null){
+                if(!this.target.within(this.unit, this.unit.type.range)){
+                    this.moveTo(this.target, this.unit.type.range);
+                }
+                this.unit.lookAt(this.target);
+            }
+            if(this.target == null){
+                if(this.timer.get(this.timerTarget4, 40)){
+                    avoid = Units.closestTarget(this.unit.team, this.unit.x, this.unit.y, fleeRange, boolf(u => u.checkTarget(true, true)), boolf(t => true));
+                }
+                if((retreatTimer += Time.delta) >= retreatDelay){
+                    if(avoid != null){
+                        var core = this.unit.closestCore();
+                        if(core != null && !this.unit.within(core, retreatDst)){
+                            this.moveTo(core, retreatDst);
+                        }
+                    }
+                }
+            }else{
+                retreatTimer = 0;
+            }
+        },
+    });
+}
+exports.Firefighter = Firefighter;

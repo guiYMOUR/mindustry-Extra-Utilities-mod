@@ -13,6 +13,7 @@ var unitType = (unitFrom, unitTo) => {
     a[1] = unitTo;
     return a;
 }
+exports.unitType = unitType;
 
 const unitF = extendContent(Reconstructor, "imaginary-reconstructor", {});
 unitF.size = 11;

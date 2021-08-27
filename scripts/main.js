@@ -45,6 +45,7 @@ require("block/production/T2CM");
 require("block/production/T2SA");
 require("block/power/GeneratorCrafter");
 require("block/production/T2pulverize");
+require("block/production/crusher");
 require("block/production/LA");
 require("block/production/AdjustableIncinerator");
 
@@ -72,6 +73,7 @@ require("unit/nihilo");
 require("unit/narwhal");
 //air sapper
 require("unit/AirSapper/winglet");
+require("unit/AirSapper/moth");
 
 require("game/items");
 require("other/status");
@@ -86,7 +88,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.60");
+    var dialog = new BaseDialog("Extra Utilities 2.4.61");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -100,19 +102,19 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(200).width(620).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-T2scorch.name") + "\n" + Core.bundle.format("block.btm-T2scorch.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-crusher.name") + "\n" + Core.bundle.format("block.btm-crusher.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-T2scorch", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.image(Core.atlas.find("btm-crusher", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.add(Core.bundle.format("unit.btm-narwhal.name") + "\n" + Core.bundle.format("unit.btm-narwhal.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("unit.btm-winglet.name") + "\n" + Core.bundle.format("unit.btm-winglet.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-narwhal-full", Core.atlas.find("clear"))).fillX().height(224).width(160).pad(3);
+        table.image(Core.atlas.find("btm-winglet", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        /*table.add(Core.bundle.format("block.btm-lightnin-generator.name") + "\n" + Core.bundle.format("block.btm-lightnin-generator.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("unit.btm-moth.name") + "\n" + Core.bundle.format("unit.btm-moth.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-lightnin-generator", Core.atlas.find("clear"))).fillX().height(160).width(160).pad(3);
+        table.image(Core.atlas.find("btm-moth", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-rws.name") + "\n" + Core.bundle.format("block.btm-rws.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        /*table.add(Core.bundle.format("block.btm-rws.name") + "\n" + Core.bundle.format("block.btm-rws.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-rws", Core.atlas.find("clear"))).fillX().height(32).width(32).pad(3);
         table.row();

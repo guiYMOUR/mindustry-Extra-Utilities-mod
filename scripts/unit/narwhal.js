@@ -40,7 +40,7 @@ narwhal.weapons.add(
             x : 0,
             y : 18,
             autoTarget : true,
-            //controllable : false,
+            controllable : false,
             //rotate : false,
             shootY : 1,
             bullet : bullets.unitHealCone({

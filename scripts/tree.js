@@ -49,6 +49,7 @@ const { T2SA } = require('block/production/T2SA');
 const { T2CM } = require('block/production/T2CM');
 const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
+const { crusher } = require("block/production/crusher");
 const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
@@ -72,6 +73,7 @@ const { nihilo } = require('unit/nihilo');
 const { narwhal } = require('unit/narwhal');
 
 const { winglet } = require('unit/AirSapper/winglet');
+const { moth } = require('unit/AirSapper/moth');
 
 const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
 const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11, TD12, TD13 } = require('game/TD/tmain');
@@ -173,6 +175,7 @@ lib.addToResearch(T2SA, { parent: 'alloy-smelter', });
 lib.addToResearch(T2CM, { parent: 'cryofluid-mixer', });
 lib.addToResearch(GC, { parent: 'pyratite-mixer', });
 lib.addToResearch(pu, { parent: 'pulverizer', });
+lib.addToResearch(crusher, { parent: 'pulverizer', });
 lib.addToResearch(LA, { parent: T2SA.name, });
 lib.addToResearch(ai, { parent: 'incinerator', });
 lib.addToResearch(DCF, { parent: 'force-projector',
@@ -222,6 +225,7 @@ lib.addToResearch(nihilo, { parent: 'omura',objectives: Seq.with( new Objectives
 lib.addToResearch(narwhal, { parent: 'navanax',objectives: Seq.with( new Objectives.Research(unitF) ) });
 
 lib.addToResearch(winglet, { parent: 'flare', });
+lib.addToResearch(moth, { parent: winglet.name,objectives: Seq.with( new Objectives.Research(Blocks.additiveReconstructor) ) });
 
 lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });
 

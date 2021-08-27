@@ -41,14 +41,12 @@ tera.weapons.add(
     (() =>{
         const w = weapon.healProjectorWeapon({
             name : "",
-            mirror : false,
             x : 0,
             y : 15,
             shootY : 1,
             autoTarget : true,
             controllable : false,
-            rotate : true,
-            useAmmo : false,
+            flyShoot : true,
             bullet : bullets.unitHealCone({
                 lifetime : 210,
                 findRange : 100,
