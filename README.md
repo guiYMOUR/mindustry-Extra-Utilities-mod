@@ -71,6 +71,7 @@
 - Tera
 - Nihilo
 - Narwhal
+- Air Sapper
 
 ### Ability
 - Territory Field
