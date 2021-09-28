@@ -37,6 +37,20 @@ core.buildVisibility = BuildVisibility.shown;
 core.category = Category.effect;
 exports.core = core;
 
+const chest = extendContent(StorageBlock, "chest", {});
+chest.size= 1;
+chest.hasItems = true;
+chest.unloadable = true;
+chest.health = 120;
+chest.itemCapacity = 40;
+chest.requirements = ItemStack.with(
+    Items.titanium, 15,
+    Items.lead, 30
+);
+chest.buildVisibility = BuildVisibility.shown;
+chest.category = Category.effect;
+exports.chest = chest;
+
 const cargo = extendContent(StorageBlock, "cargo", {});
 cargo.size= 4;
 cargo.hasItems = true;

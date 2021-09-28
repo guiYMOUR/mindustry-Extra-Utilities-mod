@@ -1,4 +1,85 @@
 //Will be added in version 1.4 or 1.3.30 onwards
+//at first i want to draw... sorry, Carrot
+function setFloor(target, liquid, floor, variants){
+    var liquidBase = liquid.asFloor();
+    var floorBase = floor.asFloor();
+    target.variants = Math.min(variants, floorBase.variants);
+    target.isLiquid = true;
+    target.status = liquidBase.status;
+    target.liquidDrop = liquidBase.liquidDrop;
+    target.cacheLayer = liquidBase.cacheLayer;
+}
+
+/* * new Block(name) = Block(name) */
+
+const stoneWater = new Floor("stone-water");
+Object.assign(stoneWater, {
+    speedMultiplier : 0.6,
+    statusDuration : 50,
+    albedo : 0.5,
+});
+setFloor(stoneWater, Blocks.water, Blocks.stone, 2);
+stoneWater.asFloor().wall = Blocks.stoneWall;
+
+const charrWater = Floor("char-water");
+Object.assign(charrWater, {
+    speedMultiplier : 0.6,
+    statusDuration : 50,
+    albedo : 0.5,
+});
+setFloor(charrWater, Blocks.water, Blocks.charr, 2);
+
+const basaltWater = Floor("basalt-water");
+Object.assign(basaltWater, {
+    liquidMultiplier : 0.5,
+    speedMultiplier : 0.6,
+    statusDuration : 50,
+    albedo : 0.5,
+});
+setFloor(basaltWater, Blocks.water, Blocks.dirt, 2);
+basaltWater.asFloor().wall = Blocks.duneWall;
+
+const dirtWater = Floor("dirt-water");
+Object.assign(dirtWater, {
+    speedMultiplier : 0.6,
+    statusDuration : 50,
+    albedo : 0.5,
+});
+setFloor(dirtWater, Blocks.water, Blocks.dirt, 2);
+dirtWater.asFloor().wall = Blocks.dirtWall;
+
+const grassWater = Floor("grass-water");
+Object.assign(grassWater, {
+    speedMultiplier : 0.6,
+    statusDuration : 50,
+    albedo : 0.5,
+});
+setFloor(grassWater, Blocks.water, Blocks.grass, 2);
+grassWater.asFloor().wall = Blocks.shrubs;
+
+const iceWater = Floor("ice-water");
+Object.assign(iceWater, {
+    liquidMultiplier : 0.5,
+    speedMultiplier : 0.6,
+    variants : 2,
+    isLiquid : true,
+    status : Liquids.cryofluid.effect,
+    liquidDrop : Liquids.cryofluid,
+    cacheLayer : CacheLayer.water,
+    statusDuration : 30,
+    albedo : 0.5,
+});
+iceWater.asFloor().wall = Blocks.iceWall;
+
+const shaleWater = Floor("shale-water");
+Object.assign(shaleWater, {
+    speedMultiplier : 0.6,
+    statusDuration : 50,
+    albedo : 0.5,
+});
+setFloor(shaleWater, Blocks.water, Blocks.dirt, 2);
+shaleWater.asFloor().wall = Blocks.shaleWall;
+
 const graphiteBlock = extendContent(StaticWall, "graphite", {});
 graphiteBlock.itemDrop = Items.graphite;
 graphiteBlock.variants = 2;

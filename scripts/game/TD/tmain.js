@@ -3,12 +3,32 @@ const ability = require("other/ability");
 const planet = require("game/challengeMap/cmain");
 
 const walkFloor = extendContent(Floor, "walkFloor", {});
-//walkFloor.envEnabled = Env.space;
 walkFloor.solid = false;
 walkFloor.hasShadow = false;
 walkFloor.variants = 0;
-//walkFloor.cacheLayer = CacheLayer.space;
 walkFloor.placeableOn = false;
+
+const walkFloorWater = new Floor("walkfloor-water");
+Object.assign(walkFloorWater, {
+    speedMultiplier : 0.2,
+    variants : 0,
+    isLiquid : true,
+    status : StatusEffects.wet,
+    statusDuration : 90,
+    drownTime : 120,
+    cacheLayer : CacheLayer.water,
+    albedo : 0.5,
+    placeableOn : false,
+});
+
+const landWaterCross = new Floor("land-water-cross");
+Object.assign(landWaterCross, {
+    speedMultiplier : 1.2,
+    variants : 0,
+    isLiquid : true,
+    status : StatusEffects.none,
+    placeableOn : false,
+});
 
 const basicDamage = new BombBulletType(0, 0, "clear");
 basicDamage.collidesAir = true;

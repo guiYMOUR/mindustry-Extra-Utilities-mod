@@ -5,7 +5,6 @@
     Version 6.0 To version 7.0 Not available due to changes in game source code,
     for example, NumberValue becomes StatValues.number, This means that some parameters and internal functions are changed,
     i just change some parameters and functions, to make it can adapt ver 7.0(and StatValue can be extended[line 554])
-    maybe I'll even make it output multi?
 >
 */
 

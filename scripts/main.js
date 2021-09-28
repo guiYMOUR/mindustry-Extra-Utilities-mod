@@ -28,6 +28,7 @@ require("block/turret/RG");
 require("block/turret/sucker");
 require("block/turret/dissipation");
 require("block/turret/heal");
+require("block/turret/TurretResupplyPoint");
 
 require("block/effect/DCF");
 require("block/power/png");
@@ -88,7 +89,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.61");
+    var dialog = new BaseDialog("Extra Utilities 2.4.62");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -106,9 +107,9 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-crusher", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.add(Core.bundle.format("unit.btm-winglet.name") + "\n" + Core.bundle.format("unit.btm-winglet.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-turret-resupply-point.name") + "\n" + Core.bundle.format("block.btm-turret-resupply-point.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-winglet", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.image(Core.atlas.find("btm-turret-resupply-point", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
         table.add(Core.bundle.format("unit.btm-moth.name") + "\n" + Core.bundle.format("unit.btm-moth.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();

@@ -29,6 +29,7 @@ const { blackhole } = require('block/turret/blackhole');
 const { sucker } = require('block/turret/sucker');
 const { dissipation } = require('block/turret/dissipation');
 const { heal } = require('block/turret/heal');
+const { TRS } = require('block/turret/TurretResupplyPoint');
 
 const { arNode, png } = require('block/power/png');
 const { T2ST } = require('block/power/T2steam');
@@ -54,7 +55,7 @@ const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
 const { tiDrill, drill, shovel, testDrill, slagE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
-const { core, cargo } = require('block/effect/core');
+const { core, chest, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
 const { speeder } = require('block/effect/speeder');
@@ -125,6 +126,11 @@ lib.addToResearch(blackhole, { parent: sam.name, });
 lib.addToResearch(sucker, { parent: 'parallax', });
 lib.addToResearch(dissipation, { parent: 'segment', });
 lib.addToResearch(heal, { parent: 'mend-projector', objectives: Seq.with(new Objectives.Research(Blocks.repairTurret)) });
+lib.addToResearch(TRS, { parent: 'duo',
+    objectives: Seq.with(
+        new Objectives.SectorComplete(SectorPresets.stainedMountains),
+    )
+});
 
 lib.addToResearch(arNode, { parent: 'power-node', });
 lib.addToResearch(png, { parent: 'power-node-large', });
@@ -196,6 +202,7 @@ lib.addToResearch(core, { parent: 'core-shard',
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
     )
 });
+lib.addToResearch(chest, { parent: 'router', });
 lib.addToResearch(cargo, { parent: 'vault', });
 lib.addToResearch(und, { parent: 'unloader', });
 lib.addToResearch(lu, { parent: 'liquid-tank', });
