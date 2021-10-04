@@ -14,6 +14,7 @@
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - Steam Workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720
 - Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
+- When the new version is stable, I will delete some old files (you can view the old version)
 
 ## The direction of mod development
 
