@@ -2,9 +2,9 @@
 
 - English | [中文](README_cn.md)
 
-- Add more than 80 blocks and some advanced units.
+- Add more than 85 blocks and some advanced units.
 
-- This module does not affect the game balance, and enrich the content of the game, you can finish the original game faster
+- This module does not affect the game balance, and enrich the content of the game, making the original game easier
 
 - The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
 
@@ -14,7 +14,6 @@
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - Steam Workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720
 - Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
-- When the new version is stable, I will delete some old files (you can view the old version)
 
 ## The direction of mod development
 
@@ -65,7 +64,7 @@
 
 ### Unit
 - Imaginary Reconstructor
-- Auzerain
+- Suzerain
 - Nebula
 - Asphyxia
 - Apocalypse
