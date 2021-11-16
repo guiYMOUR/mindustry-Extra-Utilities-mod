@@ -75,6 +75,7 @@ const { narwhal } = require('unit/narwhal');
 
 const { winglet } = require('unit/AirSapper/winglet');
 const { moth } = require('unit/AirSapper/moth');
+const { vb } = require('unit/AirSapper/VenomBee');
 
 const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
 const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11, TD12, TD13 } = require('game/TD/tmain');
@@ -233,6 +234,7 @@ lib.addToResearch(narwhal, { parent: 'navanax',objectives: Seq.with( new Objecti
 
 lib.addToResearch(winglet, { parent: 'flare', });
 lib.addToResearch(moth, { parent: winglet.name,objectives: Seq.with( new Objectives.Research(Blocks.additiveReconstructor) ) });
+lib.addToResearch(vb, { parent: moth.name,objectives: Seq.with( new Objectives.Research(Blocks.multiplicativeReconstructor) ) });
 
 lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });
 

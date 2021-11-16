@@ -1,3 +1,7 @@
+/*
+* @author <guiY>
+*/
+
 const craftTime = 108;
 const itemDuration = 90;
 const input = Items.coal;

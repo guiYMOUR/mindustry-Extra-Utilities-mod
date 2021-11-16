@@ -75,6 +75,7 @@ require("unit/narwhal");
 //air sapper
 require("unit/AirSapper/winglet");
 require("unit/AirSapper/moth");
+require("unit/AirSapper/VenomBee");
 
 require("game/items");
 require("other/status");
@@ -89,7 +90,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.62");
+    var dialog = new BaseDialog("Extra Utilities 2.4.64 Adapt 133+");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -111,9 +112,9 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-turret-resupply-point", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.add(Core.bundle.format("unit.btm-moth.name") + "\n" + Core.bundle.format("unit.btm-moth.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("unit.btm-venom-bee.name") + "\n" + Core.bundle.format("unit.btm-venom-bee.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-moth", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
+        table.image(Core.atlas.find("btm-venom-bee", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
         table.row();
         /*table.add(Core.bundle.format("block.btm-rws.name") + "\n" + Core.bundle.format("block.btm-rws.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();

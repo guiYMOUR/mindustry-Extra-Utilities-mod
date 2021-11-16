@@ -32,7 +32,11 @@ lib.addToResearch(Blocks.duct, { parent: 'conveyor', });
 
 const { winglet } = require("unit/AirSapper/winglet");
 const { moth } = require("unit/AirSapper/moth");
+const { vb } = require("unit/AirSapper/VenomBee");
 Blocks.airFactory.plans.add(new UnitFactory.UnitPlan(winglet, 60 * 30, ItemStack.with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));
 Blocks.additiveReconstructor.upgrades.add(
     up.unitType(winglet, moth),
+);
+Blocks.multiplicativeReconstructor.upgrades.add(
+    up.unitType(moth, vb),
 );

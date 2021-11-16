@@ -1,4 +1,5 @@
 //Will be added in version 1.4 or 1.3.30 onwards
+const lib = require("blib");
 const ability = require("other/ability");
 const planet = require("game/challengeMap/cmain");
 
@@ -198,19 +199,75 @@ boss2.armor = 12;
 boss2.abilities.add(ability.healthDisplay(20, 36, 5));
 boss2.alwaysUnlocked = true;
 
+const AI = require("other/unitAI");
+
+const flyEnemy1 = new UnitType("flyEnemy1");
+flyEnemy1.constructor = prov(() => extend(UnitTypes.quad.constructor.get().class, {}));
+flyEnemy1.defaultController = prov(() => AI.TDFlyingAI());
+//flyEnemy1.drag = 0.018;
+flyEnemy1.accel = 0.4;
+flyEnemy1.targetAir = false;
+flyEnemy1.boostMultiplier = 1.2;
+flyEnemy1.canBoost = true;
+flyEnemy1.speed = 0.3;
+flyEnemy1.hitSize = 15;
+flyEnemy1.health = 10000;
+flyEnemy1.mechSideSway = 0.25;
+flyEnemy1.range = 28;
+flyEnemy1.weapons.add(
+    (() => {
+        const w = new Weapon();
+        w.reload = 12;
+        w.shootCone = 180;
+        w.ejectEffect = Fx.none;
+        w.shootSound = Sounds.explosion;
+        w.bullet = basicDamage;
+        return w;
+    })()
+);
+flyEnemy1.armor = 5;
+flyEnemy1.abilities.add(ability.healthDisplay(20, 36, 5));
+flyEnemy1.alwaysUnlocked = true;
+
+const navalEnemy1 = new UnitType("navalEnemy1");
+navalEnemy1.constructor = prov(() => extend(UnitTypes.risso.constructor.get().class, {}));
+navalEnemy1.defaultController = prov(() => new SuicideAI());
+navalEnemy1.drag = 0.13;
+navalEnemy1.accel = 0.4;
+navalEnemy1.targetAir = false;
+navalEnemy1.speed = 0.9;
+navalEnemy1.hitSize = 9;
+navalEnemy1.health = 250;
+navalEnemy1.range = 28;
+navalEnemy1.weapons.add(
+    (() => {
+        const w = new Weapon();
+        w.reload = 12;
+        w.shootCone = 180;
+        w.ejectEffect = Fx.none;
+        w.shootSound = Sounds.explosion;
+        w.bullet = basicDamage;
+        return w;
+    })()
+);
+navalEnemy1.armor = 2;
+navalEnemy1.abilities.add(ability.healthDisplay(20, 30, 4));
+flyEnemy1.alwaysUnlocked = true;
+
 const TD = new JavaAdapter(Planet, {
-    load() {
+    load(){
         this.meshLoader = prov(() => new SunMesh(TD, 4, 6, 2.8, 1.4, 1.8, 1.4, 1.1,
-        Color.valueOf("5ecdc6"),
-        Color.valueOf("5ebbcd"),
-        Color.valueOf("5ecda6"),
-        Color.valueOf("5ecd86"),
-        Color.valueOf("5ecd65"),
-        Color.valueOf("5e9acd")
+            Color.valueOf("5ecdc6"),
+            Color.valueOf("5ebbcd"),
+            Color.valueOf("5ecda6"),
+            Color.valueOf("5ecd86"),
+            Color.valueOf("5ecd65"),
+            Color.valueOf("5e9acd")
         ));
         this.super$load();
-    },
-}, "TD", planet.challenge, 1, 1);
+    }
+}, "TD", planet.challenge, 1);
+lib.setPlanet(TD, 1);
 TD.generator = new SerpuloPlanetGenerator();
 TD.atmosphereColor = Color.valueOf("5ecd65");
 TD.accessible = true;
@@ -219,6 +276,14 @@ TD.sectorApproxRadius = 0.5;
 TD.atmosphereRadIn = 0.04;
 TD.atmosphereRadOut = 0.3;
 TD.startSector = 2;
+TD.meshLoader = prov(() => new SunMesh(TD, 4, 6, 2.8, 1.4, 1.8, 1.4, 1.1,
+    Color.valueOf("5ecdc6"),
+    Color.valueOf("5ebbcd"),
+    Color.valueOf("5ecda6"),
+    Color.valueOf("5ecd86"),
+    Color.valueOf("5ecd65"),
+    Color.valueOf("5e9acd")
+));
 TD.alwaysUnlocked = true;
 
 const pd = new SectorPreset("preparation", TD, 25);

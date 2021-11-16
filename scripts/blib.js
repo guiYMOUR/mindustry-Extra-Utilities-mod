@@ -2,6 +2,15 @@
     if(Vars.player == null) return false;
     return Vars.player.team().core().items.has(b.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources;
 };*/
+exports.setPlanet = function(p, s){
+    p.grid = PlanetGrid.create(s);
+    p.sectors.ensureCapacity(p.grid.tiles.length);
+    for(var i = 0; i < p.grid.tiles.length; i++){
+        p.sectors.add(new Sector(p, p.grid.tiles[i]));
+    }
+
+    p.sectorApproxRadius = p.sectors.first().tile.v.dst(p.sectors.first().tile.corners[0].v);
+}
 
 //function from abomb4's lib.js
 exports.loadSound = (() => {

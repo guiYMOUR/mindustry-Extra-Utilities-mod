@@ -131,3 +131,15 @@ const Firefighter = (retreatDst, fleeRange, retreatDelay) => {
     });
 }
 exports.Firefighter = Firefighter;
+
+const TDFlyingAI = () => {
+    return extend(GroundAI, {
+        updateMovement(){
+            this.super$updateMovement();
+            if(this.target == null || !this.unit.within(this.target, this.unit.type.range * 2)){
+                this.unit.elevation = 1;
+            }
+        },
+    });
+}
+exports.TDFlyingAI = TDFlyingAI;
