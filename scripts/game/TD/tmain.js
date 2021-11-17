@@ -252,7 +252,7 @@ navalEnemy1.weapons.add(
 );
 navalEnemy1.armor = 2;
 navalEnemy1.abilities.add(ability.healthDisplay(20, 30, 4));
-flyEnemy1.alwaysUnlocked = true;
+navalEnemy1.alwaysUnlocked = true;
 
 const TD = new JavaAdapter(Planet, {
     load(){
