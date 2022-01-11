@@ -1,4 +1,4 @@
-const items = require("game/items");
+const myitems = require("game/items");
 const range = 36;
 const pullPower = 22*60;
 const effectChance = 0.005;
@@ -32,7 +32,7 @@ const effectChance = 0.005;
     Fill.quad(x + r1 * cos, y + r1 * sin, x + r1 * cos2 + vec.x, y + r1 * sin2 + vec.y, x + r2 * cos2 + vec.x, y + r2 * sin2 + vec.y, x + r2 * cos, y + r2 * sin);
 }
 const Start = new Effect(30, cons(e => {
-    Draw.color(items.lightninAlloy.color);
+    Draw.color(myitems.lightninAlloy.color);
     Lines.stroke(3 * e.fout());
     Lines.circle(e.x, e.y, range * e.fout());
 }));
@@ -46,17 +46,17 @@ Object.assign(effectBullet, {
     instantDisappear : true,
     splashDamage : 10,
     hitShake : 3,
-    lightningColor : items.lightninAlloy.color,
+    lightningColor : myitems.lightninAlloy.color,
     lightningDamage : 3,
     lightning : 5,
     lightningLength : 12,
     hitSound : Sounds.release,
 });
 effectBullet.hitEffect = new Effect(60, cons(e => {
-    Draw.color(items.lightninAlloy.color);
+    Draw.color(myitems.lightninAlloy.color);
     Lines.stroke(e.fout() * 2);
     Lines.circle(e.x, e.y, 4 + e.finpow() * effectBullet.splashDamageRadius);
-    Draw.color(items.lightninAlloy.color);
+    Draw.color(myitems.lightninAlloy.color);
     for(var i = 0; i < 4; i++){
         Drawf.tri(e.x, e.y, 6, 36 * e.fout(), (i - e.fin()) * 90);
     }
@@ -71,33 +71,43 @@ LG.buildType = prov(() => {
     var working = false;
     var consumeTimer = 0;
     var light = 0;
+    
+    const block = LG;
+    var items = null;
+    var liquids = null;
+    var x=0,y=0;
+    
     return new JavaAdapter(NuclearReactor.NuclearReactorBuild, {
         updateTile(){
             //this.super$updateTile();
-            if(this.items.total() == this.block.itemCapacity && !working){
+            items = this.items;
+            liquids = this.liquids;
+            x = this.x;
+            y = this.y;
+            if(items.total() == block.itemCapacity && !working){
                 Start.at(this);
-                Sounds.lasercharge2.at(this.x, this.y, 1.5);
-                Units.nearby(null, this.x, this.y, range*2, cons(unit => {
-                    unit.impulse(Tmp.v3.set(unit).sub(this.x, this.y).nor().scl(-pullPower));
+                Sounds.lasercharge2.at(x, y, 1.5);
+                Units.nearby(null, x, y, range*2, cons(unit => {
+                    unit.impulse(Tmp.v3.set(unit).sub(x, y).nor().scl(-pullPower));
                 }));
                 working = true;
             }
-            if(this.items.total() < 1 && working){
+            if(items.total() < 1 && working){
                 working = false;
                 consumeTimer = 0;
             }
-            var cliquid = this.block.consumes.get(ConsumeType.liquid);
-            var item = this.block.consumes.getItem().items[0].item;
+            var cliquid = block.consumes.get(ConsumeType.liquid);
+            var item = block.consumes.getItem().items[0].item;
 
-            var fuel = this.items.get(item);
-            var fullness = fuel / this.block.itemCapacity;
+            var fuel = items.get(item);
+            var fullness = fuel / block.itemCapacity;
             this.productionEfficiency = fullness;
             if(fuel > 0 && this.enabled && working){
-                this.heat += fullness * this.block.heating * Math.min(this.delta(), 4);
-                consumeTimer += this.getProgressIncrease(this.block.itemDuration);
+                this.heat += fullness * block.heating * Math.min(this.delta(), 4);
+                consumeTimer += this.getProgressIncrease(block.itemDuration);
                 if(/*this.timer.get(this.block.timerFuel, this.block.itemDuration / this.timeScale)*/consumeTimer >= 1){
                     this.consume();
-                    effectBullet.create(this, this.team, this.x + Mathf.range(this.block.size * 4), this.y + Mathf.range(this.block.size * 4), 0);
+                    effectBullet.create(this, this.team, x + Mathf.range(block.size * 4), y + Mathf.range(block.size * 4), 0);
                     consumeTimer %= 1;
                 }
             }else{
@@ -105,14 +115,14 @@ LG.buildType = prov(() => {
             }
             var liquid = cliquid.liquid;
             if(this.heat > 0){
-                var maxUsed = Math.min(this.liquids.get(liquid), this.heat / this.block.coolantPower);
-                this.heat -= maxUsed * this.block.coolantPower;
+                var maxUsed = Math.min(liquids.get(liquid), this.heat / block.coolantPower);
+                this.heat -= maxUsed * block.coolantPower;
                 this.liquids.remove(liquid, maxUsed);
             }
-            if(this.heat > this.block.smokeThreshold){
-                var smoke = 1 + (this.heat - this.block.smokeThreshold) / (1 - this.block.smokeThreshold); //ranges from 1.0 to 2.0
+            if(this.heat > block.smokeThreshold){
+                var smoke = 1 + (this.heat - block.smokeThreshold) / (1 - block.smokeThreshold); //ranges from 1.0 to 2.0
                 if(Mathf.chance(smoke / 20 * this.delta())){
-                    Fx.reactorsmoke.at(this.x + Mathf.range(this.block.size * Vars.tilesize / 2), this.y + Mathf.range(this.block.size * Vars.tilesize / 2));
+                    Fx.reactorsmoke.at(x + Mathf.range(block.size * Vars.tilesize / 2), y + Mathf.range(block.size * Vars.tilesize / 2));
                 }
             }
             this.heat = Mathf.clamp(this.heat);
@@ -124,12 +134,12 @@ LG.buildType = prov(() => {
         },
         draw(){
             this.super$draw();
-            Draw.color(items.lightninAlloy.color);
+            Draw.color(myitems.lightninAlloy.color);
             Draw.alpha(this.items.total() > 0 ? 1 : 0);
             Draw.z(Layer.effect);
             Lines.stroke(3);
             if(!working){
-                circlePercent(this.x, this.y, range, this.items.total()/this.block.itemCapacity, 135);
+                circlePercent(this.x, this.y, range, this.items.total()/block.itemCapacity, 135);
             }
             Draw.alpha(light);
             Draw.rect(Core.atlas.find("btm-lightnin-generator-lights"), this.x,this.y);
@@ -161,7 +171,7 @@ Object.assign(LG, {
     explosionDamage : 5000,
     coolantPower : 0.1,
 });
-LG.consumes.item(items.lightninAlloy);
+LG.consumes.item(myitems.lightninAlloy);
 LG.liquidCapacity = 60;
 LG.consumes.liquid(Liquids.cryofluid, 0.04 / 0.1).update = false;
 LG.requirements = ItemStack.with(
@@ -169,7 +179,7 @@ LG.requirements = ItemStack.with(
     Items.graphite, 550,
     Items.silicon, 470,
     Items.surgeAlloy, 550,
-    items.lightninAlloy, 270
+    myitems.lightninAlloy, 270
 );
 LG.buildVisibility = BuildVisibility.shown;
 LG.category = Category.power;

@@ -123,6 +123,15 @@ heal.buildType = prov(() => {
     var boost = 1;
     var timer = 0;
     var tr = new Vec2();
+    
+    var block = heal;
+    var x = 0, y = 0;
+    var rotation = 0;
+    var target = null;
+    var unit = null;
+    var items = null;
+    var health = 0;
+    
     return new JavaAdapter(PowerTurret.PowerTurretBuild, {
         getHeat(){
             return bulletHeat;
@@ -138,58 +147,65 @@ heal.buildType = prov(() => {
             }
         },
         updateTile() {
-            boost = this.items.get(Items.phaseFabric) > 0 ? boostM : 1;
+            x = this.x;
+            y = this.y;
+            rotation = this.rotation;
+            target = this.target;
+            unit = this.unit;
+            health = this.health;
+            items = this.items;
+            boost = items.get(Items.phaseFabric) > 0 ? boostM : 1;
             this.updateConsume();
             this.wasShooting = false;
-            this.recoil = Mathf.lerpDelta(this.recoil, 0, this.block.restitution);
-            if(this.unit != null){
-                this.unit.health = this.health;
-                this.unit.rotation = this.rotation;
+            this.recoil = Mathf.lerpDelta(this.recoil, 0, block.restitution);
+            if(unit != null){
+                this.unit.health = health;
+                this.unit.rotation = rotation;
                 this.unit.team = this.team;
-                this.unit.set(this.x, this.y);
+                this.unit.set(x, y);
             }
             if(this.logicControlTime > 0){
                 this.logicControlTime -= Time.delta;
             }
             if(this.hasAmmo()){
-                if(this.timer.get(this.block.timerTarget, this.block.targetInterval)){
-                    if(this.target != null && (this.target.health >= this.target.maxHealth || !(this.target.within(this, findRange + 8) && Angles.within(this.rotation, this.angleTo(this.target), findAngle/2)) || this.isControlled() || this.logicControlled())){
+                if(this.timer.get(block.timerTarget, block.targetInterval)){
+                    if(target != null && (target.health >= target.maxHealth || !(target.within(this, findRange + 8) && Angles.within(rotation, this.angleTo(target), findAngle/2)) || this.isControlled() || this.logicControlled())){
                         this.target = null;
                     }
                     this.findTarget();
                 }
                 var canShoot = true;
                 if(this.isControlled()){ //player behavior
-                    this.targetPos.set(this.unit.aimX, this.unit.aimY);
-                    canShoot = this.unit.isShooting;
+                    this.targetPos.set(unit.aimX, unit.aimY);
+                    canShoot = unit.isShooting;
                 } else if(this.logicControlled()){ //logic behavior
                     canShoot = this.logicShooting;
                 } else { //default AI behavior
-                    if(Number.isNaN(this.rotation)){
+                    if(Number.isNaN(rotation)){
                         this.rotation = 0;
                     }
                 }
-                if(this.target == null && !(this.isControlled() || this.logicControlled())){
+                if(target == null && !(this.isControlled() || this.logicControlled())){
                     bulletLife = 0;
                     return;
                 }
-                this.targetPosition(this.target);
+                this.targetPosition(target);
                 var targetRot = this.angleTo(this.targetPos);
                 this.turnToTarget(targetRot);
 
-                if(Angles.angleDist(this.rotation, targetRot) < this.block.shootCone && canShoot){
+                if(Angles.angleDist(rotation, targetRot) < block.shootCone && canShoot){
                     this.wasShooting = true;
                     this.updateShooting();
                 }
             }
             if (bulletLife > 0 && bullet != null){
                 this.wasShooting = true;
-                tr.trns(this.rotation, this.block.shootLength, 0);
-                bullet.rotation(this.rotation);
-                bullet.set(this.x + tr.x, this.y + tr.y);
+                tr.trns(rotation, block.shootLength, 0);
+                bullet.rotation(rotation);
+                bullet.set(x + tr.x, y + tr.y);
                 bullet.time = 0;
                 //this.heat = 1;
-                this.recoil = this.block.recoilAmount;
+                this.recoil = block.recoilAmount;
                 bulletLife -= Time.delta / Math.max(this.efficiency(), 0.00001);
                 bulletHeat = Math.min(Mathf.lerpDelta(bulletHeat, 2, 0.035), 1);
                 if (bulletLife <= 0) {
@@ -218,7 +234,7 @@ heal.buildType = prov(() => {
                 return;
             }
             this.reload += this.edelta();
-            if(this.reload >= this.block.reloadTime && (this.consValid() || this.cheating())){
+            if(this.reload >= block.reloadTime && (this.consValid() || this.cheating())){
                 var type = hb;//this.peekAmmo();
                 this.shoot(type);
             
@@ -227,7 +243,7 @@ heal.buildType = prov(() => {
         },
         bullet(type, angle){
             bulletLife = shootDuration;
-            tr.trns(this.rotation, this.block.shootLength, 0);
+            tr.trns(this.rotation, block.shootLength, 0);
             bullet = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle);
         },
         shouldActiveSound(){

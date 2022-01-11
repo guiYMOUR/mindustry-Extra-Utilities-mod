@@ -41,25 +41,34 @@ laser.shootEffect = eff1;
 
 const T2lan = extendContent(PowerTurret, 'T2-lancer', {});
 
-lib.setBuildingSimple(T2lan, PowerTurret.PowerTurretBuild, {
-    _shotCounter: 0,
+T2lan.buildType = prov(()=>{
+var _shotCounter = 0;
+
+const block = T2lan;
+var x = 0, y = 0;
+var rotation = 0;
+
+return new JavaAdapter(PowerTurret.PowerTurretBuild, {
     shoot(type){
+        x = this.x;
+        y = this.y;
+        rotation = this.rotation;
         this.super$shoot(type);
-        var i = (this._shotCounter % this.block.shots) - (this.block.shots - 1)/2;
+        var i = (_shotCounter % block.shots) - (block.shots - 1)/2;
         var vec = new Vec2();
-        vec.trns(this.rotation - 90, -(this.block.spread * i + Mathf.range(0)), this.block.size * 8 / 2);
-        chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
-        chargeSound.at(this.x + vec.x, this.y + vec.y, 1);
+        vec.trns(rotation - 90, -(block.spread * i + Mathf.range(0)), block.size * 8 / 2);
+        chargeBeginEffect.at(x + vec.x, y + vec.y, rotation);
+        chargeSound.at(x + vec.x, y + vec.y, 1);
             
         for(var i = 0; i < chargeEffects; i++){
             Time.run(Mathf.random(chargeMaxDelay), () => {
                 if(!this.isValid()) return;
-                chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
+                chargeEffect.at(x + vec.x, y + vec.y, rotation);
             });
         }
-        this._shotCounter ++;
+        _shotCounter ++;
     }
-});
+}, T2lan);});
 T2lan.powerUse = 8.5;
 T2lan.shootType = laser;
 T2lan.spread = 3;

@@ -1,11 +1,16 @@
 const pu = extendContent(GenericCrafter, "pu", {});
 pu.buildType = prov(() => {
+    var x = 0, y = 0;
+    var totalProgress = 0;
     return new JavaAdapter(GenericCrafter.GenericCrafterBuild, {
         draw(){
-            Draw.rect(Core.atlas.find("btm-pu-b"), this.x, this.y);
-            Draw.rect(Core.atlas.find("btm-pu-1"), this.x, this.y, 90 + this.totalProgress * 1.5)
-            Draw.rect(Core.atlas.find("btm-pu-2"), this.x, this.y, 90 - this.totalProgress * 3);
-            Draw.rect(Core.atlas.find("btm-pu-top"),this.x, this.y);
+            x = this.x;
+            y = this.y;
+            totalProgress = this.totalProgress;
+            Draw.rect(Core.atlas.find("btm-pu-b"), x, y);
+            Draw.rect(Core.atlas.find("btm-pu-1"), x, y, 90 + totalProgress * 1.5)
+            Draw.rect(Core.atlas.find("btm-pu-2"), x, y, 90 - totalProgress * 3);
+            Draw.rect(Core.atlas.find("btm-pu-top"),x, y);
         },
     }, pu);
 });

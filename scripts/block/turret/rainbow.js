@@ -96,26 +96,32 @@ const rainbow = extendContent(PowerTurret, "rainbow", {
 rainbow.buildType = prov(() => {
     const tr = new Vec2();
     const tr2 = new Vec2();
+    const block = rainbow;
+    var rotation = 0;
+    var x = 0, y = 0;
     return new JavaAdapter(PowerTurret.PowerTurretBuild, {
         draw(){
+            rotation = this.rotation;
+            x = this.x;
+            y = this.y;
             this.super$draw();
-            tr2.trns(this.rotation, -this.recoil);
+            tr2.trns(rotation, -this.recoil);
             Draw.blend(Blending.additive);
             for(var h = 0; h < 5; h++){
                 Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 16))));
-                Draw.rect(rainbowRegions[h], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+                Draw.rect(rainbowRegions[h], x + tr2.x, y + tr2.y, rotation - 90);
             }
             Draw.blend();
             Draw.color();
         },
         shoot(type){
-            tr.trns(this.rotation, this.block.shootLength, Mathf.range(this.block.xRand));
+            tr.trns(this.rotation, block.shootLength, Mathf.range(block.xRand));
 
-            for(var i = 0; i < this.block.shots; i++){
-                this.bullet(bullet[i], this.rotation + (i - (this.block.shots / 2)) * this.block.spread);
+            for(var i = 0; i < block.shots; i++){
+                this.bullet(bullet[i], this.rotation + (i - (block.shots / 2)) * block.spread);
             }
             this.shotCounter++;
-            this.recoil = this.block.recoilAmount;
+            this.recoil = block.recoilAmount;
             this.heat = 1;
             this.effects();
             this.useAmmo();

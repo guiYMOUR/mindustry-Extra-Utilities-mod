@@ -22,6 +22,9 @@ GC.buildType = prov(() => {
     var p = 0;
     var gp = 0;
     var full = false;
+    
+    const block = GC;
+    
     function use(entity){
         return Math.min(amount * entity.edelta(), entity.block.liquidCapacity);
     }
@@ -31,7 +34,7 @@ GC.buildType = prov(() => {
     return new JavaAdapter(ItemLiquidGenerator.ItemLiquidGeneratorBuild, {
         updateTile(){
             var cons = this.consValid();
-            full = this.items.get(output) >= this.block.itemCapacity;
+            full = this.items.get(output) >= block.itemCapacity;
             if(cons && !full){
                 p += this.getProgressIncrease(craftTime);
                 gp += this.getProgressIncrease(itemDuration);
@@ -44,14 +47,15 @@ GC.buildType = prov(() => {
             if(gp > 1 && !full){
                 this.consume();
                 gp %= 1;
-                this.block.generateEffect.at(this.x + Mathf.range(3), this.y + Mathf.range(3));
+                block.generateEffect.at(this.x + Mathf.range(3), this.y + Mathf.range(3));
             }
             this.productionEfficiency = Mathf.num(cons) * Mathf.num(!full);
             this.dump(output);
+            this.produced(output);
             this.heat = Mathf.lerpDelta(this.heat, cons && !full ? 1 : 0, 0.05)
         },
         getPowerProduction(){
-            return Mathf.num(this.consValid()) * this.block.powerProduction * Mathf.num(!full);
+            return Mathf.num(this.consValid()) * block.powerProduction * Mathf.num(!full);
         },
         status(){
             if(this.consValid() && !full) return BlockStatus.active;

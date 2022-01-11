@@ -12,23 +12,28 @@ const craft = new Effect(42, cons(e => {
 }));
 
 const LA = extendContent(GenericCrafter, "LA", {});
+
+const block = LA;
+
 lib.setBuildingSimple(LA, GenericCrafter.GenericCrafterBuild, {
     updateTile(){
         this.super$updateTile();
-        if(Mathf.chanceDelta(this.block.updateEffectChance/4) && this.consValid()){
-            var rx = Mathf.range(this.block.size * 4);
-            var ry = Mathf.range(this.block.size * 4);
+        var x = this.x;
+        var y = this.y;
+        if(Mathf.chanceDelta(block.updateEffectChance/4) && this.consValid()){
+            var rx = Mathf.range(block.size * 4);
+            var ry = Mathf.range(block.size * 4);
             for(var i = 0; i < 3; i++){
                 var a = Mathf.range(180);
-                Lightning.create(this.team, items.lightninAlloy.color, 2, this.x + rx, this.y + ry, a, Mathf.random(5, 8));
+                Lightning.create(this.team, items.lightninAlloy.color, 2, x + rx, y + ry, a, Mathf.random(5, 8));
             }
-            Sounds.spark.at(this.x + rx, this.y + ry, Mathf.random(0.5, 0.7));
+            Sounds.spark.at(x + rx, y + ry, Mathf.random(0.5, 0.7));
         }
     },
     draw(){
         this.super$draw();
         Draw.color(Liquids.cryofluid.color);
-        Draw.alpha(this.liquids.get(Liquids.cryofluid) / this.block.liquidCapacity);
+        Draw.alpha(this.liquids.get(Liquids.cryofluid) / block.liquidCapacity);
         Draw.rect(Core.atlas.find("btm-LA-liquid"), this.x, this.y);
         Draw.color();
     },

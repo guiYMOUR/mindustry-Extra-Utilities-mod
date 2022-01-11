@@ -28,7 +28,7 @@ RGT.height = 20;
 RGT.damage = 180;
 RGT.splashDamageRadius = 28;
 RGT.splashDamage = 130;
-RGT.buildingDamageMultiplier = 0.2;
+RGT.buildingDamageMultiplier = 0.15;
 RGT.lifetime = 60;
 RGT.speed = 8;
 RGT.reloadMultiplier = 1.2;
@@ -38,15 +38,15 @@ RGT.shrinkY = 0;
 RGT.backColor = Pal.lancerLaser;
 RGT.frontColor = Pal.lancerLaser;
 RGT.despawnEffect = lib.newEffect(20,(e) => {
-	Draw.color(Pal.lancerLaser);
-	Lines.stroke(e.fout() * 3);
-	Lines.circle(e.x, e.y, e.fin() * 60);
-	Lines.stroke(e.fout() * 1.75);
-	Lines.circle(e.x, e.y, e.fin() * 45);
-	Draw.color(Pal.lancerLaser);
-	Fill.circle(e.x, e.y, e.fout() * 20);
-	Draw.color(Pal.lancerLaser);
-	Fill.circle(e.x, e.y, e.fout() * 14);
+    Draw.color(Pal.lancerLaser);
+    Lines.stroke(e.fout() * 3);
+    Lines.circle(e.x, e.y, e.fin() * 60);
+    Lines.stroke(e.fout() * 1.75);
+    Lines.circle(e.x, e.y, e.fin() * 45);
+    Draw.color(Pal.lancerLaser);
+    Fill.circle(e.x, e.y, e.fout() * 20);
+    Draw.color(Pal.lancerLaser);
+    Fill.circle(e.x, e.y, e.fout() * 14);
 });
 const RGS = extend(BasicBulletType, {
     update(b){
@@ -66,7 +66,7 @@ RGS.height = 20;
 RGS.damage = 290;
 RGS.splashDamageRadius = 36;
 RGS.splashDamage = 260;
-RGS.buildingDamageMultiplier = 0.15;
+RGS.buildingDamageMultiplier = 0.1;
 RGS.lifetime = 72;
 RGS.speed = 8;
 RGS.pierceCap = 2;
@@ -76,20 +76,26 @@ RGS.backColor = Pal.surge;
 RGS.frontColor = Pal.surge;
 RGS.status = StatusEffects.shocked;
 RGS.despawnEffect = lib.newEffect(20,(e) => {
-	Draw.color(Pal.surge);
-	Lines.stroke(e.fout() * 3);
-	Lines.circle(e.x, e.y, e.fin() * 60);
-	Lines.stroke(e.fout() * 1.75);
-	Lines.circle(e.x, e.y, e.fin() * 45);
-	Draw.color(Pal.surge);
-	Fill.circle(e.x, e.y, e.fout() * 20);
-	Draw.color(Pal.surge);
-	Fill.circle(e.x, e.y, e.fout() * 14);
+    Draw.color(Pal.surge);
+    Lines.stroke(e.fout() * 3);
+    Lines.circle(e.x, e.y, e.fin() * 60);
+    Lines.stroke(e.fout() * 1.75);
+    Lines.circle(e.x, e.y, e.fin() * 45);
+    Draw.color(Pal.surge);
+    Fill.circle(e.x, e.y, e.fout() * 20);
+    Draw.color(Pal.surge);
+    Fill.circle(e.x, e.y, e.fout() * 14);
 });
+
+const bigShotEff = effect.aimShoot(Pal.surge, 1.2, chargeTime + 5, 14);
 
 const RG = extendContent(ItemTurret, 'RG', {});
 
-lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
+RG.buildType = prov(()=>{ 
+var x=0,y=0;
+var rotation = 0;
+const block = RG;
+return new JavaAdapter(ItemTurret.ItemTurretBuild, {
     updateShooting(){
         if(this.reload >= this.block.reloadTime){
             var type = this.peekAmmo();
@@ -101,33 +107,40 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
     },
     shoot(type){
         //
+        x = this.x;
+        y = this.y;
+        rotation = this.rotation;
         var vec = new Vec2();
-        vec.trns(this.rotation, this.block.size * 8 / 2);
-        chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
-        effect.aimShoot(Pal.surge, this.block.range, 1.2, chargeTime + 5, 14).at(this.x + vec.x, this.y + vec.y, this.rotation);
-        chargeSound.at(this.x + vec.x, this.y + vec.y, 1);
+        vec.trns(rotation, block.size * 8 / 2);
+        chargeBeginEffect.at(x + vec.x, y + vec.y, rotation);
+        //effect.aimShoot(Pal.surge, this.block.range, 1.2, chargeTime + 5, 14).at(this.x + vec.x, this.y + vec.y, this.rotation);
+        bigShotEff.at(x + vec.x, y + vec.y, rotation, {length:RG.range});
+        chargeSound.at(x + vec.x, y + vec.y, 1);
             
         for(var i = 0; i < chargeEffects; i++){
             Time.run((chargeDelay / chargeEffects) * i, () => {
                 if(!this.isValid()) return;
-                vec.trns(this.rotation, this.block.size * 8 / 2);
-                chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
+                vec.trns(rotation, block.size * 8 / 2);
+                chargeEffect.at(x + vec.x, y + vec.y, rotation);
             });
         }
         this.charging = true;
         Time.run(chargeTime, () => {
             if(!this.isValid() || !this.hasAmmo()) return;
-            this.charging = false;
-            this.block.tr.trns(this.rotation, this.block.size * 8 / 2);
+            this.block.tr.trns(rotation, block.size * 8 / 2);
             this.heat = 1;
-            for(var i = 0; i < this.block.shots; i++){
+            for(var i = 0; i < block.shots; i++){
                 Time.run(8 * i, () => {
                     //this.peekAmmo().create(this, this.team, this.x + vec.x, this.y + vec.y, this.rotation, 1 ,1);
-                    this.bullet(type, this.rotation);
+                    this.bullet(type, rotation);
                     //this.recoil = this.block.recoilAmount;
                     this.effects();
                 })
             }
+            Time.run(8*block.shots,()=>{
+                this.charging = false;
+            });
+            //this.charging = false;
         });
         this.useAmmo();
         this.reload = 0;
@@ -136,21 +149,21 @@ lib.setBuildingSimple(RG, ItemTurret.ItemTurretBuild, {
         if(!this.enabled || this.liquids.get(this.liquids.current()) / this.block.liquidCapacity < 0.036) return 0;
         return this.power.status;
     },
-    effects(){
+    /*effects(){
         var tr = new Vec2();
-        var fshootEffect = this.block.shootEffect;
-        var fsmokeEffect = this.block.smokeEffect;
-        tr.trns(this.rotation, this.block.size * 8 / 2);
+        var fshootEffect = block.shootEffect;
+        var fsmokeEffect = block.smokeEffect;
+        tr.trns(this.rotation, block.size * 8 / 2);
         fshootEffect.at(this.x + tr.x, this.y + tr.y, this.rotation);
         fsmokeEffect.at(this.x + tr.x, this.y + tr.y, this.rotation);
-        this.block.shootSound.at(this.x + tr.x, this.y + tr.y, Mathf.random(0.9, 1.1));
+        block.shootSound.at(this.x + tr.x, this.y + tr.y, Mathf.random(0.9, 1.1));
 
-        if(this.block.shootShake > 0){
-            Effect.shake(this.block.shootShake, this.block.shootShake, this);
+        if(block.shootShake > 0){
+            Effect.shake(block.shootShake, block.shootShake, this);
         }
-        this.recoil = this.block.recoilAmount;
-    },//Wrote this was intended to change the shooting effects, may be changed behind.
-});
+        this.recoil = block.recoilAmount;
+    },//Wrote this was intended to change the shooting effects, may be changed behind.*/
+},RG);});
 RG.shootSound = Sounds.laser;
 RG.reloadTime = 60 * 5;
 RG.shots = 5;

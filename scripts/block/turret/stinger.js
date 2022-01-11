@@ -6,13 +6,13 @@ const chargeTime = 40;
 const chargeMaxDelay = 30;
 const chargeEffects = 8;
 const chargeEffect = Fx.lancerLaserCharge;
-const chargeSound = Sounds.none;
+//const chargeSound = Sounds.none;
 const chargeBeginEffect = lib.newEffect(chargeTime * 1.5, e => {
         Draw.color(Color.valueOf("ffffff"), Color.valueOf("c6d676"), e.fin());
-        Fill.circle(e.x, e.y, e.fin() * 4);
+        Fill.circle(e.x, e.y, e.fin() * 10);
 
         Draw.color();
-        Fill.circle(e.x, e.y, e.fin() * 3);
+        Fill.circle(e.x, e.y, e.fin() * 6);
 });
 const eff1 = lib.newEffect(10, (e) => {
         Draw.color(Color.white, Color.valueOf("#C6D676"), e.fin());
@@ -29,9 +29,17 @@ stingerLaser.collidesAir = false
 stingerLaser.length = 230;
 stingerLaser.width = 22;
 stingerLaser.hitSize = 6;
-stingerLaser.lifetime = 25;
+stingerLaser.lifetime = 60;
 stingerLaser.drawSize = 400;
 stingerLaser.status = status.poison;
+stingerLaser.lightningSpacing = 35;
+stingerLaser.lightningLength = 3;
+stingerLaser.lightningDelay = 1.1;
+stingerLaser.lightningLengthRand = 10;
+stingerLaser.lightningDamage = 2;
+stingerLaser.lightningAngleRand = 30;
+stingerLaser.lightColor = Color.valueOf("#C6D676");
+stingerLaser.lightningColor = Color.valueOf("#C6D676");
 stingerLaser.colors =[Color.valueOf("#C6D676"), Color.valueOf("#C6D676"), Color.white];
 stingerLaser.shootEffect = eff1;
 
@@ -39,39 +47,23 @@ stingerLaser.shootEffect = eff1;
 const stinger = extendContent(PowerTurret, 'stinger', {});
 
 lib.setBuildingSimple(stinger, PowerTurret.PowerTurretBuild, {
-    shoot(type){
-        //this.super$shoot(type);
-        this.useAmmo();
-        var vec = new Vec2();
-        vec.trns(this.rotation, this.block.size * 8 / 2);
-        chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
-        chargeSound.at(this.x + vec.x, this.y + vec.y, 1);
-            
-        for(var i = 0; i < chargeEffects; i++){
-            Time.run(Mathf.random(chargeMaxDelay), () => {
-                if(!this.isValid()) return;
-                vec.trns(this.rotation, this.block.size * 8 / 2);
-                chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
-            });
-        }
-        
-
-        Time.run(chargeTime, () => {
-            if(!this.isValid()) return;
-            vec.trns(this.rotation, this.block.size * 8 / 2);
-            this.recoil = this.block.recoilAmount;
-            this.heat = 1;
-            stingerLaser.create(this, this.team, this.x + vec.x, this.y + vec.y, this.rotation, 1 ,1)
-            this.effects();
-            
-        });
+    shouldTurn(){
+        return true;
     }
 });
+
+stinger.chargeTime = chargeTime;
+stinger.chargeMaxDelay = chargeMaxDelay;
+stinger.chargeEffects = chargeEffects;
+stinger.chargeEffect = chargeEffect;
+stinger.chargeBeginEffect = chargeBeginEffect;
+//stinger.chargeSound = chargeSound;
+
 stinger.powerUse = 10;
 stinger.shootType = stingerLaser;
 stinger.shots = 1;
 stinger.shootShake = 3;
-stinger.reloadTime = chargeTime * 2;
+stinger.reloadTime = chargeTime * 2.5;
 stinger.range = 200;
 stinger.shootCone = 15;
 stinger.ammoUseEffect = Fx.none;

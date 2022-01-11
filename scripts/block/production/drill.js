@@ -12,17 +12,17 @@ tiDrill.tier = 4;
 tiDrill.consumes.liquid(Liquids.water, 0.06).boost()
 exports.tiDrill = tiDrill;
 
-function eff1(color, fout, rad){
-    return new Effect(12, cons(e => {
-        Draw.color(color);
-        Lines.stroke(3 * e.fout());
-        if(fout){
-            Lines.circle(e.x, e.y, rad * e.fout());
-        } else {
-            Lines.circle(e.x, e.y, rad * e.fin());
-        }
-    }));
-};
+const defaultData = {color:Items.sand.color, fout:false, rad:4};
+const eff1 = new Effect(12, cons(e => {
+    let data = e.data ? e.data: defaultData;
+    Draw.color(data.color);
+    Lines.stroke(3 * e.fout());
+    if(data.fout){
+        Lines.circle(e.x, e.y, data.rad * e.fout());
+    } else {
+        Lines.circle(e.x, e.y, data.rad * e.fin());
+    }
+}));
 
 function filter(liquid){
     return liquid.temperature <= 0.5 && liquid.flammability < 0.1;
@@ -62,61 +62,120 @@ const drill = extendContent(Drill, "drill", {
     },
 });
 
+//by EB Wilson & gm, Optimizations Provided
 drill.buildType = prov(() => {
-    var work = false;
+    let work = false;
+    let warmup = 0;
+    let progress = 0;
+    
+    let dominantItem = null;
+    let delta = 0;
+    let block = drill;
+    let size = 0;
+    let itemCapacity = 0;
+    let liquidCapacity = 0;
+    let drillTime = 0;
+    let hardnessDrillMultiplier = 0;
+    let liquidBoostIntensity = 0;
+    let warmupSpeed = 0;
+    let dumpTime = 0;
+    let timerDump = 0;
+    let x = 0, y = 0;
+    let liquids = null;
+    let items = null;
+    let dominantItems = 0;
+    
+    let dmHardness = null;
+    let dmColor = null;
+    let current = null;
+    
     return new JavaAdapter(Drill.DrillBuild, {
+        create(blockParam, team){
+          this.super$create(blockParam, team)
+          size = block.size;
+          itemCapacity = block.itemCapacity;
+          liquidCapacity = block.liquidCapacity;
+          drillTime = block.drillTime;
+          hardnessDrillMultiplier = block.hardnessDrillMultiplier;
+          liquidBoostIntensity = block.liquidBoostIntensity;
+          warmupSpeed = block.warmupSpeed;
+          dumpTime = block.dumpTime;
+          timerDump = block.timerDump;
+          return this;
+        },
+        
         updateTile(){
-            //this.super$updateTile();
-            if(this.dominantItem == null){
+            x = this.x;
+            y = this.y;
+            this.warmup = warmup;
+            progress = this.progress;
+            delta = this.delta();
+            liquids = this.liquids;
+            items = this.items;
+            dominantItems = this.dominantItems;
+            
+            dominantItem = this.dominantItem;
+            dmHardness = dominantItem.hardness;
+            dmColor = dominantItem.color;
+            current = liquids.current();
+        
+            this.super$updateTile();
+            if(dominantItem == null){
                 return;
             }
-            if(this.timer.get(this.block.timerDump, this.block.dumpTime)){
-                this.dump(this.items.has(this.dominantItem) ? this.dominantItem : null);
+            if(this.timer.get(timerDump, dumpTime)){
+                this.dump(items.has(dominantItem) ? dominantItem : null);
             }
-            this.timeDrilled += this.warmup * this.delta();
-            if(this.items.total() < this.block.itemCapacity && this.dominantItems > 0 && this.consValid()){
-                var speed = 1;
+            this.timeDrilled += warmup * delta;
+            if(items.total() < itemCapacity && dominantItems > 0 && this.consValid()){
+                let speed = 1;
                 if(this.cons.optionalValid()){
-                    speed = this.block.liquidBoostIntensity;
+                    speed = liquidBoostIntensity;
                 }
-                speed *= (this.efficiency() * (1 + (this.liquids.current().heatCapacity - 0.4) * 0.9) * this.block.liquidBoostIntensity * 0.3087 * Mathf.num(work));
+                speed *= (this.efficiency() * (1 + (current.heatCapacity - 0.4) * 0.9) * liquidBoostIntensity * 0.3087 * Mathf.num(work));
                 //limit display
-                this.lastDrillSpeed = Math.min((speed * this.dominantItems * this.warmup) / (this.block.drillTime + this.block.hardnessDrillMultiplier * this.dominantItem.hardness), 60);
-                this.warmup = Mathf.lerpDelta(this.warmup, speed, this.block.warmupSpeed);
-                this.progress += this.delta() * this.dominantItems * speed * this.warmup;
-                if(Mathf.chanceDelta(this.block.updateEffectChance * this.warmup))
-                    this.block.updateEffect.at(this.x + Mathf.range(this.block.size * 2), this.y + Mathf.range(this.block.size * 2));
+                this.lastDrillSpeed = Math.min((speed * dominantItems * warmup) / (drillTime + hardnessDrillMultiplier * dmHardness), 60);
+                warmup = Mathf.lerpDelta(warmup, speed, warmupSpeed);
+                progress += delta * dominantItems * speed * warmup;
+                if(Mathf.chanceDelta(block.updateEffectChance * warmup))
+                    block.updateEffect.at(x + Mathf.range(size * 2), y + Mathf.range(size * 2));
             }else{
                 this.lastDrillSpeed = 0;
-                this.warmup = Mathf.lerpDelta(this.warmup, 0, this.block.warmupSpeed);
+                warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
                 return;
             }
-            var delay = this.block.drillTime + this.block.hardnessDrillMultiplier * this.dominantItem.hardness;
-            if(this.dominantItems > 0 && this.progress >= delay && this.items.total() < this.block.itemCapacity){
-                this.offload(this.dominantItem);
+            let delay = drillTime + hardnessDrillMultiplier * dmHardness;
+            if(dominantItems > 0 && progress >= delay && items.total() < itemCapacity){
+                this.offload(dominantItem);
                 this.index ++;
-                this.progress %= delay;
-                var eff = eff1(this.dominantItem.color, true, 10);
+                progress %= delay;
+              
                 if(Mathf.chance(0.2)){
-                    eff.at(this.x + Mathf.range(this.block.size * 2), this.y + Mathf.range(this.block.size * 2));
+                    eff1.at(x + Mathf.range(size * 2), y + Mathf.range(size * 2), 0, {color:dmColor, fout:true, rad:10});
                     if(Mathf.chance(0.5)){
-                        Fx.mineHuge.at(this.x + Mathf.range(this.block.size), this.y + Mathf.range(this.block.size), this.dominantItem.color);
+                        Fx.mineHuge.at(x + Mathf.range(size), y + Mathf.range(size), dmColor);
                     }
                 }
             }
-            if(this.liquids.get(this.liquids.current()) / this.block.liquidCapacity >= 0.08 && !work) work = true;
-            if(this.liquids.get(this.liquids.current()) / this.block.liquidCapacity < 0.08 && work){
-                this.liquids.clear();
+            
+            if(liquids.get(current) / liquidCapacity >= 0.08 && !work) work = true;
+            if(liquids.get(current) / liquidCapacity < 0.08 && work){
+                liquids.clear();
                 work = false;
             }
+            
+            //this.warmup = warmup;
+            this.progress = progress;
         },
         write(write) {
             this.super$write(write);
             write.bool(work);
+            write.f(warmup);
         },
         read(read, revision) {
             this.super$read(read, revision);
             work = read.bool();
+            warmup = read.f();
         },
     }, drill);
 });
@@ -168,9 +227,9 @@ shovel.buildType = prov(() => {
     }, shovel);
 });
 shovel.requirements = ItemStack.with(
-    Items.metaglass, 45,
-    Items.silicon, 60,
-    Items.titanium, 75
+    Items.metaglass, 55,
+    Items.silicon, 105,
+    Items.titanium, 80,
 );
 shovel.buildVisibility = BuildVisibility.shown;
 shovel.category = Category.production;
@@ -182,7 +241,7 @@ shovel.tier = 0;
 shovel.updateEffect = Fx.mineBig;
 shovel.updateEffectChance = 0.05;
 shovel.drillEffect = Fx.none;
-shovel.warmupSpeed = 10;
+shovel.warmupSpeed = 0.02;
 shovel.hasLiquids = false;
 shovel.liquidBoostIntensity = 1;
 shovel.consumes.power(2);
@@ -277,7 +336,7 @@ blastOilExtractor.buildType = prov(() => {
             if(Mathf.chance(this.delta() * this.block.updateEffectChance) && this.cons.valid() && this.typeLiquid() < this.block.liquidCapacity - 0.001){
                 var range = Mathf.range(this.block.size * 2);
                 var range2 = Mathf.range(this.block.size * 2);
-                eff1(Items.blastCompound.color, false, 12).at(this.getX() + range, this.getY() + range2);
+                eff1.at(this.getX() + range, this.getY() + range2, 0, {color:Items.blastCompound.color, fout:false, rad:12});
                 Sounds.explosion.at(this.getX() + range, this.getY() + range2, Mathf.random(0.7, 1.2));
             }
         },
@@ -361,7 +420,7 @@ dustExtractor.buildType = prov(() => {
 });
 Object.assign(dustExtractor, {
     craftTime : 1.6 * 60,
-    updateEffect : eff1(Items.sand.color, true, 4),
+    updateEffect : eff1,
     craftEffect : absorbEffect,
     updateEffectChance : 0.02,
     size : 2,

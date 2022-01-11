@@ -5,7 +5,7 @@ lib.setBuildingSimple(T2melter, AttributeSmelter.AttributeSmelterBuild, {
     draw(){
         this.super$draw();
         Draw.color(this.liquids.current().color);
-        Draw.alpha(this.liquids.total() / this.block.liquidCapacity);
+        Draw.alpha(this.liquids.total() / T2melter.liquidCapacity);
         Draw.rect(Core.atlas.find("btm-T2melter-liquid"), this.x, this.y);
         Draw.color();
     },

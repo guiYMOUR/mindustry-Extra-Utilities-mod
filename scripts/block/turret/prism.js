@@ -33,36 +33,47 @@ prism.buildType = prov(() => {
     var _reload = reloadTime;
     const tr = new Vec2();
     const tr2 = new Vec2();
+    const block = prism;
+    var x=0,y=0;
+    var rotation =0;
+    var recoil = 0;
+    var liquids = null;
     return new JavaAdapter(PowerTurret.PowerTurretBuild, {
         _bulletHeat: 0,
         getBulletHeat(){
             return this._bulletHeat;
         },
         draw(){
+            rotation = this.rotation;
+            recoil = this.recoil;
             this.super$draw();
-            tr2.trns(this.rotation, -this.recoil);
+            tr2.trns(rotation, -recoil);
             Draw.blend(Blending.additive);
             for(var h = 0; h < 8; h++){
                 Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 8))));
-                Draw.rect(rainbowRegions[h], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+                Draw.rect(rainbowRegions[h], x + tr2.x, y + tr2.y, rotation - 90);
             }
             Draw.blend();
             Draw.color();
         },
         updateTile() {
+            x = this.x;
+            y = this.y;
+            rotation = this.rotation;
+            liquids = this.liquids;
             this.super$updateTile();
             if (bulletLife > 0 && bullet[1] != null) {
                 this.wasShooting = true;
                 for(var n = 0; n < bullet.length; n++){
                     var data = (n * (360 / bullet.length));
                     var sine = Mathf.sinDeg(data + (bulletTime * angleShiftStrength));
-                    tr.trns(this.rotation, (this.block.size * Vars.tilesize / 2) + -this.block.recoilAmount, sine * sideOffset);
-                    bullet[n].rotation(this.rotation + ((sine * shiftAngel) * this._bulletHeat));
-                    bullet[n].set(this.x + tr.x, this.y + tr.y);
+                    tr.trns(rotation, (block.size * Vars.tilesize / 2) + -block.recoilAmount, sine * sideOffset);
+                    bullet[n].rotation(rotation + ((sine * shiftAngel) * this._bulletHeat));
+                    bullet[n].set(x + tr.x, y + tr.y);
                     bullet[n].time = 0;
                 }
                 this.heat = 1;
-                this.recoil = this.block.recoilAmount;
+                this.recoil = block.recoilAmount;
                 bulletTime += Time.delta;
                 bulletLife -= Time.delta / Math.max(this.efficiency(), 0.00001);
                 if (bulletLife <= 0) {
@@ -74,15 +85,15 @@ prism.buildType = prov(() => {
                 }
             } else if (_reload > 0) {
                 this.wasShooting = true;
-                var liquid = this.liquids.current();
-                var maxUsed = this.block.consumes.get(ConsumeType.liquid).amount;
+                var liquid = liquids.current();
+                var maxUsed = block.consumes.get(ConsumeType.liquid).amount;
 
-                var used = (this.cheating() ? maxUsed * Time.delta : Math.min(this.liquids.get(liquid), maxUsed * Time.delta)) * (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * this.block.coolantMultiplier);
+                var used = (this.cheating() ? maxUsed * Time.delta : Math.min(liquids.get(liquid), maxUsed * Time.delta)) * (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * block.coolantMultiplier);
                 _reload -= used;
-                this.liquids.remove(liquid, used);
+                liquids.remove(liquid, used);
 
                 if (Mathf.chance(0.06 * used)) {
-                    this.block.coolEffect.at(this.x + Mathf.range(this.block.size * Vars.tilesize / 2), this.y + Mathf.range(this.block.size * Vars.tilesize / 2));
+                    block.coolEffect.at(x + Mathf.range(block.size * Vars.tilesize / 2), y + Mathf.range(block.size * Vars.tilesize / 2));
                 }
             }
             this._bulletHeat = Mathf.lerpDelta(this._bulletHeat, 0, fade);
@@ -106,8 +117,8 @@ prism.buildType = prov(() => {
             for(var s = 0; s < 6; s++){
                 var data = (s * (360 / 6));
                 var sine = Mathf.sinDeg(data + (bulletTime * angleShiftStrength));
-                tr.trns(angle, this.block.size * Vars.tilesize / 2, sine * sideOffset);
-                bullet[s] = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle + (sine * shiftAngel));
+                tr.trns(angle, block.size * Vars.tilesize / 2, sine * sideOffset);
+                bullet[s] = type.create(this.tile.build, this.team, x + tr.x, y + tr.y, angle + (sine * shiftAngel));
                 bullet[s].data = data;
             }
         
@@ -115,7 +126,7 @@ prism.buildType = prov(() => {
         },
     
         turnToTarget(targetRot) {
-            this.rotation = Angles.moveToward(this.rotation, targetRot, this.efficiency() * this.block.rotateSpeed * this.delta() * (bulletLife > 0 ? firingMoveFract : 1));
+            this.rotation = Angles.moveToward(this.rotation, targetRot, this.efficiency() * block.rotateSpeed * this.delta() * (bulletLife > 0 ? firingMoveFract : 1));
         },
     
         shouldActiveSound(){
@@ -145,6 +156,14 @@ prism.loopSoundVolume = 2;
 prism.canOverdrive = false;
 
 prism.shootType = (() => {
+    const width = 8;
+    const strokes = [1.2, 1.1, 1, 0.9];
+    const tscales = [1, 0.74, 0.5, 0.24];
+    const lenscales = [0.92, 1, 1.017, 1.025];
+    const length = 32 * 8;
+    const spaceMag = 35;
+    const oscMag = 1.5;
+    const oscScl = 0.8;
     const cl = new JavaAdapter(ContinuousLaserBulletType, {
         draw(b){
             var fout = Mathf.clamp(b.time > b.lifetime - this.fadeTime ? 1 - (b.time - (this.lifetime - this.fadeTime)) / this.fadeTime : 1);
@@ -153,22 +172,17 @@ prism.shootType = (() => {
             Draw.blend(Blending.additive);
             for(var s = 0; s < 4; s++){
                 Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * 2) + b.data));
-                for(var i = 0; i < this.tscales.length; i++){
-                    Tmp.v1.trns(b.rotation() + 180, (this.lenscales[i] - 1) * this.spaceMag);
-                    Lines.stroke((this.width + Mathf.absin(Time.time, this.oscScl, this.oscMag)) * fout * wide * this.strokes[s] * this.tscales[i]);
-                    Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rotation(), this.length * this.lenscales[i], false);
+                for(var i = 0; i < tscales.length; i++){
+                    Tmp.v1.trns(b.rotation() + 180, (lenscales[i] - 1) * spaceMag);
+                    Lines.stroke((width + Mathf.absin(Time.time, oscScl, oscMag)) * fout * wide * strokes[s] * tscales[i]);
+                    Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rotation(), length * lenscales[i], false);
                 }
             }
             Draw.reset();
             Draw.blend();
          },
     });
-    cl.width = 8;
-    cl.damage = 45;
-    cl.strokes = [1.2, 1.1, 1, 0.9];
-    cl.tscales = [1, 0.74, 0.5, 0.24];
-    cl.lenscales = [0.92, 1, 1.017, 1.025];
-    cl.length = 32 * 8;
+    cl.damage = 40;
     cl.hitEffect = new Effect(16, cons(e => {
         Draw.blend(Blending.additive);
         Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
@@ -187,13 +201,13 @@ prism.shootType = (() => {
 })();
 prism.health = 200 * 5 * 5;
 prism.coolantMultiplier = 1;
-prism.consumes.add(new ConsumeCoolant(0.5));
+prism.consumes.add(new ConsumeCoolant(0.7)).update = false;
 prism.requirements = ItemStack.with(
     Items.lead, 620,
     Items.silicon, 550,
     Items.metaglass, 430,
     Items.thorium, 385,
-    items.lightninAlloy, 200
+    items.lightninAlloy, 180
 );
 prism.buildVisibility = BuildVisibility.shown;
 prism.category = Category.turret;

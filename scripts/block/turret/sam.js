@@ -1,3 +1,5 @@
+//现在的方法--操控子弹，后面可能会变成用贴图表示子弹填装
+//The current method is to control the bullets to represent the filling of ammunition, which may be changed to the way of "draw" later.
 const lib = require("blib");
 const mb = extend(BasicBulletType, {
     update(b){
@@ -65,35 +67,39 @@ sam.buildType = prov(() => {
     var shotCounter = 0;
     const tr = new Vec2();
     const tr2 = new Vec2();
-    //var region = Core.atlas.find("btm-sam-top");
-    //var bottom = Core.atlas.find("btm-sam-bottom");
     var drawer = cons(tile => Draw.rect(Core.atlas.find("btm-sam-top"), tile.x + tr2.x, tile.y + tr2.y, tile.rotation - 90));
     var bottomDrawer = cons(tile => Draw.rect(Core.atlas.find("btm-sam-bottom"), tile.x + tr2.x, tile.y + tr2.y, tile.rotation - 90));
+    
+    const block = sam;
+    var x = 0, y = 0;
+    var rotation = 0;
+    
     return new JavaAdapter(Turret.TurretBuild, {
         reloadSpeed(){
             return this.delta() * this.baseReloadSpeed()
         },
-        /*delta(){
-            return Time.delta * Math.min(3.75, this.timeScale);
-        },*/
         updateTile(){
+            x = this.x;
+            y = this.y;
+            rotation = this.rotation;
             this.super$updateTile();
-            var i = (shotCounter % this.block.shots) - (this.block.shots - 1)/2;
+            var i = (shotCounter % block.shots) - (block.shots - 1)/2;
             if(bullet != null){
                 if(bullet.time < 60/this.reloadSpeed()){
-                    tr.trns(this.rotation - 90, this.block.spread * i, (this.block.size * Vars.tilesize / 2) - (this.block.size * Vars.tilesize) * (1 - (bullet.time * 0.6)/(60/this.reloadSpeed())));
-                    bullet.rotation(this.rotation);
-                    bullet.set(this.x + tr.x, this.y + tr.y);
+                    tr.trns(rotation - 90, block.spread * i, (block.size * Vars.tilesize / 2) - (block.size * Vars.tilesize) * (1 - (bullet.time * 0.6)/(60/this.reloadSpeed())));
+                    bullet.rotation(rotation);
+                    bullet.set(x + tr.x, y + tr.y);
                 } else {
                     bullet = null;
                 }
             }
         },
         draw(){
-            Draw.rect(this.block.baseRegion, this.x, this.y);
+            rotation = this.rotation;
+            Draw.rect(block.baseRegion, x, y);
             Draw.color();
-            tr2.trns(this.rotation, -this.recoil);
-            Drawf.shadow(Core.atlas.find("btm-sam-top"), this.x + tr2.x - this.block.elevation, this.y + tr2.y - this.block.elevation, this.rotation - 90);
+            tr2.trns(rotation, -this.recoil);
+            Drawf.shadow(Core.atlas.find("btm-sam-top"), x + tr2.x - block.elevation, y + tr2.y - block.elevation, rotation - 90);
             bottomDrawer.get(this);
             Draw.z(Layer.turret + 1);
             drawer.get(this);
@@ -107,14 +113,14 @@ sam.buildType = prov(() => {
             shotCounter ++;
             Time.run(60/this.reloadSpeed(), () => {
                 if(!this.consValid()) return;
-                this.recoil = this.block.recoilAmount;
+                this.recoil = block.recoilAmount;
                 this.heat = 1;
                 this.useAmmo();
                 this.effects();
             });
         },
         bullet(type, angle){
-            tr.trns(angle, this.block.size * Vars.tilesize / 2);
+            tr.trns(angle, block.size * Vars.tilesize / 2);
             bullet = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle);
         },
         hasAmmo() { return this.consValid(); },

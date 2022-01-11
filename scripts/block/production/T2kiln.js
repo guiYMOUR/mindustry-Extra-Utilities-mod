@@ -1,7 +1,7 @@
 const T2kiln = extendContent(AttributeCrafter, "T2kiln", {});
 T2kiln.craftEffect = Fx.smeltsmoke;
-T2kiln.outputItem = new ItemStack(Items.metaglass, 8);
-T2kiln.craftTime = 36;
+T2kiln.outputItem = new ItemStack(Items.metaglass, 7);
+T2kiln.craftTime = 60;
 T2kiln.size = 3;
 T2kiln.hasPower = true;
 T2kiln.drawer = new DrawSmelter(Color.valueOf("ffef99"));

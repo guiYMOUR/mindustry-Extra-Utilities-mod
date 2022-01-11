@@ -25,22 +25,24 @@ const sakura = extendContent(ItemTurret, 'sakura', {});
 
 sakura.ammo(
     Items.thorium, (() => {
+        const lifetime = 120;
+        const fragBullets = 5;
         const rankS = new JavaAdapter(BasicBulletType, {
             update(b){
-                if(b.timer.get(this.lifetime/5)){
+                if(b.timer.get(lifetime/4)){
                     for(var i = 0; i < this.fragBullets; i++){
-                        rankB.create(b, b.x, b.y, (360/this.fragBullets) * (Math.floor(this.fragBullets/2) - i), 1, 1);
+                        rankB.create(b, b.x, b.y, b.rotation() + (360/fragBullets) * (Math.floor(fragBullets/2) - i), 1, 1);
                     }
                 }
             },
             despawned(b){
-                for(var i = 0; i < this.fragBullets; i++){
-                    rankB.create(b, b.x, b.y, (360/this.fragBullets) * (Math.floor(this.fragBullets/2) - i), 1, 1);
+                for(var i = 0; i < fragBullets; i++){
+                    rankB.create(b, b.x, b.y, b.rotation() + (360/fragBullets) * (Math.floor(fragBullets/2) - i), 1, 1);
                 }
             },
         });
         rankS.speed = 2;
-        rankS.lifetime = 120;
+        rankS.lifetime = lifetime;
         rankS.damage = 61;
         rankS.buildingDamageMultiplier = 0.5;
         rankS.width = 32;
@@ -50,7 +52,7 @@ sakura.ammo(
         rankS.pierceBuilding = true;
         rankS.backColor = c1;
         rankS.frontColor = c1;
-        rankS.fragBullets = 6;
+        rankS.fragBullets = fragBullets;
         return rankS;
     })()
 );
@@ -66,7 +68,7 @@ sakura.shootEffect = Fx.thoriumShoot;
 sakura.smokeEffect = Fx.thoriumShoot;
 sakura.requirements = ItemStack.with(
     Items.lead, 180,
-    Items.silicon, 125,
+    Items.silicon, 120,
     Items.titanium, 100,
     Items.thorium, 85
 );

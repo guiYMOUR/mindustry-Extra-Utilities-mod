@@ -18,7 +18,9 @@ T2ther.buildType = prov(() => {
             return this.block.powerProduction * this.productionEfficiency * st;
         },
         draw(){
-            Draw.rect(Core.atlas.find("btm-T2ther-b"),this.x,this.y);
+            var x = this.x;
+            var y = this.y;
+            Draw.rect(Core.atlas.find("btm-T2ther-b"),x,y);
             const plasmas = 4;
             var plasmaRegions = new Array();
             for(var i = 0; i < plasmas; i++){
@@ -28,11 +30,11 @@ T2ther.buildType = prov(() => {
                 var r = 29 + Mathf.absin(Time.time, 2 + i * 1, 5 - i * 0.5);
                 Draw.color(plasma2, plasma1, st);
                 Draw.alpha(st);
-                Draw.rect(Core.atlas.find(plasmaRegions[i]), this.x, this.y,Time.time * (12 + i * 6) * 1);
+                Draw.rect(Core.atlas.find(plasmaRegions[i]), x, y,Time.time * (12 + i * 6) * 1);
             }
             Draw.color();
             Draw.alpha(1);
-            Draw.rect(Core.atlas.find("btm-T2ther-top"),this.x,this.y);
+            Draw.rect(Core.atlas.find("btm-T2ther-top"),x,y);
         },
         write(write) {
             this.super$write(write);

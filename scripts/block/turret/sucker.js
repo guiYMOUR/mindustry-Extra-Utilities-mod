@@ -2,7 +2,7 @@
 * @readme <All right, all right, I'll use it.>
 */
 const shots = 6;
-const force = 20;
+const force = 24;
 const scaledForce = 8;
 const sucker = extendContent(TractorBeamTurret, "sucker", {
     setStats(){
@@ -12,38 +12,47 @@ const sucker = extendContent(TractorBeamTurret, "sucker", {
 });
 sucker.buildType = prov(() => {
     var target = new Seq();
+    
+    const block = sucker;
+    var x = 0, y = 0;
+    var rotation = 0;
+    
     return new JavaAdapter(TractorBeamTurret.TractorBeamBuild, {
         updateTile(){
+            x = this.x;
+            y = this.y;
+            rotation = this.rotation;
             this.super$updateTile();
             target.clear();
-            Units.nearbyEnemies(this.team, this.x, this.y, this.block.range, cons(unit =>{
-                if(unit.checkTarget(this.block.targetAir, this.block.targetGround) && Angles.within(this.rotation, this.angleTo(unit), this.block.shootCone) && this.efficiency() > 0.02){
+            Units.nearbyEnemies(this.team, x, y, block.range, cons(unit =>{
+                if(unit.checkTarget(block.targetAir, block.targetGround) && Angles.within(rotation, this.angleTo(unit), block.shootCone) && this.efficiency() > 0.02){
                     target.add(unit);
                 }
             }));
-            target.sort(floatf(u => u.dst(this.x, this.y)));
+            target.sort(floatf(u => u.dst(x, y)));
             var max = Math.min(shots, target.size);
             for(var a = 0; a < max; a++){
                 var unit = target.get(a);
                 if(unit != null){
-                    if(this.block.damage > 0){
-                            unit.damageContinuous(this.block.damage * this.efficiency());
+                    if(block.damage > 0){
+                            unit.damageContinuous(block.damage * this.efficiency());
                     }
-                    unit.impulseNet(Tmp.v1.set(this).sub(unit).limit((force + (1 - unit.dst(this) / this.block.range) * scaledForce) * this.edelta() * this.timeScale));
+                    unit.impulseNet(Tmp.v1.set(this).sub(unit).limit((force + (1 - unit.dst(this) / block.range) * scaledForce) * this.edelta() * this.timeScale));
                 }
             }
         },
         draw(){
-            Draw.rect(this.block.baseRegion, this.x, this.y);
-            Drawf.shadow(this.block.region, this.x - (this.block.size / 2), this.y - (this.block.size / 2), this.rotation - 90);
-            Draw.rect(this.block.region, this.x, this.y, this.rotation - 90);
+            rotation = this.rotation;
+            Draw.rect(block.baseRegion, x, y);
+            Drawf.shadow(block.region, x - (block.size / 2), y - (block.size / 2), rotation - 90);
+            Draw.rect(block.region, x, y, rotation - 90);
             Draw.z(Layer.bullet);
             var max = Math.min(shots, target.size);
             for(var a = 0; a < max; a++){
                 var unit = target.get(a);
                 Draw.mixcol();
-                Draw.mixcol(this.block.laserColor, Mathf.absin(4, 0.6));
-                Tmp.v1.trns(this.rotation, this.block.shootLength).add(this.x, this.y);
+                Draw.mixcol(block.laserColor, Mathf.absin(4, 0.6));
+                Tmp.v1.trns(rotation, block.shootLength).add(x, y);
                 if(unit != null){
                     Drawf.laser(
                         this.team,
@@ -53,7 +62,7 @@ sucker.buildType = prov(() => {
                         Tmp.v1.y,
                         unit.x,
                         unit.y,
-                        this.efficiency() * this.block.laserWidth
+                        this.efficiency() * block.laserWidth
                     );
                 }
             }

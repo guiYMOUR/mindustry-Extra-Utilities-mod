@@ -20,6 +20,13 @@ const dissipation = extendContent(PointDefenseTurret, "dissipation", {
 dissipation.buildType = prov(() => {
     var shot = maxShot;
     var cooldown = false;
+    
+    var block = dissipation;
+    var timeScale = 0;
+    var liquids = null;
+    var x = 0, y = 0;
+    var baseReloadSpeed = 0;
+    
     return new JavaAdapter(PointDefenseTurret.PointDefenseBuild, {
         getShot(){
             return shot;
@@ -28,46 +35,51 @@ dissipation.buildType = prov(() => {
             return cooldown;
         },
         updateTile(){
+            timeScale = this.timeScale;
+            liquids = this.liquids;
+            x = this.x;
+            y = this.y;
+            baseReloadSpeed = this.baseReloadSpeed()
             if(shot <= 0 && !cooldown) cooldown = true;
             if(shot >= maxShot && cooldown) cooldown = false;
             if(cooldown){
-                var maxUsed = this.block.consumes.get(ConsumeType.liquid).amount;
-                var liquid = this.liquids.current();
-                var used = Math.min(this.liquids.get(liquid), maxUsed * Time.delta) * this.baseReloadSpeed();
-                shot = this.liquids.get(liquid) > 1 ? Math.min(maxShot, shot + 2 * (1 + (liquid.heatCapacity - 0.4) * 0.9) * this.block.coolantMultiplier * this.baseReloadSpeed() * 0.28 * this.timeScale) : Math.min(maxShot, shot + 2 * this.baseReloadSpeed() * this.timeScale);
-                this.liquids.remove(liquid, used);
+                var maxUsed = block.consumes.get(ConsumeType.liquid).amount;
+                var liquid = liquids.current();
+                var used = Math.min(liquids.get(liquid), maxUsed * Time.delta) * baseReloadSpeed;
+                shot = liquids.get(liquid) > 1 ? Math.min(maxShot, shot + 2 * (1 + (liquid.heatCapacity - 0.4) * 0.9) * block.coolantMultiplier * this.baseReloadSpeed() * 0.28 * timeScale) : Math.min(maxShot, shot + 2 * baseReloadSpeed * timeScale);
+                liquids.remove(liquid, used);
                 if(Mathf.chance(0.06 * used)){
-                    this.block.coolEffect.at(this.x + Mathf.range(this.block.size * Vars.tilesize / 2), this.y + Mathf.range(this.block.size * Vars.tilesize / 2));
+                    block.coolEffect.at(x + Mathf.range(block.size * Vars.tilesize / 2), y + Mathf.range(block.size * Vars.tilesize / 2));
                 }
             } else {
                 //cooldown = false;
-                var maxUsed = this.block.consumes.get(ConsumeType.liquid).amount;
-                var liquid = this.liquids.current();
-                var used = Math.min(this.liquids.get(liquid), maxUsed * Time.delta) * this.baseReloadSpeed();
-                shot = this.liquids.get(liquid) > 1 ? Math.min(maxShot, shot + 5 * (1 + (liquid.heatCapacity - 0.4) * 0.9) * this.block.coolantMultiplier * this.baseReloadSpeed() * 0.28 * this.timeScale) : Math.min(maxShot, shot + 5 * this.baseReloadSpeed() * this.timeScale);
-                this.target = Groups.bullet.intersect(this.x - range, this.y - range, range*2, range*2).min(b => b.team != this.team && b.type.hittable, b => b.dst2(this));
+                var maxUsed = block.consumes.get(ConsumeType.liquid).amount;
+                var liquid = liquids.current();
+                var used = Math.min(liquids.get(liquid), maxUsed * Time.delta) * baseReloadSpeed;
+                shot = liquids.get(liquid) > 1 ? Math.min(maxShot, shot + 5 * (1 + (liquid.heatCapacity - 0.4) * 0.9) * block.coolantMultiplier * this.baseReloadSpeed() * 0.28 * timeScale) : Math.min(maxShot, shot + 5 * baseReloadSpeed * timeScale);
+                this.target = Groups.bullet.intersect(x - range, y - range, range*2, range*2).min(b => b.team != this.team && b.type.hittable, b => b.dst2(this));
                 if(this.target != null && !this.target.isAdded()){
                     this.target = null;
                 }
-                if(this.block.acceptCoolant && this.target != null){
-                    this.liquids.remove(liquid, used);
+                if(block.acceptCoolant && this.target != null){
+                    liquids.remove(liquid, used);
 
                     if(Mathf.chance(0.06 * used)){
-                        this.block.coolEffect.at(this.x + Mathf.range(this.block.size * Vars.tilesize / 2), this.y + Mathf.range(this.block.size * Vars.tilesize / 2));
+                        block.coolEffect.at(x + Mathf.range(block.size * Vars.tilesize / 2), y + Mathf.range(block.size * Vars.tilesize / 2));
                     }
                 }
                 if(this.target != null && this.target.within(this, range) && this.target.team != this.team && this.target.type != null && this.target.type.hittable){
                     var dest = this.angleTo(this.target);
                     this.rotation = Angles.moveToward(this.rotation, dest, this.block.rotateSpeed * this.edelta());
-                    if(Angles.within(this.rotation, dest, this.block.shootCone)){
+                    if(Angles.within(this.rotation, dest, block.shootCone)){
                         this.target.remove();
                         shot = Math.max(0, shot - 30);
-                        Tmp.v1.trns(this.rotation, this.block.shootLength);
+                        Tmp.v1.trns(this.rotation, block.shootLength);
 
-                        this.block.beamEffect.at(this.x + Tmp.v1.x, this.y + Tmp.v1.y, this.rotation, color, new Vec2().set(this.target));
-                        this.block.shootEffect.at(this.x + Tmp.v1.x, this.y + Tmp.v1.y, this.rotation, color);
-                        this.block.hitEffect.at(this.target.x, this.target.y, color);
-                        this.block.shootSound.at(this.x + Tmp.v1.x, this.y + Tmp.v1.y, Mathf.random(0.9, 1.1));
+                        block.beamEffect.at(x + Tmp.v1.x, y + Tmp.v1.y, this.rotation, color, new Vec2().set(this.target));
+                        block.shootEffect.at(x + Tmp.v1.x, y + Tmp.v1.y, this.rotation, color);
+                        block.hitEffect.at(this.target.x, this.target.y, color);
+                        block.shootSound.at(x + Tmp.v1.x, y + Tmp.v1.y, Mathf.random(0.9, 1.1));
                     }
                 }
             }

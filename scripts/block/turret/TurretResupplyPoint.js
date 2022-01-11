@@ -18,12 +18,22 @@ const TRS = extendContent(Unloader, "turret-resupply-point", {
     },
 });
 TRS.buildType = prov(() => {
+    var x = 0, y = 0;
+    var power = 0;
+    var sortItem = null;
+    var items = null;
+
     return new JavaAdapter(Unloader.UnloaderBuild, {
         updateTile(){
+            x = this.x;
+            y = this.y;
+            power = this.power.status;
+            sortItem = this.sortItem;
+            items = this.items;
             Vars.indexer.eachBlock(this, range, boolf(other => other.block instanceof ItemTurret), cons(other => {
-                if(this.power.status > 0.999 && this.sortItem != null && this.items.get(this.sortItem) > 0 && other.acceptItem(this, this.sortItem)){
-                    other.handleItem(this, this.sortItem);
-                    Fx.itemTransfer.at(this.x, this.y, 2, this.sortItem.color, other);
+                if(power > 0.999 && sortItem != null && items.get(sortItem) > 0 && other.acceptItem(this, sortItem)){
+                    other.handleItem(this, sortItem);
+                    Fx.itemTransfer.at(x, y, 2, sortItem.color, other);
                     this.items.clear();
                 }
             }));

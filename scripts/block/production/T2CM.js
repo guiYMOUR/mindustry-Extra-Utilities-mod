@@ -1,6 +1,10 @@
 const T2CM = extendContent(AttributeSmelter, "T2-CM", {});
 T2CM.buildType = prov(() => {
     var totalProgress = 0;
+    
+    const block = T2CM;
+    var x = 0, y =0;
+    
     function getTotalProgress(){ return totalProgress; }
     function setTotalProgress(v){ totalProgress = v; }
     return new JavaAdapter(AttributeSmelter.AttributeSmelterBuild, {
@@ -11,29 +15,31 @@ T2CM.buildType = prov(() => {
             //this.super$updateTile();
             if(this.consValid()){
                 var cl = this.block.consumes.get(ConsumeType.liquid);
-                var use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
+                var use = Math.min(cl.amount * this.edelta(), block.liquidCapacity - this.liquids.get(block.outputLiquid.liquid));
                 this.limitProgress();
                 this.progress += use / cl.amount;
-                this.liquids.add(this.block.outputLiquid.liquid, use);
-                if(this.progress >= this.block.craftTime){
+                this.liquids.add(block.outputLiquid.liquid, use);
+                if(this.progress >= block.craftTime){
                     this.consume();
-                    this.progress %= this.block.craftTime;
+                    this.progress %= block.craftTime;
                 }
             }
 
-            this.dumpLiquid(this.block.outputLiquid.liquid);
+            this.dumpLiquid(block.outputLiquid.liquid);
         },
         draw(){
-            Draw.rect(Core.atlas.find("btm-T2-CM-bottom"),this.x,this.y);
+            x = this.x;
+            y = this.y;
+            Draw.rect(Core.atlas.find("btm-T2-CM-bottom"),x,y);
             Draw.color(Liquids.water.color);
-            Draw.alpha(this.liquids.get(Liquids.water) / this.block.liquidCapacity);
-            Draw.rect(Core.atlas.find("btm-T2-CM-liquid2"), this.x, this.y);
-            Draw.color(this.block.outputLiquid.liquid.color);
-            Draw.alpha(this.liquids.get(this.block.outputLiquid.liquid) / this.block.liquidCapacity);
-            Draw.rect(Core.atlas.find("btm-T2-CM-liquid"), this.x, this.y);
+            Draw.alpha(this.liquids.get(Liquids.water) / block.liquidCapacity);
+            Draw.rect(Core.atlas.find("btm-T2-CM-liquid2"), x, y);
+            Draw.color(block.outputLiquid.liquid.color);
+            Draw.alpha(this.liquids.get(block.outputLiquid.liquid) / block.liquidCapacity);
+            Draw.rect(Core.atlas.find("btm-T2-CM-liquid"), x, y);
             Draw.color();
-            Draw.rect(Core.atlas.find("btm-T2-CM-s"), this.x, this.y, 30 + 90 * Math.sin(totalProgress));
-            Draw.rect(Core.atlas.find("btm-T2-CM-a"),this.x,this.y);
+            Draw.rect(Core.atlas.find("btm-T2-CM-s"), x, y, 30 + 90 * Math.sin(totalProgress));
+            Draw.rect(Core.atlas.find("btm-T2-CM-a"),x,y);
         },
         write(write) {
             this.super$write(write);
@@ -45,7 +51,7 @@ T2CM.buildType = prov(() => {
         },
     }, T2CM);
 });
-T2CM.outputLiquid = new LiquidStack(Liquids.cryofluid, 48);
+T2CM.outputLiquid = new LiquidStack(Liquids.cryofluid, 36);
 T2CM.craftTime = 120;
 T2CM.size = 3;
 T2CM.hasPower = true;

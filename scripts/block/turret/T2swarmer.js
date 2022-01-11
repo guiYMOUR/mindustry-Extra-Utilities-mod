@@ -1,6 +1,6 @@
 //guiY
 const lib = require("blib");
-const laser = extend(LaserBulletType, {});
+/*const laser = extend(LaserBulletType, {});
 laser.damage = 90;
 laser.sideAngle = 20;
 laser.sideWidth = 1.5;
@@ -253,11 +253,11 @@ f3.collidesTiles = false;
 f3.collides = false;
 f3.fragBullet = f3E;
 
-var bt = [f1, f2, f3];
+var bt = [f1, f2, f3];*/
 
 const swT2 = extendContent(ItemTurret, "T2-swarmer", {});
 lib.setBuildingSimple(swT2, ItemTurret.ItemTurretBuild, {
-    shoot(type){
+    /*shoot(type){
         this.super$shoot(type);
         if(Mathf.chance(0.06)){
             for(var i = 0; i < 2; i ++){
@@ -265,10 +265,10 @@ lib.setBuildingSimple(swT2, ItemTurret.ItemTurretBuild, {
                 bt[a].create(this, this.team, this.x, this.y, this.rotation + 45 * (i - 0.5), 1 ,1);
             }
         }
-    }
+    }*/
 });
-swT2.reloadTime = 25;
-swT2.shots = 6;
+swT2.reloadTime = 30;
+swT2.shots = 7;
 swT2.burstSpacing = 5;
 swT2.inaccuracy = 10;
 swT2.range = 28 *8;
@@ -288,11 +288,11 @@ swT2.requirements = ItemStack.with(
     Items.titanium, 50,
     Items.plastanium, 55,
     Items.silicon, 90,
-    Items.surgeAlloy, 50
+    Items.surgeAlloy, 25
 );
 swT2.buildVisibility = BuildVisibility.shown;
 swT2.category = Category.turret;
 
-exports.f = bt;
+//exports.f = bt;
 exports.swT2 = swT2;
 

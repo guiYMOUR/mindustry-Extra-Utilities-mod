@@ -1,19 +1,25 @@
 const lib = require("blib");
 const items = require("game/items");
+const RANGE = 336;
+const size = 5;
+const recoilAmount = 6;
 
-function aimShoot(color, length, width, lifetime, spacing){
-    return new Effect(lifetime, length * 2, cons(e => {
+const database = {length:RANGE};
+
+function aimShoot(color, width, lifetime, spacing){
+    return new Effect(lifetime, RANGE * 2, cons(e => {
+        var data = e.data ? e.data : database;
         Draw.color(color);
         var track = Mathf.curve(e.fin(Interp.pow2Out), 0, 0.25) * Mathf.curve(e.fout(Interp.pow4Out), 0, 0.3) * e.fin();
-        for(var i = 0; i <= length / spacing; i++){
+        for(var i = 0; i <= data.length / spacing; i++){
             Tmp.v1.trns(e.rotation, i * spacing);
-            var f = Interp.pow3Out.apply(Mathf.clamp((e.fin() * length - i * spacing) / spacing)) * (0.6 + track * 0.4);
+            var f = Interp.pow3Out.apply(Mathf.clamp((e.fin() * data.length - i * spacing) / spacing)) * (0.6 + track * 0.4);
             Draw.rect(Core.atlas.find("btm-aim-shoot"), e.x + Tmp.v1.x, e.y + Tmp.v1.y, 144 * Draw.scl * f, 144 * Draw.scl * f, e.rotation - 90);
         }
         Tmp.v1.trns(e.rotation, 0, (2 - track) * Vars.tilesize * width);
         Lines.stroke(track * 2);
         for(var i of Mathf.signs){
-            Lines.lineAngle(e.x + Tmp.v1.x * i, e.y + Tmp.v1.y * i, e.rotation, length * (0.75 + track / 4) * Mathf.curve(e.fout(Interp.pow5Out), 0, 0.1));
+            Lines.lineAngle(e.x + Tmp.v1.x * i, e.y + Tmp.v1.y * i, e.rotation, data.length * (0.75 + track / 4) * Mathf.curve(e.fout(Interp.pow5Out), 0, 0.1));
         }
     }));
 }
@@ -136,48 +142,57 @@ const charge2 = new Effect(38, cons(e => {
         }
     }));
 }));
+
 const chargeSound = lib.loadSound("blackhole");
+const bigShotEff = aimShoot(Color.valueOf("be92f9"), 1, hole.lifetime - 24, 14);
 
 const blackhole = extendContent(PowerTurret, "blackhole", {});
 blackhole.buildType = prov(() => {
     var holeBullet = null;
+    var x = 0, y = 0;
+    var rotation = 0;
+    var targetPos = null;
     return new JavaAdapter(PowerTurret.PowerTurretBuild, {
         shoot(type){
+            x = this.x;
+            y = this.y;
+            rotation = this.rotation;
+            targetPos = this.targetPos;
             var vec = new Vec2();
-            vec.trns(this.rotation, this.block.size * 8 / 2);
+            vec.trns(rotation, size * 8 / 2);
             if(holeBullet == null){
-                var length = Math.hypot(Math.abs(this.x - this.targetPos.x), Math.abs(this.y - this.targetPos.y))
-                aimShoot(Color.valueOf("be92f9"), Math.min(length, this.block.range), 1, hole.lifetime - 24, 14).at(this.x + vec.x, this.y + vec.y, this.rotation);
-                if(this.within(this.targetPos, this.block.range + 8)){
+                var length = Math.hypot(Math.abs(x - targetPos.x), Math.abs(y - targetPos.y));
+                bigShotEff.at(x + vec.x, y + vec.y, rotation, {length:Math.min(length, RANGE)});
+                if(this.within(targetPos, RANGE + 8)){
                     holeBullet = hole;
-                    holeBullet.create(this, this.team, this.targetPos.x, this.targetPos.y, this.rotation, 1, 1);
-                    chargeSound.at(this.targetPos.x, this.targetPos.y, 1);
+                    holeBullet.create(this, this.team, targetPos.x, targetPos.y, rotation, 1, 1);
+                    chargeSound.at(targetPos.x, targetPos.y, 1);
                 }
             }
-            vec.trns(this.rotation, (this.block.size/2) * 8 / 2);
-            this.block.chargeBeginEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
-            chargeSound.at(this.x + vec.x, this.y + vec.y, 1);
+            vec.trns(rotation, (size/2) * 8 / 2);
+            blackhole.chargeBeginEffect.at(x + vec.x, y + vec.y, rotation);
+            chargeSound.at(x + vec.x, y + vec.y, 1);
             for(var i = 0; i < 3; i++){
                  Time.run((120 / 3) * i, () => {
                     if(!this.isValid()) return;
-                    vec.trns(this.rotation, (this.block.size/2) * 8 / 2);
-                    chargeEffect.at(this.x + vec.x, this.y + vec.y, this.rotation);
+                    vec.trns(rotation, (size/2) * 8 / 2);
+                    chargeEffect.at(x + vec.x, y + vec.y, rotation);
                 });
             }
             for(var i = 0; i < 8; i++){
                  Time.run((120 / 8) * i, () => {
                     if(!this.isValid()) return;
-                    vec.trns(this.rotation, (this.block.size/2) * 8 / 2);
-                    charge2.at(this.x + vec.x, this.y + vec.y, this.rotation);
+                    vec.trns(rotation, (size/2) * 8 / 2);
+                    charge2.at(x + vec.x, y + vec.y, rotation);
                 });
             }
             this.charging = true;
             Time.run(hole.lifetime - 24, () => {
                 if(!this.isValid() || !this.hasAmmo()) return;
-                vec.trns(this.rotation, this.block.size * 8 / 2);
-                this.recoil = this.block.recoilAmount;
+                vec.trns(rotation, size * 8 / 2);
+                this.recoil = recoilAmount;
                 this.heat = 1;
-                this.bullet(type, this.rotation);
+                this.bullet(type, rotation);
                 this.effects();
                 this.consume();
                 this.charging = false;
@@ -192,13 +207,13 @@ blackhole.buildType = prov(() => {
     }, blackhole);
 });
 Object.assign(blackhole, {
-    health : 180*5*5,
+    health : 180*size*size,
     powerUse : 17, 
     shootType : missile,
-    size : 5,
+    size : size,
     reloadTime : 180,
-    range : 336,
-    recoilAmount : 6,
+    range : RANGE,
+    recoilAmount : recoilAmount,
     shootSound : lib.loadSound("launch2"),
     coolantMultiplier : 0.7,
     coolantUsage : 0.8,

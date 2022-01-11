@@ -9,20 +9,21 @@ const T2rip = extendContent(ItemTurret, "T2-ripple", {
         this.stats.add(Stat.reload, 7.93, StatUnit.none);
     },
 });
+const block = T2rip;
 lib.setBuildingSimple(T2rip, ItemTurret.ItemTurretBuild, {
     shoot(type){
         this.super$shoot(type);
         for(var i = 0; i < 3; i++){
-            this.bullet(type, this.rotation + Mathf.range(this.block.inaccuracy))
+            this.bullet(type, this.rotation + Mathf.range(block.inaccuracy))
         }
     },
     draw(){
         this.super$draw();
-        var i = this.shotCounter % this.block.shots;
+        var i = this.shotCounter % block.shots;
         if(this.heat <= 0.00001) return;
-        Draw.color(this.block.heatColor, this.heat);
+        Draw.color(block.heatColor, this.heat);
         Draw.blend(Blending.additive);
-        Draw.rect(Core.atlas.find("btm-T2-ripple-heat-" + i), this.x + this.block.tr2.x, this.y + this.block.tr2.y, this.rotation - 90);
+        Draw.rect(Core.atlas.find("btm-T2-ripple-heat-" + i), this.x + block.tr2.x, this.y + block.tr2.y, this.rotation - 90);
         Draw.blend();
         Draw.color();
     },
