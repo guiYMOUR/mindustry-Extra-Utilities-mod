@@ -90,7 +90,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.64 Adapt 133+");
+    var dialog = new BaseDialog("Extra Utilities 2.4.65 Adapt 133+");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -104,7 +104,7 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(200).width(620).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-crusher.name") + "\n" + Core.bundle.format("block.btm-crusher.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        /*table.add(Core.bundle.format("block.btm-crusher.name") + "\n" + Core.bundle.format("block.btm-crusher.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-crusher", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
@@ -124,6 +124,8 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-rwl", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();*/
+        table.add(Core.bundle.format("mod.btm.update")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.row();
         table.add(Core.bundle.format("mod.btm.mapMaker")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         return table;
     })()).grow().center().maxWidth(620);
