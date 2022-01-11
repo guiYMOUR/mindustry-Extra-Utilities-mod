@@ -4,13 +4,9 @@
 */
 //const stackRegion = Core.atlas.find("btm-ppc-stack");
 const stackBridge = extendContent(BufferedItemBridge, "stackBridge", {});
-
 stackBridge.buildType = prov(() => {
     var lastItem = null;
     var amount = 0;
-    
-    const block = stackBridge;
-    
     return new JavaAdapter(BufferedItemBridge.BufferedItemBridgeBuild, {
         setLastItem(v){
             lastItem = v;
@@ -31,7 +27,7 @@ stackBridge.buildType = prov(() => {
             this.super$updateTile();
         },
         updateTransport(other){
-            if(this.items.total() >= block.itemCapacity && other != null && other.items.total() < block.itemCapacity){
+            if(this.items.total() >= this.block.itemCapacity && other != null && other.items.total() < this.block.itemCapacity){
                 other.setAmount(this.items.total());
                 other.items.add(lastItem, other.getAmount());
                 Fx.itemTransfer.at(this.x, this.y, 2, lastItem.color, other);
@@ -52,14 +48,14 @@ stackBridge.buildType = prov(() => {
             if(other == null || this.getLastItem() == null || this.link == -1) return;
             var angle = this.angleTo(other);
             //Draw.rect(stackRegion, this.x, this.y, angle);
-            var size = Vars.itemSize * Mathf.lerp(Math.min(this.items.total() / block.itemCapacity, 1), 1, 0.4);
+            var size = Vars.itemSize * Mathf.lerp(Math.min(this.items.total() / this.block.itemCapacity, 1), 1, 0.4);
             Drawf.shadow(Tmp.v1.x, Tmp.v1.y, size * 1.2);
             Draw.rect(this.getLastItem().icon(Cicon.medium), this.x, this.y, size, size, 0);
         },
         acceptItem(source, item){
-            if(this == source && this.items.total() < block.itemCapacity) return true;
+            if(this == source && this.items.total() < this.block.itemCapacity) return true;
             var other = Vars.world.tile(this.link);
-            return (!((this.items.any() && !this.items.has(item)) || (this.items.total() >= this.getMaximumAccepted(item)))) && other != null && block.linkValid(this.tile, other);
+            return (!((this.items.any() && !this.items.has(item)) || (this.items.total() >= this.getMaximumAccepted(item)))) && other != null && this.block.linkValid(this.tile, other);
         },
     }, stackBridge);
 });

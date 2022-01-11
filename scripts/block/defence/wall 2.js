@@ -53,14 +53,11 @@ aws.buildCostMultiplier = 3;
 
 aws.buildType = prov(() => {
     var damageAbsorb = 0;
-    
-    const block = aws;
-    
     return new JavaAdapter(Wall.WallBuild, {
         updateTile(){
             if(damageAbsorb > 0){
                 this.heal(damageAbsorb * 2);
-                Fx.healBlockFull.at(this.x, this.y, block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
+                Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
                 damageAbsorb = 0;
             }
         },
@@ -98,14 +95,11 @@ awl.buildCostMultiplier = 3;
 
 awl.buildType = prov(() => {
     var damageAbsorb = 0;
-    
-    const block = awl;
-    
     return new JavaAdapter(Wall.WallBuild, {
         updateTile(){
             if(damageAbsorb > 0){
                 this.heal(damageAbsorb * 4);
-                Fx.healBlockFull.at(this.x, this.y, block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
+                Fx.healBlockFull.at(this.x, this.y, this.block.size, Tmp.c1.set(cor1).lerp(cor2, 0.3));
                 damageAbsorb = 0;
             }
         },
@@ -155,14 +149,11 @@ rws.buildType = prov(() => {
     var acceptDamage = true;
     const max = 180;
     const lifetime = 150;
-    
-    const block = rws;
-    
     return new JavaAdapter(Wall.WallBuild, {
         multDamage(v){
             if(Mathf.chance(chargeChance)) damage += v;
             if(damage > max){
-                shieldBullet = bullets.shieldBullet({ splashDamageRadius : block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
+                shieldBullet = bullets.shieldBullet({ splashDamageRadius : this.block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
                 shieldLife = lifetime;
                 acceptDamage = false;
                 damage = 0;
@@ -228,14 +219,11 @@ rwl.buildType = prov(() => {
     var acceptDamage = true;
     const max = 180*4;
     const lifetime = 150;
-    
-    const block = rwl;
-    
     return new JavaAdapter(Wall.WallBuild, {
         multDamage(v){
             if(Mathf.chance(chargeChance)) damage += v;
             if(damage > max){
-                shieldBullet = bullets.shieldBullet({ splashDamageRadius : block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
+                shieldBullet = bullets.shieldBullet({ splashDamageRadius : this.block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
                 shieldLife = lifetime;
                 acceptDamage = false;
                 damage = 0;

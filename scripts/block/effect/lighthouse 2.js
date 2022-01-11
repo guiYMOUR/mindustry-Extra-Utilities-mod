@@ -13,26 +13,20 @@ const lighthouse = extendContent(LightBlock, "lighthouse", {
     },
 });
 lighthouse.buildType = prov(() => {
-
-    const block = lighthouse;
-    var x = 0, y = 0;
-
     return new JavaAdapter(LightBlock.LightBuild, {
         drawLight(){
-            x = this.x;
-            y = this.y;
             this.super$drawLight();
-            Vars.indexer.allBuildings(x, y, range2, cons(other => {
+            Vars.indexer.allBuildings(this.x, this.y, range2, cons(other => {
                 if(other.team == this.team){
                     if(other.within(this, range)){
-                    Drawf.light(this.team, other.x, other.y, (!(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5) * (range / 2) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), block.brightness * this.efficiency());
+                    Drawf.light(this.team, other.x, other.y, (!(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5) * (range / 2) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
                     }
                 } else {
-                    Drawf.light(this.team, other.x, other.y, (!(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5) * (range / 4) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), block.brightness * this.efficiency());
+                    Drawf.light(this.team, other.x, other.y, (!(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5) * (range / 4) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
                 }
             }));
-            Units.nearbyEnemies(this.team, x, y, range2, cons(unit =>{
-                Drawf.light(this.team, unit.x, unit.y, (unit.hitSize / 10) * (range / 4) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), block.brightness * this.efficiency());
+            Units.nearbyEnemies(this.team, this.x, this.y, range2, cons(unit =>{
+                Drawf.light(this.team, unit.x, unit.y, (unit.hitSize / 10) * (range / 4) * Math.min(this.smoothTime, 2), Tmp.c1.set(this.color), this.block.brightness * this.efficiency());
             }));
         },
         drawSelect(){

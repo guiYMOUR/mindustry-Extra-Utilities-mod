@@ -27,18 +27,12 @@ unitA.buildType = prov(() => {
     var timeR = 0;
     var heatU = 0;
     var phaseHeatU = 0;
-    
-    const block = unitA;
-    var x = 0, y = 0;
-    
     return new JavaAdapter(OverdriveProjector.OverdriveBuild, {
         updateTile(){
-            x = this.x;
-            y = this.y;
             this.super$updateTile();
             phaseHeatU = Mathf.lerpDelta(phaseHeatU, Mathf.num(this.cons.optionalValid()), 0.1);
-            var realRange = unitRange * 0.6 + phaseHeatU * block.phaseRangeBoost;
-            Units.nearby(this.team, x, y, realRange, cons(other => {
+            var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost;
+            Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                 other.apply(status.speedUp, 30);
             }));
             heatU = Mathf.lerpDelta(heatU, this.consValid() || this.cheating() ? 1 : 0, 0.08);
@@ -46,9 +40,9 @@ unitA.buildType = prov(() => {
                 this.consume();
             }*/
             timeR += heatU * this.delta();
-            if(timeR > (block.reload * 0.8 * 4)){
+            if(timeR > (this.block.reload * 0.8 * 4)){
                 applied = false;
-                Units.nearby(this.team, x, y, realRange, cons(other => {
+                Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                     var max = other.maxHealth * 0.08;
                     if(other.shield < max){
                         other.shield = Math.min((max <= 56 ? other.shield + max/5 : other.shield + max/15) + (max/12) * phaseHeatU, max);
@@ -62,16 +56,16 @@ unitA.buildType = prov(() => {
                         Draw.color(Pal.shield);
                         Lines.stroke(e.fout() * 2);
                         Lines.circle(e.x, e.y, 2 + e.finpow() * realRange);
-                    })).at(x, y);
+                    })).at(this.x, this.y);
                 }
                 timeR = 0;
             }
             timer += heatU * this.delta();
-            var realR = unitRange + phaseHeatU * block.phaseRangeBoost * 1.2;
-            if(timer > (block.reload * 4)){
+            var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost * 1.2;
+            if(timer > (this.block.reload * 4)){
                 dam = false;
-                Units.nearbyEnemies(this.team, x, y, realR*2, realR*2, cons(other => {
-                    if(other != null && other.within(x, y, realR)){
+                Units.nearbyEnemies(this.team, this.x, this.y, realR*2, realR*2, cons(other => {
+                    if(other != null && other.within(this.x, this.y, realR)){
                         other.damage(120 + phaseHeatU * 100);
                         other.apply(status.speedDown, 120);
                         damApply.at(other.x, other.y);
@@ -83,7 +77,7 @@ unitA.buildType = prov(() => {
                         Draw.color(Color.valueOf("ff0000"));
                         Lines.stroke(e.fout() * 2);
                         Lines.circle(e.x, e.y, 2 + e.finpow() * realR);
-                    })).at(x, y);
+                    })).at(this.x, this.y);
                 }
                 timer = 0;
             }
@@ -98,7 +92,7 @@ unitA.buildType = prov(() => {
             this.super$drawSelect();
             /*var realRange = unitRange * 0.6 + phaseHeatU * this.block.phaseRangeBoost;
             Drawf.dashCircle(this.x, this.y, realRange, Pal.shield);*/
-            var realR = unitRange + phaseHeatU * block.phaseRangeBoost * 1.2;
+            var realR = unitRange + phaseHeatU * this.block.phaseRangeBoost * 1.2;
             Drawf.dashCircle(this.x, this.y, realR, Color.valueOf("ff0000"));
         },
         write(write) {

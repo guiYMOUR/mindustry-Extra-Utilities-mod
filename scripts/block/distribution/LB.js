@@ -13,6 +13,9 @@ const LB = extendContent(LiquidExtendingBridge, "lb", {
             && (!checkDouble || other.build.link != tile.pos());
     },
 });
+
+const block = LB;
+
 lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
     /*checkIncoming(){
     
@@ -20,7 +23,7 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
     updateTile(){
         const other = Vars.world.build(this.link);
         if(other != null){
-            if(!this.block.linkValid(this.tile, other.tile)){
+            if(!block.linkValid(this.tile, other.tile)){
                 this.link = -1;
                 //return;
             }
@@ -32,11 +35,11 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
 
         Draw.color(Pal.accent);
         Lines.stroke(1);
-        Drawf.circles(this.x, this.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
+        Drawf.circles(this.x, this.y, (block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
         const other = Vars.world.build(this.link);
         if(other != null){
-            Drawf.circles(other.x, other.y, (this.block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
-            Drawf.arrow(this.x, this.y, other.x, other.y, this.block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
+            Drawf.circles(other.x, other.y, (block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
+            Drawf.arrow(this.x, this.y, other.x, other.y, block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
         }
         Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
     },
@@ -69,9 +72,9 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
         Draw.reset();
     },
     acceptLiquid(source, liquid){
-        if(this.team != source.team || !this.block.hasLiquids) return false;
+        if(this.team != source.team || !block.hasLiquids) return false;
         //var other = Vars.world.tile(this.link);
-        return /*other != null && this.block.linkValid(this.tile, other) && */this.liquids.total() < this.block.liquidCapacity;
+        return /*other != null && this.block.linkValid(this.tile, other) && */this.liquids.total() < block.liquidCapacity;
     },
     checkDump(to){
         return true;

@@ -1,6 +1,5 @@
 exports.InvertedJunctionBuild = function(block, placeSprite){
     block.buildType = prov(() => {
-        var buffer = null;
         var loc = 1;
         return new JavaAdapter(Junction.JunctionBuild, {
             setLoc(v){
@@ -11,26 +10,24 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
                 loc = value;
             },
             updateTile(){
-                buffer = this.buffer;
                 for(var i = 0; i < 4; i++){
                     var p = (i + loc) % 4;
-                    if(buffer.indexes[i] > 0){
-                        if(buffer.indexes[i] > block.capacity) buffer.indexes[i] = block.capacity;
-                        var l = buffer.buffers[i][0];
+                    if(this.buffer.indexes[i] > 0){
+                        if(this.buffer.indexes[i] > this.block.capacity) this.buffer.indexes[i] = this.block.capacity;
+                        var l = this.buffer.buffers[i][0];
                         var time = BufferItem.time(l);
-                        if(Time.time >= time + block.speed / this.timeScale || Time.time < time){
+                        if(Time.time >= time + this.block.speed / this.timeScale || Time.time < time){
                             var item = Vars.content.item(BufferItem.item(l));
                             var dest = this.nearby(p);
                             if(item == null || dest == null || !dest.acceptItem(this, item) || dest.team != this.team){
                                 continue;
                             }
                             dest.handleItem(this, item);
-                            java.lang.System.arraycopy(buffer.buffers[i], 1, buffer.buffers[i], 0, buffer.indexes[i] - 1);
-                            buffer.indexes[i] --;
+                            java.lang.System.arraycopy(this.buffer.buffers[i], 1, this.buffer.buffers[i], 0, this.buffer.indexes[i] - 1);
+                            this.buffer.indexes[i] --;
                         }
                     }
                 }
-                this.buffer = buffer;
             },
             draw(){
                 //this.super$draw();

@@ -1,7 +1,7 @@
 const range = 20;
 const lib = require("blib");
 
-const IN = extendContent(ExtendingItemBridge, "i-node", {
+const LB = extendContent(LiquidExtendingBridge, "lb", {
     drawPlace(x, y, rotation, valid){
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range + 1) * Vars.tilesize, Pal.accent);
     },
@@ -13,48 +13,45 @@ const IN = extendContent(ExtendingItemBridge, "i-node", {
             && (!checkDouble || other.build.link != tile.pos());
     },
 });
-
-const block = IN;
-
-lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
+lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
     /*checkIncoming(){
     
     },*/
     updateTile(){
         const other = Vars.world.build(this.link);
         if(other != null){
-            if(!block.linkValid(this.tile, other.tile)){
+            if(!this.block.linkValid(this.tile, other.tile)){
                 this.link = -1;
                 //return;
             }
         }
         this.super$updateTile();
     },
-    drawConfigure(){
+    drawConfigure() {
         const sin = Mathf.absin(Time.time, 6, 1);
 
         Draw.color(Pal.accent);
         Lines.stroke(1);
-        Drawf.circles(this.x, this.y, (block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
+        Drawf.circles(this.x, this.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
         const other = Vars.world.build(this.link);
         if(other != null){
-            Drawf.circles(other.x, other.y, (block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
-            Drawf.arrow(this.x, this.y, other.x, other.y, block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
+            Drawf.circles(other.x, other.y, (this.block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
+            Drawf.arrow(this.x, this.y, other.x, other.y, this.block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
         }
         Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
     },
     draw(){
         //this.super$draw();
-        Draw.rect(Core.atlas.find("btm-i-node"),this.x,this.y);
+        Draw.rect(Core.atlas.find("btm-lb"),this.x,this.y);
         Draw.z(Layer.power);
-        var bridgeRegion = Core.atlas.find("btm-i-node-bridge");
-        var endRegion = Core.atlas.find("btm-i-node-end");
+        var bridgeRegion = Core.atlas.find("btm-lb-bridge");
+        var endRegion = Core.atlas.find("btm-lb-end");
         var other = Vars.world.build(this.link);
         if(other == null) return;
         var op = Core.settings.getInt("bridgeopacity") / 100;
         if(Mathf.zero(op)) return;
 
-        Draw.color(Color.white);
+        Draw.color((this.liquids.total() > 0 ? this.liquids.current().color : Color.white));
         Draw.alpha(Math.max(this.power.status, 0.25) * op);
 
         Draw.rect(endRegion, this.x, this.y);
@@ -71,28 +68,27 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
             other.y, false);
         Draw.reset();
     },
-    acceptItem(source, item){
-        if(this.team != source.team || !block.hasItems) return false;
+    acceptLiquid(source, liquid){
+        if(this.team != source.team || !this.block.hasLiquids) return false;
         //var other = Vars.world.tile(this.link);
-        return /*other != null && this.block.linkValid(this.tile, other) && */this.items.total() < block.itemCapacity;
+        return /*other != null && this.block.linkValid(this.tile, other) && */this.liquids.total() < this.block.liquidCapacity;
     },
     checkDump(to){
         return true;
     },
 });
-IN.hasPower = true;
-IN.consumes.power(1);
-IN.size = 1;
-IN.requirements = ItemStack.with(
-    Items.copper, 110,
-    Items.lead, 80,
-    Items.silicon, 100,
+LB.hasPower = true;
+LB.consumes.power(1.5);
+LB.size = 1;
+LB.requirements = ItemStack.with(
+    Items.metaglass, 80,
+    Items.silicon, 90,
     Items.graphite, 85,
     Items.titanium, 45,
     Items.thorium, 40,
-    Items.phaseFabric, 18
+    Items.phaseFabric, 25
 );
-IN.buildVisibility = BuildVisibility.shown;
-IN.category = Category.distribution;
+LB.buildVisibility = BuildVisibility.shown;
+LB.category = Category.liquid;
 
-exports.IN = IN;
+exports.LB = LB;

@@ -108,10 +108,6 @@ DCF.buildType = prov(() => {
     var h = shieldHealth;
     var r = Mathf.random(reload);
     var radscl = 0;
-    
-    const block = DCF;
-    var x = 0, y = 0;
-    
     function fairLoopIndex(i, max, offset) {
         return (i + offset) % max;
     }
@@ -137,8 +133,6 @@ DCF.buildType = prov(() => {
             return h;
         },
         updateTile(){
-            x = this.x;
-            y = this.y;
             if(h < 2500) h = Math.min(h + ab * normalReload, shieldHealth);
             radscl = Mathf.lerpDelta(radscl, ab == 0 ? ab : 1.2, 0.05);
             var speed = ab == 1 ? 2.5 : 5;
@@ -162,13 +156,13 @@ DCF.buildType = prov(() => {
             }
             if(links.size < 1){
                 if(ab != 0){
-                    const RR = block.size * 30 * 1.9;
-                    Groups.bullet.intersect(x - RR, y - RR, RR * 2, RR * 2, cons(trait =>{
-                        if(trait.type.absorbable && trait.team != this.team && Intersector.isInsideHexagon(trait.getX(), trait.getY(), RR, x, y) ){
+                    const RR = this.block.size * 30 * 1.9;
+                    Groups.bullet.intersect(this.x - RR, this.y - RR, RR * 2, RR * 2, cons(trait =>{
+                        if(trait.type.absorbable && trait.team != this.team && Intersector.isInsideHexagon(trait.getX(), trait.getY(), RR, this.x, this.y) ){
                              trait.absorb();
                              Fx.absorb.at(trait);
                              if(h <= trait.damage){
-                                 Fx.shieldBreak.at(x, y, RR * 0.4 * radscl, cor);
+                                 Fx.shieldBreak.at(this.x, this.y, RR * 0.4 * radscl, cor);
                                  ab = 0;
                             }
                             h = Math.max(h - trait.damage, 0);
@@ -210,8 +204,8 @@ DCF.buildType = prov(() => {
         },
         onRemoved(){
             if(links.size < 1 && ab != 0){
-                const fxRange = block.size * 30 * 0.8;
-                Fx.forceShrink.at(x, y, fxRange, cor);
+                const fxRange = this.block.size * 30 * 0.8;
+                Fx.forceShrink.at(this.x, this.y, fxRange, cor);
             }
             for (var i = 0; i < links.size; i++) {
                 var pos = links.get(i);
@@ -229,22 +223,22 @@ DCF.buildType = prov(() => {
             Draw.z();
             Draw.color(Color.white);
             Draw.alpha(1- (h / 2500));
-            Draw.rect(Core.atlas.find("btm-DIMENSIONAL-COMPLEX-FIELD-capacity"), x, y);
+            Draw.rect(Core.atlas.find("btm-DIMENSIONAL-COMPLEX-FIELD-capacity"), this.x, this.y);
             if(links.size < 1){
                 if(ab != 0){
-                    const R = block.size * 30 * 0.8;
+                    const R = this.block.size * 30 * 0.8;
                     Draw.z(Layer.shields);
 
                     Draw.color(cor/*, Color.white, Mathf.clamp(0)*/);
 
                     if(Core.settings.getBool("animatedshields")){
-                        Fill.poly(x, y, 6, R * radscl);
+                        Fill.poly(this.x, this.y, 6, R * radscl);
                     }else{
                         Lines.stroke(1.5);
                         Draw.alpha(0.11);
-                        Fill.poly(x, y, 6, R * radscl);
+                        Fill.poly(this.x, this.y, 6, R * radscl);
                         Draw.alpha(1);
-                        Lines.poly(x, y, 6, R * radscl);
+                        Lines.poly(this.x, this.y, 6, R * radscl);
                     }
                 }
             }
@@ -276,7 +270,7 @@ DCF.buildType = prov(() => {
 
             Draw.color(cor);
             Lines.stroke(1);
-            Drawf.circles(x, y, (this.tile.block().size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
+            Drawf.circles(this.x, this.y, (this.tile.block().size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
             
 
             for (var i = 0; i < links.size; i++) {
@@ -286,7 +280,7 @@ DCF.buildType = prov(() => {
                     Drawf.square(linkTarget.x, linkTarget.y, (!(linkTarget instanceof PayloadSource.PayloadSourceBuild) ? linkTarget.block.size : 5) * tilesize / 2 + 1, cor);
                 }
             }
-            Drawf.dashCircle(x, y, range, cor);
+            Drawf.dashCircle(this.x, this.y, range, cor);
         },
         drawSelect(){
             Vars.indexer.eachBlock(this, range, boolf(other => true), cons(other => {
@@ -294,7 +288,7 @@ DCF.buildType = prov(() => {
                     tmp.a = Mathf.absin(4, 1);
                     Drawf.selected(other, tmp);
                 }));
-                Drawf.dashCircle(x, y, range, baseColor);
+                Drawf.dashCircle(this.x, this.y, range, baseColor);
         },
         onConfigureTileTapped(other) {
             if (this == other) {

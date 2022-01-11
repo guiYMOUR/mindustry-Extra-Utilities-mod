@@ -13,9 +13,6 @@ const IN = extendContent(ExtendingItemBridge, "i-node", {
             && (!checkDouble || other.build.link != tile.pos());
     },
 });
-
-const block = IN;
-
 lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
     /*checkIncoming(){
     
@@ -23,7 +20,7 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
     updateTile(){
         const other = Vars.world.build(this.link);
         if(other != null){
-            if(!block.linkValid(this.tile, other.tile)){
+            if(!this.block.linkValid(this.tile, other.tile)){
                 this.link = -1;
                 //return;
             }
@@ -35,11 +32,11 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
 
         Draw.color(Pal.accent);
         Lines.stroke(1);
-        Drawf.circles(this.x, this.y, (block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
+        Drawf.circles(this.x, this.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
         const other = Vars.world.build(this.link);
         if(other != null){
-            Drawf.circles(other.x, other.y, (block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
-            Drawf.arrow(this.x, this.y, other.x, other.y, block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
+            Drawf.circles(other.x, other.y, (this.block.size / 3 + 1) * Vars.tilesize + sin - 2, Pal.place);
+            Drawf.arrow(this.x, this.y, other.x, other.y, this.block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
         }
         Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
     },
@@ -72,9 +69,9 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
         Draw.reset();
     },
     acceptItem(source, item){
-        if(this.team != source.team || !block.hasItems) return false;
+        if(this.team != source.team || !this.block.hasItems) return false;
         //var other = Vars.world.tile(this.link);
-        return /*other != null && this.block.linkValid(this.tile, other) && */this.items.total() < block.itemCapacity;
+        return /*other != null && this.block.linkValid(this.tile, other) && */this.items.total() < this.block.itemCapacity;
     },
     checkDump(to){
         return true;

@@ -13,35 +13,28 @@ lu.buildType = prov(() => {
     var dumpingTo = null;
     var offset = 0;
     var liquidBegin = null;
-    
-    const block = lu;
-    var source = null;
-    var proximity = null;
-    
     return new JavaAdapter(LiquidSource.LiquidSourceBuild, {
         updateTile(){
-            source = this.source;
-            proximity = this.proximity;
-            if(liquidBegin != source){
+            if(liquidBegin != this.source){
                 this.liquids.clear();
-                liquidBegin = source;
+                liquidBegin = this.source;
             }
-            for(var i = 0; i < proximity.size; i++){
-                var pos = (offset + i) % proximity.size;
-                var other = proximity.get(pos);
+            for(var i = 0; i < this.proximity.size; i++){
+                var pos = (offset + i) % this.proximity.size;
+                var other = this.proximity.get(pos);
 
-                if(other.interactable(this.team) && other.block.hasLiquids && !(other instanceof LiquidBlock.LiquidBuild && other.block.size == 1) && source != null && other.liquids.get(source) > 0){
+                if(other.interactable(this.team) && other.block.hasLiquids && !(other instanceof LiquidBlock.LiquidBuild && other.block.size == 1) && this.source != null && other.liquids.get(this.source) > 0){
                     dumpingTo = other;
-                    if(this.liquids.total() < block.liquidCapacity){
-                        var amount = Math.min(speed, other.liquids.get(source));
-                        this.liquids.add(source, amount);
-                        other.liquids.remove(source, amount);
+                    if(this.liquids.total() < this.block.liquidCapacity){
+                        var amount = Math.min(speed, other.liquids.get(this.source));
+                        this.liquids.add(this.source, amount);
+                        other.liquids.remove(this.source, amount);
                     }
                 }
             }
-            if(proximity.size > 0){
+            if(this.proximity.size > 0){
                 offset ++;
-                offset %= proximity.size;
+                offset %= this.proximity.size;
             }
             this.dumpLiquid(this.liquids.current());
         },

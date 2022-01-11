@@ -17,23 +17,17 @@ cure.buildType = prov(() => {
     var timeR = 0;
     var heatR = 0;
     var phaseHeatR = 0;
-    
-    const block = cure;
-    var x = 0, y = 0;
-    
     return new JavaAdapter(MendProjector.MendBuild, {
         updateTile(){
-            x = this.x;
-            y = this.y;
             this.super$updateTile();
             phaseHeatR = Mathf.lerpDelta(phaseHeatR, Mathf.num(this.cons.optionalValid()), 0.1);
-            var realRange = unitRange + phaseHeatR * block.phaseRangeBoost * 0.7;
+            var realRange = unitRange + phaseHeatR * this.block.phaseRangeBoost * 0.7;
             heatR = Mathf.lerpDelta(heatR, this.consValid() || this.cheating() ? 1 : 0, 0.08);
 
             timeR += heatR * this.delta();
-            if(timeR > (block.reload * 1.2)){
+            if(timeR > (this.block.reload * 1.2)){
                 wasHealed = false;
-                Units.nearby(this.team, x, y, realRange, cons(other => {
+                Units.nearby(this.team, this.x, this.y, realRange, cons(other => {
                     if(other.damaged()){
                         Fx.heal.at(other);
                         wasHealed = true;
@@ -42,15 +36,15 @@ cure.buildType = prov(() => {
                     other.heal(hm < 10000 ? (hm <= 1500 ? 150 + 120 * phaseHeatR : hm * 0.06 + hm * 0.05) : hm * 0.03 + hm * 0.02);
                 }));
                 if(wasHealed){
-                    Fx.healWaveDynamic.at(x, y, realRange);
+                    Fx.healWaveDynamic.at(this.x, this.y, realRange);
                 }
                 timeR = 0;
             }
         },
         drawSelect(){
             this.super$drawSelect();
-            var realRange = unitRange + phaseHeatR * block.phaseRangeBoost * 0.7;
-            Drawf.circles(x, y, realRange, cor);
+            var realRange = unitRange + phaseHeatR * this.block.phaseRangeBoost * 0.7;
+            Drawf.circles(this.x, this.y, realRange, cor);
         },
         write(write) {
             this.super$write(write);

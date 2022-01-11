@@ -5,9 +5,6 @@ const und = extendContent(Unloader, "und", {});
 und.buildType = prov(() => {
     var ts = 1;
     var td = 0;
-    
-    var power = 0;
-    
     return new JavaAdapter(Unloader.UnloaderBuild, {
         delta(){
             return Time.delta * ts;
@@ -19,16 +16,15 @@ und.buildType = prov(() => {
             ts = Math.max(ts, intensity);
         },
         updateTile(){
-            power = this.power.status;
             if(td > 0){
                 td -= Time.delta;
                 if(td <= 0){
                     ts = 1;
                 }
             }
-            this.timeScale = Math.max(ts * power, 0.001);
-            this.timeScaleDuration = td / Math.max(power, 0.001);
-            if(power >= 0.001){
+            this.timeScale = Math.max(ts * this.power.status, 0.001);
+            this.timeScaleDuration = td / Math.max(this.power.status, 0.001);
+            if(this.power.status >= 0.001){
                 this.super$updateTile();
             }
         },

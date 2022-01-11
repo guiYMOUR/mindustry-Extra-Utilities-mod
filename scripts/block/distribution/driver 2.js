@@ -66,16 +66,12 @@ const driver = extendContent(LiquidExtendingBridge, "ld", {
     },
     findLink(x, y){ return null },
 });
-
 driver.buildType = prov(() => {
     var rotation = 90;
     var reload = 0;
     var amount = 0;
     var liquid = null;
     var tr = new Vec2();
-    
-    const block = driver;
-    
     return new JavaAdapter(LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
         getR(){
             return rotation;
@@ -103,8 +99,8 @@ driver.buildType = prov(() => {
                 reload = Mathf.clamp(reload - this.edelta() / reloadTime);
             }
             const other = Vars.world.build(this.link);
-            if(other != null/* && block.linkValid(this.tile, other.tile)*/){
-                if(!block.linkValid(this.tile, other.tile)){
+            if(other != null/* && this.block.linkValid(this.tile, other.tile)*/){
+                if(!this.block.linkValid(this.tile, other.tile)){
                     this.link = -1;
                     return;
                 }
@@ -135,7 +131,7 @@ driver.buildType = prov(() => {
         shoot(target){
             reload = 1;
             this.bullet(waterBullet, this.getR());
-            tr.trns(this.getR(), block.size * Vars.tilesize / 2);
+            tr.trns(this.getR(), this.block.size * Vars.tilesize / 2);
             var angle = this.angleTo(target);
             shootEffect.at(this.x + Angles.trnsx(angle, translation),
             this.y + Angles.trnsy(angle, translation), angle);
@@ -149,7 +145,7 @@ driver.buildType = prov(() => {
             this.liquids.remove(this.getL(), this.getA());
         },
         bullet(type, angle){
-            tr.trns(angle, block.size * Vars.tilesize / 2);
+            tr.trns(angle, this.block.size * Vars.tilesize / 2);
             type.create(this, this.team, this.x + tr.x, this.y + tr.y, angle, 1);
         },
         drawSelect(){    },
@@ -158,11 +154,11 @@ driver.buildType = prov(() => {
 
             Draw.color(Pal.accent);
             Lines.stroke(1);
-            Drawf.circles(this.x, this.y, (block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
+            Drawf.circles(this.x, this.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
             const other = Vars.world.build(this.link);
             if(other != null){
-                Drawf.circles(other.x, other.y, (block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.place);
-                Drawf.arrow(this.x, this.y, other.x, other.y, block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
+                Drawf.circles(other.x, other.y, (this.block.size / 2 + 1) * Vars.tilesize + sin - 2, Pal.place);
+                Drawf.arrow(this.x, this.y, other.x, other.y, this.block.size * Vars.tilesize + sin, 4 + sin, Pal.accent);
             }
             Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
         },
@@ -178,8 +174,8 @@ driver.buildType = prov(() => {
             Draw.z(Layer.turret);
 
             Drawf.shadow(region,
-            this.x + Angles.trnsx(rotation + 180, reload * knockback) - (block.size / 2),
-            this.y + Angles.trnsy(rotation + 180, reload * knockback) - (block.size / 2), rotation - 90);
+            this.x + Angles.trnsx(rotation + 180, reload * knockback) - (this.block.size / 2),
+            this.y + Angles.trnsy(rotation + 180, reload * knockback) - (this.block.size / 2), rotation - 90);
             Draw.rect(bottom,
             this.x + Angles.trnsx(rotation + 180, reload * knockback),
             this.y + Angles.trnsy(rotation + 180, reload * knockback), rotation - 90);
@@ -187,7 +183,7 @@ driver.buildType = prov(() => {
             this.x + Angles.trnsx(rotation + 180, reload * knockback),
             this.y + Angles.trnsy(rotation + 180, reload * knockback), rotation - 90);
             Draw.color(this.liquids.current().color);
-            Draw.alpha(Math.min(this.liquids.get(this.liquids.current()) / block.liquidCapacity, 1));
+            Draw.alpha(Math.min(this.liquids.get(this.liquids.current()) / this.block.liquidCapacity, 1));
             Draw.rect(liquidRegion,
             this.x + Angles.trnsx(rotation + 180, reload * knockback),
             this.y + Angles.trnsy(rotation + 180, reload * knockback), rotation - 90);
@@ -198,9 +194,9 @@ driver.buildType = prov(() => {
             this.y + Angles.trnsy(rotation + 180, reload * knockback), rotation - 90);
         },
         acceptLiquid(source, liquid){
-            if(this.team != source.team || !block.hasLiquids) return false;
+            if(this.team != source.team || !this.block.hasLiquids) return false;
             var other = Vars.world.tile(this.link);
-            return other != null && block.linkValid(this.tile, other) && this.liquids.total() < block.liquidCapacity;
+            return other != null && this.block.linkValid(this.tile, other) && this.liquids.total() < this.block.liquidCapacity;
         },
         write(write) {
             this.super$write(write);
