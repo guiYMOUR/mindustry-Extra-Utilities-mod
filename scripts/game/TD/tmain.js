@@ -210,7 +210,7 @@ flyEnemy1.targetAir = false;
 flyEnemy1.boostMultiplier = 1.2;
 flyEnemy1.canBoost = true;
 flyEnemy1.speed = 0.3;
-flyEnemy1.hitSize = 15;
+flyEnemy1.hitSize = 18;
 flyEnemy1.health = 10000;
 flyEnemy1.mechSideSway = 0.25;
 flyEnemy1.range = 28;
@@ -226,7 +226,7 @@ flyEnemy1.weapons.add(
     })()
 );
 flyEnemy1.armor = 5;
-flyEnemy1.abilities.add(ability.healthDisplay(20, 36, 5));
+flyEnemy1.abilities.add(ability.healthDisplay(30, 36, 5));
 flyEnemy1.alwaysUnlocked = true;
 
 const navalEnemy1 = new UnitType("navalEnemy1");
@@ -235,9 +235,9 @@ navalEnemy1.defaultController = prov(() => new SuicideAI());
 navalEnemy1.drag = 0.13;
 navalEnemy1.accel = 0.4;
 navalEnemy1.targetAir = false;
-navalEnemy1.speed = 0.9;
-navalEnemy1.hitSize = 9;
-navalEnemy1.health = 250;
+navalEnemy1.speed = 0.3;
+navalEnemy1.hitSize = 18;
+navalEnemy1.health = 9500;
 navalEnemy1.range = 28;
 navalEnemy1.weapons.add(
     (() => {
@@ -250,9 +250,9 @@ navalEnemy1.weapons.add(
         return w;
     })()
 );
-navalEnemy1.armor = 2;
-navalEnemy1.abilities.add(ability.healthDisplay(20, 30, 4));
-navalEnemy1.alwaysUnlocked = true;
+navalEnemy1.armor = 10;
+navalEnemy1.abilities.add(ability.healthDisplay(30, 30, 4));
+flyEnemy1.alwaysUnlocked = true;
 
 const TD = new JavaAdapter(Planet, {
     load(){

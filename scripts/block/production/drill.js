@@ -306,7 +306,7 @@ exports.slagE = slagE;
 //6.0, 7.0 not this type.
 const T2CU = extendContent(AttributeCrafter, "T2CU", {});
 T2CU.outputItem = new ItemStack(Items.sporePod, 2);
-T2CU.craftTime = 120;
+T2CU.craftTime = 108;
 T2CU.size = 3;
 T2CU.hasLiquids = true;
 T2CU.hasPower = true;
