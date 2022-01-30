@@ -195,7 +195,7 @@ RG.requirements = ItemStack.with(
     Items.plastanium, 220,
     items.lightninAlloy, 180
 );
-RG.consumes.powerCond(15, boolf(b => b.isActive()));
+RG.consumes.powerCond(31, boolf(b => b.isActive()));
 RG.buildVisibility = BuildVisibility.shown;
 RG.category = Category.turret;
 

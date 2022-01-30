@@ -117,7 +117,7 @@ Object.assign(light, {
     s.threat = 0.7;
     return s;
 }*/
-const challenge = new JavaAdapter(Planet, {
+/*const challenge = new JavaAdapter(Planet, {
     load(){
         this.meshLoader = prov(() => new HexMesh(challenge, 6));
         this.super$load();
@@ -164,4 +164,4 @@ exports.RadiationIslands = RadiationIslands;
 
 const GlacialValley = new SectorPreset("GlacialValley", challenge, 58);
 GlacialValley.difficulty = 10;
-exports.GlacialValley = GlacialValley;
+exports.GlacialValley = GlacialValley;*/

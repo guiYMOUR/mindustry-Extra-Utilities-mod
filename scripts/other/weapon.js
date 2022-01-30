@@ -280,3 +280,119 @@ const antiMissileWeapon = (() => {
     }
 })();
 exports.antiMissileWeapon = antiMissileWeapon;
+
+const statWeapon = (setStat, name) =>{
+    const weapon = extend(Weapon, {
+        addStats(u, w){
+            this.super$addStats(u, w);
+            w.row();
+            setStat(w);
+        },
+    });
+    weapon.name = name;
+    return weapon;
+}
+exports.statWeapon = statWeapon;
+//to define : function setStat(w){ your stats, for example:w.add("xxx") }
+//weapon(for example) : const w = (your require).statWeapon(setStat, "name");w.xxx=xxx;....
+
+//whitelist
+//group
+function checkList(other, list){
+    for(var listValue of list)
+        if(other.block.group == listValue) return true;
+    return false;
+}
+//instanceof
+/*function checkList(other, list){
+    for(var listValue of list)
+        if(other instanceof listValue) return true;
+    return false;
+}*/
+const continueLaser = (() => {
+    return (object) => {
+        const options = Object.assign({
+            flagListGroup : [BlockGroup.power, BlockGroup.turrets, BlockGroup.transportation],//use BlockGroup
+            //flagListInstance : [PowerNode, Turret],//use instanceof
+            
+            name : "",
+            reload : 1,
+            mirror : false,
+            predictTarget : false,
+            autoTarget : true,
+            controllable : false,
+            rotate : true,
+            rotateSpeed : 5,
+            useAmmo : false,
+            shootY : 10,
+            recoil : 0,
+            bullet : Bullets.standardThoriumBig,
+            x : 0,
+            y : 0,
+            cone : 20,
+            strength : 0.5,
+            beamWidth : 1.7,
+            pulseRadius : 4,
+            pulseStroke : 2,
+            laserColor : Color.valueOf("bf92f977"),
+            laserTopColor : Color.valueOf("bf92f9bb"),
+        }, object)
+        var offset = new Vec2();
+        var lastEnd = new Vec2();
+        const at = extend(Weapon, {
+            addStats(u, w){
+                w.row();
+                w.add("[accent]" + options.bullet.damage +"[lightgrey]/s damage");
+            },
+            shoot(unit, mount, shootX, shootY, aimX, aimY, mountX, mountY, rotation, side){  },
+            update(unit, mount){
+                var mountX = unit.x + Angles.trnsx(unit.rotation - 90, options.x, options.y),
+                mountY = unit.y + Angles.trnsy(unit.rotation - 90, options.x, options.y);
+                mount.target = Units.findEnemyTile(unit.team, mountX, mountY, options.bullet.range(), boolf(other => checkList(other, options.flagListGroup) && other.within(mountX, mountY, options.bullet.range())));
+                if(mount.target != null && !mount.target.within(mountX, mountY, options.bullet.range())) mount.target = null;
+                if(mount.target != null){
+                    var axisX = unit.x + Angles.trnsx(unit.rotation - 90,  options.x, options.y),
+                    axisY = unit.y + Angles.trnsy(unit.rotation - 90,  options.x, options.y);
+                    mount.targetRotation = Angles.angle(axisX, axisY, mount.target.x + offset.x, mount.target.y + offset.y) - unit.rotation;
+                    mount.rotation = Angles.moveToward(mount.rotation, mount.targetRotation, options.rotateSpeed * Time.delta);
+                    //
+                    if(mount.target.block != null && Angles.within(mount.rotation, mount.targetRotation, options.cone)){
+                        mount.target.damage(options.bullet.damage/60);
+                        if(Mathf.chance(0.02)) Fx.blastExplosion.at(mount.target.x + offset.x, mount.target.y + offset.y);
+                    }
+                }
+            },
+            draw(unit, mount){
+                this.super$draw(unit, mount);
+                var
+                weaponRotation = unit.rotation - 90,
+                wx = unit.x + Angles.trnsx(weaponRotation, options.x, options.y),
+                wy = unit.y + Angles.trnsy(weaponRotation, options.x, options.y);
+                var z = Draw.z();
+                if(mount.target != null && Angles.within(mount.rotation, mount.targetRotation, options.cone)) RepairPoint.drawBeam(wx, wy, unit.rotation + mount.rotation, options.shootY, unit.id, mount.target, unit.team, options.strength,
+                    options.pulseStroke, options.pulseRadius, options.beamWidth, lastEnd, offset, options.laserColor, options.laserTopColor,
+                    Blocks.repairPoint.laser, Blocks.repairPoint.laserEnd, Blocks.repairPoint.laserTop, Blocks.repairPoint.laserTopEnd);
+                Draw.z(z);
+            },
+        });
+        at.name = options.name;
+        at.reload = options.reload;
+        at.predictTarget = options.predictTarget;
+        at.autoTarget = options.autoTarget;
+        at.controllable = options.controllable;
+        at.rotate = options.rotate;
+        at.useAmmo = options.useAmmo;
+        at.recoil = options.recoil;
+        at.x = options.x;
+        at.y = options.y;
+        at.bullet = options.bullet;
+        at.shootY = options.shootY;
+        at.shootSound = Sounds.missile;
+        at.mirror = options.mirror;
+        at.rotateSpeed = options.rotateSpeed;
+        at.targetInterval = 0;
+        at.targetSwitchInterval = 0;
+        return at;
+    }
+})();
+exports.continueLaser = continueLaser;

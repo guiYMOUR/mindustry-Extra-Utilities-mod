@@ -44,6 +44,7 @@ require("block/production/T2PC");
 require("block/production/T2PF");
 require("block/production/T2CM");
 require("block/production/T2SA");
+require("block/production/CrispSteelSmelter");
 require("block/power/GeneratorCrafter");
 require("block/production/T2pulverize");
 require("block/production/crusher");
@@ -76,6 +77,7 @@ require("unit/narwhal");
 require("unit/AirSapper/winglet");
 require("unit/AirSapper/moth");
 require("unit/AirSapper/VenomBee");
+require("unit/AirSapper/phantom");
 
 require("game/items");
 require("other/status");
@@ -90,7 +92,7 @@ lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
 
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.65 Adapt 133+");
+    var dialog = new BaseDialog("Extra Utilities 2.4.7 Adapt 133+");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -104,28 +106,28 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(200).width(620).pad(3);
         table.row();
-        /*table.add(Core.bundle.format("block.btm-crusher.name") + "\n" + Core.bundle.format("block.btm-crusher.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("item.btm-crisp-steel.name") + "\n" + Core.bundle.format("item.btm-crisp-steel.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-crusher", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.image(Core.atlas.find("btm-crisp-steel", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-turret-resupply-point.name") + "\n" + Core.bundle.format("block.btm-turret-resupply-point.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-crisp-steel-smelter.name") + "\n" + Core.bundle.format("block.btm-crisp-steel-smelter.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-turret-resupply-point", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.image(Core.atlas.find("btm-crisp-steel-smelter", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.add(Core.bundle.format("unit.btm-venom-bee.name") + "\n" + Core.bundle.format("unit.btm-venom-bee.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("unit.btm-phantom.name") + "\n" + Core.bundle.format("unit.btm-phantom.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-venom-bee", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
+        table.image(Core.atlas.find("btm-phantom-full", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
         table.row();
-        /*table.add(Core.bundle.format("block.btm-rws.name") + "\n" + Core.bundle.format("block.btm-rws.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.add(Core.bundle.format("block.btm-T2-WE.name") + "\n" + Core.bundle.format("block.btm-T2-WE.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.image(Core.atlas.find("btm-rws", Core.atlas.find("clear"))).fillX().height(32).width(32).pad(3);
+        table.image(Core.atlas.find("btm-T2-WE-full", Core.atlas.find("clear"))).fillX().height(96).width(96).pad(3);
         table.row();
-        table.add(Core.bundle.format("block.btm-rwl.name") + "\n" + Core.bundle.format("block.btm-rwl.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        /*table.add(Core.bundle.format("block.btm-rwl.name") + "\n" + Core.bundle.format("block.btm-rwl.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-rwl", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
-        table.row();*/
-        table.add(Core.bundle.format("mod.btm.update")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
+        table.add(Core.bundle.format("mod.btm.update")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.row();*/
         table.add(Core.bundle.format("mod.btm.mapMaker")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         return table;
     })()).grow().center().maxWidth(620);
@@ -146,4 +148,4 @@ const CoreSchematics = [
     }
 })();
 
-require("block/effect/pl");
+//require("block/effect/pl");

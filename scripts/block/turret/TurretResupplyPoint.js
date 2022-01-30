@@ -6,6 +6,7 @@ const range = 64;
 
 const TRS = extendContent(Unloader, "turret-resupply-point", {
     drawPlace(x, y, rotation, valid){
+        this.super$drawPlace(x, y, rotation, valid);
         Drawf.dashCircle(x * Vars.tilesize + this.offset, y * Vars.tilesize + this.offset, range, Pal.accent);
     },
     outputsItems(){

@@ -3,7 +3,7 @@ const ability = require("other/ability");
 var railTrail = new Effect(16, cons(e => {
     Draw.color(Pal.heal);
     for(var i of Mathf.signs){
-        Drawf.tri(e.x, e.y, 10 * e.fout(), 24, e.rotation + 90 + 90 * i);
+        Drawf.tri(e.x, e.y, 22 * e.fout(), 25, e.rotation + 90 + 90 * i);
     }
 }));
 const nebulaShoot = new Effect(24, cons(e => {
@@ -51,8 +51,8 @@ nebula.weapons.add(
 nebula.weapons.add(
     (() =>{
         const w = new PointDefenseWeapon("btm-nebula-defense");
-        w.x = 24;
-        w.y = 2;
+        w.x = 20;
+        w.y = -18;
         w.reload = 8;
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
@@ -72,8 +72,8 @@ nebula.weapons.add(
 nebula.weapons.add(
     (() =>{
         const w = new PointDefenseWeapon("btm-nebula-defense");
-        w.x = -24;
-        w.y = 2;
+        w.x = -20;
+        w.y = -18;
         w.reload = 8;
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
@@ -90,17 +90,18 @@ nebula.weapons.add(
         return w;
     })()
 );
-for(var x of [9, -9]){
+for(var x of [10.5, -10.5]){
     nebula.weapons.add(
         (() =>{
             const w = new RepairBeamWeapon("btm-nebula-heal");
             w.x = x;
-            w.y = -14;
+            w.y = -4.5;
             w.beamWidth = 0.8;
             w.repairSpeed = 1.5;
             w.mirror = false;
             w.bullet = (() => {
-            const b = new BulletType();
+                const b = new BulletType();
+                b.drag = 1;
                 b.maxRange = 200;
                 return b;
             })()

@@ -1,4 +1,5 @@
 const lib = require("blib");
+const items = require("game/items");
 const T2PC = extendContent(GenericCrafter, "T2-PC", {});
 lib.setBuildingSimple(T2PC, GenericCrafter.GenericCrafterBuild, {});
 T2PC.hasItems = true;
@@ -19,8 +20,8 @@ T2PC.consumes.item(Items.titanium, 4);
 T2PC.requirements = ItemStack.with(
     Items.silicon, 105,
     Items.lead, 155,
-    Items.graphite, 85,
-    Items.titanium, 100,
+    Items.graphite, 60,
+    items.crispSteel, 95,
     Items.plastanium, 10
 );
 T2PC.buildVisibility = BuildVisibility.shown;

@@ -51,10 +51,11 @@ const { T2CM } = require('block/production/T2CM');
 const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
 const { crusher } = require("block/production/crusher");
+const { crispSteelSmelter } = require('block/production/CrispSteelSmelter');
 const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
-const { tiDrill, drill, shovel, testDrill, slagE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
+const { tiDrill, drill, shovel, testDrill, slagE, T2WE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
 const { core, chest, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
@@ -76,8 +77,9 @@ const { narwhal } = require('unit/narwhal');
 const { winglet } = require('unit/AirSapper/winglet');
 const { moth } = require('unit/AirSapper/moth');
 const { vb } = require('unit/AirSapper/VenomBee');
+const { phantom } = require('unit/AirSapper/phantom');
 
-const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
+//const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
 const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11, TD12, TD13 } = require('game/TD/tmain');
 /*-----------------------------------------------------------------------*/
 lib.addToResearch(T2duo, { parent: 'duo', });
@@ -183,6 +185,7 @@ lib.addToResearch(T2CM, { parent: 'cryofluid-mixer', });
 lib.addToResearch(GC, { parent: 'pyratite-mixer', });
 lib.addToResearch(pu, { parent: 'pulverizer', });
 lib.addToResearch(crusher, { parent: 'pulverizer', });
+lib.addToResearch(crispSteelSmelter, { parent: 'kiln', });
 lib.addToResearch(LA, { parent: T2SA.name, });
 lib.addToResearch(ai, { parent: 'incinerator', });
 lib.addToResearch(DCF, { parent: 'force-projector',
@@ -195,6 +198,7 @@ lib.addToResearch(drill, { parent: 'blast-drill', });
 lib.addToResearch(shovel, { parent: 'pneumatic-drill', });
 lib.addToResearch(testDrill, { parent: 'laser-drill', });
 lib.addToResearch(slagE, { parent: 'water-extractor', });
+lib.addToResearch(T2WE, { parent: 'water-extractor', });
 lib.addToResearch(T2CU, { parent: 'cultivator', });
 lib.addToResearch(blastOilExtractor, { parent: 'oil-extractor', });
 lib.addToResearch(dustExtractor, { parent: 'pneumatic-drill', });
@@ -235,10 +239,12 @@ lib.addToResearch(narwhal, { parent: 'navanax',objectives: Seq.with( new Objecti
 lib.addToResearch(winglet, { parent: 'flare', });
 lib.addToResearch(moth, { parent: winglet.name,objectives: Seq.with( new Objectives.Research(Blocks.additiveReconstructor) ) });
 lib.addToResearch(vb, { parent: moth.name,objectives: Seq.with( new Objectives.Research(Blocks.multiplicativeReconstructor) ) });
+lib.addToResearch(phantom, { parent: vb.name,objectives: Seq.with( new Objectives.Research(Blocks.exponentialReconstructor) ) });
 
+lib.addToResearch(items.crispSteel, { parent: 'titanium', });
 lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });
 
-lib.addToResearch(start, {
+/*lib.addToResearch(start, {
     parent: SectorPresets.planetaryTerminal.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.planetaryTerminal)
@@ -279,7 +285,7 @@ lib.addToResearch(GlacialValley, {
     objectives: Seq.with(
         new Objectives.SectorComplete(sporeArea)
     )
-});
+});*/
 
 lib.addToResearch(pd, { 
     parent: 'core-shard', 

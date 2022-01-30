@@ -2,6 +2,8 @@
 * @author guiY
 * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
 */
+const items = require("game/items");
+
 const speed = 2;
 
 const lu = extendContent(LiquidSource, "liquid-unloader", {
@@ -65,7 +67,7 @@ lu.liquidCapacity = 10;
 lu.requirements = ItemStack.with(
     Items.metaglass, 10,
     Items.silicon, 20,
-    Items.titanium, 15
+    items.crispSteel, 10
 );
 lu.buildVisibility = BuildVisibility.shown;
 lu.category = Category.effect;

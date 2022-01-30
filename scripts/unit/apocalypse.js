@@ -1,18 +1,13 @@
 const ability = require("other/ability");
+const bullets = require("other/bullets");
 const status = require("other/status");
+const weapon = require("other/weapon");
 
-const bubble = extend(LiquidBulletType, {});
-bubble.liquid = Liquids.slag;
-bubble.status = status.weakness;
-bubble.lightColor = Color.valueOf("#EC7458");
-bubble.lightOpacity = Color.valueOf("#EC7458");
-bubble.damage = 13;
-bubble.knockback = 1.2;
-bubble.puddleSize = 8;
-bubble.orbSize = 4;
-bubble.lifetime = 54;
-bubble.speed = 4;
-bubble.shootEffect = Fx.shootLiquid;
+const bubble = bullets.percentDamage({
+    percent : 0.005,
+    status : status.weakness,
+    damage : 13,
+});
 
 const r = extend(RailBulletType, {});
 r.shootEffect = Fx.railShoot;
@@ -74,9 +69,12 @@ apocalypse.weapons.add(
         return w;
     })()
 );
+function setStat(w){
+    w.add(Core.bundle.format("stat.btm-percentDamage", bubble.percent()));
+}
 apocalypse.weapons.add(
     (() => {
-        const w = new Weapon("btm-apocalypse-bubble");
+        const w = weapon.statWeapon(setStat, "btm-apocalypse-bubble");
         w.shootY = 6;
         w.bullet = bubble;
         w.rotate = true;

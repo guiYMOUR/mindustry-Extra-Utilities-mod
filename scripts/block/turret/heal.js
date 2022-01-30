@@ -42,10 +42,12 @@ const hb = extend(BasicBulletType,{
                 unit.heal(unit.maxHealth * (this.healPercent/ratio));
             }
         }));
-        Vars.indexer.eachBlock(b, findRange, boolf(other => other.damaged() && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)), cons(other => {
-            other.heal((this.healPercent/ratio) * other.maxHealth);
-            Fx.healBlockFull.at(other.x, other.y, !(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5, Pal.heal);
-        }));
+        if(b.timer.get(1, 30)) {
+            Vars.indexer.eachBlock(b, findRange, boolf(other => other.damaged() && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)), cons(other => {
+                other.heal((this.healPercent / ratio) * other.maxHealth * 20);
+                Fx.healBlockFull.at(other.x, other.y, !(other instanceof PayloadSource.PayloadSourceBuild) ? other.block.size : 5, Pal.heal);
+            }));
+        }
     },
     draw(b){
         const range = findRange * b.owner.getHeat();
@@ -253,7 +255,7 @@ heal.buildType = prov(() => {
 });
 Object.assign(heal, {
     health : 180*3*3,
-    powerUse : 6.5, 
+    powerUse : 7,
     shootType : hb,
     range : findRange + 8,
     reloadTime : 90,

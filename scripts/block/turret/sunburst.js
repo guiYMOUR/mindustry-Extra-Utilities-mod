@@ -107,7 +107,7 @@ m.fragBullet = (() => {
 const sunburst = extendContent(PowerTurret, "sunburst", {});
 Object.assign(sunburst, {
     size : 3,
-    powerUse : 6,
+    powerUse : 7,
     shootType : m,
     shots : 2,
     shootShake : 1,

@@ -1,3 +1,5 @@
+const items = require("game/items");
+
 const T2kiln = extendContent(AttributeCrafter, "T2kiln", {});
 T2kiln.craftEffect = Fx.smeltsmoke;
 T2kiln.outputItem = new ItemStack(Items.metaglass, 7);
@@ -17,7 +19,7 @@ T2kiln.requirements = ItemStack.with(
     Items.copper, 100,
     Items.lead, 80,
     Items.graphite, 50,
-    Items.titanium, 90
+    items.crispSteel, 50
 );
 T2kiln.itemCapacity = 16;
 T2kiln.boostScale = 0.4;

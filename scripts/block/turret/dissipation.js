@@ -113,7 +113,7 @@ Object.assign(dissipation, {
     acceptCoolant : true,
     coolantMultiplier : 5,
 });
-dissipation.consumes.powerCond(10, boolf(e => e.getCool() || e.target != null));
+dissipation.consumes.powerCond(12, boolf(e => e.getCool() || e.target != null));
 dissipation.requirements = ItemStack.with(
     Items.silicon, 180,
     Items.thorium, 100,

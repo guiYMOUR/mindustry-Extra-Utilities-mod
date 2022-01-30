@@ -1,7 +1,7 @@
 //Will be added in version 1.4 or 1.3.30 onwards
 const lib = require("blib");
 const ability = require("other/ability");
-const planet = require("game/challengeMap/cmain");
+//const planet = require("game/challengeMap/cmain");
 
 const walkFloor = extendContent(Floor, "walkFloor", {});
 walkFloor.solid = false;
@@ -266,12 +266,12 @@ const TD = new JavaAdapter(Planet, {
         ));
         this.super$load();
     }
-}, "TD", planet.challenge, 1);
+}, "TD", Planets.sun, 1);
 lib.setPlanet(TD, 1);
 TD.generator = new SerpuloPlanetGenerator();
 TD.atmosphereColor = Color.valueOf("5ecd65");
 TD.accessible = true;
-TD.orbitRadius = 4;
+TD.orbitRadius = 12;
 TD.sectorApproxRadius = 0.5;
 TD.atmosphereRadIn = 0.04;
 TD.atmosphereRadOut = 0.3;
@@ -357,3 +357,8 @@ const TD13 = new SectorPreset("TD13", TD, 24);
 TD13.captureWave = 101;
 TD13.difficulty = 8;
 exports.TD13 = TD13;
+
+const TD14 = new SectorPreset("TD14", TD, 26);
+TD14.captureWave = 101;
+TD14.difficulty = 8;
+exports.TD14 = TD14;

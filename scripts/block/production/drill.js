@@ -284,6 +284,57 @@ testDrill.buildVisibility = BuildVisibility.shown;
 testDrill.category = Category.production;
 exports.testDrill = testDrill;
 
+var weBoost = 1.2;
+var weItem = Items.graphite;
+const weUseTime = 120;
+const T2WE = extendContent(SolidPump, "T2-WE", {
+    setStats(){
+        this.stats.timePeriod = weUseTime;
+        this.super$setStats();
+        this.stats.add(Stat.boostEffect, weBoost, StatUnit.timesSpeed);
+    },
+});
+T2WE.buildType = prov(() => {
+    var timer = 0;
+    return new JavaAdapter(SolidPump.SolidPumpBuild, {
+        updateTile(){
+            this.super$updateTile();
+            var entity = this;
+            if(entity.items.get(weItem) && entity.liquids.total() < T2WE.liquidCapacity && entity.power.status > 0.0001){
+                timer += entity.power.status * entity.delta();
+            }
+            if(timer >= weUseTime){
+                entity.consume();
+                timer -= weUseTime;
+            }
+        },
+        efficiency(){
+            if(!this.enabled) return 0;
+            return this.power.status * (this.items.get(weItem) > 0 ? weBoost : 1);
+        },
+    }, T2WE);
+});
+T2WE.result = Liquids.water;
+T2WE.pumpAmount = 0.28;
+T2WE.size = 3;
+T2WE.liquidCapacity = 60;
+T2WE.rotateSpeed = 2;
+T2WE.baseEfficiency = 1;
+T2WE.attribute = Attribute.water;
+T2WE.envRequired |= Env.groundWater;
+T2WE.consumes.power(5);
+T2WE.consumes.item(weItem).boost();
+T2WE.requirements = ItemStack.with(
+    Items.metaglass, 50,
+    Items.lead, 85,
+    Items.graphite, 75,
+    Items.silicon, 75,
+    Items.titanium, 70
+);
+T2WE.buildVisibility = BuildVisibility.shown;
+T2WE.category = Category.production;
+exports.T2WE = T2WE;
+
 const slagE = extendContent(SolidPump, "slag-extractor", {});
 slagE.result = Liquids.slag;
 slagE.pumpAmount = 0.1;
@@ -303,16 +354,15 @@ slagE.buildVisibility = BuildVisibility.shown;
 slagE.category = Category.production;
 exports.slagE = slagE;
 
-//6.0, 7.0 not this type.
 const T2CU = extendContent(AttributeCrafter, "T2CU", {});
-T2CU.outputItem = new ItemStack(Items.sporePod, 2);
-T2CU.craftTime = 108;
+T2CU.outputItem = new ItemStack(Items.sporePod, 3);
+T2CU.craftTime = 120;
 T2CU.size = 3;
 T2CU.hasLiquids = true;
 T2CU.hasPower = true;
 T2CU.hasItems = true;
 T2CU.consumes.power(1.5);
-T2CU.consumes.liquid(Liquids.water, 20/60);
+T2CU.consumes.liquid(Liquids.water, 30/60);
 T2CU.drawer = new DrawCultivator();
 T2CU.requirements = ItemStack.with(
     Items.copper, 40,
@@ -387,33 +437,34 @@ const dustExtractor = extendContent(GenericCrafter, "dust-extractor", {
     },
 });
 dustExtractor.buildType = prov(() => {
+    const block = dustExtractor;
     return new JavaAdapter(GenericCrafter.GenericCrafterBuild, {
         updateTile(){
             var boost = this.liquids.total() > 1 ? boof : 1;
             if(this.consValid()){
-                this.progress += this.getProgressIncrease(this.block.craftTime/boost);
+                this.progress += this.getProgressIncrease(block.craftTime/boost);
                 this.totalProgress += this.delta();
-                this.warmup = Mathf.approachDelta(this.warmup, 1, this.block.warmupSpeed);
-                if(Mathf.chanceDelta(this.block.updateEffectChance)){
-                    this.block.updateEffect.at(this.getX() + Mathf.range(this.block.size * 4), this.getY() + Mathf.range(this.block.size * 4));
+                this.warmup = Mathf.approachDelta(this.warmup, 1, block.warmupSpeed);
+                if(Mathf.chanceDelta(block.updateEffectChance)){
+                    this.block.updateEffect.at(this.getX() + Mathf.range(block.size * 4), this.getY() + Mathf.range(block.size * 4));
                 }
             }else{
-                this.warmup = Mathf.approachDelta(this.warmup, 0, this.block.warmupSpeed);
+                this.warmup = Mathf.approachDelta(this.warmup, 0, block.warmupSpeed);
             }
             if(this.progress >= 1){
                 this.consume();
-                if(this.block.outputItem != null){
-                    for(var i = 0; i < this.block.outputItem.amount; i++){
-                        this.offload(this.block.outputItem.item);
+                if(block.outputItem != null){
+                    for(var i = 0; i < block.outputItem.amount; i++){
+                        this.offload(block.outputItem.item);
                     }
                 }
                 for(var i = 0; i < 3; i++){
-                    this.block.craftEffect.at(this.x, this.y);
+                    block.craftEffect.at(this.x, this.y);
                 }
                 this.progress %= 1;
             }
-            if(this.block.outputItem != null && this.timer.get(this.block.timerDump, this.block.dumpTime / this.timeScale)){
-                this.dump(this.block.outputItem.item);
+            if(block.outputItem != null && this.timer.get(block.timerDump, block.dumpTime / this.timeScale)){
+                this.dump(block.outputItem.item);
             }
         },
     }, dustExtractor);

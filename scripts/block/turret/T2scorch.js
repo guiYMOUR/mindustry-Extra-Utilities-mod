@@ -3,6 +3,7 @@
 * @readme <The bullet are in "other/bullets">
 */
 const bullets = require("other/bullets");
+const items = require("game/items");
 
 const T2scorch = new ItemTurret("T2scorch");
 T2scorch.ammo(
@@ -33,7 +34,7 @@ Object.assign(T2scorch, {
 T2scorch.requirements = ItemStack.with(
     Items.copper, 60,
     Items.graphite, 40,
-    Items.titanium, 20
+    items.crispSteel, 20
 );
 T2scorch.buildVisibility = BuildVisibility.shown;
 T2scorch.category = Category.turret;

@@ -5,7 +5,7 @@ UnitTypes.corvus.mineTier = 2;
 UnitTypes.corvus.mineSpeed = 7;
 UnitTypes.corvus.buildSpeed = 2;
 
-Blocks.cultivator.consumes.liquid(Liquids.water, 15 / 60);
+//Blocks.cultivator.consumes.liquid(Liquids.water, 15 / 60);
 Blocks.duct.buildVisibility = BuildVisibility.shown;
 Blocks.ductBridge.buildVisibility = BuildVisibility.shown;
 //if Anuke sees this, I hope he can change it early, it will cause the game to crash
@@ -33,10 +33,14 @@ lib.addToResearch(Blocks.duct, { parent: 'conveyor', });
 const { winglet } = require("unit/AirSapper/winglet");
 const { moth } = require("unit/AirSapper/moth");
 const { vb } = require("unit/AirSapper/VenomBee");
+const { phantom } = require("unit/AirSapper/phantom");
 Blocks.airFactory.plans.add(new UnitFactory.UnitPlan(winglet, 60 * 30, ItemStack.with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));
 Blocks.additiveReconstructor.upgrades.add(
     up.unitType(winglet, moth),
 );
 Blocks.multiplicativeReconstructor.upgrades.add(
     up.unitType(moth, vb),
+);
+Blocks.exponentialReconstructor.upgrades.add(
+    up.unitType(vb, phantom),
 );

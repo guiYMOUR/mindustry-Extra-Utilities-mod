@@ -1,3 +1,5 @@
+const items = require("game/items");
+
 const minisp = extendContent(ItemTurret, "minisp", {});
 minisp.shootSound = Sounds.shootBig;
 minisp.size = 3;
@@ -22,11 +24,11 @@ minisp.ammo(
 );
 minisp.limitRange();
 minisp.requirements = ItemStack.with(
-    Items.copper, 600,
-    Items.graphite, 210,
+    Items.copper, 500,
+    Items.graphite, 150,
     Items.surgeAlloy, 150,
     Items.silicon, 175,
-    Items.thorium, 250
+    items.crispSteel, 150
 );
 minisp.buildVisibility = BuildVisibility.shown;
 minisp.category = Category.turret;

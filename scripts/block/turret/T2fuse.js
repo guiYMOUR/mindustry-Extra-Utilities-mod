@@ -1,5 +1,6 @@
 //
 const lib = require("blib");
+const items = require("game/items");
 //钛
 const fuse1 = extend(ShrapnelBulletType, {});
 fuse1.length = 110;
@@ -39,8 +40,8 @@ T2fuse.ammo(
 );
 T2fuse.requirements = ItemStack.with(
     Items.copper, 260,
-    Items.graphite, 260,
-    Items.titanium, 225,
+    Items.graphite, 235,
+    items.crispSteel, 175,
     Items.thorium, 120
 );
 T2fuse.buildVisibility = BuildVisibility.shown;

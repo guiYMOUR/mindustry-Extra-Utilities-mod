@@ -92,7 +92,7 @@ const storm = extendContent(PowerTurret, 'MAGNETIC-STORM', {
 });
 
 lib.setBuildingSimple(storm, PowerTurret.PowerTurretBuild, {});
-storm.powerUse = 19;
+storm.powerUse = 32;
 storm.shootType = MS;
 storm.shots = 1;
 storm.shootShake = 5;

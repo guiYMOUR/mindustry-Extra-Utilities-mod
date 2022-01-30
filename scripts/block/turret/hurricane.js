@@ -1,5 +1,6 @@
 //
 const lib = require('blib');
+const items = require("game/items");
 const liC = Color.valueOf("bf92f9");
 const dec = Color.valueOf("ffffff");
 const dec2 = Color.valueOf("ffffff");
@@ -13,8 +14,7 @@ const hur = extend(BasicBulletType, {
                 
             }
         }
-    }
-    
+    },
 });
 hur.width = 1;
 hur.height = 1;
@@ -39,7 +39,7 @@ hur.pierceBuilding = true
 const hurricane = extendContent(PowerTurret, 'hurricane', {});
 
 lib.setBuildingSimple(hurricane, PowerTurret.PowerTurretBuild, {});
-hurricane.powerUse = 6;
+hurricane.powerUse = 8.5;
 hurricane.shootType = hur;
 hurricane.shots = 1;
 hurricane.shootShake = 0.5;
@@ -58,7 +58,7 @@ hurricane.requirements = ItemStack.with(
     Items.lead, 60,
     Items.silicon, 30,
     //Items.graphite, 30,
-    Items.titanium, 20
+    items.crispSteel, 20
 );
 hurricane.buildVisibility = BuildVisibility.shown;
 hurricane.category = Category.turret;

@@ -323,3 +323,192 @@ Object.assign(antiMissileBullet, {
     collidesGround : false,
 });
 exports.antiMissileBullet = antiMissileBullet;
+
+const percentDamage = (() => {
+    return (object) => {
+        const options = Object.assign({
+            percent : 0.1,
+            /*----------------*/
+            lifetime : 54,
+            shootEffect : Fx.shootLiquid,
+            hitEffect : Fx.bubble,
+            smokeEffect : Fx.none,
+            trailEffect : Fx.none,
+            despawnEffect : Fx.bubble,
+            damage : 10,
+            speed : 4,
+            status : StatusEffects.none,
+            knockback : 1.2,
+            shrinkY : 0,
+            width : 15,
+            height : 9,
+            backColor : Color.valueOf("ec7458"),
+            frontColor : Color.valueOf("ec7458"),
+            collides : true,
+            collidesAir : true,
+            collidesGround : true,
+            absorbable : false,
+            hittable : false,
+            keepVelocity : false,
+            reflectable : false,
+        }, object);
+        const bullet = new JavaAdapter(BasicBulletType, {
+            percent(){
+                return options.percent * 100;
+            },
+            hitTile(b, build, initialHealth, direct){
+                options.hitEffect.at(b.x, b.y);
+                if(build.health < options.damage){
+                    build.kill();
+                    return;
+                }
+                build.health -= Math.ceil(build.maxHealth * options.percent);
+            },
+        });
+        bullet.lifetime = options.lifetime;
+        bullet.shootEffect = options.shootEffect;
+        bullet.hitEffect = options.hitEffect;
+        bullet.smokeEffect = options.smokeEffect;
+        bullet.trailEffect = options.trailEffect;
+        bullet.despawnEffect = options.despawnEffect;
+        bullet.damage = options.damage;
+        bullet.speed = options.speed;
+        bullet.status = options.status;
+        bullet.knockback = options.knockback;
+        bullet.shrinkY = options.shrinkY;
+        bullet.width = options.width;
+        bullet.height = options.height;
+        bullet.backColor = options.backColor;
+        bullet.frontColor = options.frontColor;
+        bullet.collides = options.collides;
+        bullet.collidesAir = options.collidesAir;
+        bullet.collidesGround = options.collidesGround;
+        bullet.absorbable = options.absorbable;
+        bullet.hittable = options.hittable;
+        bullet.keepVelocity = options.keepVelocity;
+        bullet.reflectable = options.reflectable;
+        return bullet;
+    }
+})();
+exports.percentDamage = percentDamage;
+
+const lineBullet = (() => {
+    return (object) => {
+        const traE = new Effect(16, cons(e => {
+            Draw.color(Pal.sapBulletBack);
+            for(var s in Mathf.signs){
+                Drawf.tri(e.x, e.y, 4, 30 * e.fslope(), e.rotation + 90*s);
+            }
+        }));
+        const options = Object.assign({
+            maxFind : 12,
+            damageUp : 1,
+            /*--------------*/
+            lifetime : 150,
+            damage : 120,
+            speed : 2,
+            status : StatusEffects.sapped,
+            width : 28,
+            height : 18,
+            backColor : Pal.sapBulletBack,
+            frontColor : Pal.sapBullet,
+            trailLength : 18,
+            trailWidth : 8,
+            trailColor : Pal.sapBulletBack,
+            trailInterval : 3,
+            splashDamage : 100,
+            splashDamageRadius : 100,
+            hitShake : 4,
+            trailEffect : traE,
+        }, object);
+        const disE = new Effect(18, cons(e => {
+            Draw.color(options.backColor);
+            Lines.stroke(e.fout() * 2 + 0.2);
+            Lines.circle(e.x, e.y, e.fin() * options.splashDamageRadius);
+        }));
+        const maxFind = options.maxFind;
+        var unitTarget = new Seq();
+        const lb = extend(BasicBulletType, {
+            maxFindValue(){
+                return maxFind;
+            },
+            update(b){
+                this.super$update(b);
+                //const findAngle = 30;
+                //I added a limit, so this can be removed.↑↑↑
+                var range = this.homingRange;
+                Units.nearbyEnemies(b.team, b.x - range, b.y - range, range * 2, range * 2, cons(other => {
+                    if(other.within(b, range)/* && Angles.within(b.rotation(), b.angleTo(other), findAngle/2)*/){
+                        unitTarget.add(other);
+                    }
+                }));
+                unitTarget.sort(floatf(u => u.dst2(b.x, b.y)));
+                var find = Math.min(maxFind, unitTarget.size);
+                if(b.timer.get(1, 5)){
+                    for(var a = 0; a < find; a++){
+                        var other = unitTarget.get(a);
+                        if(other == null) continue;
+                        other.damage(options.damage/6);
+                        other.apply(options.status, 5);
+                        Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
+                        Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
+                    }
+                }
+                unitTarget.clear();
+            },
+            hit(b){
+                var range2 = options.splashDamageRadius
+                Units.nearbyEnemies(b.team, b.x - range2, b.y - range2, range2 * 2, range2 * 2, cons(other => {
+                    if(other.within(b, range2)){
+                        other.damage(options.splashDamage);
+                        other.apply(options.status, 60);
+                        Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
+                        Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
+                    }
+                }));
+                Vars.indexer.allBuildings(b.x, b.y, range2, cons(other =>{
+                    if(other.block != null && other.team != b.team){
+                        if(other.block.group == BlockGroup.power || other.block.group == BlockGroup.turrets || other.block.group == BlockGroup.transportation){
+                            if(other.block instanceof PowerNode && other.power.links.size > 0){
+                                other.onConfigureTileTapped(other);
+                            } else {
+                                other.damage(options.splashDamage * options.damageUp);
+                                Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, other);
+                                Fx.hitLaserBlast.at(other.x, other.y, b.angleTo(other), Pal.sapBulletBack);
+                            }
+                        } else {
+                            other.damage(options.splashDamage);
+                        }
+                    }
+                }));
+                disE.at(b);
+                Sounds.spark.at(b);
+            },
+        });
+        lb.width = options.width;
+        lb.height = options.height;
+        lb.frontColor = options.frontColor;
+        lb.backColor = options.backColor;
+        lb.lifetime = options.lifetime;
+        lb.speed = options.speed;
+        lb.trailLength = options.trailLength;
+        lb.trailWidth = options.trailWidth;
+        lb.trailColor = options.trailColor;
+        lb.trailInterval = options.trailInterval;
+        lb.damage = options.damage;
+        lb.splashDamage = options.splashDamage;
+        lb.splashDamageRadius = options.splashDamageRadius;
+        lb.hitShake = options.hitShake;
+        lb.collidesTiles = false;
+        lb.trailRotation = true;
+        lb.status = options.status;
+        lb.trailEffect = options.trailEffect;
+        lb.despawnEffect = Fx.none;
+        lb.homingPower = 0.08;
+        lb.homingRange = 256;
+        lb.homingDelay = 30;
+        lb.shrinkY = 0;
+        return lb;
+    }
+})();
+exports.lineBullet = lineBullet;

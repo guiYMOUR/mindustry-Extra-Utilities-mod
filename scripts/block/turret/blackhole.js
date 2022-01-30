@@ -208,7 +208,7 @@ blackhole.buildType = prov(() => {
 });
 Object.assign(blackhole, {
     health : 180*size*size,
-    powerUse : 17, 
+    powerUse : 19, 
     shootType : missile,
     size : size,
     reloadTime : 180,

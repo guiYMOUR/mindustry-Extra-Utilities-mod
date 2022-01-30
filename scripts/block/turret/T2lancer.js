@@ -1,5 +1,6 @@
 //
 const lib = require('blib');
+const items = require("game/items");
 
 const chargeTime = 20;
 const chargeMaxDelay = 15;
@@ -19,7 +20,7 @@ const eff1 = lib.newEffect(10, (e) => {
         Lines.circle(e.x, e.y, e.fin() * 28);
 });
 const laser = extend(LaserBulletType, {});
-laser.damage = 140;
+laser.damage = 120;
 laser.sideAngle = 1;
 laser.sideWidth = 3;
 laser.sideLength = 35;
@@ -69,7 +70,7 @@ return new JavaAdapter(PowerTurret.PowerTurretBuild, {
         _shotCounter ++;
     }
 }, T2lan);});
-T2lan.powerUse = 8.5;
+T2lan.powerUse = 11;
 T2lan.shootType = laser;
 T2lan.spread = 3;
 T2lan.shots = 2;
@@ -87,11 +88,11 @@ T2lan.size = 2;
 T2lan.targetAir = false;
 T2lan.shootSound = Sounds.laser;
 T2lan.requirements = ItemStack.with(
-    Items.copper, 80,
+    Items.copper, 90,
     Items.lead, 90,
-    Items.silicon, 65,
+    Items.silicon, 85,
     Items.graphite, 55,
-    Items.titanium, 60
+    items.crispSteel, 65
 );
 T2lan.buildVisibility = BuildVisibility.shown;
 T2lan.category = Category.turret;
