@@ -3,7 +3,7 @@ const lib = require("blib");
 
 const LB = extendContent(LiquidExtendingBridge, "lb", {
     drawPlace(x, y, rotation, valid){
-        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range + 1) * Vars.tilesize, Pal.accent);
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range) * Vars.tilesize, Pal.accent);
     },
     linkValid(tile, other, checkDouble){
         if(other == null || tile == null || other == tile) return false;

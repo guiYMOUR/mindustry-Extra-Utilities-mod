@@ -284,7 +284,7 @@ testDrill.buildVisibility = BuildVisibility.shown;
 testDrill.category = Category.production;
 exports.testDrill = testDrill;
 
-var weBoost = 1.2;
+var weBoost = 1.5;
 var weItem = Items.graphite;
 const weUseTime = 120;
 const T2WE = extendContent(SolidPump, "T2-WE", {
@@ -319,9 +319,9 @@ T2WE.pumpAmount = 0.28;
 T2WE.size = 3;
 T2WE.liquidCapacity = 60;
 T2WE.rotateSpeed = 2;
-T2WE.baseEfficiency = 1;
+//T2WE.baseEfficiency = 1;
 T2WE.attribute = Attribute.water;
-T2WE.envRequired |= Env.groundWater;
+//T2WE.envRequired |= Env.groundWater;
 T2WE.consumes.power(5);
 T2WE.consumes.item(weItem).boost();
 T2WE.requirements = ItemStack.with(

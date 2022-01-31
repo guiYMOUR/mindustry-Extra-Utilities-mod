@@ -348,7 +348,7 @@ const continueLaser = (() => {
             update(unit, mount){
                 var mountX = unit.x + Angles.trnsx(unit.rotation - 90, options.x, options.y),
                 mountY = unit.y + Angles.trnsy(unit.rotation - 90, options.x, options.y);
-                mount.target = Units.findEnemyTile(unit.team, mountX, mountY, options.bullet.range(), boolf(other => checkList(other, options.flagListGroup) && other.within(mountX, mountY, options.bullet.range())));
+                mount.target = Units.findEnemyTile(unit.team, mountX, mountY, options.bullet.range(), boolf(other => !(other instanceof PayloadSource.PayloadSourceBuild) && checkList(other, options.flagListGroup) && other.within(mountX, mountY, options.bullet.range())));
                 if(mount.target != null && !mount.target.within(mountX, mountY, options.bullet.range())) mount.target = null;
                 if(mount.target != null){
                     var axisX = unit.x + Angles.trnsx(unit.rotation - 90,  options.x, options.y),
