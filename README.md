@@ -75,7 +75,7 @@
 
 ### Ability
 - Territory Field
-- Repair Field
+- Mending Field
 - Lightning Field
 
 ### Status Effect
