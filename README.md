@@ -4,7 +4,7 @@
 
 - Add more than 85 blocks and some advanced units.
 
-- The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
+- The MOD body uses JavaScript only, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
 
 
 - QQ Group①：513165958
@@ -28,7 +28,7 @@
 - More powerful turrets.
 
 ### Crafting
-- More advanced plant 
+- More advanced factories 
 - Coal burning plant (easier to make pyratite)
 
 ### Power
@@ -45,7 +45,7 @@
 ### Drill
 - Titanium Drill
 - High Energy drill
-- shovel
+- Shovel
 - Beam Drill updated in advance
 - Slag Extractor
 - T2 Water Extractor
@@ -55,15 +55,15 @@
 - Composite Wall
 
 ### Effect
-- Composite repair field
+- Composite Repair Field
 - Composite Overdrive Projector
 - DIMENSIONAL COMPLEX FIELD
-- Small Core
+- Sub Core
 - ELECTRIC UNLOADER
 - Liquid Unloader
 
 ### Unit
-- Imaginary Reconstructor
+- Imaginative Reconstructor
 - Suzerain
 - Nebula
 - Asphyxia
@@ -75,14 +75,14 @@
 
 ### Ability
 - Territory Field
-- Mend Field
+- Repair Field
 - Lightning Field
 
 ### Status Effect
-- Erosion
+- Eroding
 - Territory Buff
 - Territory Debuff
-- Weakness
+- Weakened
 
 ### Other
 - Added tower defense gameplay.
