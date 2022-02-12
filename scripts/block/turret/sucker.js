@@ -1,9 +1,12 @@
 /*
 * @readme <All right, all right, I'll use it.>
 */
+//索敌数
 const shots = 6;
+//强度
 const force = 24;
 const scaledForce = 8;
+
 const sucker = extendContent(TractorBeamTurret, "sucker", {
     setStats(){
         this.super$setStats();

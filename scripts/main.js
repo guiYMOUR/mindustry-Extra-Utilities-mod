@@ -1,10 +1,11 @@
 const lib = require("blib");
-
+//main是模组的捆绳，把所有要用到的文件一并读入
 //require("blib");
 require("block/turret/T2duo");
 require("block/turret/T3duo");
 require("block/turret/T2scatter");
 require("block/turret/T2scorch");
+require("block/turret/IceCookie");
 require("block/turret/shotgun");
 require("block/turret/sakura");
 require("block/turret/rainbow");
@@ -45,6 +46,7 @@ require("block/production/T2PF");
 require("block/production/T2CM");
 require("block/production/T2SA");
 require("block/production/CrispSteelSmelter");
+require("block/production/T2CrispSteelSmelter");
 require("block/power/GeneratorCrafter");
 require("block/production/T2pulverize");
 require("block/production/crusher");
@@ -78,6 +80,7 @@ require("unit/AirSapper/winglet");
 require("unit/AirSapper/moth");
 require("unit/AirSapper/VenomBee");
 require("unit/AirSapper/phantom");
+require("unit/AirSapper/skyline");
 
 require("game/items");
 require("other/status");
@@ -88,11 +91,12 @@ require("game/TD/tmain");
 
 require("tree");
 
+//根据游戏设置的语言改模组介绍和名字
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
-
+//进游戏显示
 Events.on(EventType.ClientLoadEvent, cons(e => {
-    var dialog = new BaseDialog("Extra Utilities 2.4.7 Adapt 133+");
+    var dialog = new BaseDialog("Extra Utilities 2.4.8 Adapt 133+");
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.button("@close", run(() => {
@@ -106,36 +110,38 @@ Events.on(EventType.ClientLoadEvent, cons(e => {
         table.row();
         table.image(Core.atlas.find("btm-logo", Core.atlas.find("clear"))).left().fillX().height(200).width(620).pad(3);
         table.row();
-        table.add(Core.bundle.format("item.btm-crisp-steel.name") + "\n" + Core.bundle.format("item.btm-crisp-steel.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        /*table.add(Core.bundle.format("item.btm-crisp-steel.name") + "\n" + Core.bundle.format("item.btm-crisp-steel.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-crisp-steel", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.row();*/
+        table.add(Core.bundle.format("block.btm-T2CSm.name") + "\n" + Core.bundle.format("block.btm-T2CSm.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.add(Core.bundle.format("block.btm-crisp-steel-smelter.name") + "\n" + Core.bundle.format("block.btm-crisp-steel-smelter.description")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.image(Core.atlas.find("btm-T2CSm", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
         table.row();
-        table.image(Core.atlas.find("btm-crisp-steel-smelter", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
+        table.add(Core.bundle.format("unit.btm-skyline.name") + "\n" + Core.bundle.format("unit.btm-skyline.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.add(Core.bundle.format("unit.btm-phantom.name") + "\n" + Core.bundle.format("unit.btm-phantom.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
+        table.image(Core.atlas.find("btm-skyline-full", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
         table.row();
-        table.image(Core.atlas.find("btm-phantom-full", Core.atlas.find("clear"))).fillX().height(128).width(128).pad(3);
+        table.add(Core.bundle.format("block.btm-IM.name") + "\n" + Core.bundle.format("block.btm-IM.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
-        table.add(Core.bundle.format("block.btm-T2-WE.name") + "\n" + Core.bundle.format("block.btm-T2-WE.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
-        table.row();
-        table.image(Core.atlas.find("btm-T2-WE-full", Core.atlas.find("clear"))).fillX().height(96).width(96).pad(3);
+        table.image(Core.atlas.find("btm-IM", Core.atlas.find("clear"))).fillX().height(96).width(96).pad(3);
         table.row();
         /*table.add(Core.bundle.format("block.btm-rwl.name") + "\n" + Core.bundle.format("block.btm-rwl.description")).left().growX().wrap().width(620).pad(4).labelAlign(Align.left);
         table.row();
         table.image(Core.atlas.find("btm-rwl", Core.atlas.find("clear"))).fillX().height(64).width(64).pad(3);
-        table.row();
-        table.add(Core.bundle.format("mod.btm.update")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         table.row();*/
+        table.add(Core.bundle.format("mod.btm.update")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
+        table.row();
         table.add(Core.bundle.format("mod.btm.mapMaker")).left().growX().wrap().width(620).maxWidth(620).pad(4).labelAlign(Align.left);
         return table;
     })()).grow().center().maxWidth(620);
     dialog.show();
 }));
 
+//override部分
 require("other/override");
 
+//核心蓝图，这种方式不会在蓝图包出现
 const CoreSchematics = [
 "bXNjaAF4nCWLWwqAMBAD05eI/ngRD1XXBQt9yFpEb6+lCQRmIHAYNGz2iTHxU8WvVIQx73yRhLOGkgGDJTEdPgfycd0lxIiRSr75LYJxq6m/AIce9VdD6X9sY9OlafIDyOMXfA=="
 ];

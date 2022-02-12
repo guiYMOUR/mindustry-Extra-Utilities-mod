@@ -2,6 +2,7 @@
 const core = extendContent(CoreBlock, "core", {
     canBreak(tile) { return Vars.state.teams.cores(tile.team()).size > 1; },
     canReplace(other) { return other.alwaysReplace; },
+    //核心数量限制，后面应该会改
     canPlaceOn(tile, team) { return Vars.state.teams.cores(team).size < 8; },
     placeBegan(tile, previous) {},
     beforePlaceBegan(tile, previous) {},

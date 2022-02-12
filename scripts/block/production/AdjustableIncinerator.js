@@ -1,6 +1,7 @@
 /*
 *@author <guiY>
 */
+//这个代码要用没必要大改，要改的就是贴图名字，往下看
 const lib = require("blib");
 
 const loadRegionCache = {};
@@ -12,6 +13,7 @@ const loadRegion = (name) => {
     if (c) {
         return c
     }
+    //这里'btm'是mod名字，改成你mod的名字，也可以套lib，我忘了就没改
     c = Core.atlas.find('btm' + '-' + name, Core.atlas.find("error"))
     print('find ' + 'btm' + '-' + name + ' result: ' + c)
     loadRegionCache[name] = c
@@ -55,6 +57,7 @@ ai.buildType = prov(() => {
         },
         draw(){
             this.super$draw();
+            //这里引号里的就是你的贴图名字
             choice1 = cI ? loadRegion("c1t") : loadRegion("c1f");
             choice2 = cL ? loadRegion("c2t") : loadRegion("c2f");
         },

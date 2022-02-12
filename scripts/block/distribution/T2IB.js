@@ -1,4 +1,5 @@
 /*all the advanced transport equipment is here*/
+//引用部分，类似import，对应的是exports导出
 const lib = require("blib");
 const build = require("block/distribution/invertedJunction");
 

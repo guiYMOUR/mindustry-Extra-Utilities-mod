@@ -396,3 +396,23 @@ const continueLaser = (() => {
     }
 })();
 exports.continueLaser = continueLaser;
+
+const healthDeWeapon = (name) =>{
+    const weapon = extend(Weapon, {
+        bullet(unit, shootX, shootY, angle, lifescl){
+            var xr = Mathf.range(this.xRand);
+            return this.bullet.create(unit,
+            unit.team,
+            shootX + Angles.trnsx(angle, 0, xr),
+            shootY + Angles.trnsy(angle, 0, xr),
+            angle,
+            this.bullet.damage * unit.damageMultiplier * Vars.state.rules.unitDamage(unit.team) * Math.max(Math.floor(100 + (unit.health/unit.maxHealth - 0.5) * 200)/100, 1),
+            (1 - this.velocityRnd) + Mathf.random(this.velocityRnd),
+            lifescl,
+            null);
+        }
+    });
+    weapon.name = name;
+    return weapon;
+}
+exports.healthDeWeapon = healthDeWeapon;

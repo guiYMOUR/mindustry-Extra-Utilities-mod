@@ -1,12 +1,26 @@
-/*
-* @author <(main) younggam 6.0>
-* @author <guiY 7.0 adapter>
+/**
+* v2
+* 第二个版本发布是因为发现物品一直会跳
+* 这个版本就是将这个bug修复(其实就是把原本覆盖的去除用原版的table)，其次物品消耗stat框颜色可以自己更改了，看下面注释，其实就是小改，主要怕你们删错，以后可能会改展示
+* 保留所有注释，如有侵权，立即删除
+*/
+
+/**
+* @author < (main) younggam 6.0 >
+* @author < guiY 7.0 adapter&remake >
 * @readme <
     Version 6.0 To version 7.0 Not available due to changes in game source code,
     for example, NumberValue becomes StatValues.number, This means that some parameters and internal functions are changed,
     i just change some parameters and functions, to make it can adapt ver 7.0(and StatValue can be extended[line 554])
+    Item display has been fixed
 >
 */
+
+//stst color
+//RGB can be used  可以使用RGB格式
+const colorStat = Pal.accent;
+//Pal为内置颜色，自定义颜色格式
+//const colorStat = Color.valueOf("ffffff");//纯白色
 
 function MultiCrafterBuild() {
     this.acceptItem = function(source, item) {
@@ -225,12 +239,12 @@ function MultiCrafterBuild() {
     this.productionValid = function() {
         return this._cond && this.enabled;
     };
-    this.updateTableAlign = function(table) {
+    /*this.updateTableAlign = function(table) {
         var pos = Core.input.mouseScreen(this.x, this.y - this.block.size * 4 - 1).y;
         var relative = Core.input.mouseScreen(this.x, this.y + this.block.size * 4);
         table.setPosition(relative.x, Math.min(pos, relative.y - Math.ceil(this.itemHas / 3) * 48 - 4), Align.top);
         if(!this.block.getInvFrag().isShown() && Vars.control.input.frag.config.getSelectedTile() == this && this.items.total() > 0) this.block.getInvFrag().showFor(this);
-    };
+    };*/
     this.buildConfiguration = function(table) {
         if(typeof this.block["getRecipes"] !== "function") return;
         const recs = this.block.getRecipes(),
@@ -392,7 +406,7 @@ function MultiCrafterBuild() {
 };
 
 function MultiCrafterBlock() {
-    this.tempRecs = [];
+    this.tmpRecs = [];
     var recs = [];
     var infoStyle = null;
     this.getRecipes = function() {
@@ -599,7 +613,7 @@ function MultiCrafterBlock() {
                         (StatValues.number(rec.craftTime / 60, StatUnit.seconds)).display(row);
                     })).left().row();
                     if(typeof this["customDisplay"] === "function") this.customDisplay(part, i);
-                }).color(Pal.accent).left().growX();
+                }).color(colorStat).left().growX();
                 table.add().size(18).row();
             }
         },

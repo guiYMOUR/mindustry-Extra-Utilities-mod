@@ -1,8 +1,10 @@
 /*
-    * @guiY
+    * @author <guiY>
     * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
     * @readme <I am sorry that the former version of the code due to my negligence led to a lot of problems, has been fixed, I hope you have fun. Finally, I would like to express my apologies again.>
+    * I will use bullet data (maybe, If the update is over and there is time to change)
 */
+//因为未来可能会改，这个的中文注释等改版后加
 const range = 58;//blocks
 const knockback = 2;
 const reloadTime = 150;

@@ -1,3 +1,4 @@
+//引用部分，类似import，对应的是exports导出
 const items = require("game/items");
 
 const crispSteelSmelter = extendContent(GenericCrafter, "crisp-steel-smelter", {});

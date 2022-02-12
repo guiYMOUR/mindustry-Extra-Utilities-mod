@@ -507,8 +507,11 @@ const lineBullet = (() => {
         lb.homingPower = 0.08;
         lb.homingRange = 256;
         lb.homingDelay = 30;
+        lb.keepVelocity = false;
         lb.shrinkY = 0;
         return lb;
     }
 })();
 exports.lineBullet = lineBullet;
+
+//const buster = 

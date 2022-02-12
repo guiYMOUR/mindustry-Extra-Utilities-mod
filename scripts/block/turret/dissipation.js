@@ -1,8 +1,11 @@
 /*
 * readme <Inspiration comes from Rusted Warfare>
 */
+//能量槽
 const maxShot = 60 * 40;
+//范围
 const range = 220;
+//没什么用的激光颜色
 const color = Color.white;
 const dissipation = extendContent(PointDefenseTurret, "dissipation", {
     setStats() {

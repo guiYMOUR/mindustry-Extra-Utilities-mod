@@ -1,7 +1,7 @@
 /*
 * @author <guiY>
 */
-
+//补给范围
 const range = 64;
 
 const TRS = extendContent(Unloader, "turret-resupply-point", {

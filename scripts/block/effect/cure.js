@@ -1,4 +1,4 @@
-const unitRange = 90;
+const unitRange = 90;//单位治疗范围
 const cor = Color.valueOf("84f491");
 const cure = extendContent(MendProjector , "cure", {
     drawPlace(x, y, rotation, valid) {

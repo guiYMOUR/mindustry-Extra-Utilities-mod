@@ -1,10 +1,12 @@
-const range = 20;
+const range = 20;//范围
+//引用部分，类似import，对应的是exports导出
 const lib = require("blib");
 
 const IN = extendContent(ExtendingItemBridge, "i-node", {
     drawPlace(x, y, rotation, valid){
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, (range) * Vars.tilesize, Pal.accent);
     },
+    //修改他的连接方式变成范围连接
     linkValid(tile, other, checkDouble){
         if(other == null || tile == null || other == tile) return false;
         if(Math.pow(other.x - tile.x, 2) + Math.pow(other.y - tile.y, 2) > Math.pow(range + 0.5, 2)) return false;
@@ -43,6 +45,7 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
         }
         Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
     },
+    //修改他的连接显示为线状
     draw(){
         //this.super$draw();
         Draw.rect(Core.atlas.find("btm-i-node"),this.x,this.y);
@@ -71,6 +74,7 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
             other.y, false);
         Draw.reset();
     },
+    //下面是修改他进物品和出物品为全向
     acceptItem(source, item){
         if(this.team != source.team || !block.hasItems) return false;
         //var other = Vars.world.tile(this.link);

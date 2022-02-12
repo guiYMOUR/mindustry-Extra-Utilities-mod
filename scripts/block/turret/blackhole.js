@@ -1,11 +1,15 @@
+//引用部分，类似import，对应的是exports导出
 const lib = require("blib");
 const items = require("game/items");
+//范围
 const RANGE = 336;
+//尺寸
 const size = 5;
+//后坐力
 const recoilAmount = 6;
 
+//发射轨道特效
 const database = {length:RANGE};
-
 function aimShoot(color, width, lifetime, spacing){
     return new Effect(lifetime, RANGE * 2, cons(e => {
         var data = e.data ? e.data : database;
@@ -25,6 +29,8 @@ function aimShoot(color, width, lifetime, spacing){
 }
 exports.aimShoot = aimShoot;
 
+//黑洞部分
+//引力
 function percent(x, y, tx, ty, radius) {
     var dst = Mathf.dst(x, y, tx, ty);
     var falloff = 0.4;
@@ -83,6 +89,7 @@ Object.assign(hole, {
     keepVelocity: false,
     reflectable: false,
 });
+//导弹
 const missile = extend(BasicBulletType, {});
 Object.assign(missile, {
     sprite : "btm-blackhole-missile",

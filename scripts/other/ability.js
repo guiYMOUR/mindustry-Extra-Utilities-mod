@@ -415,3 +415,23 @@ const propeller = (px, py, sprite, length, speed) => {
     return ability;
 };
 exports.propeller = propeller;
+
+const healthRequireAbility = (percent, mod, status, def) => {
+    var ability = new JavaAdapter(Ability, {
+        localized(){
+            return mod == 1 ? "「浑身」" : mod == 2 ? "「背水」" : "";
+        },
+        update(unit){
+            if(def){
+                if(unit.health >= unit.maxHealth * percent) unit.apply(status, 5); 
+            } else {
+                if(unit.health <= unit.maxHealth * percent) unit.apply(status, 5); 
+            }
+        },
+        copy(){
+            return healthRequireAbility(percent, mod, status, def);
+        },
+    });
+    return ability;
+};
+exports.healthRequireAbility = healthRequireAbility;

@@ -1,5 +1,5 @@
-const range = 120;
-const range2 = 280;
+const range = 120;//方块
+const range2 = 280;//单位
 const lighthouse = extendContent(LightBlock, "lighthouse", {
     drawPlace(x, y, rotation, valid) {
         this.super$drawPlace(x, y, rotation, valid);
