@@ -1,10 +1,14 @@
+//引用部分，类似import，对应的是exports导出
 const items = require("game/items");
 const bullets = require("other/bullets");
-
+//全能墙的伤害吸收概率
 const absorbDamageChance = 0.1;
+//吸收时的颜色
 const cor1 = Color.valueOf("b9ff00");
 const cor2 = Color.valueOf("b9ff22");
 
+//cl:copper lead 就是铜铅墙
+//小
 const clWall = extendContent(Wall,"clWall",{});
 clWall.size = 1;
 clWall.health = 420;
@@ -19,7 +23,7 @@ clWall.requirements = ItemStack.with(
 clWall.buildVisibility = BuildVisibility.shown;
 clWall.category = Category.defense;
 exports.clWall = clWall;
-
+//大
 const clWallL = extendContent(Wall,"clWall-large",{});
 clWallL.size = 2;
 clWallL.health = 1680;
@@ -35,6 +39,8 @@ clWallL.buildVisibility = BuildVisibility.shown;
 clWallL.category = Category.defense;
 exports.clWallL = clWallL;
 
+//全能墙部分
+//小
 const aws = extendContent(Wall,"allWallSmall",{
     setStats() {
         this.super$setStats();
@@ -79,7 +85,7 @@ aws.requirements = ItemStack.with(
 aws.buildVisibility = BuildVisibility.shown;
 aws.category = Category.defense;
 exports.aws = aws;
-
+//大
 const awl = extendContent(Wall,"allWallLarge",{
     setStats() {
         this.super$setStats();
@@ -125,7 +131,10 @@ awl.buildVisibility = BuildVisibility.shown;
 awl.category = Category.defense;
 exports.awl = awl;
 
+//吸收伤害的概率，意味着不是所有伤害都会给他充能
 const chargeChance = 0.8;
+//充能墙部分
+//小
 const rws = extendContent(Wall,"rws",{
     setBars(){
         this.super$setBars();
@@ -159,19 +168,24 @@ rws.buildType = prov(() => {
     const block = rws;
     
     return new JavaAdapter(Wall.WallBuild, {
+        //处理命中伤害的地方
         multDamage(v){
             if(Mathf.chance(chargeChance)) damage += v;
             if(damage > max){
+                //护盾子弹看'other/bullets'
                 shieldBullet = bullets.shieldBullet({ splashDamageRadius : block.size * 64, }).create(this.tile.build, this.team, this.x, this.y, 0);
                 shieldLife = lifetime;
                 acceptDamage = false;
                 damage = 0;
             }
         },
+        //用于bar
         getCharge(){
             return damage / max;
         },
+        //墙体自身update是false，要运行update需要把update接口改成true
         updateTile(){
+            //用于逻辑显示屏显示，显示接口为timeScale
             this.timeScale = this.getCharge();
             if(shieldLife > 0){
                 if(shieldBullet != null){
@@ -184,11 +198,22 @@ rws.buildType = prov(() => {
                 acceptDamage = true;
             }
         },
+        //原版反馈伤害的func
         handleDamage(amount){
             if(acceptDamage){
                 this.multDamage(amount);
             }
             return amount;
+        },
+        //储存
+        write(write) {
+            this.super$write(write);
+            write.f(damage);
+        },
+        //读取
+        read(read, revision) {
+            this.super$read(read, revision);
+            damage = read.f();
         },
     }, rws);
 });
@@ -198,7 +223,7 @@ rws.requirements = ItemStack.with(
 rws.buildVisibility = BuildVisibility.shown;
 rws.category = Category.defense;
 exports.rws = rws;
-
+//大，部分和小墙同理，看小墙注释
 const rwl = extendContent(Wall,"rwl",{
     setBars(){
         this.super$setBars();

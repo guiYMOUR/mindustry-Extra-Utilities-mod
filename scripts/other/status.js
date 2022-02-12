@@ -52,3 +52,21 @@ weakness.speedMultiplier = 0.4;
 weakness.healthMultiplier = 0.8;
 weakness.effect = Fx.sapped;
 exports.weakness = weakness;
+
+const fireSpeedUp = extend(StatusEffect, "fireSpeedUp", {});
+fireSpeedUp.color = Color.valueOf("fa1111");
+fireSpeedUp.reloadMultiplier = 1.5;
+fireSpeedUp.effect = Fx.none;
+exports.fireSpeedUp = fireSpeedUp;
+
+const fireDamageUp = extend(StatusEffect, "fireDamageUp", {});
+fireDamageUp.color = Color.valueOf("fa1112");
+fireDamageUp.damageMultiplier = 2;
+fireDamageUp.effect = Fx.none;
+exports.fireDamageUp = fireDamageUp;
+
+const defenseUp = extend(StatusEffect, "defenseUp", {});
+defenseUp.color = Color.valueOf("fa1113");
+defenseUp.healthMultiplier = 1.3;
+defenseUp.effect = Fx.none;
+exports.defenseUp = defenseUp;

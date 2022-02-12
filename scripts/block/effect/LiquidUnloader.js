@@ -2,10 +2,13 @@
 * @author guiY
 * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
 */
+//引用部分，类似import，对应的是exports导出
 const items = require("game/items");
 
+//速度，一般性不用改
 const speed = 2;
 
+//液体卸货器就是用卸货器的码改液体源
 const lu = extendContent(LiquidSource, "liquid-unloader", {
     drawRequestConfig(req, list){
         this.drawRequestConfigCenter(req, req.config, Core.atlas.find("btm-liquid-unloader-centre"), true);

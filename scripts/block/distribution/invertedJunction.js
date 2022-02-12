@@ -1,3 +1,4 @@
+//直接导出
 exports.InvertedJunctionBuild = function(block, placeSprite){
     block.buildType = prov(() => {
         var buffer = null;
@@ -6,6 +7,7 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
             setLoc(v){
                 loc = v;
             },
+            //复制点击状态
             configured(player, value){
                 this.super$configured(player, value);
                 loc = value;
@@ -37,20 +39,24 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
                 Draw.rect(Core.atlas.find(placeSprite), this.x,this.y);
                 Draw.rect(Core.atlas.find("btm-junction-" + loc),this.x,this.y);
             },
+            //更改物品进入原则
             acceptItem(source, item){
                 var relative = source.relativeTo(this.tile);
                 if(relative == -1 || !this.buffer.accepts(relative)) return false;
                 var to = this.nearby((relative + loc) % 4);
                 return to != null && to.team == this.team;
             },
+            //点击显示按钮
             buildConfiguration(table) {
                 table.button(new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find("btm-flip", Core.atlas.find("clear"))), Styles.clearTransi, run(() => { this.switchf() })).size(36).tooltip("switch");
             },
+            //用于转换
             switchf(){
                 loc = loc == 1 ? 3 : 1;
                 this.deselect();
                 this.configure(loc);
             },
+            //点击反馈
             config(){
                 return loc;
             },

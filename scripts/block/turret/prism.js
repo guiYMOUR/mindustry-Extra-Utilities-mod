@@ -1,13 +1,20 @@
+//引用部分，类似import，对应的是exports导出
 const lib = require("blib");
 const items = require("game/items");
+//三棱镜光线聚集的强度
 const angleShiftStrength = 7;
+//角度
 const shiftAngel = 55;
 const sideOffset = 3;
+//激光粗度变化速度，<1
 const fade = 0.012;
+//射击间隔
 const shootDuration = 480;
+//烎移动炮台速度
 const firingMoveFract = 0.25;
+//reload还要注释?
 const reloadTime = 240;
-
+//炮塔颜色变化速度
 const shiftSpeed = 1.8;
 var rainbowRegions = [];
 

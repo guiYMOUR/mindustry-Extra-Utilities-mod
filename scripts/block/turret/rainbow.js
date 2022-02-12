@@ -1,4 +1,5 @@
 const status = require("other/status");
+const items = require("game/items");
 
 function gone(color){
     return new Effect(12, cons(e => {
@@ -150,10 +151,11 @@ rainbow.powerUse = 18;
 rainbow.health = 200 * 3 * 3;
 rainbow.shootType = r1;
 rainbow.requirements = ItemStack.with(
-    Items.lead, 200,
-    Items.silicon, 220,
-    Items.metaglass, 180,
-    Items.thorium, 105
+    Items.lead, 240,
+    Items.silicon, 200,
+    Items.metaglass, 150,
+    Items.thorium, 90,
+    items.crispSteel, 55
 );
 rainbow.buildVisibility = BuildVisibility.shown;
 rainbow.category = Category.turret;

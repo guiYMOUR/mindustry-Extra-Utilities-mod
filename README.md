@@ -4,13 +4,13 @@
 
 - Add more than 85 blocks and some advanced units.
 
-- The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
+- The MOD body uses JavaScript only, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
 
 
 - QQ Group①：513165958
 - QQ Group②：338651136
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
-- download now : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases/download/2.4.71/EU.v2.4.71-official.zip
+- download now : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases/download/2.4.8/EU.v2.4.8p.zip
 - Steam Workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720
 - Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
 
@@ -28,7 +28,7 @@
 - More powerful turrets.
 
 ### Crafting
-- More advanced plant 
+- More advanced factories 
 - Coal burning plant (easier to make pyratite)
 
 ### Power
@@ -45,7 +45,7 @@
 ### Drill
 - Titanium Drill
 - High Energy drill
-- shovel
+- Shovel
 - Beam Drill updated in advance
 - Slag Extractor
 - T2 Water Extractor
@@ -55,15 +55,15 @@
 - Composite Wall
 
 ### Effect
-- Composite repair field
+- Composite Repair Field
 - Composite Overdrive Projector
 - DIMENSIONAL COMPLEX FIELD
-- Small Core
+- Sub Core
 - ELECTRIC UNLOADER
 - Liquid Unloader
 
 ### Unit
-- Imaginary Reconstructor
+- Imaginative Reconstructor
 - Suzerain
 - Nebula
 - Asphyxia
@@ -75,14 +75,14 @@
 
 ### Ability
 - Territory Field
-- Mend Field
+- Mending Field
 - Lightning Field
 
 ### Status Effect
-- Erosion
+- Eroding
 - Territory Buff
 - Territory Debuff
-- Weakness
+- Weakened
 
 ### Other
 - Added tower defense gameplay.

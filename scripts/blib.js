@@ -2,6 +2,8 @@
     if(Vars.player == null) return false;
     return Vars.player.team().core().items.has(b.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources;
 };*/
+//静态库，全部外用
+//星球设置区块
 exports.setPlanet = function(p, s){
     p.grid = PlanetGrid.create(s);
     p.sectors.ensureCapacity(p.grid.tiles.length);
@@ -13,6 +15,7 @@ exports.setPlanet = function(p, s){
 }
 
 //function from abomb4's lib.js
+//加载声音
 exports.loadSound = (() => {
     const cache = {};
     return (path) => {
@@ -28,6 +31,7 @@ exports.loadSound = (() => {
 exports.aModName = "btm";//你mod的名字
 exports.mod = Vars.mods.locateMod(exports.aModName);
 
+//104方法写特效，只有lifetime的可以用，有clipsize的还是用new Effect
 exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 
 exports.cons2 = (func) => new Cons2({
@@ -37,6 +41,7 @@ exports.func = (getter) => new Func({
     get: getter
 });
 
+//贴图加载，省去modname
 exports.loadRegion = function(name) {
     return Core.atlas.find(exports.aModName + '-' + name, Core.atlas.find("clear"))
 }
@@ -47,6 +52,7 @@ exports.loadRegion = function(name) {
  *        A function receives block type, return Building instance;
  *        don't use prov (this function will use prov once)
  */
+//直接建立一个新的block
 exports.setBuilding = function(blockType, buildingCreator) {
     blockType.buildType = prov(() => buildingCreator(blockType));
 }
@@ -56,6 +62,7 @@ exports.setBuilding = function(blockType, buildingCreator) {
  * @param {Class<Building>} buildingType The building type
  * @param {Object} overrides Object that as second parameter of extend()
  */
+//直接设置buildType
 exports.setBuildingSimple = function(blockType, buildingType, overrides) {
     blockType.buildType = prov(() => new JavaAdapter(buildingType, overrides, blockType));
 }
@@ -65,12 +72,13 @@ exports.setBuildingSimple = function(blockType, buildingType, overrides) {
  * @param {string} type the prefix such as block, unit, mech
  * @param
  */
+//快捷获取翻译
 exports.getMessage = function(type, key) {
     return Core.bundle.get(type + "." + exports.aModName + "." + key);
 }
 
 exports.int = (v) => new java.lang.Integer(v);
-///科技树
+///科技树部分
 exports.addToResearch = (content, research) => {
     if (!content) {
         throw new Error('content is null!');
@@ -149,3 +157,4 @@ exports.createProbabilitySelector = function() {
         }
     }
 }
+//感谢滞人大佬的lib模板

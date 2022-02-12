@@ -1,4 +1,5 @@
 //The single quotation mark is used because it looks comfortable.
+//科技树部分
 const lib = require('blib');
 const items = require('game/items');
 
@@ -6,6 +7,7 @@ const { T2duo } = require('block/turret/T2duo');
 const { T3duo } = require('block/turret/T3duo');
 const { T2scatter } = require('block/turret/T2scatter');
 const { T2scorch } = require('block/turret/T2scorch');
+const { IM } = require('block/turret/IceCookie');
 const { shotgun } = require('block/turret/shotgun');
 const { sakura } = require('block/turret/sakura');
 const { rainbow } = require('block/turret/rainbow');
@@ -52,6 +54,7 @@ const { GC } = require("block/power/GeneratorCrafter");
 const { pu } = require("block/production/T2pulverize");
 const { crusher } = require("block/production/crusher");
 const { crispSteelSmelter } = require('block/production/CrispSteelSmelter');
+const { T2CSm } = require("block/production/T2CrispSteelSmelter");
 const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 const { DCF } = require('block/effect/DCF');
@@ -78,6 +81,7 @@ const { winglet } = require('unit/AirSapper/winglet');
 const { moth } = require('unit/AirSapper/moth');
 const { vb } = require('unit/AirSapper/VenomBee');
 const { phantom } = require('unit/AirSapper/phantom');
+const { skyline } = require('unit/AirSapper/skyline');
 
 //const { start, sporeArea, rail, RadiationIslands, Colosseum, Darkness, GlacialValley } = require('game/challengeMap/cmain');
 const { pd, TD1, TD2, TD3, TD4, TD5, TD6, TD7, TD8, TD9, TD10, TD11, TD12, TD13 } = require('game/TD/tmain');
@@ -86,6 +90,7 @@ lib.addToResearch(T2duo, { parent: 'duo', });
 lib.addToResearch(T3duo, { parent: T2duo.name, });
 lib.addToResearch(T2scatter, { parent: 'scatter', });
 lib.addToResearch(T2scorch, { parent: 'scorch', });
+lib.addToResearch(IM, { parent: 'hail', });
 lib.addToResearch(shotgun, { parent: 'duo',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
@@ -186,6 +191,7 @@ lib.addToResearch(GC, { parent: 'pyratite-mixer', });
 lib.addToResearch(pu, { parent: 'pulverizer', });
 lib.addToResearch(crusher, { parent: 'pulverizer', });
 lib.addToResearch(crispSteelSmelter, { parent: 'kiln', });
+lib.addToResearch(T2CSm, { parent: crispSteelSmelter.name, });
 lib.addToResearch(LA, { parent: T2SA.name, });
 lib.addToResearch(ai, { parent: 'incinerator', });
 lib.addToResearch(DCF, { parent: 'force-projector',
@@ -240,6 +246,7 @@ lib.addToResearch(winglet, { parent: 'flare', });
 lib.addToResearch(moth, { parent: winglet.name,objectives: Seq.with( new Objectives.Research(Blocks.additiveReconstructor) ) });
 lib.addToResearch(vb, { parent: moth.name,objectives: Seq.with( new Objectives.Research(Blocks.multiplicativeReconstructor) ) });
 lib.addToResearch(phantom, { parent: vb.name,objectives: Seq.with( new Objectives.Research(Blocks.exponentialReconstructor) ) });
+lib.addToResearch(skyline, { parent: phantom.name,objectives: Seq.with( new Objectives.Research(Blocks.tetrativeReconstructor) ) });
 
 lib.addToResearch(items.crispSteel, { parent: 'titanium', });
 lib.addToResearch(items.lightninAlloy, { parent: 'surge-alloy', });

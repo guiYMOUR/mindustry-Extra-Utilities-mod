@@ -1,3 +1,4 @@
+//与物品节点同理，具体看物品节点注释
 const range = 20;
 const lib = require("blib");
 

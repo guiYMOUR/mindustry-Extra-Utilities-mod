@@ -2,11 +2,15 @@
 * @author <guiY>
 * @readme <The player can control it or use the logic processor.>
 */
-
+//范围
 const findRange = 184;
+//角度
 const findAngle = 40;
+//射击间隔
 const shootDuration = 240;
+//治疗比
 const healP = 13;
+//加成(相位物)
 const boostM = 2;
 
 //128.1can but 128cannot

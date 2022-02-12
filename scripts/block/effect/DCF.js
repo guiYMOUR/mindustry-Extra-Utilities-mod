@@ -1,14 +1,19 @@
+//引用部分，类似import，对应的是exports导出
 const lib = require('blib');
 const items = require("game/items");
-
+//总体盾容
 const shieldHealth = 2400;
+//模仿力墙接口
 const brokenReload = 3;
 const normalReload = 5;
 const range = 90;
+//最多连接
 const maxNode = 3;
-
+//颜色
 const cor = Color.valueOf("#BF92F9");
+//修复比例
 const cureRatio = 0.06;
+//修复重载，需要除去加成，不是10s，未破盾时是600/2.5=240，也就是4s
 const reload = 600;
 const baseColor = cor;
 const phaseColor = Color.valueOf("de98b0");
@@ -141,6 +146,7 @@ DCF.buildType = prov(() => {
             y = this.y;
             if(h < 2500) h = Math.min(h + ab * normalReload, shieldHealth);
             radscl = Mathf.lerpDelta(radscl, ab == 0 ? ab : 1.2, 0.05);
+            //未破2.5倍，破后5倍
             var speed = ab == 1 ? 2.5 : 5;
             var duration = 33.5 - speed;
             r += 1 * this.delta();

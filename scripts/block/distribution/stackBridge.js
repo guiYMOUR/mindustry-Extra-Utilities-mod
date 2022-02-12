@@ -39,6 +39,7 @@ stackBridge.buildType = prov(() => {
                 this.items.clear();
             }
         },
+        //4倍速度出物品，原版速度为准
         doDump(){
             for(var i = 0; i < 4; i++){
                 var other = this.nearby(i);
