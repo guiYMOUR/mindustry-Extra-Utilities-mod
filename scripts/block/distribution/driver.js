@@ -73,6 +73,11 @@ waterBullet.pierce = true;
 waterBullet.pierceBuilding = true;
 
 const driver = extendContent(LiquidExtendingBridge, "ld", {
+    setStats(){
+        this.super$setStats();
+        this.stats.add(Stat.shootRange, range, StatUnit.blocks);
+        this.stats.add(Stat.reload, 60 / reloadTime, StatUnit.perSecond);
+    },
     drawBridge(req, ox, oy, flip){ },
     drawPlace(x, y, rotation, valid){
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range * Vars.tilesize, Pal.accent);
