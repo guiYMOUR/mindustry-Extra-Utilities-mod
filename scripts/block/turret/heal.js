@@ -1,4 +1,4 @@
-/*
+/**
  * @author guiY
  * @readme <The player can control it or use the logic processor.>
  */
