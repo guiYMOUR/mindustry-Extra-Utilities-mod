@@ -1,6 +1,6 @@
-/*
-*@author <guiY>
-*/
+/**
+ *@author guiY<guiYMOUR>
+ */
 //这个代码要用没必要大改，要改的就是贴图名字，往下看
 const lib = require("blib");
 

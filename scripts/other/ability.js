@@ -1,7 +1,7 @@
-/*
-* @author <guiY>
-* @abilities
-*/
+/**
+ * @author guiY
+ * @abilities
+ */
 
 const status = require("other/status");
 

@@ -1,3 +1,7 @@
+/**
+ * @author guiY<guiYMOUR>
+ */
+
 //直接导出
 exports.InvertedJunctionBuild = function(block, placeSprite){
     block.buildType = prov(() => {

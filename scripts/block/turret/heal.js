@@ -1,7 +1,7 @@
 /*
-* @author <guiY>
-* @readme <The player can control it or use the logic processor.>
-*/
+ * @author guiY
+ * @readme <The player can control it or use the logic processor.>
+ */
 //范围
 const findRange = 184;
 //角度

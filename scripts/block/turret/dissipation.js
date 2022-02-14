@@ -1,6 +1,6 @@
-/*
-* readme <Inspiration comes from Rusted Warfare>
-*/
+/**
+ * readme <Inspiration comes from Rusted Warfare>
+ */
 //能量槽
 const maxShot = 60 * 40;
 //范围

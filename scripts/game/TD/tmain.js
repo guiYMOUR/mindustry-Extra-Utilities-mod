@@ -221,7 +221,7 @@ flyEnemy1.weapons.add(
         w.shootCone = 180;
         w.ejectEffect = Fx.none;
         w.shootSound = Sounds.explosion;
-        w.bullet = basicDamage;
+        w.bullet = midDamage;
         return w;
     })()
 );
@@ -246,7 +246,7 @@ navalEnemy1.weapons.add(
         w.shootCone = 180;
         w.ejectEffect = Fx.none;
         w.shootSound = Sounds.explosion;
-        w.bullet = basicDamage;
+        w.bullet = midDamage;
         return w;
     })()
 );

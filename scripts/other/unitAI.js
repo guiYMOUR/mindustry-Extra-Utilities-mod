@@ -1,7 +1,7 @@
-/*
-* @author <guiY>
-* @DefAI
-*/
+/**
+ * @author guiY
+ * @DefAI
+ */
 
 const DefenderHealAI = (shotUnit, findBuild, hasPower) => {
     return extend(DefenderAI, {

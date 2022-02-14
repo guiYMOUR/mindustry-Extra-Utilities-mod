@@ -1,7 +1,7 @@
-/*
-* @author guiY
-* @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
-*/
+/**
+ * @author guiY<guiYMOUR>
+ * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
+ */
 //引用部分，类似import，对应的是exports导出
 const items = require("game/items");
 

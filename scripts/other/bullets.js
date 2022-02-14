@@ -1,7 +1,7 @@
-/*
-* @author <guiY>
-* @readme <bulletTypes>
-*/
+/**
+ * @author guiY
+ * @BulletTypes
+ */
 
 const items = require("game/items");
 

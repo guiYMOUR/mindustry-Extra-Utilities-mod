@@ -37,6 +37,7 @@ const effectChance = 0.005;
     vec.trns(a, 0, len * (f - 1));
     Fill.quad(x + r1 * cos, y + r1 * sin, x + r1 * cos2 + vec.x, y + r1 * sin2 + vec.y, x + r2 * cos2 + vec.x, y + r2 * sin2 + vec.y, x + r2 * cos, y + r2 * sin);
 }
+exports.circlePercent = circlePercent;
 const Start = new Effect(30, cons(e => {
     Draw.color(myitems.lightninAlloy.color);
     Lines.stroke(3 * e.fout());

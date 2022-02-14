@@ -1,11 +1,11 @@
-/*
-    * @author <guiY>
-    * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
-    * @readme <I am sorry that the former version of the code due to my negligence led to a lot of problems, has been fixed, I hope you have fun. Finally, I would like to express my apologies again.>
-    * I will use bullet data (maybe, If the update is over and there is time to change)
-*/
-//因为未来可能会改，这个的中文注释等改版后加
-const range = 58;//blocks
+/**
+ * @author guiY<guiYMOUR>
+ * @Extra mod <https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod>
+ * @readme <I am sorry that the former version of the code due to my negligence led to a lot of problems, has been fixed, I hope you have fun. Finally, I would like to express my apologies again.>
+ */
+
+const range = 55;//blocks
+//接口基本就是质驱
 const knockback = 2;
 const reloadTime = 150;
 const shootEffect = Fx.shootBig2;
@@ -16,25 +16,44 @@ const shake = 2;
 const translation = 5;
 const minDistribute = 24;
 
+//定义一个默认data
+const defData = {from : null, to : null, liquid : Liquids.water, amount : 0};
+//自己写一个类似质驱子弹的运输子弹
 const waterBullet = extend(BasicBulletType,{
     hit(b){    },
     update(b){
-        var owner = b.owner;
-        var other = Vars.world.tile(owner.link);
-        if(other == null || other.build == null || !owner.block.linkValid(owner.tile, other)){
-            b.remove();
-            return;//Here is redundant, do not care, will not quit on the line.
+        var data = b.data == null ? defData : b.data;
+        if(data.from == null || data.from.dead || data.to == null || data.to.dead) return;//owner或目标不存在或死亡，强制退出，防止闪退
+        const hitDst = 7;//可以认为是shootLength吧
+        var baseDst = data.from.dst(data.to);//owner到目标的距离
+        var dst1 = b.dst(data.from);//子弹离开owner的距离
+        var dst2 = b.dst(data.to);//子弹到目标的距离
+        var intersect = false;//是不是到了
+
+        if(dst1 > baseDst){
+            var angleTo = b.angleTo(data.to);
+            var baseAngle = data.to.angleTo(data.from);
+
+            if(Angles.near(angleTo, baseAngle, 2)){
+                intersect = true;
+                b.set(data.to.x + Angles.trnsx(baseAngle, hitDst), data.to.y + Angles.trnsy(baseAngle, hitDst));
+            }
         }
-        if(other != null && other.build != null && b.within(other.build, 16) && b.team == other.build.team){
+
+        if(Math.abs(dst1 + dst2 - baseDst) < 4 && dst2 <= hitDst || dst1 > baseDst){//保险，其实可以不用，效果优先，不过完全判定距离也是可以的，角度在方块里面判断了
+            intersect = true;
+        }
+        if(intersect){
             receiveEffect.at(b);
             b.remove();
             Effect.shake(shake, shake, b);
-            other.build.setReload(1);
-            other.build.liquids.add(owner.getL(), owner.getA());
+            data.to.setReload(1);
+            data.to.liquids.add(data.liquid, data.amount);
         }
     },
     draw(b){
-        Draw.color(b.owner.getL().color);
+        var data = b.data == null ? defData : b.data;
+        Draw.color(data.liquid.color);
         Draw.rect(this.backRegion, b.x, b.y, this.width, this.height, b.rotation() - 90);
         Draw.rect(this.frontRegion, b.x, b.y, this.width, this.height, b.rotation() - 90);
 
@@ -120,7 +139,7 @@ driver.buildType = prov(() => {
                 this.setR(Mathf.slerpDelta(this.getR(), this.angleTo(other), 0.125 * this.power.status));
                 }
                 var targetRotation = this.angleTo(other);
-                if(this.liquids.total() > minDistribute && other.liquids.total() < other.block.liquidCapacity && Vars.world.build(this.link) != null && Angles.near(this.getR(), targetRotation, 1) && Angles.near(other.getR(), targetRotation + 180, 1) && reload == 0){
+                if(this.liquids.total() > minDistribute && other.liquids.total() < other.block.liquidCapacity && Vars.world.build(this.link) != null && /*Angles.near(this.getR(), targetRotation, 1) && Angles.near(other.getR(), targetRotation + 180, 1) && */Angles.within(rotation, targetRotation, 1) && Angles.within(other.getR(), other.angleTo(this), 5) && reload <= 0){
                     this.setL(this.liquids.current());
                     this.setA(this.liquids.total()); 
                     this.shoot(other);
@@ -129,14 +148,19 @@ driver.buildType = prov(() => {
             //var otherL = other
             if(other == null) return;
             //if(other != null){
-            if(other.link == -1){
+            if(other.link == -1 || Vars.world.build(other.link) == null){
+                //未连接的液驱可以排出液体
                 other.dumpLiquid(other.liquids.current());
             }
             //}
         },
+        /**
+         * @param {Building} target
+         * 射击部分独立成函数了，记住target是Building就行
+         */
         shoot(target){
             reload = 1;
-            this.bullet(waterBullet, this.getR());
+            this.bullet(waterBullet, this.getR(), {from : this, to : target, liquid : this.getL(), amount : this.getA()});
             tr.trns(this.getR(), block.size * Vars.tilesize / 2);
             var angle = this.angleTo(target);
             shootEffect.at(this.x + Angles.trnsx(angle, translation),
@@ -150,12 +174,18 @@ driver.buildType = prov(() => {
             shootSound.at(this.tile, Mathf.random(0.9, 1.1));
             this.liquids.remove(this.getL(), this.getA());
         },
-        bullet(type, angle){
+        /**
+         * @param {MyLiquidMassDriverBolt} type
+         * @param {float} angle
+         * @param {MyBulletData} data
+         * 子弹是这里构建的，发射是上面发射的
+         */
+        bullet(type, angle, data){
             tr.trns(angle, block.size * Vars.tilesize / 2);
-            type.create(this, this.team, this.x + tr.x, this.y + tr.y, angle, 1);
+            type.create(this, this.team, this.x + tr.x, this.y + tr.y, angle, -1, 1, 1, data);
         },
         drawSelect(){    },
-        drawConfigure() {
+        drawConfigure(){
             const sin = Mathf.absin(Time.time, 6, 1);
 
             Draw.color(Pal.accent);
@@ -169,8 +199,9 @@ driver.buildType = prov(() => {
             Drawf.dashCircle(this.x, this.y, range * Vars.tilesize, Pal.accent);
         },
         canDumpLiquid(to, liquid){
-             return Vars.world.build(this.link) == null;
+            return Vars.world.build(this.link) == null;
         },
+        //draw部分以自己需求
         draw(){
             Draw.rect(Core.atlas.find("btm-ld-base"),this.x,this.y);
             var region = Core.atlas.find("btm-ld-region");
@@ -216,6 +247,7 @@ driver.buildType = prov(() => {
         },
     }, driver);
 });
+
 driver.hasPower = true;
 driver.consumes.power(1.8);
 driver.size = 2;

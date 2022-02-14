@@ -1,7 +1,7 @@
-/*
-* @author <guiY>为海辅献上心脏!!!(某种原因，武器要单加，太困了，一天没睡，就先这样吧(for some reason, weapons need to be added separately, too sleepy, a day did not sleep, temporarily so, ahhh~
-* @weapon(s)
-*/
+/**
+ * @author guiY 为海辅献上心脏!!!(某种原因，武器要单加，太困了，一天没睡，就先这样吧(for some reason, weapons need to be added separately, too sleepy, a day did not sleep, temporarily so, ahhh~
+ * @weapon(s)
+ */
 const bullets = require("other/bullets");
 
 const healProjectorWeapon = (() => {

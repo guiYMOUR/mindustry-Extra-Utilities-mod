@@ -1,6 +1,6 @@
-/*
-*@readme <It's simple, right?>
-*/
+/**
+ *@readme <It's simple, right?>
+ */
 //可以用电的可加速的卸货器就是吧原版的加速的参数调出来，加速后赋值回去
 const und = extendContent(Unloader, "und", {});
 und.buildType = prov(() => {
