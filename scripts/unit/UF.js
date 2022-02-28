@@ -19,14 +19,14 @@ const unitF = extendContent(Reconstructor, "imaginary-reconstructor", {});
 unitF.size = 11;
 unitF.consumes.power(30);
 unitF.consumes.items(ItemStack.with(
-    Items.silicon, 900,
-    Items.titanium, 750,
-    Items.plastanium, 450,
-    Items.phaseFabric, 250,
-    items.lightninAlloy, 180
+    Items.silicon, 1200,
+    Items.titanium, 800,
+    Items.plastanium, 600,
+    Items.phaseFabric, 400,
+    items.lightninAlloy, 150
 ));
 unitF.consumes.liquid(Liquids.cryofluid, 4);
-unitF.constructTime = 60 * 60 * 3.8;
+unitF.constructTime = 60 * 60 * 5;
 unitF.liquidCapacity = 180;
 
 unitF.upgrades.addAll(
@@ -39,12 +39,12 @@ unitF.upgrades.addAll(
     unitType(UnitTypes.navanax, narwhal),
 );
 unitF.requirements = ItemStack.with(
-    Items.silicon, 6000,
-    Items.graphite, 3500,
-    Items.titanium, 1000,
-    Items.thorium, 800,
-    Items.plastanium, 600,
-    Items.phaseFabric, 350,
+    Items.silicon, 4000,
+    Items.graphite, 2500,
+    Items.titanium, 2000,
+    Items.thorium, 1200,
+    Items.plastanium, 800,
+    Items.phaseFabric, 500,
     items.lightninAlloy, 200
 );
 unitF.buildCostMultiplier = 0.8;
