@@ -4,7 +4,7 @@ const items = require("game/items");
 //三棱镜光线聚集的强度
 const angleShiftStrength = 7;
 //角度
-const shiftAngel = 55;
+const shiftAngel = 60;
 const sideOffset = 3;
 //激光粗度变化速度，<1
 const fade = 0.012;
@@ -189,7 +189,7 @@ prism.shootType = (() => {
             Draw.blend();
          },
     });
-    cl.damage = 40;
+    cl.damage = 44;
     cl.hitEffect = new Effect(16, cons(e => {
         Draw.blend(Blending.additive);
         Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
@@ -210,11 +210,11 @@ prism.health = 200 * 5 * 5;
 prism.coolantMultiplier = 1;
 prism.consumes.add(new ConsumeCoolant(0.7)).update = false;
 prism.requirements = ItemStack.with(
-    Items.lead, 620,
-    Items.silicon, 550,
-    Items.metaglass, 430,
-    Items.thorium, 385,
-    items.lightninAlloy, 180
+    Items.lead, 1400,
+    Items.silicon, 600,
+    Items.metaglass, 500,
+    Items.thorium, 450,
+    items.lightninAlloy, 150
 );
 prism.buildVisibility = BuildVisibility.shown;
 prism.category = Category.turret;
