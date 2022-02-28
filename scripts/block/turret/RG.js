@@ -25,14 +25,14 @@ const RGT = extend(BasicBulletType, {});
 RGT.sprite = "btm-gt";
 RGT.width = 40;
 RGT.height = 20;
-RGT.damage = 180;
-RGT.splashDamageRadius = 28;
-RGT.splashDamage = 130;
-RGT.buildingDamageMultiplier = 0.15;
+RGT.damage = 130;
+RGT.splashDamageRadius = 24;
+RGT.splashDamage = 180;
+RGT.buildingDamageMultiplier = 0.22;
 RGT.lifetime = 60;
 RGT.speed = 8;
-RGT.reloadMultiplier = 1.2;
-RGT.pierceCap = 2;
+RGT.reloadMultiplier = 1.4;
+RGT.pierceCap = 4;
 RGT.pierceBuilding = true;
 RGT.shrinkY = 0;
 RGT.backColor = Pal.lancerLaser;
@@ -63,13 +63,13 @@ const RGS = extend(BasicBulletType, {
 RGS.sprite = "btm-gs";
 RGS.width = 40;
 RGS.height = 20;
-RGS.damage = 290;
+RGS.damage = 330;
 RGS.splashDamageRadius = 36;
-RGS.splashDamage = 260;
-RGS.buildingDamageMultiplier = 0.1;
+RGS.splashDamage = 200;
+RGS.buildingDamageMultiplier = 0.15;
 RGS.lifetime = 72;
 RGS.speed = 8;
-RGS.pierceCap = 2;
+RGS.pierceCap = 4;
 RGS.pierceBuilding = true;
 RGS.shrinkY = 0;
 RGS.backColor = Pal.surge;
@@ -187,13 +187,13 @@ RG.ammo(
     Items.surgeAlloy, RGS
 );
 RG.requirements = ItemStack.with(
-    //Items.copper, 500,
-    Items.lead, 750,
-    Items.silicon, 700,
-    Items.graphite, 585,
-    Items.titanium, 345,
-    Items.plastanium, 220,
-    items.lightninAlloy, 180
+    Items.copper, 1200,
+    Items.lead, 600,
+    Items.silicon, 400,
+    Items.graphite, 200,
+    Items.plastanium, 200,
+    Items.surgeAlloy, 200,
+    items.lightninAlloy, 150
 );
 RG.consumes.powerCond(31, boolf(b => b.isActive()));
 RG.buildVisibility = BuildVisibility.shown;
