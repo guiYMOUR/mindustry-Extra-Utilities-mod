@@ -54,9 +54,9 @@ hurricane.rotateSpeed = 10;
 hurricane.size = 2;
 hurricane.shootSound = Sounds.spark;
 hurricane.requirements = ItemStack.with(
-    Items.copper, 100,
-    Items.lead, 60,
-    Items.silicon, 30,
+    Items.copper, 80,
+    Items.lead, 80,
+    Items.silicon, 50,
     //Items.graphite, 30,
     items.crispSteel, 20
 );
