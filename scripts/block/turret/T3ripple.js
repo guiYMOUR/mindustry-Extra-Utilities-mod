@@ -59,11 +59,11 @@ T3rip.ammo(
             Items.surgeAlloy, bullets.artillerySurge
 );
 T3rip.requirements = ItemStack.with(
-    Items.copper, 300,
-    Items.graphite, 220,
-    Items.titanium, 155,
-    Items.thorium, 100,
-    Items.silicon, 85,
+    Items.copper, 800,
+    Items.graphite, 400,
+    Items.titanium, 250,
+    Items.thorium, 150,
+    Items.silicon, 150,
     Items.surgeAlloy, 80
 );
 T3rip.buildVisibility = BuildVisibility.shown;
