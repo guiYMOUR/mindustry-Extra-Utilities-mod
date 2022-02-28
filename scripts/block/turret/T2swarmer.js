@@ -284,11 +284,11 @@ swT2.ammo(
 );
 swT2.limitRange();
 swT2.requirements = ItemStack.with(
-    Items.graphite, 65,
-    Items.titanium, 50,
-    Items.plastanium, 55,
-    Items.silicon, 90,
-    Items.surgeAlloy, 25
+    Items.graphite, 100,
+    Items.titanium, 150,
+    Items.plastanium, 150,
+    Items.silicon, 200,
+    Items.surgeAlloy, 50
 );
 swT2.buildVisibility = BuildVisibility.shown;
 swT2.category = Category.turret;
