@@ -98,9 +98,9 @@ Object.assign(missile, {
     width : 25,
     height : 25,
     shrinkY : 0,
-    damage : 386,
-    splashDamage : 500,
-    splashDamageRadius : 88,
+    damage : 420,
+    splashDamage : 460,
+    splashDamageRadius : 72,
     homingPower : 1,
     homingRange : 80,
     lifetime : 52,
@@ -235,11 +235,12 @@ blackhole.consumes.items(ItemStack.with(
     items.lightninAlloy, 2
 ));
 blackhole.requirements = ItemStack.with(
+    Items.lead, 1500,
     Items.graphite, 750,
-    Items.silicon, 700,
-    Items.thorium, 420,
-    Items.plastanium, 250,
-    items.lightninAlloy, 175
+    Items.silicon, 750,
+    Items.thorium, 600,
+    Items.plastanium, 400,
+    items.lightninAlloy, 150
 );
 blackhole.buildVisibility = BuildVisibility.shown;
 blackhole.category = Category.turret;
