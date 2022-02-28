@@ -118,10 +118,10 @@ Object.assign(dissipation, {
 });
 dissipation.consumes.powerCond(12, boolf(e => e.getCool() || e.target != null));
 dissipation.requirements = ItemStack.with(
-    Items.silicon, 180,
-    Items.thorium, 100,
-    Items.surgeAlloy, 70,
-    Items.phaseFabric, 55
+    Items.silicon, 250,
+    Items.titanium, 200,
+    Items.surgeAlloy, 100,
+    Items.phaseFabric, 120
 );
 dissipation.buildVisibility = BuildVisibility.shown;
 dissipation.category = Category.turret;
