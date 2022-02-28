@@ -107,7 +107,7 @@ m.fragBullet = (() => {
 const sunburst = extendContent(PowerTurret, "sunburst", {});
 Object.assign(sunburst, {
     size : 3,
-    powerUse : 7,
+    powerUse : 6,
     shootType : m,
     shots : 2,
     shootShake : 1,
@@ -125,9 +125,9 @@ Object.assign(sunburst, {
     placeableLiquid : true,
 });
 sunburst.requirements = ItemStack.with(
-    Items.lead, 150,
-    Items.silicon, 145,
-    item, 36
+    Items.lead, 250,
+    Items.silicon, 180,
+    item, 40
 );
 sunburst.buildVisibility = BuildVisibility.shown;
 sunburst.category = Category.turret;
