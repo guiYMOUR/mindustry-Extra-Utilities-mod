@@ -21,7 +21,7 @@ const eff1 = lib.newEffect(10, (e) => {
 });
 
 const stingerLaser = extend(LaserBulletType, {});
-stingerLaser.damage = 286;
+stingerLaser.damage = 270;
 stingerLaser.sideAngle = 2;
 stingerLaser.sideWidth = 2;
 stingerLaser.sideLength = 40;
@@ -29,14 +29,14 @@ stingerLaser.collidesAir = false
 stingerLaser.length = 230;
 stingerLaser.width = 22;
 stingerLaser.hitSize = 6;
-stingerLaser.lifetime = 48;
+stingerLaser.lifetime = 54;
 stingerLaser.drawSize = 400;
 stingerLaser.status = status.poison;
-stingerLaser.lightningSpacing = 35;
-stingerLaser.lightningLength = 5;
+stingerLaser.lightningSpacing = 42;
+stingerLaser.lightningLength = 6;
 stingerLaser.lightningDelay = 1.1;
-stingerLaser.lightningLengthRand = 10;
-stingerLaser.lightningDamage = 2;
+stingerLaser.lightningLengthRand = 80;
+stingerLaser.lightningDamage = 8;
 stingerLaser.lightningAngleRand = 30;
 stingerLaser.lightColor = Color.valueOf("#C6D676");
 stingerLaser.lightningColor = Color.valueOf("#C6D676");
@@ -59,7 +59,7 @@ stinger.chargeEffect = chargeEffect;
 stinger.chargeBeginEffect = chargeBeginEffect;
 //stinger.chargeSound = chargeSound;
 
-stinger.powerUse = 11;
+stinger.powerUse = 12;
 stinger.shootType = stingerLaser;
 stinger.shots = 1;
 stinger.shootShake = 3;
@@ -75,13 +75,12 @@ stinger.size = 3;
 stinger.targetAir = false;
 stinger.shootSound = Sounds.laser;
 stinger.requirements = ItemStack.with(
-    Items.copper, 200,
-    Items.silicon, 150,
-    Items.graphite, 125,
-    Items.titanium, 100,
-    Items.thorium, 100,
+    Items.copper, 400,
+    Items.silicon, 220,
+    Items.graphite, 100,
+    Items.titanium, 200,
     Items.plastanium, 80,
-    Items.surgeAlloy, 10
+    Items.surgeAlloy, 50
 );
 stinger.buildVisibility = BuildVisibility.shown;
 stinger.category = Category.turret;
