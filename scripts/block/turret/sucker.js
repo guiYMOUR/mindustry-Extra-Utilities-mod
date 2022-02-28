@@ -2,7 +2,7 @@
 * @readme <All right, all right, I'll use it.>
 */
 //索敌数
-const shots = 6;
+const shots = 8;
 //强度
 const force = 24;
 const scaledForce = 8;
@@ -77,7 +77,7 @@ Object.assign(sucker, {
     force : 0,
     scaledForce : 0,
     size : 3,
-    damage : 0.6,
+    damage : 1.2,
     range : 300,
     shootCone : 50,
     shootLength : 11,
@@ -87,10 +87,10 @@ Object.assign(sucker, {
 });
 sucker.consumes.powerCond(4, boolf(e => e.target != null));
 sucker.requirements = ItemStack.with(
-    Items.graphite, 120,
-    Items.silicon, 180,
-    Items.titanium, 60,
-    Items.plastanium, 35
+    Items.graphite, 200,
+    Items.silicon, 240,
+    Items.titanium, 100,
+    Items.plastanium, 60
 );
 sucker.buildVisibility = BuildVisibility.shown;
 sucker.category = Category.turret;
