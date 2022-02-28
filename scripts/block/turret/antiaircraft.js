@@ -73,12 +73,13 @@ antiaircraft.ammo(
     Items.plastanium, rail2
 );
 antiaircraft.requirements = ItemStack.with(
-    Items.copper, 250,
-    Items.lead, 300,
-    Items.silicon, 150,
-    Items.graphite, 125,
-    Items.titanium, 205,
-    Items.surgeAlloy, 30
+    Items.copper, 400,
+    Items.lead, 600,
+    Items.silicon, 250,
+    Items.graphite, 100,
+    Items.titanium, 200,
+    Items.plastanium, 150,
+    Items.surgeAlloy, 50
 );
 antiaircraft.consumes.powerCond(8, boolf(b => b.isActive()));
 antiaircraft.buildVisibility = BuildVisibility.shown;
