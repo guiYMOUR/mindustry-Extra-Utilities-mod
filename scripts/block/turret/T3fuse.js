@@ -36,12 +36,12 @@ T3fuse.ammo(
     Items.thorium, fuse2
 );
 T3fuse.requirements = ItemStack.with(
-    Items.copper, 350,
-    Items.graphite, 320,
-    Items.titanium, 270,
-    Items.thorium, 150,
-    Items.silicon, 150,
-    Items.surgeAlloy, 140
+    Items.copper, 750,
+    Items.graphite, 400,
+    Items.titanium, 300,
+    Items.thorium, 250,
+    Items.silicon, 200,
+    Items.surgeAlloy, 100
 );
 T3fuse.buildVisibility = BuildVisibility.shown;
 T3fuse.category = Category.turret;
