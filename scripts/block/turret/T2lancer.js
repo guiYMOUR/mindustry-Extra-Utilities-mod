@@ -88,11 +88,11 @@ T2lan.size = 2;
 T2lan.targetAir = false;
 T2lan.shootSound = Sounds.laser;
 T2lan.requirements = ItemStack.with(
-    Items.copper, 90,
-    Items.lead, 90,
-    Items.silicon, 85,
-    Items.graphite, 55,
-    items.crispSteel, 65
+    Items.copper, 120,
+    Items.lead, 120,
+    Items.silicon, 80,
+    Items.titanium, 80,
+    items.crispSteel, 40
 );
 T2lan.buildVisibility = BuildVisibility.shown;
 T2lan.category = Category.turret;
