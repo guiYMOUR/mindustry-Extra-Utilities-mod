@@ -11,12 +11,12 @@ T2scorch.ammo(
         particleNumber : 60
     }),
     Items.pyratite, bullets.flame({
-        damage : 32,
+        damage : 72,
         flameCone : 16,
         colorBegin : Pal.lightPyraFlame,
         colorTo : Pal.darkPyraFlame,
-        ammoMultiplier : 4,
-        statusDuration : 60 * 6
+        ammoMultiplier : 6,
+        statusDuration : 60 * 4
     })
 );
 Object.assign(T2scorch, {
@@ -28,13 +28,14 @@ Object.assign(T2scorch, {
     shootCone : 50,
     targetAir : false,
     ammoUseEffect : Fx.none,
-    health : 400 * 2 * 2,
+    health : 350 * 2 * 2,
     shootSound : Sounds.flame,
 });
 T2scorch.requirements = ItemStack.with(
-    Items.copper, 60,
-    Items.graphite, 40,
-    items.crispSteel, 20
+    Items.copper, 80,
+    Items.graphite, 50,
+    Items.titanium, 50,
+    items.crispSteel, 30
 );
 T2scorch.buildVisibility = BuildVisibility.shown;
 T2scorch.category = Category.turret;
