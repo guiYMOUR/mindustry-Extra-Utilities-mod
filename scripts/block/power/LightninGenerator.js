@@ -4,7 +4,7 @@ const range = 36;
 //火花攻击敌方范围
 const enemyRange = 15*8;
 //输出电量
-const pullPower = 22*60;
+const pullPower = 24*60;
 //根本没用到.jpg
 const effectChance = 0.005;
 
@@ -232,11 +232,12 @@ LG.consumes.item(myitems.lightninAlloy);
 LG.liquidCapacity = 60;
 LG.consumes.liquid(Liquids.cryofluid, 0.04 / 0.1).update = false;
 LG.requirements = ItemStack.with(
+    Items.lead, 800,
     Items.metaglass, 600,
-    Items.graphite, 550,
-    Items.silicon, 470,
-    Items.surgeAlloy, 550,
-    myitems.lightninAlloy, 270
+    Items.graphite, 400,
+    Items.silicon, 800,
+    Items.surgeAlloy, 500,
+    myitems.lightninAlloy, 300
 );
 LG.buildVisibility = BuildVisibility.shown;
 LG.category = Category.power;
