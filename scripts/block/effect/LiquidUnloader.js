@@ -68,9 +68,9 @@ lu.buildType = prov(() => {
 lu.health = 70;
 lu.liquidCapacity = 10;
 lu.requirements = ItemStack.with(
-    Items.metaglass, 10,
-    Items.silicon, 20,
-    items.crispSteel, 10
+    Items.metaglass, 18,
+    Items.silicon, 18,
+    Items.titanium, 12
 );
 lu.buildVisibility = BuildVisibility.shown;
 lu.category = Category.effect;
