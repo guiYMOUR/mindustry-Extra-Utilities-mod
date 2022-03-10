@@ -85,16 +85,15 @@ lib.setBuildingSimple(IN, ExtendingItemBridge.ExtendingItemBridgeBuild, {
     },
 });
 IN.hasPower = true;
-IN.consumes.power(1);
+IN.consumes.power(0.5);
 IN.size = 1;
 IN.requirements = ItemStack.with(
-    Items.copper, 110,
+    Items.copper, 80,
     Items.lead, 80,
     Items.silicon, 100,
-    Items.graphite, 85,
-    Items.titanium, 45,
-    Items.thorium, 40,
-    Items.phaseFabric, 18
+    Items.titanium, 50,
+    Items.thorium, 50,
+    Items.phaseFabric, 10
 );
 IN.buildVisibility = BuildVisibility.shown;
 IN.category = Category.distribution;
