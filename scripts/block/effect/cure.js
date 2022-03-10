@@ -65,8 +65,8 @@ cure.buildType = prov(() => {
     }, cure);
 });
 cure.requirements = ItemStack.with(
-    Items.lead, 180,
-    Items.graphite, 105,
+    Items.lead, 200,
+    Items.graphite, 100,
     Items.silicon, 160,
     Items.titanium, 90,
     Items.thorium, 50,
@@ -75,12 +75,12 @@ cure.requirements = ItemStack.with(
 );
 cure.buildVisibility = BuildVisibility.shown;
 cure.category = Category.effect;
-cure.consumes.power(3);
+cure.consumes.power(4);
 cure.buildCostMultiplier = 0.9;
 cure.size = 3;
-cure.reload = 240;
+cure.reload = 200;
 cure.range = 120;
-cure.healPercent = 14;
+cure.healPercent = 12;
 cure.phaseBoost = 15;
 cure.health = 720;
 cure.consumes.item(Items.phaseFabric).boost();
