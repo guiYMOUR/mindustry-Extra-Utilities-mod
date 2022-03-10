@@ -17,7 +17,7 @@ clWall.hasPower = true;
 clWall.consumesPower = false;
 clWall.outputsPower = true;
 clWall.requirements = ItemStack.with(
-    Items.copper, 5,
+    Items.copper, 4,
     Items.lead, 6
 );
 clWall.buildVisibility = BuildVisibility.shown;
@@ -32,7 +32,7 @@ clWallL.hasPower = true;
 clWallL.consumesPower = false;
 clWallL.outputsPower = true;
 clWallL.requirements = ItemStack.with(
-    Items.copper, 20,
+    Items.copper, 16,
     Items.lead, 24
 );
 clWallL.buildVisibility = BuildVisibility.shown;
@@ -48,7 +48,7 @@ const aws = extendContent(Wall,"allWallSmall",{
     },
 });
 aws.size = 1;
-aws.health = 1280;
+aws.health = 1080;
 aws.lightningChance = 0.06;
 aws.chanceDeflect = 20;
 aws.flashHit = true;
@@ -80,7 +80,7 @@ aws.requirements = ItemStack.with(
     Items.silicon, 6,
     Items.plastanium, 4,
     Items.phaseFabric, 4,
-    Items.surgeAlloy, 5
+    Items.surgeAlloy, 6
 );
 aws.buildVisibility = BuildVisibility.shown;
 aws.category = Category.defense;
@@ -93,7 +93,7 @@ const awl = extendContent(Wall,"allWallLarge",{
     },
 });
 awl.size = 2;
-awl.health = 1280 * 4;
+awl.health = 1080 * 4;
 awl.lightningChance = 0.06;
 awl.chanceDeflect = 20;
 awl.flashHit = true;
@@ -122,17 +122,17 @@ awl.buildType = prov(() => {
     }, awl);
 });
 awl.requirements = ItemStack.with(
-    Items.silicon, 24,
-    Items.plastanium, 14,
-    Items.phaseFabric, 14,
-    Items.surgeAlloy, 18
+    Items.silicon, 36,
+    Items.plastanium, 16,
+    Items.phaseFabric, 16,
+    Items.surgeAlloy, 24
 );
 awl.buildVisibility = BuildVisibility.shown;
 awl.category = Category.defense;
 exports.awl = awl;
 
 //吸收伤害的概率，意味着不是所有伤害都会给他充能
-const chargeChance = 0.8;
+const chargeChance = 0.75;
 //充能墙部分
 //小
 const rws = extendContent(Wall,"rws",{
@@ -149,7 +149,7 @@ const rws = extendContent(Wall,"rws",{
     },
 });
 rws.size = 1;
-rws.health = 1100;
+rws.health = 1000;
 rws.lightningChance = 0.06;
 rws.chanceDeflect = 10;
 rws.flashHit = true;
@@ -238,7 +238,7 @@ const rwl = extendContent(Wall,"rwl",{
     },
 });
 rwl.size = 2;
-rwl.health = 1100*4;
+rwl.health = 1000*4;
 rwl.lightningChance = 0.06;
 rwl.chanceDeflect = 10;
 rwl.flashHit = true;
