@@ -47,13 +47,13 @@ T2ther.buildType = prov(() => {
     }, T2ther);
 });
 T2ther.requirements = ItemStack.with(
-    Items.copper, 130,
-    Items.graphite, 80,
-    Items.lead, 120,
-    Items.silicon, 95,
-    Items.titanium, 70,
-    Items.thorium, 55,
-    Items.metaglass, 65
+    Items.copper, 300,
+    Items.graphite, 100,
+    Items.lead, 350,
+    Items.silicon, 125,
+    Items.titanium, 75,
+    Items.thorium, 50,
+    Items.metaglass, 80
 );
 T2ther.buildVisibility = BuildVisibility.shown;
 T2ther.category = Category.power;
