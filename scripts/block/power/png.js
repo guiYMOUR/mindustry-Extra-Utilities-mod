@@ -3,7 +3,7 @@ const lib = require("blib");
 const arNode = extendContent(PowerNode, "ar-node", {});
 arNode.maxNodes = 8;
 arNode.laserRange = 8.5;
-arNode.health = 130;
+arNode.health = 180;
 arNode.placeableLiquid = true;
 arNode.requirements = ItemStack.with(
     Items.lead, 5,
