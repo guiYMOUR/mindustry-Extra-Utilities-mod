@@ -82,15 +82,14 @@ lib.setBuildingSimple(LB, LiquidExtendingBridge.LiquidExtendingBridgeBuild, {
     },
 });
 LB.hasPower = true;
-LB.consumes.power(1.5);
+LB.consumes.power(0.5);
 LB.size = 1;
 LB.requirements = ItemStack.with(
     Items.metaglass, 80,
-    Items.silicon, 90,
-    Items.graphite, 85,
-    Items.titanium, 45,
-    Items.thorium, 40,
-    Items.phaseFabric, 25
+    Items.silicon, 100,
+    Items.titanium, 60,
+    Items.thorium, 60,
+    Items.phaseFabric, 20
 );
 LB.buildVisibility = BuildVisibility.shown;
 LB.category = Category.liquid;
