@@ -3,9 +3,9 @@ Object.assign(speeder, {
     range : 4.85*8,
     speedBoost : 1.2,
     phaseRangeBoost : 20,
-    speedBoostPhase : 0.3,
+    speedBoostPhase : 0.25,
 });
-speeder.consumes.power(1);
+speeder.consumes.power(1.5);
 speeder.consumes.item(Items.silicon).boost();
 speeder.requirements = ItemStack.with(
     Items.lead, 40,
