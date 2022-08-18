@@ -23,6 +23,9 @@ public class HeatDriver extends HeatConductor {
 
     public HeatDriver(String name) {
         super(name);
+
+        sync = true;
+        envEnabled |= Env.space;
         configurable = true;
         hasPower = true;
         visualMaxHeat = 50f;

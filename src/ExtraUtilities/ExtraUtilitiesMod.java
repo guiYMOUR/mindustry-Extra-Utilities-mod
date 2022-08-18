@@ -17,7 +17,7 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     public ExtraUtilitiesMod(){
-        Log.info("Loaded ExtraUtilities.");
+        Log.info("Loaded ExtraUtilities Mod constructor.");
 
         Events.on(ClientLoadEvent.class, e -> {
             Time.runTask(10f, () -> {
@@ -36,6 +36,9 @@ public class ExtraUtilitiesMod extends Mod{
                     t.image(Core.atlas.find(name("thermal-heater"))).pad(3f).row();
                     t.add(Core.bundle.format("block."+name("thermal-heater.name"))).row();
                     t.add(Core.bundle.format("block."+name("thermal-heater.description"))).row();
+                    t.image(Core.atlas.find(name("T2oxide-preview"))).pad(3f).row();
+                    t.add(Core.bundle.format("block."+name("T2oxide.name"))).row();
+                    t.add(Core.bundle.format("block."+name("T2oxide.description"))).row();
                 }).grow().center().maxWidth(960f);
                 dialog.buttons.button("@close", dialog::hide).size(100f, 50f).center();
                 dialog.show();
