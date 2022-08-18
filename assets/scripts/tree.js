@@ -3,6 +3,7 @@
 const lib = require('blib');
 const items = require('game/items');
 
+
 const { T2duo } = require('block/turret/T2duo');
 const { T3duo } = require('block/turret/T3duo');
 const { T2scatter } = require('block/turret/T2scatter');
@@ -40,10 +41,10 @@ const { th2 } = require('block/power/th2');
 const { LG } = require('block/power/LightninGenerator');
 
 const { LB } = require('block/distribution/LB');
-const { driver } = require('block/distribution/driver');
-const { alloyDuct, ppc, T2IB, invertedJunction, TJ, TIJ, TR, T2LB, TLR, conduit } = require('block/distribution/T2IB');
-const { stackBridge } = require('block/distribution/stackBridge');
-const { IN } = require('block/distribution/IN');*/
+const { driver } = require('block/distribution/driver');*/
+const { alloyDuct, ppc, T2IB, invertedJunction, TJ, TIJ, TR, T2LB, conduit } = require('block/distribution/T2IB');
+//const { stackBridge } = require('block/distribution/stackBridge');
+//const { IN } = require('block/distribution/IN');
 const { T2kiln } = require('block/production/T2kiln');
 const { T2melter } = require('block/production/T2melter');
 const { T2PC } = require('block/production/T2PC');
@@ -59,11 +60,11 @@ const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 /*const { DCF } = require('block/effect/DCF');
 const { tiDrill, drill, shovel, testDrill, slagE, T2WE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
-const { core, chest, cargo } = require('block/effect/core');
+const { core, chest, cargo } = require('block/effect/core');*/
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
 const { speeder } = require('block/effect/speeder');
-const { cure } = require('block/effect/cure');
+/*const { cure } = require('block/effect/cure');
 const { unitA } = require('block/effect/unitA');
 const { lighthouse } = require('block/effect/lighthouse');
 const { clWall, clWallL, aws, awl, rws, rwl } = require('block/defence/wall');
@@ -155,9 +156,9 @@ lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
     )
-});
+});*/
 lib.addToResearch(alloyDuct, { parent: 'armored-conveyor', });
-lib.addToResearch(stackBridge, { parent: 'plastanium-conveyor', });
+//lib.addToResearch(stackBridge, { parent: 'plastanium-conveyor', });
 lib.addToResearch(ppc, { parent: 'plastanium-conveyor', });
 lib.addToResearch(invertedJunction, { parent: 'junction', });
 lib.addToResearch(TJ, { parent: 'junction',
@@ -176,7 +177,7 @@ lib.addToResearch(T2LB, { parent: 'bridge-conduit',
         new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
-lib.addToResearch(TLR, { parent: 'liquid-router',
+/*lib.addToResearch(TLR, { parent: 'liquid-router',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
     )
@@ -215,12 +216,11 @@ lib.addToResearch(core, { parent: 'core-shard',
     )
 });
 lib.addToResearch(chest, { parent: 'router', });
-lib.addToResearch(cargo, { parent: 'vault', });
+lib.addToResearch(cargo, { parent: 'vault', });*/
 lib.addToResearch(und, { parent: 'unloader', });
 lib.addToResearch(lu, { parent: 'liquid-tank', });
 lib.addToResearch(speeder, { parent: 'force-projector', });
-//lib.addToResearch(Blocks.overdriveProjector, { parent: speeder.name, });
-lib.addToResearch(cure, { parent: 'mend-projector', });
+/*lib.addToResearch(cure, { parent: 'mend-projector', });
 lib.addToResearch(unitA, { parent: 'overdrive-projector', });
 lib.addToResearch(lighthouse, { parent: 'illuminator', });
 lib.addToResearch(clWall, { parent: 'copper-wall-large', });

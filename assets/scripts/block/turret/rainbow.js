@@ -1,6 +1,7 @@
 const status = require("other/status");
 const items = require("game/items");
 const lib = require("blib");
+const DrawRainbow = lib.getClass("ExtraUtilities.worlds.drawer.DrawRainbow");
 
 function gone(color){
     return new Effect(12, cons(e => {
@@ -10,9 +11,6 @@ function gone(color){
     }));
 };
 const bSp = lib.aModName + "-shotgunShot";
-
-const shiftSpeed = 2;
-var rainbowRegions = [];
 
 const r1 = extend(BasicBulletType,{});
 r1.sprite = bSp;
@@ -75,12 +73,6 @@ r5.status = status.poison;
 const bullet = [r2, r1, r5, r4, r3];
 
 const rainbow = extend(PowerTurret, "rainbow", {
-    load(){
-        this.super$load();
-        for(var i = 0; i < 5; i++){
-            rainbowRegions[i] = Core.atlas.find(lib.aModName + "-rainbow-rainbow-" + (i + 1));
-        }
-    },
     setStats() {
         this.super$setStats();
         this.stats.remove(Stat.ammo);
@@ -103,21 +95,6 @@ rainbow.buildType = prov(() => {
     var rotation = 0;
     var x = 0, y = 0;
     return new JavaAdapter(PowerTurret.PowerTurretBuild, {
-        draw(){
-            rotation = this.rotation;
-            var recoilOffset = this.recoilOffset;
-            x = this.x;
-            y = this.y;
-            this.super$draw();
-            //tr2.trns(rotation, -this.curRecoil);
-            Draw.blend(Blending.additive);
-            for(var h = 0; h < 5; h++){
-                Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360 / 16))));
-                Draw.rect(rainbowRegions[h], x + recoilOffset.x, y + recoilOffset.y, rotation - 90);
-            }
-            Draw.blend();
-            Draw.color();
-        },
         shoot(type){
             //rotation = this.rotation;
             for(var i = 0; i < block.shots; i++){
@@ -138,6 +115,8 @@ rainbow.shootEffect = new Effect(16, cons(e => {
     Draw.blend();
     Draw.reset();
 }));
+
+rainbow.drawer = new DrawMulti(new DrawTurret(), new DrawRainbow(2, 5));
 
 rainbow.consumePower(18);
 //rainbow.recoilTime = 2;

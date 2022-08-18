@@ -1,7 +1,7 @@
 /**
  * @author guiY<guiYMOUR>
  */
-
+const lib = require("blib");
 //直接导出
 exports.InvertedJunctionBuild = function(block, placeSprite){
     block.buildType = prov(() => {
@@ -41,7 +41,7 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
             draw(){
                 //this.super$draw();
                 Draw.rect(Core.atlas.find(placeSprite), this.x,this.y);
-                Draw.rect(Core.atlas.find("btm-junction-" + loc),this.x,this.y);
+                Draw.rect(Core.atlas.find(lib.aModName + "-junction-" + loc),this.x,this.y);
             },
             //更改物品进入原则
             acceptItem(source, item){
@@ -52,7 +52,7 @@ exports.InvertedJunctionBuild = function(block, placeSprite){
             },
             //点击显示按钮
             buildConfiguration(table) {
-                table.button(new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find("btm-flip", Core.atlas.find("clear"))), Styles.clearTransi, run(() => { this.switchf() })).size(36).tooltip("switch");
+                table.button(new Packages.arc.scene.style.TextureRegionDrawable(Core.atlas.find(lib.aModName + "-flip", Core.atlas.find("clear"))), Styles.cleari, run(() => { this.switchf() })).size(36).tooltip("switch");
             },
             //用于转换
             switchf(){

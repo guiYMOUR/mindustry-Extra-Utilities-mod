@@ -22,6 +22,7 @@ Object.assign(exports.artillerySurge, {
     lightningLength : 8,
 });
 
+//应该都会移植到Java
 const shieldBullet = (() => {
     return (object) => {
         const options = Object.assign({

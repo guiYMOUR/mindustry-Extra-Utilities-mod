@@ -4,6 +4,15 @@
 };*/
 //静态库，全部外用
 //星球设置区块
+
+//读取我自己的Java class
+const urlLoader = Packages.java.net.URLClassLoader([Vars.mods.getMod(modName).file.file().toURI().toURL()], Vars.mods.mainLoader());
+exports.getClass = function (name){
+    return Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, urlLoader.loadClass(name));
+}
+exports.Fx = exports.getClass("ExtraUtilities.content.EUFx");
+exports.Blocks = exports.getClass("ExtraUtilities.content.EUBlocks");
+
 exports.setPlanet = function(p, s){
     p.grid = PlanetGrid.create(s);
     p.sectors.ensureCapacity(p.grid.tiles.length);

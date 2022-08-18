@@ -29,7 +29,7 @@ und.buildType = prov(() => {
             }
             this.timeScale = Math.max(ts * power, 0.001);
             this.timeScaleDuration = td / Math.max(power, 0.001);
-            if(power >= 0.001){
+            if(power >= 0.999){
                 this.super$updateTile();
             }
         },
@@ -46,5 +46,5 @@ und.category = Category.effect;
 und.speed = 1;
 und.health = 80;
 und.hasPower = true;
-und.consumes.power(1);
+und.consumePower(45/60);
 exports.und = und;

@@ -53,16 +53,16 @@ require("block/production/T2pulverize");
 require("block/production/LA");
 require("block/production/AdjustableIncinerator");
 
-/*require("block/distribution/T2IB");
-require("block/distribution/stackBridge");
+require("block/distribution/T2IB");
+/*require("block/distribution/stackBridge");
 require("block/distribution/IN");
 require("block/distribution/LB");
 require("block/distribution/driver");
-require("block/effect/core");
+require("block/effect/core");*/
 require("block/effect/und");
 require("block/effect/LiquidUnloader");
 require("block/effect/speeder");
-require("block/effect/cure");
+/*require("block/effect/cure");
 require("block/effect/unitA");
 require("block/effect/lighthouse");
 require("block/defence/wall");

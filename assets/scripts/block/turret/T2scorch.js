@@ -2,22 +2,21 @@
 * @author <guiY>
 * @readme <The bullet are in "other/bullets">
 */
-const bullets = require("other/bullets");
+const lib = require("blib");
+//const bullets = require("other/bullets");
 const items = require("game/items");
+const FlameBulletType = lib.getClass("ExtraUtilities.worlds.entity.bullet.FlameBulletType");
 
 const T2scorch = new ItemTurret("T2scorch");
 T2scorch.ammo(
-    Items.coal, bullets.flame({
-        particleNumber : 60
-    }),
-    Items.pyratite, bullets.flame({
-        damage : 32,
-        flameCone : 16,
-        colorBegin : Pal.lightPyraFlame,
-        colorTo : Pal.darkPyraFlame,
-        ammoMultiplier : 4,
-        statusDuration : 60 * 6
-    })
+    Items.coal, new FlameBulletType(Pal.lightFlame, Pal.darkFlame, Color.gray, T2scorch.range+8, 14, 60, 22),
+    Items.pyratite, (() => {
+        const b = new FlameBulletType(Pal.lightPyraFlame, Pal.darkPyraFlame, Color.gray, T2scorch.range+8, 20, 72, 22);
+        b.damage = 41;
+        b.damageBoost = 5;
+        b.statusDuration = 60 * 6;
+        return b;
+    })()
 );
 Object.assign(T2scorch, {
     size : 2,
