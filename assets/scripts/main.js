@@ -18,8 +18,8 @@ require("block/turret/ms");
 // require("block/turret/T2swarmer");
 // require("block/turret/T2ripple");
 // require("block/turret/T3ripple");
-// require("block/turret/T2fuse");
-// require("block/turret/T3fuse");
+require("block/turret/T2fuse");
+require("block/turret/T3fuse");
 // require("block/turret/minisp");
 // require("block/turret/antiaircraft");
 // require("block/turret/sam");
@@ -36,9 +36,9 @@ require("block/turret/ms");
 require("block/power/T2steam");
 require("block/power/T2ther");
 require("block/power/th2");
-//require("block/power/LightninGenerator");
+//require("block/power/LightninGenerator");*/
 
-require("block/production/drill");*/
+require("block/production/drill");
 require("block/production/T2kiln");
 require("block/production/T2melter");
 require("block/production/T2PC");
@@ -56,9 +56,9 @@ require("block/production/AdjustableIncinerator");
 require("block/distribution/T2IB");
 /*require("block/distribution/stackBridge");
 require("block/distribution/IN");
-require("block/distribution/LB");
+require("block/distribution/LB");*/
 require("block/distribution/driver");
-require("block/effect/core");*/
+//require("block/effect/core");
 require("block/effect/und");
 require("block/effect/LiquidUnloader");
 require("block/effect/speeder");

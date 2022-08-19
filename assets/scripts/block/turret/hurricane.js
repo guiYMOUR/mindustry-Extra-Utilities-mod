@@ -30,7 +30,6 @@ hur.pierceBuilding = true
 
 const hurricane = extend(PowerTurret, 'hurricane', {});
 
-lib.setBuildingSimple(hurricane, PowerTurret.PowerTurretBuild, {});
 hurricane.consumePower(8.5);
 hurricane.shootType = hur;
 //hurricane.shots = 1;
@@ -49,7 +48,7 @@ lib.Coolant(hurricane, 0.2);
 hurricane.requirements = ItemStack.with(
     Items.copper, 100,
     Items.lead, 60,
-    Items.silicon, 60,
+    Items.silicon, 90,
     //Items.graphite, 30,
     items.crispSteel, 20
 );

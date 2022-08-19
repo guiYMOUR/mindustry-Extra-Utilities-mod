@@ -4,7 +4,7 @@ const items = require("game/items");
 //钛
 const fuse1 = extend(ShrapnelBulletType, {});
 fuse1.length = 110;
-fuse1.damage = 70;
+fuse1.damage = 67;
 fuse1.width = 17;
 fuse1.reloadMultiplier = 1.3;
 fuse1.ammoMultiplier = 3;
@@ -13,28 +13,26 @@ fuse1.smokeEffect = Fx.lightningShoot;
 //钍
 const fuse2 = extend(ShrapnelBulletType, {});
 fuse2.length = 110;
-fuse2.damage = 110;
-fuse2.toColor = Color.valueOf("ffc3ff");
+fuse2.damage = 108;
+fuse2.toColor = Pal.thoriumPink;
 fuse2.ammoMultiplier = 4;
 fuse2.shootEffect = Fx.thoriumShoot;
 fuse2.smokeEffect = Fx.thoriumShoot;
 
 const T2fuse = extend(ItemTurret, "T2-fuse", {});
-lib.setBuildingSimple(T2fuse, ItemTurret.ItemTurretBuild, {});
 T2fuse.reload = 35;
 T2fuse.shake = 4;
 T2fuse.range = 100;
-T2fuse.recoilAmount = 5;
-//T2fuse.shots = 5;
-//T2fuse.spread = 12;
-//T2fuse.restitution = 0.1;
+T2fuse.recoil = 5;
+T2fuse.shoot = new ShootSpread(5, 12);
 T2fuse.shootCone = 30;
 T2fuse.size = 3;
 T2fuse.health = 240 * 3 * 3;
 T2fuse.shootSound = Sounds.shotgun;
 T2fuse.envEnabled |= Env.space;
 T2fuse.shoot = ShootSpread(5, 12);
-lib.Coolant(T2fuse, 0.35);
+lib.Coolant(T2fuse, 0.4);
+T2fuse.coolantMultiplier = 3;
 T2fuse.ammo(
     Items.titanium, fuse1,
     Items.thorium, fuse2

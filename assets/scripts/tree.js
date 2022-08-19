@@ -14,34 +14,34 @@ const { sakura } = require('block/turret/sakura');
 const { rainbow } = require('block/turret/rainbow');
 const { hurricane } = require('block/turret/hurricane');
 const { ms } = require('block/turret/ms');
-/*const { sunburst } =require('block/turret/sunburst');
-const { T2lan } = require('block/turret/T2lancer');
-const { stinger } = require('block/turret/stinger');
-const { swT2 } = require('block/turret/T2swarmer');
-const { swMin } = require('block/turret/miniswarmer');
-const { T2rip } = require('block/turret/T2ripple');
-const { T3rip } = require('block/turret/T3ripple');
+// const { sunburst } =require('block/turret/sunburst');
+// const { T2lan } = require('block/turret/T2lancer');
+// const { stinger } = require('block/turret/stinger');
+// const { swT2 } = require('block/turret/T2swarmer');
+// const { swMin } = require('block/turret/miniswarmer');
+// const { T2rip } = require('block/turret/T2ripple');
+// const { T3rip } = require('block/turret/T3ripple');
 const { T2fuse } = require('block/turret/T2fuse');
 const { T3fuse } = require('block/turret/T3fuse');
-const { minisp } = require('block/turret/minisp');
-const { antiaircraft } = require('block/turret/antiaircraft');
-const { sam } = require('block/turret/sam');
-const { RG } = require('block/turret/RG');
-const { prism } = require('block/turret/prism');
-const { blackhole } = require('block/turret/blackhole');
-const { sucker } = require('block/turret/sucker');
-const { dissipation } = require('block/turret/dissipation');
-const { heal } = require('block/turret/heal');
-const { TRS } = require('block/turret/TurretResupplyPoint');
-
-const { arNode, png } = require('block/power/png');
-const { T2ST } = require('block/power/T2steam');
-const { T2ther } = require('block/power/T2ther');
-const { th2 } = require('block/power/th2');
-const { LG } = require('block/power/LightninGenerator');
-
-const { LB } = require('block/distribution/LB');
-const { driver } = require('block/distribution/driver');*/
+// const { minisp } = require('block/turret/minisp');
+// const { antiaircraft } = require('block/turret/antiaircraft');
+// const { sam } = require('block/turret/sam');
+// const { RG } = require('block/turret/RG');
+// const { prism } = require('block/turret/prism');
+// const { blackhole } = require('block/turret/blackhole');
+// const { sucker } = require('block/turret/sucker');
+// const { dissipation } = require('block/turret/dissipation');
+// const { heal } = require('block/turret/heal');
+// const { TRS } = require('block/turret/TurretResupplyPoint');
+//
+// const { arNode, png } = require('block/power/png');
+// const { T2ST } = require('block/power/T2steam');
+// const { T2ther } = require('block/power/T2ther');
+// const { th2 } = require('block/power/th2');
+// const { LG } = require('block/power/LightninGenerator');
+//
+// const { LB } = require('block/distribution/LB');
+const { driver } = require('block/distribution/driver');
 const { alloyDuct, ppc, T2IB, invertedJunction, TJ, TIJ, TR, T2LB, conduit } = require('block/distribution/T2IB');
 //const { stackBridge } = require('block/distribution/stackBridge');
 //const { IN } = require('block/distribution/IN');
@@ -58,9 +58,9 @@ const { crispSteelSmelter } = require('block/production/CrispSteelSmelter');
 const { T2CSm } = require("block/production/T2CrispSteelSmelter");
 const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
-/*const { DCF } = require('block/effect/DCF');
-const { tiDrill, drill, shovel, testDrill, slagE, T2WE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
-const { core, chest, cargo } = require('block/effect/core');*/
+//const { DCF } = require('block/effect/DCF');
+const { tiDrill, /*drill, */shovel, slagE, T2WE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
+//const { core, chest, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
 const { speeder } = require('block/effect/speeder');
@@ -108,10 +108,10 @@ lib.addToResearch(stinger, { parent: T2lan.name, });
 lib.addToResearch(swT2, { parent: 'swarmer', });
 lib.addToResearch(swMin, { parent: 'swarmer', });
 lib.addToResearch(T2rip, { parent: 'ripple', });
-lib.addToResearch(T3rip, { parent: T2rip.name, });
+lib.addToResearch(T3rip, { parent: T2rip.name, });*/
 lib.addToResearch(T2fuse, { parent: 'fuse', });
 lib.addToResearch(T3fuse, { parent: T2fuse.name, });
-lib.addToResearch(minisp, { parent: 'swarmer', });
+/*lib.addToResearch(minisp, { parent: 'swarmer', });
 lib.addToResearch(antiaircraft, { parent: 'scatter',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.overgrowth),
@@ -150,13 +150,13 @@ lib.addToResearch(th2, { parent: 'thorium-reactor', });
 lib.addToResearch(LG, { parent: 'impact-reactor', });
 
 lib.addToResearch(conduit, { parent: 'plated-conduit', });
-lib.addToResearch(LB, { parent: 'phase-conduit', });
+lib.addToResearch(LB, { parent: 'phase-conduit', });*/
 lib.addToResearch(driver, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
     )
-});*/
+});
 lib.addToResearch(alloyDuct, { parent: 'armored-conveyor', });
 //lib.addToResearch(stackBridge, { parent: 'plastanium-conveyor', });
 lib.addToResearch(ppc, { parent: 'plastanium-conveyor', });
@@ -200,17 +200,18 @@ lib.addToResearch(ai, { parent: 'incinerator', });
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
-});
+});*/
 lib.addToResearch(tiDrill, { parent: 'pneumatic-drill', });
-lib.addToResearch(drill, { parent: 'blast-drill', });
+//lib.addToResearch(drill, { parent: 'blast-drill', });
 lib.addToResearch(shovel, { parent: 'pneumatic-drill', });
-lib.addToResearch(testDrill, { parent: 'laser-drill', });
+//lib.addToResearch(testDrill, { parent: 'laser-drill', });
 lib.addToResearch(slagE, { parent: 'water-extractor', });
 lib.addToResearch(T2WE, { parent: 'water-extractor', });
 lib.addToResearch(T2CU, { parent: 'cultivator', });
 lib.addToResearch(blastOilExtractor, { parent: 'oil-extractor', });
 lib.addToResearch(dustExtractor, { parent: 'pneumatic-drill', });
-lib.addToResearch(core, { parent: 'core-shard',
+
+/*lib.addToResearch(core, { parent: 'core-shard',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
     )
