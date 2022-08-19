@@ -23,7 +23,7 @@ public class FlameBulletType extends BulletType {
         this.flameLength = length;
         this.flameCone = cone;
         this.particleNumber = number;
-        this.lifetime = lifetime;
+        this.lifetime = 0;
 
         damage = 20;
         speed = 0;

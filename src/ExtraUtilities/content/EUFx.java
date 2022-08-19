@@ -2,11 +2,11 @@ package ExtraUtilities.content;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.util.Time;
+import mindustry.content.Items;
 import mindustry.entities.Effect;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import static arc.math.Angles.*;
 
@@ -52,5 +52,13 @@ public class EUFx {
             Fill.circle(e.x, e.y, e.fout() * 14);
         });
     }
+
+    public static Effect absorbEffect = new Effect(38, e -> {
+        Draw.color(Items.sand.color);
+        Angles.randLenVectors(e.id, 2, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 3 + 1);
+            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
+        });
+    });
 
 }
