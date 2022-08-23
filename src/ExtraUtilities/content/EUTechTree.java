@@ -5,7 +5,6 @@ import mindustry.content.*;
 import mindustry.ctype.*;
 import mindustry.game.Objectives.*;
 import mindustry.type.*;
-import mindustry.world.Block;
 
 import static mindustry.content.Blocks.*;
 import static mindustry.content.TechTree.*;
@@ -23,6 +22,17 @@ public class EUTechTree {
         });
         addToNode(ventCondenser, () -> {
             nodeProduce(thermalHeater, () -> {});
+        });
+        addToNode(oxidationChamber, () -> {
+            nodeProduce(T2oxide, () -> {});
+        });
+        addToNode(plasmaBore, () -> {
+            nodeProduce(minerPoint, () ->{
+                node(minerCenter);
+            });
+        });
+        addToNode(reinforcedPump, () -> {
+            nodeProduce(arkyciteExtractor, () ->{});
         });
     }
 

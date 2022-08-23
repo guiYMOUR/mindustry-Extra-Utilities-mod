@@ -4,12 +4,11 @@ import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.production.*;
 import ExtraUtilities.worlds.drawer.*;
 import mindustry.content.*;
-import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.Sounds;
-import mindustry.graphics.Pal;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.heat.*;
+import mindustry.world.blocks.production.SolidPump;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
@@ -17,6 +16,8 @@ import static mindustry.type.ItemStack.*;
 
 public class EUBlocks {
     public static Block
+        //drill?
+            arkyciteExtractor, minerPoint, minerCenter,
         //production
             T2oxide,
         //heat
@@ -24,6 +25,47 @@ public class EUBlocks {
         //other&sandbox
             randomer;
     public static void load(){
+        arkyciteExtractor = new DrawSolidPump("arkycite-extractor"){{
+            requirements(Category.production, with(Items.carbide, 35, Items.oxide, 50, Items.thorium, 150, Items.tungsten, 100));
+            consumePower(8f);
+            consumeLiquid(Liquids.nitrogen, 4/60f);
+            consumeItem(Items.oxide);
+
+            consumeTime = 60 * 1.5f;
+            drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidRegion(Liquids.arkycite), new DrawDefault(), new DrawRegion("-top"));
+            result = Liquids.arkycite;
+            liquidCapacity = 120;
+            pumpAmount = 1;
+            size = 3;
+        }};
+        minerPoint = new MinerPoint("miner-point"){{
+            requirements(Category.production, with(Items.beryllium, 90, Items.graphite, 100, Items.silicon, 70, Items.tungsten, 40));
+            consumePower(2);
+            consumeLiquid(Liquids.water, 12/60f);
+
+            blockedItem = Items.titanium;
+            droneConstructTime = 60 * 10f;
+            tier = 3;
+            alwaysUnlocked = true;
+        }};
+        minerCenter = new MinerPoint("miner-center"){{
+            requirements(Category.production, with(Items.tungsten, 300, Items.oxide, 100, Items.carbide, 100, Items.surgeAlloy, 100));
+            consumePower(3);
+            consumeLiquid(Liquids.cyanogen, 6/60f);
+
+            range = 22;
+            alwaysCons = true;
+            blockedItem = Items.thorium;
+            dronesCreated = 4;
+            droneConstructTime = 60 * 7f;
+            tier = 5;
+            size = 4;
+
+            MinerUnit = EUUnitTypes.T2miner;
+
+            alwaysUnlocked = true;
+        }};
+
         T2oxide = new HeatProducer("T2oxide"){{
             requirements(Category.crafting, with(Items.oxide, 50, Items.graphite, 300, Items.silicon, 300, Items.surgeAlloy, 50, Items.carbide, 90));
             size = 5;
