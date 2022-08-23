@@ -2,7 +2,7 @@ displayName: ExtraUtilities
 name:"extra-utilities"
 author: guiY
 main: "ExtraUtilities.ExtraUtilitiesMod"
-description: "没"
-version: 1.0
+description: "槑"
+version: 1.041
 java: true
 minGameVersion: 137
