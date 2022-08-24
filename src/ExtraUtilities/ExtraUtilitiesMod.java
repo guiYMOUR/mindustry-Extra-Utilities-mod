@@ -10,16 +10,17 @@ import arc.util.*;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
+import mindustry.world.Block;
 
 public class ExtraUtilitiesMod extends Mod{
     public static String ModName = "extra-utilities";
     public static String name(String add){
         return ModName + "-" + add;
     }
-    public void addToTable(String name, Table t){
-        t.image(Core.atlas.find(name(name))).pad(3f).row();
-        t.add(Core.bundle.format("block."+name(name + ".name"))).row();
-        t.add(Core.bundle.format("block."+name(name + ".description"))).row();
+    public void addToTable(Block block, Table t){
+        t.image(block.uiIcon).pad(3f).row();
+        t.add(Core.bundle.format("block."+block.name + ".name")).row();
+        t.add(Core.bundle.format("block."+block.name + ".description")).row();
     }
 
     public ExtraUtilitiesMod(){
@@ -29,23 +30,19 @@ public class ExtraUtilitiesMod extends Mod{
             Time.runTask(10f, () -> {
                 BaseDialog dialog = new BaseDialog("ExtraUtilities");
                 dialog.cont.add("ExtraUtilities").row();
-                dialog.cont.image(Core.atlas.find(name("LOGO"))).pad(3f).row();
+                dialog.cont.image(Core.atlas.find(name("LOGO"))).pad(3f).height(150).width(400).row();
                 dialog.cont.add(Core.bundle.format("tips.name")).row();
                 dialog.cont.add(Core.bundle.format("tips.description")).row();
                 dialog.cont.pane(t -> {
-                    t.image(Core.atlas.find(name("arkycite-extractor-preview"))).pad(3f).row();
-                    t.add(Core.bundle.format("block."+name("arkycite-extractor.name"))).row();
-                    t.add(Core.bundle.format("block."+name("arkycite-extractor.description"))).row();
-                    addToTable("miner-point", t);
-                    addToTable("miner-center", t);
-                    t.image(Core.atlas.find(name("heat-driver-preview-all"))).pad(3f).row();
-                    t.add(Core.bundle.format("block."+name("heat-driver.name"))).row();
-                    t.add(Core.bundle.format("block."+name("heat-driver.description"))).row();
-                    addToTable("heat-transfer", t);
-                    addToTable("thermal-heater", t);
-                    t.image(Core.atlas.find(name("T2oxide-preview"))).pad(3f).row();
-                    t.add(Core.bundle.format("block."+name("T2oxide.name"))).row();
-                    t.add(Core.bundle.format("block."+name("T2oxide.description"))).row();
+                    addToTable(EUBlocks.liquidSorter, t);
+                    addToTable(EUBlocks.liquidValve, t);
+                    addToTable(EUBlocks.arkyciteExtractor, t);
+                    addToTable(EUBlocks.minerPoint, t);
+                    addToTable(EUBlocks.minerCenter, t);
+                    addToTable(EUBlocks.heatDriver, t);
+                    addToTable(EUBlocks.heatTransfer, t);
+                    addToTable(EUBlocks.thermalHeater, t);
+                    addToTable(EUBlocks.T2oxide, t);
                 }).grow().center().maxWidth(960f);
                 dialog.buttons.button("@close", dialog::hide).size(100f, 50f).center();
                 dialog.show();

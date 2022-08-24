@@ -1,6 +1,7 @@
 package ExtraUtilities.content;
 
 import ExtraUtilities.worlds.blocks.heat.*;
+import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.production.*;
 import ExtraUtilities.worlds.drawer.*;
 import mindustry.content.*;
@@ -18,6 +19,8 @@ public class EUBlocks {
     public static Block
         //drill?
             arkyciteExtractor, minerPoint, minerCenter,
+        //liquid
+            liquidSorter, liquidValve,
         //production
             T2oxide,
         //heat
@@ -31,7 +34,7 @@ public class EUBlocks {
             consumeLiquid(Liquids.nitrogen, 4/60f);
             consumeItem(Items.oxide);
 
-            consumeTime = 60 * 1.5f;
+            consumeTime = 60 * 2f;
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidRegion(Liquids.arkycite), new DrawDefault(), new DrawRegion("-top"));
             result = Liquids.arkycite;
             liquidCapacity = 120;
@@ -39,35 +42,57 @@ public class EUBlocks {
             size = 3;
         }};
         minerPoint = new MinerPoint("miner-point"){{
-            requirements(Category.production, with(Items.beryllium, 90, Items.graphite, 100, Items.silicon, 70, Items.tungsten, 40));
+            requirements(Category.production, with(Items.beryllium, 120, Items.graphite, 120, Items.silicon, 85, Items.tungsten, 50));
             consumePower(2);
-            consumeLiquid(Liquids.water, 12/60f);
+            consumeLiquid(Liquids.ozone, 6/60f);
 
             blockedItem = Items.titanium;
             droneConstructTime = 60 * 10f;
             tier = 3;
-            alwaysUnlocked = true;
+            //alwaysUnlocked = true;
         }};
         minerCenter = new MinerPoint("miner-center"){{
-            requirements(Category.production, with(Items.tungsten, 300, Items.oxide, 100, Items.carbide, 100, Items.surgeAlloy, 100));
+            requirements(Category.production, with(Items.tungsten, 360, Items.oxide, 125, Items.carbide, 120, Items.surgeAlloy, 130));
             consumePower(3);
             consumeLiquid(Liquids.cyanogen, 6/60f);
 
-            range = 22;
+            range = 18;
             alwaysCons = true;
             blockedItem = Items.thorium;
-            dronesCreated = 4;
+            dronesCreated = 6;
             droneConstructTime = 60 * 7f;
             tier = 5;
             size = 4;
+            itemCapacity = 300;
 
             MinerUnit = EUUnitTypes.T2miner;
 
-            alwaysUnlocked = true;
+            //alwaysUnlocked = true;
+        }};
+
+        liquidSorter = new SortLiquidRouter("liquid-sorter"){{
+            requirements(Category.liquid, with(Items.silicon, 8, Items.beryllium, 4));
+            liquidCapacity = 30f;
+            liquidPadding = 3f/4f;
+            researchCostMultiplier = 3;
+            underBullets = true;
+            rotate = false;
+
+            //alwaysUnlocked = true;
+        }};
+        liquidValve = new SortLiquidRouter("liquid-valve"){{
+            requirements(Category.liquid, with(Items.graphite, 6, Items.beryllium, 6));
+            liquidCapacity = 30f;
+            liquidPadding = 3f/4f;
+            researchCostMultiplier = 3;
+            underBullets = true;
+            configurable = false;
+
+            //alwaysUnlocked = true;
         }};
 
         T2oxide = new HeatProducer("T2oxide"){{
-            requirements(Category.crafting, with(Items.oxide, 50, Items.graphite, 300, Items.silicon, 300, Items.surgeAlloy, 50, Items.carbide, 90));
+            requirements(Category.crafting, with(Items.oxide, 50, Items.graphite, 300, Items.silicon, 300, Items.carbide, 110, Items.thorium, 100));
             size = 5;
             hasLiquids = true;
             canOverdrive = true;

@@ -16,23 +16,27 @@ public class EUTechTree {
 
     public static void load() {
         addToNode(heatRedirector, () -> {
-            nodeProduce(heatTransfer, () -> {
+            node(heatTransfer, () -> {
                 node(heatDriver);
             });
         });
-        addToNode(ventCondenser, () -> {
-            nodeProduce(thermalHeater, () -> {});
+        addToNode(electricHeater, () -> {
+            node(thermalHeater, () -> {});
         });
         addToNode(oxidationChamber, () -> {
-            nodeProduce(T2oxide, () -> {});
+            node(T2oxide, () -> {});
         });
         addToNode(plasmaBore, () -> {
-            nodeProduce(minerPoint, () ->{
+            node(minerPoint, () ->{
                 node(minerCenter);
             });
         });
         addToNode(reinforcedPump, () -> {
-            nodeProduce(arkyciteExtractor, () ->{});
+            node(arkyciteExtractor, () ->{});
+        });
+        addToNode(reinforcedLiquidRouter, () -> {
+            node(liquidSorter, () ->{});
+            node(liquidValve, () -> {});
         });
     }
 

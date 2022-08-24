@@ -8,6 +8,7 @@ import arc.func.*;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
+import arc.math.geom.Rect;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.*;
 import arc.scene.ui.layout.*;
@@ -16,6 +17,7 @@ import arc.util.*;
 import arc.util.io.*;
 import mindustry.content.*;
 import mindustry.core.World;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.type.Item;
@@ -25,6 +27,7 @@ import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.world.*;
 import mindustry.world.blocks.environment.*;
+import mindustry.world.blocks.storage.CoreBlock.*;
 import mindustry.world.meta.*;
 
 import static mindustry.Vars.*;
@@ -33,17 +36,20 @@ public class MinerPoint extends Block {
     //猫在钻头里面定义了这个为不可挖的矿，虽然只能写一个。。。但是应该不错了
     public @Nullable Item blockedItem;
 
-    public int range = 15;
+    public int range = 12;
     public int tier = 2;
-    public int dronesCreated = 2;
+    public int dronesCreated = 3;
     public float droneConstructTime = 60f * 5f;
     public float polyStroke = 1.8f, polyRadius = 8f;
     public int polySides = 6;
     public float polyRotateSpeed = 1f;
     public Color polyColor = Color.valueOf("92dd7e");
     public boolean alwaysCons = false;
+    public boolean limitSize = true;
 
     public UnitType MinerUnit = EUUnitTypes.miner;
+
+    public boolean canPickUp = false;
 
     public MinerPoint(String name) {
         super(name);
@@ -56,6 +62,8 @@ public class MinerPoint extends Block {
         configurable = true;
         copyConfig = false;
         sync = true;
+        buildCostMultiplier = 0;
+        flags = EnumSet.of(BlockFlag.unitCargoUnloadPoint);
 
         config(Tile.class, (MinerPointBuild tile, Tile t) -> tile.sortTile = t);
         configClear((MinerPointBuild tile) -> tile.sortTile = null);
@@ -63,12 +71,42 @@ public class MinerPoint extends Block {
 
     @Override
     public void drawPlace(int x, int y, int rotation, boolean valid) {
-        drawPotentialLinks(x, y);
-        drawOverlay(x * tilesize + offset, y * tilesize + offset, rotation);
+        super.drawPlace(x, y, rotation, valid);
+        if(world.tile(x, y) != null) {
+            if (!canPlaceOn(world.tile(x, y), player.team(), rotation)) {
+                drawPlaceText(Core.bundle.get(
+                        (player.team().core() != null && player.team().core().items.has(requirements, state.rules.buildCostMultiplier)) || state.rules.infiniteResources ?
+                                "bar.extra-utilities-close" :
+                                "bar.noresources"
+                ), x, y, valid);
+            }
+        }
         x *= tilesize;
         y *= tilesize;
 
         Drawf.dashSquare(Pal.accent, x, y, range * tilesize * 2);
+    }
+
+    public Rect getRect(Rect rect, float x, float y, float range){
+        rect.setCentered(x, y, range * 2 * tilesize);
+
+        return rect;
+    }
+
+    @Override
+    public boolean canPlaceOn(Tile tile, Team team, int rotation){
+        CoreBuild core = team.core();
+        if(core == null || (!state.rules.infiniteResources && !core.items.has(requirements, state.rules.buildCostMultiplier))) return false;
+        if(!limitSize) return true;
+        Rect rect = getRect(Tmp.r1, tile.worldx() + offset, tile.worldy() + offset, range).grow(0.1f);
+        return !indexer.getFlagged(team, BlockFlag.unitCargoUnloadPoint).contains(b -> {
+            if(b instanceof MinerPointBuild) {
+                MinerPointBuild build = (MinerPointBuild) b;
+                MinerPoint block = (MinerPoint) b.block;
+                return getRect(Tmp.r2, build.x, build.y, block.range).overlaps(rect);
+            }
+            return false;
+        });
     }
 
     @Override
@@ -86,6 +124,7 @@ public class MinerPoint extends Block {
             }
         }));
         stats.add(Stat.range, range);
+        stats.remove(Stat.buildTime);
     }
 
     @Override
@@ -192,6 +231,16 @@ public class MinerPoint extends Block {
                 MinerPointAI ai = (MinerPointAI)unit.controller();
                 ai.ore = alwaysCons ? efficiency > 0.4 ? sortTile : null : sortTile;
             }
+        }
+
+        @Override
+        public boolean canPickup() {
+            return canPickUp;
+        }
+
+        @Override
+        public void pickedUp() {
+            if(canPickUp) configure(null);
         }
 
         @Override

@@ -17,11 +17,11 @@ public class DrawSolidPump extends SolidPump {
         super(name);
     }
 
-//    @Override
-//    public void setStats() {
-//        super.setStats();
-//        if(boost > 1) stats.add(Stat.boostEffect, boost, StatUnit.timesSpeed);
-//    }
+    @Override
+    public void setStats() {
+        stats.timePeriod = consumeTime;
+        super.setStats();
+    }
 
     @Override
     public TextureRegion[] icons(){

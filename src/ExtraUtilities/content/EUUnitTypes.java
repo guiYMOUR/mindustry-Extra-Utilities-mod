@@ -38,6 +38,7 @@ public class EUUnitTypes {
             hitSize = 12f;
             itemCapacity = 20;
             isEnemy = false;
+            payloadCapacity = 0;
 
             mineTier = 10;//据点决定tier
             mineSpeed = 1.6f;
@@ -76,6 +77,7 @@ public class EUUnitTypes {
             hitSize = 16f;
             itemCapacity = 50;
             isEnemy = false;
+            payloadCapacity = 0;
 
             mineTier = 10;
             mineSpeed = 3.2f;
