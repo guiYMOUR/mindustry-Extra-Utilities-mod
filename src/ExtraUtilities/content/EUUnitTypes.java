@@ -71,7 +71,7 @@ public class EUUnitTypes {
             speed = 1.5f;
             health = 100;
             engineSize = 2.6f;
-            engineOffset = 8.9f;
+            engineOffset = 9.8f;
             range = 50f;
             mineRange = 100f;
             hitSize = 16f;

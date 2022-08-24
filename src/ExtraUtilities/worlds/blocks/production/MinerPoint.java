@@ -63,7 +63,7 @@ public class MinerPoint extends Block {
         copyConfig = false;
         sync = true;
         buildCostMultiplier = 0;
-        flags = EnumSet.of(BlockFlag.unitCargoUnloadPoint);
+        flags = EnumSet.of(BlockFlag.factory);
 
         config(Tile.class, (MinerPointBuild tile, Tile t) -> tile.sortTile = t);
         configClear((MinerPointBuild tile) -> tile.sortTile = null);
@@ -99,7 +99,7 @@ public class MinerPoint extends Block {
         if(core == null || (!state.rules.infiniteResources && !core.items.has(requirements, state.rules.buildCostMultiplier))) return false;
         if(!limitSize) return true;
         Rect rect = getRect(Tmp.r1, tile.worldx() + offset, tile.worldy() + offset, range).grow(0.1f);
-        return !indexer.getFlagged(team, BlockFlag.unitCargoUnloadPoint).contains(b -> {
+        return !indexer.getFlagged(team, BlockFlag.factory).contains(b -> {
             if(b instanceof MinerPointBuild) {
                 MinerPointBuild build = (MinerPointBuild) b;
                 MinerPoint block = (MinerPoint) b.block;
