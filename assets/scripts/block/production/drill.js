@@ -229,7 +229,7 @@ shovel.buildType = prov(() => {
 });
 shovel.requirements = ItemStack.with(
     Items.metaglass, 55,
-    Items.silicon, 105,
+    Items.silicon, 130,
     Items.titanium, 80,
 );
 shovel.buildVisibility = BuildVisibility.shown;
@@ -285,6 +285,7 @@ const boof = 2;
 // testDrill.category = Category.production;
 // exports.testDrill = testDrill;
 
+const DrawSolidPump = lib.getClass("ExtraUtilities.worlds.blocks.production.DrawSolidPump");
 var weBoost = 1.5;
 var weItem = Items.graphite;
 const weUseTime = 120;
@@ -302,7 +303,7 @@ T2WE.buildType = prov(() => {
             this.efficiency *= this.items.get(weItem) > 0 ? weBoost : 1;
             this.super$updateTile();
             var entity = this;
-            if(entity.items.get(weItem) && entity.liquids.get(entity.liquids.current()) < T2WE.liquidCapacity && entity.power.status > 0.0001){
+            if(this.efficiency > 0){
                 timer += entity.power.status * entity.delta();
             }
             if(timer >= weUseTime){
@@ -316,7 +317,9 @@ T2WE.buildType = prov(() => {
         // },
     }, T2WE);
 });
+//const T2WE = new DrawSolidPump("T2-WE");
 T2WE.result = Liquids.water;
+//T2WE.consItem = Items.graphite;
 T2WE.pumpAmount = 0.28;
 T2WE.size = 3;
 T2WE.liquidCapacity = 60;
@@ -325,7 +328,7 @@ T2WE.rotateSpeed = 2;
 T2WE.attribute = Attribute.water;
 //T2WE.envRequired |= Env.groundWater;
 T2WE.consumePower(5);
-T2WE.consumeItem(weItem).boost();
+T2WE.consumeItem(Items.graphite).boost();
 T2WE.requirements = ItemStack.with(
     Items.metaglass, 50,
     Items.lead, 85,

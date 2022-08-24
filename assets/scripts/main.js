@@ -32,11 +32,11 @@ require("block/turret/T3fuse");
 // require("block/turret/TurretResupplyPoint");
 
 //require("block/effect/DCF");
-/*require("block/power/png");
+//require("block/power/png");
 require("block/power/T2steam");
-require("block/power/T2ther");
+//require("block/power/T2ther");
 require("block/power/th2");
-//require("block/power/LightninGenerator");*/
+//require("block/power/LightninGenerator");
 
 require("block/production/drill");
 require("block/production/T2kiln");
