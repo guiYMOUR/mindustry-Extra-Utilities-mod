@@ -43,6 +43,7 @@ public class ExtraUtilitiesMod extends Mod{
                     addToTable(EUBlocks.heatTransfer, t);
                     addToTable(EUBlocks.thermalHeater, t);
                     addToTable(EUBlocks.T2oxide, t);
+                    addToTable(EUBlocks.guiY, t);
                 }).grow().center().maxWidth(960f);
                 dialog.buttons.button("@close", dialog::hide).size(100f, 50f).center();
                 dialog.show();

@@ -3,13 +3,23 @@ package ExtraUtilities.content;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.production.*;
+import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
 import ExtraUtilities.worlds.drawer.*;
+import arc.graphics.Color;
+import arc.math.Interp;
+import arc.math.Mathf;
 import mindustry.content.*;
+import mindustry.entities.bullet.*;
+import mindustry.entities.part.*;
+import mindustry.entities.pattern.*;
 import mindustry.gen.Sounds;
+import mindustry.graphics.Pal;
 import mindustry.type.*;
 import mindustry.world.Block;
+import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.production.SolidPump;
+import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
@@ -25,6 +35,8 @@ public class EUBlocks {
             T2oxide,
         //heat
             thermalHeater, heatTransfer, heatDriver,
+        //turret
+            guiY, turretResupplyPoint,
         //other&sandbox
             randomer;
     public static void load(){
@@ -142,6 +154,91 @@ public class EUBlocks {
             regionRotated1 = 1;
 
             consumePower(4);
+        }};
+
+        guiY = new ItemTurret("guiY"){{
+            requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
+            size = 2;
+            ammo(
+                    Items.silicon, new MissileBulletType(0.5f, 0){{
+                        frontColor = backColor = Pal.gray;
+                        width = 10f;
+                        height = 12f;
+                        shrinkY = 0f;
+                        ammoMultiplier = 1f;
+                        hitSound = Sounds.none;
+                        shootEffect = despawnEffect = hitEffect = Fx.none;
+                        trailEffect = EUFx.missileTrailSmokeSmall;
+                        trailWidth = 2.2f;
+                        trailLength = 11;
+                        trailColor = Pal.lightTrail;
+                        lifetime = 20f;
+                        homingPower = 0;
+                        fragRandomSpread = 0;
+                        fragAngle = 0;
+                        fragBullets = 1;
+                        fragVelocityMin = 1f;
+                        fragBullet = new MissileBulletType(3.7f, 50){{
+                                frontColor = backColor = Pal.gray;
+                                width = 10f;
+                                height = 12f;
+                                shrinkY = 0f;
+                                homingPower = 0.08f;
+                                homingRange = 26.25f * 8;
+                                splashDamageRadius = 28f;
+                                splashDamage = 66f;
+                                ammoMultiplier = 4f;
+                                hitEffect = Fx.blastExplosion;
+                                trailWidth = 2.2f;
+                                trailLength = 11;
+                                trailColor = Pal.lightTrail;
+                                buildingDamageMultiplier = 0.3f;
+                            }};
+                    }}
+            );
+            drawer = new DrawTurret("reinforced-"){{
+                parts.add(new RegionPart(){{
+                            progress = PartProgress.warmup;
+                            heatProgress = PartProgress.warmup;
+                            heatColor = Color.red;
+                            moveRot = -22f;
+                            moveX = 0f;
+                            moveY = -0.8f;
+                            mirror = true;
+                        }},
+                        new RegionPart("-mid"){{
+                            progress = PartProgress.recoil;
+                            heatProgress = PartProgress.warmup.add(-0.2f).add(p -> Mathf.sin(9f, 0.2f) * p.warmup);
+                            mirror = false;
+                            under = true;
+                            moveY = -0.8f;
+                        }}
+                );
+            }};
+            scaledHealth = 190;
+
+            accurateDelay = false;
+
+            range = 26.25f * 8;
+            ammoPerShot = 2;
+            maxAmmo = ammoPerShot * 4;
+            shoot = new ShootAlternate(6f);
+            shake = 2f;
+            recoil = 1f;
+            reload = 60f;
+            shootY = 0f;
+            rotateSpeed = 1.2f;
+            minWarmup = 0.85f;
+            shootWarmupSpeed = 0.07f;
+            shootSound = Sounds.missile;
+
+            coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
+        }};
+        turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
+            requirements(Category.turret, with(Items.graphite, 90, Items.silicon, 180, Items.thorium, 70));
+            size = 2;
+            hasPower = true;
+            consumePower(1);
         }};
 
         randomer = new Randomer("randomer"){{

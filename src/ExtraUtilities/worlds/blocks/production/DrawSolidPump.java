@@ -53,7 +53,7 @@ public class DrawSolidPump extends SolidPump {
         public void updateTile() {
             super.updateTile();
             if(cons && efficiency > 0){
-                if((consTimer += edelta()) >= consumeTime){
+                if((consTimer += delta()) >= consumeTime){
                     consume();
                     consTimer = 0f;
                 }

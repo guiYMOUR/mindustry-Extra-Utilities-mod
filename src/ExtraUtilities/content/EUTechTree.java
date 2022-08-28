@@ -38,6 +38,12 @@ public class EUTechTree {
             node(liquidSorter, () ->{});
             node(liquidValve, () -> {});
         });
+
+        addToNode(breach, () -> {
+            node(guiY, () -> {
+                node(turretResupplyPoint);
+            });
+        });
     }
 
     public static void addToNode(UnlockableContent p, Runnable c) {
