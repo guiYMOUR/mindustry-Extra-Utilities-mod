@@ -2,11 +2,7 @@
 
 - English | [中文](README_cn.md)
 
-- Add more than 85 blocks and some advanced units.
-
 - This module does not affect the game balance, and enrich the content of the game, making the original game easier
-
-- The MOD body uses only JS, including the ability, status effect, mod introduction, core schematics, ect. Easy to understand, welcome to refer
 
 
 - QQ Group①：513165958
@@ -26,63 +22,21 @@
 ## Added extensions
 
 ### Turret
-- More powerful turrets.
 
 ### Crafting
-- More advanced plant 
-- Coal burning plant (easier to make pyratite)
 
 ### Power
-- More advanced generators 
-- Power Center (node and battery integration)
 
 ### Distribution
-- More Transport equipment for titanium manufacture
-- Plastanium Bridge<strike>(bug)</strike>
-- Item Node
-- Liquid Node
-- Liquid Mass Driver
 
 ### Drill
-- Titanium Drill
-- High Energy drill
-- shovel
-- Beam Drill updated in advance
-- Slag Extractor
 
 ### Wall
-- Copper-Lead Wall
-- Composite Wall
 
 ### Effect
-- Composite repair field
-- Composite Overdrive Projector
-- DIMENSIONAL COMPLEX FIELD
-- Small Core
-- ELECTRIC UNLOADER
-- Liquid Unloader
 
 ### Unit
-- Imaginary Reconstructor
-- Suzerain
-- Nebula
-- Asphyxia
-- Apocalypse
-- Tera
-- Nihilo
-- Narwhal
-- Air Sapper
 
 ### Ability
-- Territory Field
-- Mend Field
-- Lightning Field
 
 ### Status Effect
-- Erosion
-- Territory Buff
-- Territory Debuff
-- Weakness
-
-### Other
-- Added tower defense gameplay.
