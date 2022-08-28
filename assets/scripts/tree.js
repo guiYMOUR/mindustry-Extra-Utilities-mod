@@ -140,8 +140,7 @@ lib.addToResearch(TRS, { parent: 'duo',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.stainedMountains),
     )
-});
-*/
+});*/
 // lib.addToResearch(arNode, { parent: 'power-node', });
 // lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
