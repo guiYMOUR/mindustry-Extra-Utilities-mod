@@ -16,8 +16,8 @@ require("block/turret/ms");
 // require("block/turret/stinger");
 // require("block/turret/miniswarmer");
 // require("block/turret/T2swarmer");
-// require("block/turret/T2ripple");
-// require("block/turret/T3ripple");
+require("block/turret/T2ripple");
+require("block/turret/T3ripple");
 require("block/turret/T2fuse");
 require("block/turret/T3fuse");
 // require("block/turret/minisp");
@@ -86,8 +86,8 @@ require("game/items");
 require("other/status");
 
 //re-coming soon...
-require("game/challengeMap/cmain");
-require("game/TD/tmain");*/
+require("game/challengeMap/cmain");*/
+require("game/TD/tmain");
 
 require("tree");
 

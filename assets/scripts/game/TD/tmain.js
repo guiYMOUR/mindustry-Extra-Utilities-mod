@@ -1,6 +1,7 @@
 //Will be added in version 1.4 or 1.3.30 onwards
 const lib = require("blib");
-const ability = require("other/ability");
+//const ability = require("other/ability");
+const healthDisplay = lib.getClass("ExtraUtilities.worlds.entity.ability.healthDisplay");
 //const planet = require("game/challengeMap/cmain");
 
 const walkFloor = extend(Floor, "walkFloor", {});
@@ -75,7 +76,7 @@ hugeDamage.hitEffect = new Effect(60, cons(e => {
 
 const enemy1 = new UnitType("enemy1");
 enemy1.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
-enemy1.defaultController = prov(() => new SuicideAI());
+enemy1.aiController = prov(() => new SuicideAI());
 enemy1.targetAir = false;
 enemy1.speed = 0.9;
 enemy1.hitSize = 8;
@@ -94,12 +95,12 @@ enemy1.weapons.add(
     })()
 );
 enemy1.armor = 1;
-enemy1.abilities.add(ability.healthDisplay(10, 15, 2));
+enemy1.abilities.add(new healthDisplay(10, 15, 2));
 enemy1.alwaysUnlocked = true;
 
 const enemy2 = new UnitType("enemy2");
 enemy2.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
-enemy2.defaultController = prov(() => new SuicideAI());
+enemy2.aiController = prov(() => new SuicideAI());
 enemy2.targetAir = false;
 enemy2.speed = 0.7;
 enemy2.hitSize = 9;
@@ -119,13 +120,13 @@ enemy2.weapons.add(
 );
 enemy2.armor = 6;
 enemy2.abilities.add(new ShieldRegenFieldAbility(20, 160, 60 * 4, 60));
-enemy2.abilities.add(ability.healthDisplay(12, 15, 2));
+enemy2.abilities.add(new healthDisplay(12, 15, 2));
 enemy2.abilities.add(new ForceFieldAbility(36, 1, 180, 60 * 10));
 enemy2.alwaysUnlocked = true;
 
 const enemy3 = new UnitType("enemy3");
 enemy3.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
-enemy3.defaultController = prov(() => new SuicideAI());
+enemy3.aiController = prov(() => new SuicideAI());
 enemy3.targetAir = false;
 enemy3.speed = 0.6;
 enemy3.hitSize = 16;
@@ -145,12 +146,12 @@ enemy3.weapons.add(
 );
 enemy3.armor = 4;
 enemy3.abilities.add(new RepairFieldAbility(60, 60 * 3, 64));
-enemy3.abilities.add(ability.healthDisplay(14, 22, 3));
+enemy3.abilities.add(new healthDisplay(14, 22, 3));
 enemy3.alwaysUnlocked = true;
 
 const boss1 = new UnitType("boss1");
 boss1.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
-boss1.defaultController = prov(() => new SuicideAI());
+boss1.aiController = prov(() => new SuicideAI());
 boss1.targetAir = false;
 boss1.speed = 0.3;
 boss1.hitSize = 28;
@@ -171,13 +172,13 @@ boss1.weapons.add(
 boss1.armor = 15;
 boss1.abilities.add(new UnitSpawnAbility(enemy1, 60 *6, -9.5, -11.5), new UnitSpawnAbility(enemy2, 60 * 8, 9.5, -11.5));
 boss1.abilities.add(new RepairFieldAbility(60, 60 * 3, 80));
-boss1.abilities.add(ability.healthDisplay(18, 30, 4));
+boss1.abilities.add(new healthDisplay(18, 30, 4));
 boss1.abilities.add(new ForceFieldAbility(80, 2.2, 600, 60 * 15));
 boss1.alwaysUnlocked = true;
 
 const boss2 = new UnitType("boss2");
 boss2.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
-boss2.defaultController = prov(() => new SuicideAI());
+boss2.aiController = prov(() => new SuicideAI());
 boss2.targetAir = false;
 boss2.speed = 0.35;
 boss2.hitSize = 30;
@@ -196,14 +197,14 @@ boss2.weapons.add(
     })()
 );
 boss2.armor = 12;
-boss2.abilities.add(ability.healthDisplay(20, 36, 5));
+boss2.abilities.add(new healthDisplay(20, 36, 5));
 boss2.alwaysUnlocked = true;
 
 const AI = require("other/unitAI");
 
 const flyEnemy1 = new UnitType("flyEnemy1");
 flyEnemy1.constructor = prov(() => extend(UnitTypes.quad.constructor.get().class, {}));
-flyEnemy1.defaultController = prov(() => AI.TDFlyingAI());
+flyEnemy1.aiController = prov(() => AI.TDFlyingAI());
 //flyEnemy1.drag = 0.018;
 flyEnemy1.accel = 0.4;
 flyEnemy1.targetAir = false;
@@ -226,12 +227,12 @@ flyEnemy1.weapons.add(
     })()
 );
 flyEnemy1.armor = 5;
-flyEnemy1.abilities.add(ability.healthDisplay(30, 36, 5));
+flyEnemy1.abilities.add(new healthDisplay(30, 36, 5));
 flyEnemy1.alwaysUnlocked = true;
 
 const navalEnemy1 = new UnitType("navalEnemy1");
 navalEnemy1.constructor = prov(() => extend(UnitTypes.risso.constructor.get().class, {}));
-navalEnemy1.defaultController = prov(() => new SuicideAI());
+navalEnemy1.aiController = prov(() => new SuicideAI());
 navalEnemy1.drag = 0.13;
 navalEnemy1.accel = 0.4;
 navalEnemy1.targetAir = false;
@@ -251,10 +252,10 @@ navalEnemy1.weapons.add(
     })()
 );
 navalEnemy1.armor = 10;
-navalEnemy1.abilities.add(ability.healthDisplay(30, 30, 4));
+navalEnemy1.abilities.add(new healthDisplay(30, 30, 4));
 flyEnemy1.alwaysUnlocked = true;
 
-const TD = new JavaAdapter(Planet, {
+/*const TD = new JavaAdapter(Planet, {
     load(){
         this.meshLoader = prov(() => new SunMesh(TD, 4, 6, 2.8, 1.4, 1.8, 1.4, 1.1,
             Color.valueOf("5ecdc6"),
@@ -361,4 +362,4 @@ exports.TD13 = TD13;
 const TD14 = new SectorPreset("TD14", TD, 26);
 TD14.captureWave = 101;
 TD14.difficulty = 8;
-exports.TD14 = TD14;
+exports.TD14 = TD14;*/
