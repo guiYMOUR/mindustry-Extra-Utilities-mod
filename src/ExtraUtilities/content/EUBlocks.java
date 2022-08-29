@@ -128,7 +128,7 @@ public class EUBlocks {
             heatOutput = 20f;
         }};
         thermalHeater = new ThermalHeater("thermal-heater"){{
-            requirements(Category.power, with(Items.graphite, 50, Items.beryllium, 100, Items.oxide, 25));
+            requirements(Category.power, with(Items.graphite, 50, Items.beryllium, 100, Items.oxide, 15));
             powerProduction = 70/60f;
             generateEffect = Fx.redgeneratespark;
             effectChance = 0.01f;
