@@ -37,7 +37,7 @@ public class HeatDriver extends HeatConductor {
     @Override
     public void setStats() {
         super.setStats();
-        stats.add(Stat.shootRange, range, StatUnit.blocks);
+        stats.add(Stat.shootRange, (float) range / tilesize, StatUnit.blocks);
     }
 
     @Override

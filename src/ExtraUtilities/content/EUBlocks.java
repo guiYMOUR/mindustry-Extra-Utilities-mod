@@ -199,8 +199,6 @@ public class EUBlocks {
             drawer = new DrawTurret("reinforced-"){{
                 parts.add(new RegionPart(){{
                             progress = PartProgress.warmup;
-                            heatProgress = PartProgress.warmup;
-                            heatColor = Color.red;
                             moveRot = -22f;
                             moveX = 0f;
                             moveY = -0.8f;
@@ -208,7 +206,6 @@ public class EUBlocks {
                         }},
                         new RegionPart("-mid"){{
                             progress = PartProgress.recoil;
-                            heatProgress = PartProgress.warmup.add(-0.2f).add(p -> Mathf.sin(9f, 0.2f) * p.warmup);
                             mirror = false;
                             under = true;
                             moveY = -0.8f;

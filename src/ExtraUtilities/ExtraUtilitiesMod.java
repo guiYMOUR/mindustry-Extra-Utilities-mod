@@ -1,6 +1,7 @@
 package ExtraUtilities;
 
 import ExtraUtilities.content.EUBlocks;
+import ExtraUtilities.content.EUStatusEffects;
 import ExtraUtilities.content.EUTechTree;
 import ExtraUtilities.content.EUUnitTypes;
 import ExtraUtilities.net.EUCall;

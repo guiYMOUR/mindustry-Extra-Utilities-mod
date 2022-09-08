@@ -167,7 +167,6 @@ public class MinerPoint extends Block {
 
         @Override
         public void updateTile() {
-            tiles.clear();//直接清除，因为在下面直接显示了不会无效直到关闭
 
             dumpAccumulate();
 
@@ -262,15 +261,11 @@ public class MinerPoint extends Block {
         }
 
         @Override
-        public void drawSelect(){
-            super.drawSelect();
-
-            Drawf.dashSquare(Pal.accent, x, y, range * tilesize * 2);
-        }
-
-        @Override
         public void drawConfigure() {
             super.drawConfigure();
+
+            Drawf.dashSquare(Pal.accent, x, y, range * tilesize * 2);
+
             if(sortTile == null) return;
             Tmp.v1.set(sortTile.getX(), sortTile.getY()).sub(x, y).limit((size / 2f + 1) * tilesize + 0.5f);
             float xx = x + Tmp.v1.x, yy = y + Tmp.v1.y;
@@ -303,6 +298,7 @@ public class MinerPoint extends Block {
             int tr = range;
             for(int x = -tr; x <= tr; x++){
                 for(int y = -tr; y <= tr; y++){
+                    if(result != null) break;
                     Tile other = world.tile(x + tx, y + ty);
                     if(other != null && checkOre(other) && validOre(other, item)){
                         result = other;
@@ -319,6 +315,7 @@ public class MinerPoint extends Block {
 
         @Override
         public void buildConfiguration(Table table) {
+            tiles.clear();//直接清除，因为在下面直接显示了不会无效直到关闭
             int size = content.items().size;
             for(int i = 0; i < size; i++){
                 Item item = content.item(i);
