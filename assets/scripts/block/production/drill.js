@@ -409,7 +409,7 @@ Object.assign(blastOilExtractor, {
     updateEffectChance : 0.04,
     //rotateSpeed : 2,
     liquidCapacity : 100,
-    pumpAmount : 0.8,
+    pumpAmount : 1,
     size : 4,
     attribute : Attribute.oil,
     baseEfficiency : 0.2,

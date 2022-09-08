@@ -11,7 +11,7 @@ exports.getClass = function (name){
     return Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, urlLoader.loadClass(name));
 }
 exports.Fx = exports.getClass("ExtraUtilities.content.EUFx");
-exports.Blocks = exports.getClass("ExtraUtilities.content.EUBlocks");
+//exports.Blocks = exports.getClass("ExtraUtilities.content.EUBlocks");
 
 exports.setPlanet = function(p, s){
     p.grid = PlanetGrid.create(s);

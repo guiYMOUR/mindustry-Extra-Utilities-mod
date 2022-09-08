@@ -1,11 +1,7 @@
 const lib = require("blib");
 
 const c1 = Pal.thoriumPink;
-const disappear = new Effect(12, cons(e => {
-    Draw.color(c1);
-    Lines.stroke(2 * e.fout());
-    Lines.circle(e.x, e.y, 5 * e.fout());
-}));
+const disappear = lib.Fx.gone(c1);
 
 const rankB = extend(BasicBulletType, {
     update(b){

@@ -116,7 +116,7 @@ const heal = extend(PowerTurret, "heal", {
        this.super$setStats();
        var healTime = Math.floor(100/healP);
        var reloadNeed = Math.floor(healTime/((shootDuration -60)/60)) - 1;
-       var reloadRest = Math.floor(reloadNeed * this.reloadTime/60);
+       var reloadRest = Math.floor(reloadNeed * this.reload/60);
        this.stats.add(Stat.repairTime, 2 * (healTime + reloadRest), StatUnit.seconds);
        this.stats.add(Stat.boostEffect, boostM, StatUnit.timesSpeed);
     },
@@ -163,7 +163,8 @@ heal.buildType = prov(() => {
             boost = items.get(Items.phaseFabric) > 0 ? boostM : 1;
             this.updateConsume();
             this.wasShooting = false;
-            this.recoil = Mathf.lerpDelta(this.recoil, 0, block.restitution);
+            this.curRecoil = Mathf.lerpDelta(this.curRecoil, 0, 1 / block.recoilTime);
+            this.recoilOffset.trns(rotation, -Mathf.pow(this.curRecoil, block.recoilPow) * block.recoil);
             if(unit != null){
                 this.unit.health = health;
                 this.unit.rotation = rotation;
@@ -204,6 +205,8 @@ heal.buildType = prov(() => {
                     this.updateShooting();
                 }
             }
+            this.updateReload();
+
             if (bulletLife > 0 && bullet != null){
                 this.wasShooting = true;
                 tr.trns(rotation, block.shootLength, 0);
@@ -211,7 +214,7 @@ heal.buildType = prov(() => {
                 bullet.set(x + tr.x, y + tr.y);
                 bullet.time = 0;
                 //this.heat = 1;
-                this.recoil = block.recoilAmount;
+                this.curRecoil = 1;
                 bulletLife -= Time.delta / Math.max(this.efficiency(), 0.00001);
                 bulletHeat = Math.min(Mathf.lerpDelta(bulletHeat, 2, 0.035), 1);
                 if (bulletLife <= 0) {
@@ -259,10 +262,9 @@ heal.buildType = prov(() => {
 });
 Object.assign(heal, {
     health : 180*3*3,
-    powerUse : 7,
     shootType : hb,
     range : findRange + 8,
-    reloadTime : 90,
+    reload : 90,
     size : 3,
     firingMoveFract : 0.8,
     shootDuration : shootDuration,
@@ -270,7 +272,8 @@ Object.assign(heal, {
     shootSound : Sounds.none,
     loopSound : Sounds.pulse,
 });
-heal.consumes.item(Items.phaseFabric).boost();
+heal.consumeItem(Items.phaseFabric).boost();
+heal.consumePower(7);
 heal.requirements = ItemStack.with(
     Items.graphite, 200,
     Items.silicon, 240,

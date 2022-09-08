@@ -13,7 +13,7 @@ require("block/turret/hurricane");
 require("block/turret/ms");
 // require("block/turret/sunburst");
 // require("block/turret/T2lancer");
-// require("block/turret/stinger");
+require("block/turret/stinger");
 // require("block/turret/miniswarmer");
 // require("block/turret/T2swarmer");
 require("block/turret/T2ripple");
