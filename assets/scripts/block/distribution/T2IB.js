@@ -6,7 +6,7 @@ const InvertedJunction = lib.getClass("ExtraUtilities.worlds.blocks.distribution
 
 const alloyDuct = new Duct("alloy-duct");
 alloyDuct.requirements = ItemStack.with(
-    Items.metaglass, 2,
+    Items.graphite, 3,
     Items.surgeAlloy, 1,
     Items.phaseFabric, 1
 );
@@ -105,7 +105,7 @@ exports.TR = TR;
 
 const conduit = extend(ArmoredConduit, "conduit", {});
 conduit.requirements = ItemStack.with(
-    Items.metaglass, 2,
+    Items.silicon, 2,
     Items.phaseFabric, 1
 );
 conduit.health = 220;

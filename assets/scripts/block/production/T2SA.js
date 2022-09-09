@@ -8,7 +8,7 @@ T2SA.outputItem = new ItemStack(Items.surgeAlloy, 5);
 T2SA.craftTime = 90;
 T2SA.size = 4;
 T2SA.hasPower = true;
-T2SA.drawer = new DrawMulti(new DrawRegion("-bottom"), drawer.DrawPower(Color.valueOf("feb380")), new DrawDefault(), new DrawFlame(Color.valueOf("ffef99")));
+T2SA.drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawDefault(), drawer.DrawPower(Color.valueOf("f3e979")), new DrawFlame(Color.valueOf("ffef99")));
 T2SA.consumePower(6);
 T2SA.consumeItems(ItemStack.with(
     Items.copper, 5,

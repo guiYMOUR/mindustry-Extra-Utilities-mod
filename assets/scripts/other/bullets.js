@@ -110,7 +110,7 @@ function flameShoot(colorBegin, colorTo, colorEnd, length, cone, number, lifetim
     }));
 }
 //flameBullet
-const flame = (() => {
+/*const flame = (() => {
     return (object) => {
         const options = Object.assign({
             //not in bullet
@@ -183,7 +183,7 @@ const flame = (() => {
         return f;
     }
 })();
-exports.flame = flame;
+exports.flame = flame;*/
 
 const unitHealCone =(() => {
     function posx(x, y, length, angle){

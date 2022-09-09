@@ -13,11 +13,11 @@ require("block/turret/hurricane");
 require("block/turret/ms");
 // require("block/turret/sunburst");
 // require("block/turret/T2lancer");
-// require("block/turret/stinger");
+require("block/turret/stinger");
 // require("block/turret/miniswarmer");
 // require("block/turret/T2swarmer");
-// require("block/turret/T2ripple");
-// require("block/turret/T3ripple");
+require("block/turret/T2ripple");
+require("block/turret/T3ripple");
 require("block/turret/T2fuse");
 require("block/turret/T3fuse");
 // require("block/turret/minisp");
@@ -29,14 +29,14 @@ require("block/turret/T3fuse");
 // require("block/turret/sucker");
 // require("block/turret/dissipation");
 // require("block/turret/heal");
-// require("block/turret/TurretResupplyPoint");
+//require("block/turret/TurretResupplyPoint");
 
 //require("block/effect/DCF");
-/*require("block/power/png");
+//require("block/power/png");
 require("block/power/T2steam");
-require("block/power/T2ther");
+//require("block/power/T2ther");
 require("block/power/th2");
-//require("block/power/LightninGenerator");*/
+//require("block/power/LightninGenerator");
 
 require("block/production/drill");
 require("block/production/T2kiln");
@@ -86,8 +86,8 @@ require("game/items");
 require("other/status");
 
 //re-coming soon...
-require("game/challengeMap/cmain");
-require("game/TD/tmain");*/
+require("game/challengeMap/cmain");*/
+require("game/TD/tmain");
 
 require("tree");
 

@@ -60,12 +60,11 @@ Object.assign(TRS, {
     acceptsItems : true,
     hasPower : true,
 });
-TRS.consumes.power(1);
+TRS.consumePower(1);
 TRS.requirements = ItemStack.with(
     Items.graphite, 100,
-    Items.titanium, 95,
-    Items.silicon, 115,
-    Items.thorium, 75
+    Items.silicon, 185,
+    Items.thorium, 65
     
 );
 TRS.buildVisibility = BuildVisibility.shown;

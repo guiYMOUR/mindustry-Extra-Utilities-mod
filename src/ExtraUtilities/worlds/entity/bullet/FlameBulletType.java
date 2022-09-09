@@ -7,7 +7,6 @@ import mindustry.content.*;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.*;
 import mindustry.gen.*;
-import mindustry.graphics.Pal;
 
 import static mindustry.Vars.*;
 
@@ -16,7 +15,7 @@ public class FlameBulletType extends BulletType {
     public float flameCone;
     public int particleNumber;
 
-    public float damageBoost = 4f;
+    public float damageBoost = 3f;
 
     public FlameBulletType(Color colorBegin, Color colorTo, Color colorEnd, float length,  float cone, int number, float lifetime){
 
@@ -25,7 +24,7 @@ public class FlameBulletType extends BulletType {
         this.particleNumber = number;
         this.lifetime = 0;
 
-        damage = 20;
+        damage = 19;
         speed = 0;
         hitEffect = Fx.none;
         smokeEffect = Fx.none;

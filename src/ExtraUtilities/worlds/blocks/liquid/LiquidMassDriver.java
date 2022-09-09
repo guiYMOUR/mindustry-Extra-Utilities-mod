@@ -52,6 +52,7 @@ public class LiquidMassDriver extends Block {
         hasPower = true;
         sync = true;
         envEnabled |= Env.space;
+        outputsLiquid = true;
 
         //point2 is relative
         config(Point2.class, (LiquidMassDriverBuild tile, Point2 point) -> tile.link = Point2.pack(point.x + tile.tileX(), point.y + tile.tileY()));

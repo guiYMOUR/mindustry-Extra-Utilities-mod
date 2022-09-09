@@ -25,12 +25,12 @@ GC.buildType = prov(() => {
     
     const block = GC;
     
-    function use(entity){
-        return Math.min(amount * entity.edelta(), entity.block.liquidCapacity);
-    }
-    function update(entity){
-        entity.liquids.remove(inputLiquid, Math.min(use(entity), entity.liquids.get(inputLiquid)));
-    }
+    // function use(entity){
+    //     return Math.min(amount * entity.edelta(), entity.block.liquidCapacity);
+    // }
+    // function update(entity){
+    //     entity.liquids.remove(inputLiquid, Math.min(use(entity), entity.liquids.get(inputLiquid)));
+    // }
     return new JavaAdapter(ConsumeGenerator.ConsumeGeneratorBuild, {
         updateTile(){
             var cons = this.consValid();
@@ -38,7 +38,7 @@ GC.buildType = prov(() => {
             if(cons && !full){
                 p += this.getProgressIncrease(craftTime);
                 gp += this.getProgressIncrease(itemDuration);
-                update(this);
+                //update(this);
             }
             if(p > 1 && !full){
                 this.items.add(output, 1);

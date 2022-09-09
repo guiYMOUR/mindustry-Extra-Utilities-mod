@@ -12,9 +12,14 @@ T2scorch.ammo(
     Items.coal, new FlameBulletType(Pal.lightFlame, Pal.darkFlame, Color.gray, T2scorch.range+8, 14, 60, 22),
     Items.pyratite, (() => {
         const b = new FlameBulletType(Pal.lightPyraFlame, Pal.darkPyraFlame, Color.gray, T2scorch.range+8, 20, 72, 22);
-        b.damage = 41;
-        b.damageBoost = 5;
+        b.damage = 39;
         b.statusDuration = 60 * 6;
+        return b;
+    })(),
+    Items.sporePod, (() => {
+        const b = new FlameBulletType(Pal.lightFlame, Pal.sapBulletBack, Color.gray, T2scorch.range+8, 25, 60, 25);
+        b.damage = 10;
+        b.status = StatusEffects.sapped;
         return b;
     })()
 );

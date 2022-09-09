@@ -1,42 +1,13 @@
 //
 const lib = require("blib");
 const bullets = require("other/bullets");
+const MultiShootTurret = lib.getClass("ExtraUtilities.worlds.blocks.turret.MultiShootTurret");
 const shots = 3;
 
-const T3rip = extend(ItemTurret, "T3-ripple", {
-    setStats(){
-        this.super$setStats();
-        
-        this.stats.remove(Stat.reload);
-        this.stats.add(Stat.reload, 14.25, StatUnit.none);
-    },
-});
-const block = T3rip;
-lib.setBuildingSimple(T3rip, ItemTurret.ItemTurretBuild, {
-    shoot(type){
-        this.super$shoot(type);
-        var ent = this;
-        var
-            bulletX = ent.x + Angles.trnsx(ent.rotation - 90, block.shootX, block.shootY),
-            bulletY = ent.y + Angles.trnsy(ent.rotation - 90, block.shootX, block.shootY);
-        var lif = Mathf.clamp(Mathf.dst(bulletX, bulletY, ent.targetPos.x, ent.targetPos.y) / type.range, block.minRange / type.range, block.range / type.range)
-        for(var i = 0; i < 4; i++){
-            type.create(ent, ent.team, bulletX, bulletY, ent.rotation + Mathf.range(block.inaccuracy), 1 + Mathf.range(block.velocityRnd), lif);
-        }
-    },
-    draw(){
-        this.super$draw();
-        var ent = this;
-        var i = ent.totalShots % shots;
-        if(ent.heat <= 0.00001) return;
-        Draw.color(block.heatColor, ent.heat);
-        Draw.blend(Blending.additive);
-        Draw.rect(Core.atlas.find("btm-T3-ripple-heat-" + i), ent.x + ent.recoilOffset.x, ent.y + ent.recoilOffset.y, ent.rotation - 90);
-        Draw.blend();
-        Draw.color();
-    },
-});
+const T3rip = new MultiShootTurret("T3-ripple");
 T3rip.reload = 20;
+T3rip.shots = shots;
+T3rip.perShoot = 4;
 T3rip.shoot = lib.moreShootAlternate(6, shots);
 T3rip.targetAir = false;
 T3rip.inaccuracy = 10;
@@ -45,16 +16,16 @@ T3rip.size = 4;
 T3rip.ammoEjectBack = 5;
 T3rip.ammoUseEffect = Fx.casing3Double;
 T3rip.ammoPerShot = 2;
-T3rip.cooldown = 0.03;
-T3rip.velocityRad = 0.2;
-//T3rip.restitution = 0.02;
-T3rip.recoilAmount = 6;
+T3rip.cooldownTime = 60;
+T3rip.velocityRnd = 0.2;
+T3rip.recoilTime = 60;
+T3rip.recoil = 6;
 T3rip.shake = 2;
 T3rip.range = 370;
 T3rip.minRange = 50;
 T3rip.health = 250 * 3 * 3;
 T3rip.shootSound = Sounds.artillery;
-lib.Coolant(T3rip, 0.4, 0.3);
+lib.Coolant(T3rip, 0.4, 1.5);
 T3rip.ammo(
     Items.graphite, lib.toBullet(Blocks.ripple, Items.graphite),
     Items.silicon, lib.toBullet(Blocks.ripple, Items.silicon),

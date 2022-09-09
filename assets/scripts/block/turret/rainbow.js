@@ -2,14 +2,9 @@ const status = require("other/status");
 const items = require("game/items");
 const lib = require("blib");
 const DrawRainbow = lib.getClass("ExtraUtilities.worlds.drawer.DrawRainbow");
+//const EUStatusEffects = lib.getClass("ExtraUtilities.content.EUStatusEffects");
 
-function gone(color){
-    return new Effect(12, cons(e => {
-        Draw.color(color);
-        Lines.stroke(2 * e.fout());
-        Lines.circle(e.x, e.y, 5 * e.fout());
-    }));
-};
+var gone = lib.Fx.gone;
 const bSp = lib.aModName + "-shotgunShot";
 
 const r1 = extend(BasicBulletType,{});
@@ -103,18 +98,7 @@ rainbow.buildType = prov(() => {
         },
     }, rainbow);
 });
-rainbow.shootEffect = new Effect(16, cons(e => {
-    Draw.blend(Blending.additive);
-    Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0));
-    Lines.stroke(e.fout() * 1.5);
-    const hl = new Floatc2({get: function(x, y){
-        const ang = Mathf.angle(x, y);
-        Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 8 + 1.5);
-    }});
-    Angles.randLenVectors(e.id, 1, e.finpow() * 70.0, e.rotation, 80.0, hl);
-    Draw.blend();
-    Draw.reset();
-}));
+rainbow.shootEffect = lib.Fx.rainbowShoot;
 
 rainbow.drawer = new DrawMulti(new DrawTurret(), new DrawRainbow(2, 5));
 

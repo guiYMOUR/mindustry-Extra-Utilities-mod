@@ -19,8 +19,8 @@ const { ms } = require('block/turret/ms');
 // const { stinger } = require('block/turret/stinger');
 // const { swT2 } = require('block/turret/T2swarmer');
 // const { swMin } = require('block/turret/miniswarmer');
-// const { T2rip } = require('block/turret/T2ripple');
-// const { T3rip } = require('block/turret/T3ripple');
+const { T2rip } = require('block/turret/T2ripple');
+const { T3rip } = require('block/turret/T3ripple');
 const { T2fuse } = require('block/turret/T2fuse');
 const { T3fuse } = require('block/turret/T3fuse');
 // const { minisp } = require('block/turret/minisp');
@@ -35,9 +35,9 @@ const { T3fuse } = require('block/turret/T3fuse');
 // const { TRS } = require('block/turret/TurretResupplyPoint');
 //
 // const { arNode, png } = require('block/power/png');
-// const { T2ST } = require('block/power/T2steam');
+const { T2ST } = require('block/power/T2steam');
 // const { T2ther } = require('block/power/T2ther');
-// const { th2 } = require('block/power/th2');
+const { th2 } = require('block/power/th2');
 // const { LG } = require('block/power/LightninGenerator');
 //
 // const { LB } = require('block/distribution/LB');
@@ -106,9 +106,9 @@ lib.addToResearch(ms, { parent: hurricane.name, });
 //lib.addToResearch(T2lan, { parent: 'lancer', });
 lib.addToResearch(stinger, { parent: T2lan.name, });
 lib.addToResearch(swT2, { parent: 'swarmer', });
-lib.addToResearch(swMin, { parent: 'swarmer', });
+lib.addToResearch(swMin, { parent: 'swarmer', });*/
 lib.addToResearch(T2rip, { parent: 'ripple', });
-lib.addToResearch(T3rip, { parent: T2rip.name, });*/
+lib.addToResearch(T3rip, { parent: T2rip.name, });
 lib.addToResearch(T2fuse, { parent: 'fuse', });
 lib.addToResearch(T3fuse, { parent: T2fuse.name, });
 /*lib.addToResearch(minisp, { parent: 'swarmer', });
@@ -140,17 +140,16 @@ lib.addToResearch(TRS, { parent: 'duo',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.stainedMountains),
     )
-});
-
-lib.addToResearch(arNode, { parent: 'power-node', });
-lib.addToResearch(png, { parent: 'power-node-large', });
+});*/
+// lib.addToResearch(arNode, { parent: 'power-node', });
+// lib.addToResearch(png, { parent: 'power-node-large', });
 lib.addToResearch(T2ST, { parent: 'steam-generator', });
-lib.addToResearch(T2ther, { parent: 'thermal-generator', });
+// lib.addToResearch(T2ther, { parent: 'thermal-generator', });
 lib.addToResearch(th2, { parent: 'thorium-reactor', });
-lib.addToResearch(LG, { parent: 'impact-reactor', });
-
-lib.addToResearch(conduit, { parent: 'plated-conduit', });
-lib.addToResearch(LB, { parent: 'phase-conduit', });*/
+// lib.addToResearch(LG, { parent: 'impact-reactor', });
+//
+// lib.addToResearch(conduit, { parent: 'plated-conduit', });
+// lib.addToResearch(LB, { parent: 'phase-conduit', });
 lib.addToResearch(driver, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
     objectives: Seq.with(

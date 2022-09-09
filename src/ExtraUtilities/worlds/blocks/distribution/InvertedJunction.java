@@ -2,14 +2,15 @@ package ExtraUtilities.worlds.blocks.distribution;
 
 import ExtraUtilities.worlds.drawer.DrawInvertedJunction;
 import arc.Core;
+import arc.graphics.Color;
+import arc.graphics.g2d.*;
+import arc.math.Mathf;
+import arc.math.geom.Geometry;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.util.Time;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
-import mindustry.gen.BufferItem;
-import mindustry.gen.Building;
-import mindustry.gen.Unit;
+import arc.util.io.*;
+import mindustry.gen.*;
 import mindustry.type.Item;
 import mindustry.ui.Styles;
 import mindustry.world.blocks.distribution.Junction;
@@ -23,14 +24,27 @@ public class InvertedJunction extends Junction {
     //为什么写drawer？减少一点点内存消耗
     public DrawBlock drawer = new DrawInvertedJunction();
 
+    public final int size = 1;
+
+    public Color[] colors = {Color.valueOf("bf92f9"), Color.valueOf("c0ecff"), Color.valueOf("84f491"), Color.valueOf("fffa763")};
+
+    public TextureRegion arrow1, arrow2;
+
     public InvertedJunction(String name) {
         super(name);
 
         sync = true;
         configurable = true;
-        //saveConfig = true;
         config(Integer.class, (InvertedJunctionBuild build, Integer loc) -> build.loc = loc);
     }
+
+    @Override
+    public void load() {
+        super.load();
+        arrow1 = Core.atlas.find(name("arrow-1"));
+        arrow2 = Core.atlas.find(name("arrow-2"));
+    }
+
     public class InvertedJunctionBuild extends JunctionBuild{
         public int loc = 1;
 
@@ -81,12 +95,38 @@ public class InvertedJunction extends Junction {
         }
 
         @Override
+        public void drawSelect() {
+            super.drawSelect();
+            //输出显示
+            float sin = Mathf.sin(Time.time, 6, 0.6f);
+            for (int i = 0; i < 4; i++){
+                Draw.color(colors[i]);
+                int in = loc == 1 ? 3 : 1;//对，得反着来
+                int input = (i + in)%4;//溢出 ? 0 : v
+                Draw.rect(
+                        arrow1,
+                        x + Geometry.d4x(i) * (tilesize + sin),
+                        y + Geometry.d4y(i) * (tilesize + sin),
+                        90*i
+                );
+                Draw.rect(
+                        arrow2,
+                        x + Geometry.d4x(input) * (tilesize - sin),
+                        y + Geometry.d4y(input) * (tilesize - sin),
+                        90*input
+                );
+                Draw.color();
+            }
+        }
+
+        @Override
         public void buildConfiguration(Table table) {
             table.button(new TextureRegionDrawable(Core.atlas.find(ModName + "-flip", Core.atlas.find("clear"))), Styles.cleari, this::switchf).size(36f).tooltip("switch");
         }
 
 
         public void switchf(){
+            //点击转换，loc直接作为方位
             loc = loc == 1 ? 3 : 1;
             deselect();
             configure(loc);
