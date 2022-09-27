@@ -21,22 +21,22 @@
 
 ## Added extensions
 
-### Turret
+- Turrets
 
-### Crafting
+- Crafting
 
-### Power
+- Power
 
-### Distribution
+- Distribution
 
-### Drill
+- Drills
 
-### Wall
+- Walls
 
-### Effect
+- Effects
 
-### Unit
+- Units 
 
-### Ability
+- Abilities
 
-### Status Effect
+- Status Effects
