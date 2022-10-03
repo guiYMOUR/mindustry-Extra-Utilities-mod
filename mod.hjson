@@ -3,6 +3,6 @@ name:"extra-utilities"
 author: guiY
 main: "ExtraUtilities.ExtraUtilitiesMod"
 description: "槑"
-version: 1.043
+version: 1.05
 java: true
-minGameVersion: 137
+minGameVersion: 138.1
