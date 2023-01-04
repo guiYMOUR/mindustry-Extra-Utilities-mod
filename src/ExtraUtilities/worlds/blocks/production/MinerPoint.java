@@ -32,6 +32,11 @@ import mindustry.world.meta.*;
 
 import static mindustry.Vars.*;
 
+/**
+ * 其实就是延续了猫星的特色，可能还是存在部分bug
+ * @author guiY
+ */
+
 public class MinerPoint extends Block {
     //猫在钻头里面定义了这个为不可挖的矿，虽然只能写一个。。。但是应该不错了
     public @Nullable Item blockedItem;

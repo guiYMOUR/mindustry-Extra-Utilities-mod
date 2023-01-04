@@ -15,6 +15,13 @@ public class EUTechTree {
     public static TechNode context = null;
 
     public static void load() {
+        //S
+        addToNode(surgeSmelter, ()->{
+            node(LA, () ->{
+                node(LG);
+            });
+        });
+        //E
         addToNode(heatRedirector, () -> {
             node(heatTransfer, () -> {
                 node(heatDriver);
@@ -43,6 +50,18 @@ public class EUTechTree {
             node(guiY, () -> {
                 node(turretResupplyPoint);
             });
+        });
+
+        addToNode(impactDrill, () -> {
+            node(minerPoint, () -> {
+                node(minerCenter);
+            });
+        });
+        addToNode(surgeCrucible, () -> {
+            node(ELA);
+        });
+        addToNode(slagIncinerator, () ->{
+            node(liquidIncinerator);
         });
     }
 

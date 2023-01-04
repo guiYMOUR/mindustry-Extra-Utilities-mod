@@ -18,6 +18,8 @@ import static ExtraUtilities.ExtraUtilitiesMod.*;
 public class MagneticStormBulletType extends BasicBulletType {
     public Color cor = Pal.ammo;
     public Color liC = Pal.ammo;
+    /** damage[min, mid, max, des]*/
+    public float[] damages = {15, 18, 20, 32};
 
     public MagneticStormBulletType(Color c1, Color c2){
         cor = c1;
@@ -32,18 +34,18 @@ public class MagneticStormBulletType extends BasicBulletType {
         updateHoming(b);
         if(b.timer.get(1,4)){
             for(int i = 0; i < 3; i++){
-                Lightning.create(b.team, cor, 16, b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(8,20));
+                Lightning.create(b.team, cor, damages[1], b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(8,20));
             }
             for(int i = 0; i < 5; i++){
-                Lightning.create(b.team, liC, 12, b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(5,10));
+                Lightning.create(b.team, liC, damages[0], b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(5,10));
             }
             for(int i = 0; i < 7; i++){
-                Lightning.create(b.team, cor, 18, b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(3,7));
+                Lightning.create(b.team, cor, damages[2], b.x + Mathf.random(-40,40), b.y + Mathf.random(-40,40), Mathf.random(360), Mathf.random(3,7));
             }
             if(Mathf.chance(Time.delta * 0.075)){
                 int len = Mathf.random(1, 7);
                 float a = b.rotation() + Mathf.range(fragSpread/2) + fragAngle;
-                Lightning.create(b.team, liC, 12, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, (int) (0.5 + Mathf.random(14)));
+                Lightning.create(b.team, liC, damages[0], b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, (int) (0.5 + Mathf.random(14)));
             }
         }
     }
@@ -65,10 +67,10 @@ public class MagneticStormBulletType extends BasicBulletType {
     public void despawned(Bullet b) {
         despawnEffect.at(b.x, b.y, b.rotation());
         for(int i = 0; i < 12; i++){
-            Lightning.create(b.team, cor, 32, b.x , b.y , Mathf.random(360), Mathf.random(25, 40));
+            Lightning.create(b.team, cor, damages[3], b.x , b.y , Mathf.random(360), Mathf.random(25, 40));
             int len = Mathf.random(1, 7);
-            float a = b.rotation() + Mathf.range(fragSpread/2) + this.fragAngle;
-            Lightning.create(b.team, liC, 32, b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, (int) (0.5 + Mathf.random(14)));
+            float a = b.rotation() + Mathf.range(fragSpread/2) + fragAngle;
+            Lightning.create(b.team, liC, damages[3], b.x - Angles.trnsx(a, len), b.y - Angles.trnsy(a, len), a, (int) (0.5 + Mathf.random(14)));
         }
     }
 }

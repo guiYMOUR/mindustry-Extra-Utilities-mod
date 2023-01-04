@@ -13,6 +13,8 @@ import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 
+import javax.xml.crypto.Data;
+
 import static arc.graphics.g2d.Draw.color;
 import static arc.math.Angles.*;
 import static mindustry.content.Fx.*;
@@ -88,12 +90,15 @@ public class EUFx {
         }
     }).layer(Layer.bullet - 1f);
 
-    public static Effect gone(Color color){
+    public static Effect gone(Color color, float r, float t){
         return new Effect(12, e -> {
             Draw.color(color);
-            Lines.stroke(2f * e.fout());
-            Lines.circle(e.x, e.y, 5f * e.fout());
+            Lines.stroke(t * e.fout());
+            Lines.circle(e.x, e.y, r * e.fout());
         });
+    }
+    public static Effect gone(Color color){
+        return gone(color, 5, 2);
     }
 
     public static Effect rainbowShoot = new Effect(16, e -> {
@@ -141,4 +146,43 @@ public class EUFx {
         });
     }
 
+    public static Effect prismHit = new Effect(16, e -> {
+        Draw.blend(Blending.additive);
+        Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2f));
+        Lines.stroke(e.fout() * 1.5f);
+        randLenVectors(e.id, 1, e.finpow() * 70f, e.rotation, 80f, (x, y) -> {
+            float ang = Mathf.angle(x, y);
+            Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 8f + 1.5f);
+        });
+        Draw.blend();
+        Draw.reset();
+    });
+
+    public static Effect LACraft = new Effect(60, e ->{
+//        Draw.blend(Blending.additive);
+//        Draw.color(Color.valueOf("ff0000ff").shiftHue(e.fout() * 360f));
+        Draw.color(Pal.surge, EUItems.lightninAlloy.color, e.fin());
+        Lines.stroke(e.fout() * 5);
+        Lines.circle(e.x, e.y, 20* e.fin());
+//        Draw.blend();
+//        Draw.reset();
+    });
+
+    public static Effect Start = new Effect(30, e -> {
+        Draw.color(EUItems.lightninAlloy.color);
+        Lines.stroke(3 * e.fout());
+        if(e.data instanceof Float){
+            float range = (float) e.data;
+            Lines.circle(e.x, e.y, range * e.fout());
+        }
+    });
+
+    public static Effect shieldDefense = new Effect(20, e -> {
+        Draw.color(EUItems.lightninAlloy.color);
+        Lines.stroke(e.fslope() * 2.5f);
+        Lines.poly(e.x, e.y, 6, 3 * e.fout() + 9);
+        Angles.randLenVectors(e.id, 2, 32 * e.fin(), 0, 360,(x, y) -> {
+            Lines.poly(e.x + x, e.y + y, 6, 2 * e.fout() + 2);
+        });
+    });
 }

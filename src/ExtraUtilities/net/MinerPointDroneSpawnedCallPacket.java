@@ -1,5 +1,6 @@
 package ExtraUtilities.net;
 
+import ExtraUtilities.worlds.blocks.production.MinerPoint;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.io.TypeIO;
@@ -32,6 +33,6 @@ public class MinerPointDroneSpawnedCallPacket extends Packet {
     }
 
     public void handleClient() {
-        UnitCargoLoader.cargoLoaderDroneSpawned(this.tile, this.id);
+        MinerPoint.minerPointDroneSpawned(this.tile, this.id);
     }
 }

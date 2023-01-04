@@ -13,11 +13,12 @@ import mindustry.world.draw.*;
 public class DrawRainbow extends DrawBlock {
     public float shiftSpeed = 2f;
     public int size = 6;
-    public TextureRegion[] rainbowRegions = new TextureRegion[size];
+    public TextureRegion[] rainbowRegions = new TextureRegion[6];
 
     public DrawRainbow(float shiftSpeed, int size){
         this.shiftSpeed = shiftSpeed;
         this.size = size;
+        this.rainbowRegions = new TextureRegion[size];
     }
     public DrawRainbow(){
     }

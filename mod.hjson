@@ -2,7 +2,7 @@ displayName: ExtraUtilities
 name:"extra-utilities"
 author: guiY
 main: "ExtraUtilities.ExtraUtilitiesMod"
-description: "槑"
-version: 1.05
+description: "我TM来辣！"
+version: 1.061
 java: true
-minGameVersion: 138.1
+minGameVersion: 138

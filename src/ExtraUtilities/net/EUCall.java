@@ -2,6 +2,7 @@ package ExtraUtilities.net;
 
 import ExtraUtilities.input.EUInputHandler;
 import ExtraUtilities.worlds.blocks.production.MinerPoint;
+import ExtraUtilities.worlds.blocks.turret.wall.ReleaseShieldWall;
 import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.gen.Player;
@@ -51,8 +52,22 @@ public class EUCall {
         }
     }
 
+    public static void ReleaseShieldWallBuildSync(Tile tile, float damage){
+        if (Vars.net.server() || !Vars.net.active()) {
+            ReleaseShieldWall.setDamage(tile, damage);
+        }
+
+        if (Vars.net.server()) {
+            ReleaseShieldWallBuildSyncPacket packet = new ReleaseShieldWallBuildSyncPacket();
+            packet.tile = tile;
+            packet.damage = damage;
+            Vars.net.send(packet, true);
+        }
+    }
+
     public static void registerPackets(){
         Net.registerPacket(MinerPointDroneSpawnedCallPacket::new);
         Net.registerPacket(MinerPointConfigCallPacket::new);
+        Net.registerPacket(ReleaseShieldWallBuildSyncPacket::new);
     }
 }

@@ -54,6 +54,6 @@ public class MinerPointConfigCallPacket extends Packet {
     }
 
     public void handleClient() {
-        InputHandler.tileConfig(this.player, this.build, this.value);
+        EUInputHandler.minerPointConfig(this.player, this.build, this.value);
     }
 }
