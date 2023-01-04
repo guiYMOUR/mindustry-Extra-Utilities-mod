@@ -56,7 +56,7 @@ const { pu } = require("block/production/T2pulverize");
 //const { crusher } = require("block/production/crusher");
 const { crispSteelSmelter } = require('block/production/CrispSteelSmelter');
 const { T2CSm } = require("block/production/T2CrispSteelSmelter");
-const { LA } = require('block/production/LA');
+//const { LA } = require('block/production/LA');
 const { ai } = require('block/production/AdjustableIncinerator');
 //const { DCF } = require('block/effect/DCF');
 const { tiDrill, /*drill, */shovel, slagE, T2WE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
@@ -66,10 +66,11 @@ const { lu } = require('block/effect/LiquidUnloader');
 const { speeder } = require('block/effect/speeder');
 /*const { cure } = require('block/effect/cure');
 const { unitA } = require('block/effect/unitA');
-const { lighthouse } = require('block/effect/lighthouse');
-const { clWall, clWallL, aws, awl, rws, rwl } = require('block/defence/wall');
+const { lighthouse } = require('block/effect/lighthouse');*/
+//const { clWall, clWallL, aws, awl, rws, rwl } = require('block/defence/wall');
+const { clWall, clWallL, rws, rwl } = require('block/defence/wall');
 
-const { unitF } = require('unit/UF');
+/*const { unitF } = require('unit/UF');
 const { suzerain } = require('unit/suzerain');
 const { asphyxia } = require('unit/asphyxia');
 const { apocalypse } = require('unit/apocalypse');
@@ -193,7 +194,7 @@ lib.addToResearch(pu, { parent: 'pulverizer', });
 //lib.addToResearch(crusher, { parent: 'pulverizer', });
 lib.addToResearch(crispSteelSmelter, { parent: 'kiln', });
 lib.addToResearch(T2CSm, { parent: crispSteelSmelter.name, });
-lib.addToResearch(LA, { parent: T2SA.name, });
+//lib.addToResearch(LA, { parent: T2SA.name, });
 lib.addToResearch(ai, { parent: 'incinerator', });
 /*lib.addToResearch(DCF, { parent: 'force-projector',
     objectives: Seq.with(
@@ -222,13 +223,14 @@ lib.addToResearch(lu, { parent: 'liquid-tank', });
 lib.addToResearch(speeder, { parent: 'force-projector', });
 /*lib.addToResearch(cure, { parent: 'mend-projector', });
 lib.addToResearch(unitA, { parent: 'overdrive-projector', });
-lib.addToResearch(lighthouse, { parent: 'illuminator', });
+lib.addToResearch(lighthouse, { parent: 'illuminator', });*/
 lib.addToResearch(clWall, { parent: 'copper-wall-large', });
 lib.addToResearch(clWallL, { parent: clWall.name, });
-lib.addToResearch(aws, { parent: 'surge-wall-large', });
-lib.addToResearch(awl, { parent: aws.name, });
-lib.addToResearch(rws, { parent: aws.name, });
-lib.addToResearch(rwl, { parent: rws.name, });*/
+// lib.addToResearch(aws, { parent: 'surge-wall-large', });
+// lib.addToResearch(awl, { parent: aws.name, });
+// lib.addToResearch(rws, { parent: aws.name, });
+lib.addToResearch(rws, { parent: 'surge-wall-large', });
+lib.addToResearch(rwl, { parent: rws.name, });
 
 /*lib.addToResearch(unitF, { parent: 'tetrative-reconstructor',
     objectives: Seq.with(

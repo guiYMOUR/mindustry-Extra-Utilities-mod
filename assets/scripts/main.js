@@ -23,7 +23,7 @@ require("block/turret/T3fuse");
 // require("block/turret/minisp");
 // require("block/turret/antiaircraft");
 // require("block/turret/sam");
-// require("block/turret/prism");
+require("block/turret/prism");
 // require("block/turret/blackhole");
 // require("block/turret/RG");
 // require("block/turret/sucker");
@@ -50,7 +50,7 @@ require("block/production/T2CrispSteelSmelter");
 require("block/power/GeneratorCrafter");
 require("block/production/T2pulverize");
 //require("block/production/crusher");
-require("block/production/LA");
+//require("block/production/LA");
 require("block/production/AdjustableIncinerator");
 
 require("block/distribution/T2IB");
@@ -64,7 +64,7 @@ require("block/effect/LiquidUnloader");
 require("block/effect/speeder");
 /*require("block/effect/cure");
 require("block/effect/unitA");
-require("block/effect/lighthouse");
+require("block/effect/lighthouse");*/
 require("block/defence/wall");
 
 /*require("unit/UF");

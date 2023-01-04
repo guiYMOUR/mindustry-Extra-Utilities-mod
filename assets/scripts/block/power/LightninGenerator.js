@@ -3,7 +3,7 @@ const myitems = require("game/items");
 const range = 36;
 //火花攻击敌方范围
 const enemyRange = 15*8;
-//输出电量
+//牵引力
 const pullPower = 22*60;
 //根本没用到.jpg
 const effectChance = 0.005;

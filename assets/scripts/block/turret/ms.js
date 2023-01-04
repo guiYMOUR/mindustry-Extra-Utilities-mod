@@ -15,7 +15,7 @@ MS.homingPower = 0.4;
 MS.speed = 1.5;
 MS.damage = 0;
 MS.knockback = 0.2;
-MS.splashDamageRadius = 56;
+MS.splashDamageRadius = 64;
 MS.splashDamage = 200;
 MS.width = 40;
 MS.height = 40;
@@ -26,6 +26,10 @@ MS.hitSize = 0;
 MS.collides = false;
 MS.collidesAir = true;
 MS.lifetime = 300;
+
+//Anuke: for visual stats only.
+MS.buildingDamageMultiplier = 0.25;
+
 MS.status = StatusEffects.shocked;
 
 const storm = extend(PowerTurret, 'magstorm', {});
