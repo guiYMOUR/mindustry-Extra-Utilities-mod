@@ -290,7 +290,6 @@ public class EUBlocks {
             requirements(Category.power, with(Items.metaglass, 600, Items.graphite, 550, Items.silicon, 470, Items.surgeAlloy, 550, EUItems.lightninAlloy, 270));
             fuelItem = EUItems.lightninAlloy;
             consumeItem(fuelItem);
-            consumeLiquid(Liquids.cryofluid, heating / coolantPower).update(false);
             liquidCapacity = 60;
             size = 6;
             itemCapacity = 30;
@@ -301,6 +300,8 @@ public class EUBlocks {
             explosionRadius = 88;
             explosionDamage = 6000;
             coolantPower = 0.1f;
+
+            consumeLiquid(Liquids.cryofluid, heating / coolantPower).update(false);
         }};
 
 

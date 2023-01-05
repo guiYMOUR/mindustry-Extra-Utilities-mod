@@ -59,6 +59,7 @@ public class LightenGenerator extends NuclearReactor {
             lightning = 5;
             lightningLength = 12;
             hitSound = Sounds.release;
+            ammoMultiplier = 1;
             hitEffect = new Effect(60, e ->{
                 Draw.color(EUItems.lightninAlloy.color);
                 Lines.stroke(e.fout() * 2);
