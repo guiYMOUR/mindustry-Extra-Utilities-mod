@@ -1,5 +1,7 @@
 # Extra Utilities
 
+![Logo](assets/sprites-override/ui/logo.png)
+
 - English | [中文](README_cn.md)
 
 - This module does not affect the game balance, and enrich the content of the game, making the original game easier
