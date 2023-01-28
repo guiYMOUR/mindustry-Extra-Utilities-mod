@@ -1,25 +1,43 @@
 package ExtraUtilities.worlds.blocks.heat;
 
+import arc.Core;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
+import arc.struct.IntSet;
 import arc.struct.Seq;
+import arc.util.Eachable;
+import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
+import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
+import mindustry.ui.Bar;
+import mindustry.world.Block;
+import mindustry.world.blocks.heat.HeatBlock;
 import mindustry.world.blocks.heat.HeatConductor;
+import mindustry.world.blocks.heat.HeatConsumer;
+import mindustry.world.draw.DrawBlock;
+import mindustry.world.draw.DrawDefault;
 import mindustry.world.meta.*;
+
+import java.util.Arrays;
 
 import static mindustry.Vars.*;
 
-public class HeatDriver extends HeatConductor {
+public class HeatDriver extends Block {
     public int range = 240;
     public float lost = 0.15f;
+    public float visualMaxHeat = 15f;
+    public DrawBlock drawer = new DrawDefault();
+    public boolean splitHeat = false;
 
     public HeatDriver(String name) {
         super(name);
@@ -28,7 +46,9 @@ public class HeatDriver extends HeatConductor {
         envEnabled |= Env.space;
         configurable = true;
         hasPower = true;
-        visualMaxHeat = 50f;
+        update = solid = rotate = true;
+        rotateDraw = false;
+        size = 3;
 
         config(Point2.class, (HeatDriverBuild tile, Point2 point) -> tile.link = Point2.pack(point.x + tile.tileX(), point.y + tile.tileY()));
         config(Integer.class, (HeatDriverBuild tile, Integer point) -> tile.link = point);
@@ -45,13 +65,52 @@ public class HeatDriver extends HeatConductor {
         super.drawPlace(x, y, rotation, valid);
         Drawf.dashCircle(x * tilesize + this.offset, y * tilesize + this.offset, range, Pal.accent);
     }
+    @Override
+    public void setBars(){
+        super.setBars();
+        addBar("heat", (HeatDriverBuild entity) -> new Bar(() -> Core.bundle.format("bar.heatamount", (int)(entity.heat + 0.001f)), () -> Pal.lightOrange, () -> entity.heat / visualMaxHeat));
+    }
 
-    public class HeatDriverBuild extends HeatConductorBuild{
+    @Override
+    public void load(){
+        super.load();
+
+        drawer.load(this);
+    }
+
+    @Override
+    public void drawPlanRegion(BuildPlan plan, Eachable<BuildPlan> list){
+        drawer.drawPlan(this, plan, list);
+    }
+
+    @Override
+    public TextureRegion[] icons(){
+        return drawer.finalIcons(this);
+    }
+
+    public class HeatDriverBuild extends Building implements HeatBlock, HeatConsumer {
         public float rotation = 90f;
         public float progress = 0f;
         public float resProgress = 0f;
         public int link = -1;
         public Seq<Building> owners = new Seq<>();
+
+        public float heat = 0f;
+        public float[] sideHeat = new float[4];
+        public IntSet cameFrom = new IntSet();
+        public long lastHeatUpdate = -1;
+
+        @Override
+        public void draw(){
+            drawer.draw(this);
+        }
+
+        @Override
+        public void drawLight(){
+            super.drawLight();
+            drawer.drawLight(this);
+        }
+
 
         @Override
         public void updateTile() {
@@ -102,8 +161,15 @@ public class HeatDriver extends HeatConductor {
                 }
                 heat = totalHeat;
             } else {
-                super.updateTile();
+                updateHeat();
             }
+        }
+
+        public void updateHeat(){
+            if(lastHeatUpdate == Vars.state.updateId) return;
+
+            lastHeatUpdate = Vars.state.updateId;
+            heat = calculateHeat(sideHeat, cameFrom);
         }
 
         @Override
@@ -112,9 +178,23 @@ public class HeatDriver extends HeatConductor {
         }
 
         @Override
-        public float heat() {
-            //if(link == -1 && owners.size == 0) return 0;
+        public float warmup(){
+            return heat;
+        }
+
+        @Override
+        public float heat(){
             return (owners.size > 0 && link == -1)? heat : 0;
+        }
+
+        @Override
+        public float heatFrac(){
+            return (heat / visualMaxHeat) / (splitHeat ? 3f : 1);
+        }
+
+        @Override
+        public float[] sideHeat(){
+            return sideHeat;
         }
 
         @Override

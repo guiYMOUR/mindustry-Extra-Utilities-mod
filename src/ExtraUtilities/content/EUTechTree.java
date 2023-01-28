@@ -51,12 +51,6 @@ public class EUTechTree {
                 node(turretResupplyPoint);
             });
         });
-
-        addToNode(impactDrill, () -> {
-            node(minerPoint, () -> {
-                node(minerCenter);
-            });
-        });
         addToNode(surgeCrucible, () -> {
             node(ELA);
         });

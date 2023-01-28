@@ -1,5 +1,6 @@
 package ExtraUtilities.content;
 
+import arc.Core;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
@@ -185,4 +186,27 @@ public class EUFx {
             Lines.poly(e.x + x, e.y + y, 6, 2 * e.fout() + 2);
         });
     });
+
+    public static Effect casingContinue(float lifetime, int shots){
+        return new Effect(lifetime, e->{
+            Draw.z(Layer.bullet);
+            for(int a = 0; a < shots; a++) {
+                float time = lifetime / shots;
+                e.scaled(time * a, b -> {
+                    Draw.color(Pal.lightOrange, Pal.lightishGray, Pal.lightishGray, b.fin());
+                    Draw.alpha(b.fout(0.5f));
+                    float rot = Math.abs(e.rotation) + 90;
+                    int i = -Mathf.sign(e.rotation);
+                    float len = (4 + b.finpow() * 9) * i;
+                    float lr = rot + Mathf.randomSeedRange(e.id + i + 6, 20 * b.fin()) * i;
+                    Draw.rect(Core.atlas.find("casing"),
+                            e.x + Angles.trnsx(lr, len) + Mathf.randomSeedRange(e.id + i + 7, 3 * b.fin()),
+                            e.y + Angles.trnsy(lr, len) + Mathf.randomSeedRange(e.id + i + 8, 3 * b.fin()),
+                            3, 6,
+                            rot + e.fin() * 50 * i
+                    );
+                });
+            }
+        });
+    }
 }

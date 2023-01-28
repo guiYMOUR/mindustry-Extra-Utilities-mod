@@ -1,5 +1,6 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.power.LightenGenerator;
@@ -8,12 +9,15 @@ import ExtraUtilities.worlds.blocks.production.*;
 import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
 import ExtraUtilities.worlds.blocks.turret.guiY;
 import ExtraUtilities.worlds.drawer.*;
+import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
+import arc.Core;
 import arc.func.Prov;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -30,9 +34,16 @@ import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.production.*;
+import mindustry.world.blocks.units.Reconstructor;
+import mindustry.world.blocks.units.UnitAssembler;
+import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static mindustry.type.ItemStack.*;
 import static ExtraUtilities.ExtraUtilitiesMod.*;
@@ -55,8 +66,10 @@ public class EUBlocks {
             LG,
         //turret
             guiY, onyxBlaster, turretResupplyPoint,
+        //unit
+            imaginaryReconstructor,
         //other&sandbox
-            randomer;
+            randomer, fireWork;
     public static void load(){
         arkyciteExtractor = new DrawSolidPump("arkycite-extractor"){{
             requirements(Category.production, with(Items.carbide, 35, Items.oxide, 50, Items.thorium, 150, Items.tungsten, 100));
@@ -309,42 +322,56 @@ public class EUBlocks {
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
             ammo(
-                    Items.silicon, new MissileBulletType(0.5f, 0){
-                        {
-                            frontColor = backColor = Pal.gray;
-                            width = 10f;
-                            height = 12f;
-                            shrinkY = 0f;
-                            ammoMultiplier = 1f;
-                            hitSound = Sounds.none;
-                            shootEffect = despawnEffect = hitEffect = Fx.none;
-                            trailEffect = EUFx.missileTrailSmokeSmall;
-                            trailWidth = 2.2f;
-                            trailLength = 11;
-                            trailColor = Pal.lightTrail;
-                            lifetime = 20f;
-                            homingPower = 0;
-                            fragRandomSpread = 0;
-                            fragAngle = 0;
-                            fragBullets = 1;
-                            fragVelocityMin = 1f;
-                            fragBullet = new MissileBulletType(3.7f, 50) {{
-                                frontColor = backColor = Pal.gray;
-                                width = 10f;
-                                height = 12f;
-                                shrinkY = 0f;
-                                homingPower = 0.08f;
-                                homingRange = 26.25f * 8;
-                                splashDamageRadius = 28f;
-                                splashDamage = 66f;
-                                ammoMultiplier = 4f;
-                                hitEffect = Fx.blastExplosion;
-                                trailWidth = 2.2f;
-                                trailLength = 11;
-                                trailColor = Pal.lightTrail;
-                                buildingDamageMultiplier = 0.3f;
-                            }};
-                        }}
+//                    Items.silicon, new MissileBulletType(0.5f, 0){
+//                        {
+//                            frontColor = backColor = Pal.gray;
+//                            width = 10f;
+//                            height = 12f;
+//                            shrinkY = 0f;
+//                            ammoMultiplier = 1f;
+//                            hitSound = Sounds.none;
+//                            shootEffect = despawnEffect = hitEffect = Fx.none;
+//                            trailEffect = EUFx.missileTrailSmokeSmall;
+//                            trailWidth = 2.2f;
+//                            trailLength = 11;
+//                            trailColor = Pal.lightTrail;
+//                            lifetime = 20f;
+//                            homingPower = 0;
+//                            fragRandomSpread = 0;
+//                            fragAngle = 0;
+//                            fragBullets = 1;
+//                            fragVelocityMin = 1f;
+//                            fragBullet = new MissileBulletType(3.7f, 0) {{
+//                                frontColor = backColor = Pal.gray;
+//                                width = 10f;
+//                                height = 12f;
+//                                shrinkY = 0f;
+//                                homingPower = 0.08f;
+//                                homingRange = 26.25f * 8;
+//                                splashDamageRadius = 32f;
+//                                splashDamage = 88f;
+//                                ammoMultiplier = 4f;
+//                                hitEffect = Fx.blastExplosion;
+//                                trailWidth = 2.2f;
+//                                trailLength = 11;
+//                                trailColor = Pal.lightTrail;
+//                                buildingDamageMultiplier = 0.3f;
+//                            }};
+//                        }}
+                    Items.silicon, new CtrlMissile("quell-missile", -1, -1){{
+                        shootEffect = Fx.shootBig;
+                        smokeEffect = Fx.shootBigSmoke2;
+                        speed = 4.3f;
+                        keepVelocity = false;
+                        maxRange = 6f;
+                        lifetime = 60f;
+                        damage = 120;
+                        splashDamage = 160;
+                        splashDamageRadius = 32;
+                        buildingDamageMultiplier = 0.8f;
+                        hitEffect = despawnEffect = Fx.massiveExplosion;
+                        trailColor = Pal.sapBulletBack;
+                    }}
             );
             drawer = new DrawTurret("reinforced-"){{
                 parts.add(new RegionPart(){{
@@ -393,10 +420,35 @@ public class EUBlocks {
             consumePower(1);
         }};
 
+        imaginaryReconstructor = new Reconstructor("imaginary-reconstructor"){{
+            requirements(Category.units, with(Items.silicon, 6000, Items.graphite, 3500, Items.titanium, 1000, Items.thorium, 800, Items.plastanium, 600, Items.phaseFabric, 350, EUItems.lightninAlloy, 200));
+            size = 11;
+            inRegion = Core.atlas.find(name + "-in");
+            outRegion = Core.atlas.find(name + "-out");
+            upgrades.addAll(
+                    new UnitType[]{UnitTypes.reign, EUUnitTypes.suzerain},
+                    new UnitType[]{UnitTypes.toxopid, EUUnitTypes.asphyxia}
+            );
+            researchCostMultiplier = 0.4f;
+            buildCostMultiplier = 0.7f;
+            constructTime = 60 * 60 * 4.2f;
+
+            consumePower(3f);
+            consumeItems(with(Items.silicon, 900, Items.titanium, 750, Items.plastanium, 450, Items.phaseFabric, 250, EUItems.lightninAlloy, 210));
+            consumeLiquid(Liquids.cryofluid, 3.2f);
+        }};
+
         randomer = new Randomer("randomer"){{
             requirements(Category.distribution, with(Items.silicon, 1));
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.sandboxOnly;
         }};
+
+        fireWork = new fireWork("fireWork"){{
+            requirements(Category.effect, with(Items.silicon, 10));
+            size = 2;
+            alwaysUnlocked = true;
+        }};
+        //override
     }
 }

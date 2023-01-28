@@ -2,20 +2,21 @@ package ExtraUtilities.content;
 
 import arc.graphics.Color;
 import arc.math.Mathf;
+import arc.struct.ObjectSet;
 import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
+import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
 
 public class EUStatusEffects {
 
     public static StatusEffect poison = new StatusEffect("poison"){{
-        transitionDamage = 76;
+        transitionDamage = 156;
         color = Color.valueOf("#cbd97f");
         speedMultiplier = 0.4f;
-        damage = 1.4f;
+        damage = 2.8f;
         healthMultiplier = 0.7f;
         effect = Fx.oily;
-        //reactive = true;
         init(() -> {
             affinity(StatusEffects.sapped, (unit, result, time) -> {
                 unit.damagePierce(transitionDamage);
@@ -30,7 +31,7 @@ public class EUStatusEffects {
         buildSpeedMultiplier = 2;
         speedMultiplier = 1.3f;
         reloadMultiplier = 2;
-        damage = -0.1f;
+        damage = -0.2f;
         effectChance = 0.07f;
         effect = Fx.overclocked;
     }};
@@ -39,6 +40,7 @@ public class EUStatusEffects {
         color = Color.valueOf("8b9bb4");
         speedMultiplier = 0.4f;
         reloadMultiplier = 0.5f;
+        damage = 15/60f;
         effectChance = 0.07f;
         effect = Fx.overclocked;
     }};
@@ -60,5 +62,4 @@ public class EUStatusEffects {
         healthMultiplier = 1.3f;
         effect = Fx.none;
     }};
-
 }

@@ -3,6 +3,6 @@ name:"extra-utilities"
 author: guiY
 main: "ExtraUtilities.ExtraUtilitiesMod"
 description: "我TM来辣！"
-version: 1.061
+version: 1.07
 java: true
 minGameVersion: 138
