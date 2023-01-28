@@ -1,6 +1,6 @@
 # Extra Utilities
 
-![Logo](assets/sprites-override/ui/logo.png)
+![Logo](showImgs/logo.png)
 
 - English | [中文](README_cn.md)
 
