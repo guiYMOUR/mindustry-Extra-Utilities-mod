@@ -1,6 +1,6 @@
 # 更多实用设备
 
-![Logo](assets/sprites-override/ui/logo.png)
+![Logo](showImgs/logo.png)
 
 [English](README.md) | 中文
 
