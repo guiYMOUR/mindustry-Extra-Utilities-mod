@@ -1,5 +1,7 @@
 # 更多实用设备
 
+![Logo](assets/sprites-override/ui/logo.png)
+
 [English](README.md) | 中文
 
 - 本模组不会太大程度影响游戏平衡，同时丰富游戏内容，使原版游戏更简单
