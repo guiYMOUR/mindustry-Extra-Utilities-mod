@@ -53,4 +53,4 @@ Blocks.tetrativeReconstructor.upgrades.add(
 );*/
 Blocks.oxidationChamber.canOverdrive = true;
 Blocks.neoplasiaReactor.canOverdrive = true;
-StatusEffects.sapped.reactive = true;
+//StatusEffects.sapped.reactive = true;

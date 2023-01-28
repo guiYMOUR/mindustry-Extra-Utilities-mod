@@ -37,7 +37,7 @@ storm.consumePower(32);
 storm.shootType = MS;
 //storm.shots = 1;
 storm.shootShake = 5;
-storm.reload = 282;
+storm.reload = 300;
 storm.recoil = 6;
 //storm.restitution = 0.02;
 storm.range = 300;
@@ -178,8 +178,8 @@ storm.requirements = ItemStack.with(
     Items.graphite, 780,
     Items.silicon, 600,
     Items.thorium, 350,
-    Items.surgeAlloy, 250,
-    items.lightninAlloy, 190
+    Items.surgeAlloy, 220,
+    items.lightninAlloy, 300
 );
 storm.buildVisibility = BuildVisibility.shown;
 storm.category = Category.turret;

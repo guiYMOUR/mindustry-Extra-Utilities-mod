@@ -50,16 +50,23 @@ exports.Coolant = function(block, v, coolantMultiplier){
 
 //function from abomb4's lib.js
 //加载声音
-exports.loadSound = (() => {
-    const cache = {};
-    return (path) => {
-        const c = cache[path];
-        if (c === undefined) {
-            return cache[path] = Vars.mods.scripts.loadSound(path);
+//js用法：lib.loadSound("名字", (s) => {你的方块.声音接口 = s});
+exports.loadSound = function (name, setter) {
+    const params = new Packages.arc.assets.loaders.SoundLoader.SoundParameter();
+    params.loadedCallback = new Packages.arc.assets.AssetLoaderParameters.LoadedCallback({
+        finishedLoading(asset, str, cls) {
+            // print('1 load sound ' + name + ' from arc');
+            setter(asset.get(str, cls));
         }
-        return c;
-    }
-})();
+    });
+
+    Core.assets.load("sounds/" + name, Packages.arc.audio.Sound, params).loaded = new Cons({
+        get(a) {
+            // print('2 load sound ' + name + ' from arc');
+            setter(a);
+        }
+    });
+}
 
 
 exports.aModName = "extra-utilities";//你mod的名字

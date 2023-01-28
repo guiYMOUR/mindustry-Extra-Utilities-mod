@@ -18,7 +18,9 @@ prism.shootDuration = 10*60;
 prism.reloadTime = 200;
 prism.consumePower(40);
 // prism.shootSound = lib.loadSound("prismS");
-// prism.loopSound = lib.loadSound("prism-beam");
+// lib.loadSound("prism-beam.ogg", (a) => {
+//     prism.loopSound = a;
+// });
 // prism.loopSoundVolume = 2;
 //prism.canOverdrive = false;
 
@@ -62,7 +64,7 @@ prism.shootType = (() => {
     //     Draw.blend();
     //     Draw.reset();
     // }));
-    const cl = new PrismLaser(800/12, 11, prism.range);
+    const cl = new PrismLaser(900/12, 11, prism.range);
     cl.drawSize = 320;
     cl.incendChance = -1;
     cl.incendAmount = -1;
