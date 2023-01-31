@@ -2,9 +2,9 @@
 
 ![Logo](showImgs/logo.png)
 ![Celebration](showImgs/c-mk1.png)
-![Celebration-GIF](showImgs/mk1.gif)
+![](showImgs/mk1.gif)
 ![Celebration Mk2](showImgs/c-mk2.png)
-![Celebration Mk2-GIF](showImgs/mk2.gif)
+![](showImgs/mk2.gif)
 
 - English | [中文](README_cn.md)
 
