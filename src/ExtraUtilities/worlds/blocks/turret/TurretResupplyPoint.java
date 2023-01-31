@@ -13,6 +13,7 @@ import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.blocks.ItemSelection;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.meta.*;
 
 import static mindustry.Vars.*;
@@ -52,7 +53,7 @@ public class TurretResupplyPoint extends Block {
 
         @Override
         public void updateTile() {
-            indexer.eachBlock(this, range, b -> b.block instanceof ItemTurret, b ->{
+            indexer.eachBlock(this, range, b -> (b.block instanceof Turret && b.block.hasItems), b ->{
                 if((!hasPower || power.status > 0.999) && sortItem != null && items.get(sortItem) > 0 && b.acceptItem(this, sortItem)){
                     b.handleItem(this, sortItem);
                     Fx.itemTransfer.at(x, y, 2, sortItem.color, b);
@@ -73,9 +74,8 @@ public class TurretResupplyPoint extends Block {
         @Override
         public void drawConfigure() {
             super.drawConfigure();
-            indexer.eachBlock(this, range, b -> b.block instanceof ItemTurret, b -> {
-                ItemTurret block = (ItemTurret) b.block;
-                if(sortItem != null && block.ammoTypes.get(this.sortItem) != null) Drawf.square(b.x, b.y, b.block.size * tilesize / 2f + 1, sortItem.color);
+            indexer.eachBlock(this, range, b -> (b.block instanceof Turret && b.block.hasItems), b -> {
+                if(sortItem != null && b.acceptItem(this, sortItem)) Drawf.square(b.x, b.y, b.block.size * tilesize / 2f + 1, sortItem.color);
             });
             Drawf.dashCircle(x, y, range, Pal.accent);
         }

@@ -23,7 +23,7 @@ public class preventCheatingAbility extends Ability {
                     if(owner != null) owner.kill();
                     b.remove();
                 }
-                if(owner != null && (owner.maxHealth > unit.maxHealth * 2 || owner.type.armor > unit.type.armor * 2)) owner.kill();
+                if(owner != null && (owner.maxHealth > unit.maxHealth * 2 || owner.type.armor >= unit.type.armor * 2)) owner.kill();
 
                 Building building = null;
                 if(b.owner instanceof Building) building = (Building) b.owner;

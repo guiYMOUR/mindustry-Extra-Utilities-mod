@@ -9,6 +9,7 @@ import mindustry.type.*;
 import static mindustry.content.Blocks.*;
 import static mindustry.content.TechTree.*;
 import static ExtraUtilities.content.EUBlocks.*;
+import static ExtraUtilities.content.EUUnitTypes.*;
 
 
 public class EUTechTree {
@@ -19,6 +20,17 @@ public class EUTechTree {
         addToNode(surgeSmelter, ()->{
             node(LA, () ->{
                 node(LG);
+            });
+        });
+        addToNode(tetrativeReconstructor, () -> {
+            node(imaginaryReconstructor, () -> {
+                node(suzerain);
+                node(asphyxia);
+            });
+        });
+        addToNode(cyclone, () -> {
+            node(celebration, () -> {
+                node(celebrationMk2);
             });
         });
         //E

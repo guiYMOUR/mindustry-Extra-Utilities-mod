@@ -6,18 +6,22 @@ import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.power.LightenGenerator;
 import ExtraUtilities.worlds.blocks.production.*;
 //import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
+import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
 import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
 import ExtraUtilities.worlds.blocks.turret.guiY;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
+import ExtraUtilities.worlds.entity.bullet.FireWorkBullet;
 import arc.Core;
 import arc.func.Prov;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.struct.Seq;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -47,6 +51,7 @@ import java.util.List;
 
 import static mindustry.type.ItemStack.*;
 import static ExtraUtilities.ExtraUtilitiesMod.*;
+import static ExtraUtilities.worlds.entity.bullet.FireWorkBullet.*;
 
 public class EUBlocks {
     public static Block
@@ -65,7 +70,7 @@ public class EUBlocks {
         //power
             LG,
         //turret
-            guiY, onyxBlaster, turretResupplyPoint,
+            guiY, onyxBlaster, celebration, celebrationMk2, turretResupplyPoint,
         //unit
             imaginaryReconstructor,
         //other&sandbox
@@ -408,11 +413,276 @@ public class EUBlocks {
 
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
         }};
+
+        // 梦幻联动
 //        onyxBlaster = new MultiBulletTurret("onyx-blaster"){{
 //            requirements(Category.turret, with(Items.graphite, 90, Items.silicon, 180, Items.thorium, 70));
 //            size = 4;
 //            //ammo(Items.surgeAlloy, );
 //        }};
+        celebration = new MultiBulletTurret("celebration"){{
+            requirements(Category.turret, with(Items.silicon, 120, Items.titanium, 125, Items.thorium, 70, EUItems.crispSteel, 60));
+            drawer = new DrawTurret("reinforced-");
+            shoot = new ShootSpread(2, 4);
+            inaccuracy = 3;
+            scaledHealth = 150;
+            size = 3;
+            range = 27f * 8;
+            shake = 2f;
+            recoil = 1f;
+            reload = 60f;
+            shootY = 12f;
+            rotateSpeed = 3.1f;
+            coolant = consumeCoolant(0.3f);
+            shootSound = Sounds.missile;
+
+            BulletType f1 = new FireWorkBullet(100, 4, name("mb"), Color.valueOf("EA8878"), 6 * 8);
+            BulletType f2 = new FireWorkBullet(100, 4, Color.valueOf("5CFAD5"));
+            BulletType f3 = new FireWorkBullet(100, 4){{
+                colorful = true;
+                fire = new colorFire(false, 3f, 60){{
+                    stopFrom = 0f;
+                    stopTo = 0f;
+                    trailLength = 9;
+                }};
+                splashDamageRadius = 10 * Vars.tilesize;
+                trailInterval = 0;
+                trailWidth = 2;
+                trailLength = 8;
+            }};
+            BulletType fp1 = new FireWorkBullet(88, 4, name("mb"), Color.valueOf("EA8878"), 6 * 8){{
+                status = StatusEffects.none;
+            }};
+            BulletType fp2 = new FireWorkBullet(88, 4, Color.valueOf("5CFAD5")){{
+                status = StatusEffects.none;
+            }};
+            BulletType fp3 = new FireWorkBullet(88, 4, Items.plastanium.color){{
+                fire = new colorFire(true, 5f, 60){{
+                    trailLength = 9;
+                    stopFrom = 0.1f;
+                    stopTo = 0.7f;
+                }};
+                splashDamageRadius = 8 * Vars.tilesize;
+            }};
+            BulletType[] bullets1 = new BulletType[]{f1, f2, f3};
+            BulletType[] bullets2 = new BulletType[]{fp1, fp2, fp3};
+            ammo(Items.blastCompound, bullets1, Items.plastanium, bullets2);
+        }};
+
+        celebrationMk2 = new MultiBulletTurret("celebration-mk2"){{
+            size = 5;
+            drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawMk2());
+            requirements(Category.turret, with(Items.silicon, 410, Items.graphite, 330, Items.thorium, 280, EUItems.lightninAlloy, 200));
+            inaccuracy = 3;
+            shootEffect = EUFx.Mk2Shoot(90);
+            smokeEffect = Fx.none;
+            scaledHealth = 150;
+            range = 32 * 8;
+            shake = 2f;
+            recoil = 1.5f;
+            reload = 10;
+            shootY = 20;
+            rotateSpeed = 2f;
+            coolant = consumeCoolant(0.8f);
+            coolantMultiplier = 1.5f;
+            shootSound = Sounds.missile;
+            canOverdrive = false;
+
+            //红
+            BulletType f1 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FF1A44"), 6 * 8){{
+                outline = true;
+                trailInterval = 0;
+                trailWidth = 2.4f;
+                trailLength = 10;
+                pierce = true;
+                pierceCap = 3;
+                fire = new colorFire(false, 2.3f, 60){{
+                    stopFrom = 0.55f;
+                    stopTo = 0.55f;
+                    rotSpeed = 666;
+                }};
+                num = 15;
+            }};
+            //橙
+            BulletType ff2 = new FireWorkBullet(150, 6.7f, name("mb-mk2"), Color.valueOf("FFB22C"), 12 * 8){{
+                outline = true;
+                trailWidth = 3.5f;
+                trailLength = 10;
+                trailInterval = 0;
+                width = 22;
+                height = 22;
+                fire = new colorFire(false, 3.6f, 60){{
+                    stopFrom = 0.7f;
+                    stopTo = 0.7f;
+                    rotSpeed = 666;
+                    //speedRod = 0.3f;
+                }};
+                textFire = new spriteBullet(name("fire-EU"));
+                status = StatusEffects.none;
+                num = 18;
+            }
+
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    b.rotation(b.rotation() + Time.delta * 3f);
+                    if(b.timer.get(3, 6)) EUFx.ellipse(14, 8/2, 40, color).at(b.x, b.y, b.rotation());
+                }
+            };
+            BulletType f2 = new BulletType(){{
+                ammoMultiplier = 1;
+                damage = 0;
+                speed = 0;
+                lifetime = 0;
+                fragBullet = ff2;
+                fragBullets = 1;
+                collides = false;
+                absorbable = false;
+                hittable = false;
+                despawnEffect = hitEffect = Fx.none;
+            }
+                public void createFrags(Bullet b, float x, float y){
+                    if(fragBullet != null && (fragOnAbsorb || !b.absorbed)){
+                        fragBullet.create(b, b.x, b.y, b.rotation() - 60);
+                    }
+                }
+            };
+            //黄
+            BulletType f3 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FFF52B"), 6 * 8){{
+                outline = true;
+                trailInterval = 0;
+                trailWidth = 2f;
+                trailLength = 10;
+                weaveMag = 8f;
+                weaveScale = 2f;
+                fire = new colorFire(false, 2.3f, 60){{
+                    stopFrom = 0.55f;
+                    stopTo = 0.55f;
+                    rotSpeed = 666;
+                }};
+                textFire = new spriteBullet(name("fire-Carrot"));
+                status = StatusEffects.none;
+                num = 18;
+            }};
+            //绿
+            BulletType f4 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("2BFF5C"), 6 * 8){{
+                outline = true;
+                trailInterval = 0;
+                trailWidth = 2.4f;
+                trailLength = 10;
+                homingPower = 1;
+                homingRange = 32 * 8;
+                width = 10;
+                height = 10;
+                status = StatusEffects.electrified;
+                fire = new colorFire(false, 2.3f, 60){{
+                    stopFrom = 0.55f;
+                    stopTo = 0.55f;
+                    rotSpeed = 666;
+                }};
+                num = 10;
+            }};
+            //蓝
+            BulletType ff5 = new FireWorkBullet(110, 6, name("mb-mk2"), Color.valueOf("2BBCFF"), 8 * 8){{
+                outline = true;
+                trailInterval = 0;
+                trailWidth = 3f;
+                trailLength = 10;
+                width = 19;
+                height = 19;
+                status = StatusEffects.wet;
+                weaveMag = 8;
+                weaveScale = 6;
+                weaveRandom = false;
+                fire = new colorFire(false, 2.8f, 60){{
+                    stopFrom = 0.55f;
+                    stopTo = 0.55f;
+                    rotSpeed = 666;
+                    //speedRod = 0.3f;
+                }};
+                num = 20;
+            }
+                public void updateWeaving(Bullet b){
+                    if(weaveMag != 0 && b.data instanceof Integer){
+                        b.vel.rotateRadExact((float)Math.sin((b.time + Math.PI * weaveScale/2f) / weaveScale) * weaveMag * Time.delta * Mathf.degRad * (int)b.data);
+                    }
+                }
+            };
+            BulletType f5 = new BulletType(){{
+                ammoMultiplier = 1;
+                damage = 0;
+                speed = 0;
+                lifetime = 0;
+                fragBullet = ff5;
+                fragBullets = 2;
+                collides = false;
+                absorbable = false;
+                hittable = false;
+                despawnEffect = hitEffect = Fx.none;
+            }
+                public void createFrags(Bullet b, float x, float y){
+                    if(fragBullet != null && (fragOnAbsorb || !b.absorbed)){
+                        for(int i : new int[]{-1, 1}) fragBullet.create(b, b.team, b.x, b.y, b.rotation() - 10 * i, -1, 1, 1, i);
+                    }
+                }
+            };
+            //紫
+            BulletType ff6 = new FireWorkBullet(100, 5, name("mb-mk2"), Color.valueOf("B72BFF"), 4 * 8){{
+                outline = true;
+                trailInterval = 0;
+                trailWidth = 2f;
+                trailLength = 10;
+                width = 9;
+                height = 9;
+                status = StatusEffects.sapped;
+                fire = new colorFire(true, 4, 60);
+            }
+
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    if(b.data instanceof Float){
+                        if(b.time > 10) b.rotation(Angles.moveToward(b.rotation(), (float) b.data, Time.delta * 0.5f));
+                    }
+                }
+            };
+            BulletType f6 = new BulletType(){{
+                ammoMultiplier = 1;
+                damage = 0;
+                speed = 0;
+                lifetime = 0;
+                fragBullet = ff6;
+                fragBullets = 3;
+                collides = false;
+                absorbable = false;
+                hittable = false;
+                despawnEffect = hitEffect = Fx.none;
+            }
+                public void createFrags(Bullet b, float x, float y){
+                    if(fragBullet != null && (fragOnAbsorb || !b.absorbed)){
+                        for(int i : new int[]{-1, 0, 1}) fragBullet.create(b, b.team, b.x, b.y, b.rotation() - 10 * i, -1, 1, 1, b.rotation());
+                    }
+                }
+            };
+            //粉
+            BulletType f7 = new FireWorkBullet(125, 5, name("mb-mk2"), Color.valueOf("FF7DF4"), 10 * 8){{
+                outline = true;
+                trailInterval = 0;
+                trailWidth = 2.4f;
+                trailLength = 10;
+                status = StatusEffects.none;
+                textFire = new spriteBullet(name("fire-guiY"), 128, 128);
+                fire = new colorFire(false, 3f, 60){{
+                    stopFrom = 0.6f;
+                    stopTo = 0.6f;
+                    rotSpeed = 666;
+                }};
+            }};
+
+            BulletType[] bullets = new BulletType[]{f1, f2, f3, f4, f5, f6, f7};
+            ammo(Items.thorium, bullets);
+        }};
+
         turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
             requirements(Category.turret, with(Items.graphite, 90, Items.silicon, 180, Items.thorium, 70));
             size = 2;
@@ -423,8 +693,6 @@ public class EUBlocks {
         imaginaryReconstructor = new Reconstructor("imaginary-reconstructor"){{
             requirements(Category.units, with(Items.silicon, 6000, Items.graphite, 3500, Items.titanium, 1000, Items.thorium, 800, Items.plastanium, 600, Items.phaseFabric, 350, EUItems.lightninAlloy, 200));
             size = 11;
-            inRegion = Core.atlas.find(name + "-in");
-            outRegion = Core.atlas.find(name + "-out");
             upgrades.addAll(
                     new UnitType[]{UnitTypes.reign, EUUnitTypes.suzerain},
                     new UnitType[]{UnitTypes.toxopid, EUUnitTypes.asphyxia}
@@ -448,6 +716,7 @@ public class EUBlocks {
             requirements(Category.effect, with(Items.silicon, 10));
             size = 2;
             alwaysUnlocked = true;
+            buildVisibility = BuildVisibility.editorOnly;
         }};
         //override
     }

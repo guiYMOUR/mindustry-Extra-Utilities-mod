@@ -155,7 +155,9 @@ public class EUUnitTypes {
             health = 63000;
             itemCapacity = 240;
             ammoType = new ItemAmmoType(Items.thorium);
-            abilities.add(new TerritoryFieldAbility(20 * 8, 72, 120), new ShieldRegenFieldAbility(100, 1000, 120, 20 * 8), new preventCheatingAbility());
+            abilities.add(new TerritoryFieldAbility(20 * 8, 72, 120){{
+                open = true;
+            }}, new ShieldRegenFieldAbility(100, 1000, 120, 20 * 8), new preventCheatingAbility());
             weapons.add(
                     new Weapon(name("suzerain-weapon")){{
                         shake = 5;

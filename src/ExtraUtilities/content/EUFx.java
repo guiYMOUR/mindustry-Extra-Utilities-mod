@@ -7,7 +7,9 @@ import arc.graphics.g2d.*;
 import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.struct.FloatSeq;
 import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
@@ -207,6 +209,59 @@ public class EUFx {
                     );
                 });
             }
+        });
+    }
+
+    public static Effect ellipse(float startRad, int num, float lifetime, Color color){
+        return new Effect(lifetime, e ->{
+            float length = startRad * e.fin();
+            float width = length/2;
+
+            Draw.color(color);
+
+            for(int i = 0; i <= num; i++){
+                float rot = -90f + 180f * i / (float)num;
+                Tmp.v1.trnsExact(rot, width);
+
+                point(
+                        (Tmp.v1.x) / width * length, //convert to 0..1, then multiply by desired length and offset relative to previous segment
+                        Tmp.v1.y, //Y axis remains unchanged
+                        e.x, e.y,
+                        e.rotation + 90,
+                        2f * e.fout()
+                );
+            }
+
+            for(int i = 0; i <= num; i++){
+                float rot = 90f + 180f * i / (float)num;
+                Tmp.v1.trnsExact(rot, width);
+
+                point(
+                        (Tmp.v1.x) / width * length, //convert to 0..1, then multiply by desired length and offset relative to previous segment
+                        Tmp.v1.y, //Y axis remains unchanged
+                        e.x, e.y,
+                        e.rotation + 90,
+                        2f * e.fout()
+                );
+            }
+        });
+    }
+    private static void point(float x, float y, float baseX, float baseY, float rotation, float rad){
+        Tmp.v1.set(x, y).rotateRadExact(rotation * Mathf.degRad);
+        Fill.circle(Tmp.v1.x + baseX, Tmp.v1.y + baseY, rad);
+    }
+
+    public static Effect Mk2Shoot(float rotation){
+        return new Effect(30, e ->{
+            Draw.z(Layer.effect - 0.1f);
+            Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
+            for(float r : new float[]{-rotation, rotation}) {
+                Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + r, 0, (x, y) -> {
+                    Fill.circle(e.x + x, e.y + y, 2 * e.fout());
+                });
+            }
+            Draw.blend();
+            Draw.reset();
         });
     }
 }

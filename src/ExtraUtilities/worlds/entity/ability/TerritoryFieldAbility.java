@@ -28,6 +28,7 @@ public class TerritoryFieldAbility extends Ability {
     public float reload = 60f * 1.5f;
 
     public boolean active = true;
+    public boolean open = false;
 
     public float applyParticleChance = 13f;
 
@@ -60,6 +61,12 @@ public class TerritoryFieldAbility extends Ability {
             u.apply(EUStatusEffects.speedDown, 60);
             if(damageAm > 0 && !u.dead) u.damage((damageAm / 60f) * Time.delta);
         });
+
+        if(open){
+            Units.nearbyEnemies(unit.team, unit.x, unit.y, range * 2, u -> {
+                if(!u.dead && u.type != null && (u.health > unit.maxHealth * 2 || u.type.armor >= unit.type.armor * 2)) u.kill();
+            });
+        }
 
         if(!active) return;
 
