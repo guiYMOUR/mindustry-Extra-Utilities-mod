@@ -1,6 +1,10 @@
 # 更多实用设备
 
 ![Logo](showImgs/logo.png)
+![喜庆弹射器](showImgs/c-mk1.png)
+![](showImgs/mk1.gif)
+![喜庆弹射器Mk2](showImgs/c-mk2.png)
+![](showImgs/mk2.gif)
 
 [English](README.md) | 中文
 
