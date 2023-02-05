@@ -8,8 +8,7 @@
 
 - 本模组不会太大程度影响游戏平衡，同时丰富游戏内容，使原版游戏更简单
 
-- QQ ①群：513165958
-- QQ ②群：338651136
+- QQ ①群：588379643
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - 创意工坊：https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720
 
