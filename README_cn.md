@@ -10,7 +10,7 @@
 
 - QQ ①群：588379643
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
-- 创意工坊：https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720
+- 创意工坊：[https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720](https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527)
 
 ## mod扩展方向
 
