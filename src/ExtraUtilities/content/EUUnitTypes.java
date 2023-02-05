@@ -4,6 +4,7 @@ import ExtraUtilities.ai.MinerPointAI;
 import ExtraUtilities.worlds.entity.ability.TerritoryFieldAbility;
 import ExtraUtilities.worlds.entity.ability.preventCheatingAbility;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
+import ExtraUtilities.worlds.entity.bullet.PercentDamage;
 import ExtraUtilities.worlds.entity.bullet.SCSBullet;
 import arc.Core;
 import arc.func.Prov;
@@ -15,13 +16,16 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
+import arc.struct.ObjectSet;
 import mindustry.Vars;
 import mindustry.ai.UnitCommand;
 import mindustry.content.*;
 import mindustry.entities.Effect;
 import mindustry.entities.Lightning;
+import mindustry.entities.abilities.EnergyFieldAbility;
 import mindustry.entities.abilities.ShieldRegenFieldAbility;
 import mindustry.entities.abilities.SuppressionFieldAbility;
+import mindustry.entities.abilities.UnitSpawnAbility;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.effect.MultiEffect;
@@ -56,12 +60,13 @@ public class EUUnitTypes {
 
         EntityMapping.nameMap.put(name("suzerain"), EntityMapping.idMap[4]);
         EntityMapping.nameMap.put(name("asphyxia"), EntityMapping.idMap[33]);
+        EntityMapping.nameMap.put(name("apocalypse"), EntityMapping.idMap[3]);
     }
 
     public static UnitType
         miner, T2miner,
         //T6
-        suzerain, asphyxia;
+        suzerain, asphyxia, apocalypse;
     public static void load(){
         miner = new ErekirUnitType("miner"){{
             defaultCommand = UnitCommand.mineCommand;
@@ -155,7 +160,7 @@ public class EUUnitTypes {
             health = 63000;
             itemCapacity = 240;
             ammoType = new ItemAmmoType(Items.thorium);
-            abilities.add(new TerritoryFieldAbility(20 * 8, 72, 120){{
+            abilities.add(new TerritoryFieldAbility(20 * 8, 90, 210){{
                 open = true;
             }}, new ShieldRegenFieldAbility(100, 1000, 120, 20 * 8), new preventCheatingAbility());
             weapons.add(
@@ -213,7 +218,7 @@ public class EUUnitTypes {
                         shake = 4;
                         shootY = 7;
                         shoot = new ShootSpread(2, 10f);
-                        bullet = new FlakBulletType(8f, 50f){{
+                        bullet = new FlakBulletType(8f, 40f){{
                             sprite = "missile-large";
 
                             lifetime = 40f;
@@ -250,7 +255,7 @@ public class EUUnitTypes {
                             flakInterval = 20f;
                             despawnShake = 3f;
 
-                            fragBullet = new LaserBulletType(45f){{
+                            fragBullet = new LaserBulletType(40f){{
                                 colors = new Color[]{Pal.surge.cpy().a(0.4f), Pal.surge, Color.white};
                                 buildingDamageMultiplier = 0.4f;
                                 width = 19f;
@@ -325,7 +330,7 @@ public class EUUnitTypes {
             }};
             
             BulletType asl = new ContinuousLaserBulletType(){{
-                damage = 96;
+                damage = 106;
                 length = 240;
                 width = 7;
                 hitEffect = Fx.sapExplosion;
@@ -420,6 +425,143 @@ public class EUUnitTypes {
                         controllable = false;
                         bullet = sapper;
                         shootSound = Sounds.sap;
+                    }}
+            );
+        }};
+        apocalypse = new UnitType("apocalypse"){{
+            armor = 18;
+            flying = true;
+            speed = 0.51f;
+            hitSize = 62;
+            accel = 0.04f;
+            rotateSpeed = 1;
+            baseRotateSpeed = 20;
+            drag = 0.018f;
+            health = 60000;
+            lowAltitude = true;
+            itemCapacity = 320;
+            engineOffset = 41;
+            engineSize = 11;
+            targetFlags = UnitTypes.eclipse.targetFlags;
+            immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting);
+            ammoType = new ItemAmmoType(Items.pyratite);
+
+            abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
+            abilities.add(new EnergyFieldAbility(60f, 90f, 192f){{
+                color = Color.valueOf("FFA665");
+                status = StatusEffects.unmoving;
+                statusDuration = 60f;
+                maxTargets = 30;
+                healPercent = 0.8f;
+            }});
+
+            PercentDamage bubble = new PercentDamage(){{
+                damage = 13;
+                status = StatusEffects.sapped;
+            }};
+
+            weapons.add(
+                    new Weapon(name("apocalypse-m1")){{
+                        top = false;
+                        shake = 3;
+                        shootY = 2;
+                        bullet = new MissileBulletType(3.7f, 36){{
+                            width = 8f;
+                            height = 8f;
+                            shrinkY = 0f;
+                            splashDamageRadius = 30f;
+                            splashDamage = 72;
+                            hitEffect = Fx.blastExplosion;
+                            despawnEffect = Fx.blastExplosion;
+                            status = StatusEffects.blasted;
+                            statusDuration = 60f;
+                        }};
+                        rotate = true;
+                        rotateSpeed = 4;
+                        x = 35;
+                        y = 23;
+                        shoot.shotDelay = 3;
+                        xRand = 2;
+                        shoot.shots = 3;
+                        inaccuracy = 3;
+                        ejectEffect = Fx.none;
+                        shootSound = Sounds.missile;
+                        reload = 30;
+                        recoil = 2;
+                    }},
+                    new Weapon(name("apocalypse-m1")){{
+                        top = false;
+                        shake = 3;
+                        shootY = 2;
+                        bullet = new MissileBulletType(3.7f, 36){{
+                            width = 8f;
+                            height = 8f;
+                            shrinkY = 0f;
+                            splashDamageRadius = 30f;
+                            splashDamage = 72;
+                            hitEffect = Fx.blastExplosion;
+                            despawnEffect = Fx.blastExplosion;
+                            status = StatusEffects.blasted;
+                            statusDuration = 60f;
+                        }};
+                        rotate = true;
+                        rotateSpeed = 4;
+                        x = 30;
+                        y = -27;
+                        shoot.shotDelay = 3;
+                        xRand = 2;
+                        shoot.shots = 3;
+                        inaccuracy = 3;
+                        ejectEffect = Fx.none;
+                        shootSound = Sounds.missile;
+                        reload = 30;
+                        recoil = 2;
+                    }},
+                    new Weapon(name("apocalypse-bubble")){{
+                        top = false;
+                        shootY = 6;
+                        bullet = bubble;
+                        rotate = true;
+                        rotateSpeed = 8;
+                        x = 14;
+                        y = 29;
+                        shoot.shotDelay = 3;
+                        xRand = 2;
+                        shoot.shots = 5;
+                        inaccuracy = 1;
+                        ejectEffect = Fx.none;
+                        reload = 6;
+                        recoil = 1;
+                    }
+
+                        @Override
+                        public void addStats(UnitType u, Table t) {
+                            super.addStats(u, t);
+                            t.row();
+                            t.add(Core.bundle.format("stat." + name("percentDamage"), bubble.percent * 100));
+                        }
+                    },
+                    new Weapon(name("apocalypse-weapon")){{
+                        top = false;
+                        shake = 4;
+                        shootY = 16;
+                        reload = 90;
+                        bullet = new RailBulletType(){{
+                            shootEffect = Fx.railShoot;
+                            length = 400;
+                            pierceEffect = Fx.railHit;
+                            hitEffect = Fx.massiveExplosion;
+                            smokeEffect = Fx.shootBig2;
+                            damage = 986;
+                            pierceDamageFactor = 0.5f;
+                            pointEffectSpace = 60f;
+                            pointEffect = Fx.railTrail;
+                        }};
+                        rotate = true;
+                        rotateSpeed = 2;
+                        shootSound = Sounds.railgun;
+                        x = 28;
+                        y = -3;
                     }}
             );
         }};

@@ -11,6 +11,7 @@ import arc.struct.ObjectMap;
 import arc.struct.ObjectMap.*;
 import arc.struct.Seq;
 import arc.util.Nullable;
+import arc.util.Strings;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -66,7 +67,7 @@ public class MultiBulletTurret extends Turret {
         stats.add(Stat.ammo, EUStatValues.ammo(ammoTypes));
         if(all){
             stats.remove(Stat.reload);
-            stats.add(Stat.reload, Core.bundle.format("stat.extra-utilities-shootTime"), reload/60);
+            stats.add(Stat.reload, Core.bundle.format("stat.extra-utilities-shootTime", Strings.autoFixed(reload/60f, 2)));
         }
     }
 
@@ -266,19 +267,15 @@ public class MultiBulletTurret extends Turret {
                 type[0].chargeEffect.at(bulletX, bulletY, rotation);
             }
 
-            if(all){
-                bullets(type, bulletX, bulletY, rotation, null);
-            } else {
-                shoot.shoot(totalShots, (xOffset, yOffset, angle, delay, mover) -> {
-                    queuedBullets++;
-                    if (delay > 0f) {
-                        Time.run(delay, () -> bullets(type, xOffset, yOffset, angle, mover));
-                    } else {
-                        bullets(type, xOffset, yOffset, angle, mover);
-                    }
-                    totalShots++;
-                });
-            }
+            shoot.shoot(totalShots, (xOffset, yOffset, angle, delay, mover) -> {
+                queuedBullets++;
+                if (delay > 0f) {
+                    Time.run(delay, () -> bullets(type, xOffset, yOffset, angle, mover));
+                } else {
+                    bullets(type, xOffset, yOffset, angle, mover);
+                }
+                totalShots++;
+            });
 
             if(consumeAmmoOnce){
                 useAmmo();

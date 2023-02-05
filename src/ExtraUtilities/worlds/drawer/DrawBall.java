@@ -29,6 +29,7 @@ public class DrawBall extends DrawPart {
     public float layer = -1f, layerOffset = 0f;
     public PartProgress progress = PartProgress.warmup;
 
+    public boolean line = false;
 
     //public transient Trail trail;
 
@@ -78,12 +79,15 @@ public class DrawBall extends DrawPart {
         float sin = Mathf.sin(Time.time, 6, 0.6f) * p;
 
         Draw.color(color);
-        Fill.circle(lastEnd.x, lastEnd.y, trailWid + sin);
+        if(line){
+            Lines.stroke(trailWid/2f + sin);
+            Lines.circle(lastEnd.x, lastEnd.y, trailWid + sin);
+        } else Fill.circle(lastEnd.x, lastEnd.y, trailWid + sin);
 //        if(trail == null){
 //            trail = new Trail(trailLen);
 //        }
 //        trail.length = trailLen;
-//        trail.draw(color, trailWid);
+//        trail.draw(color, 1);
 //        trail.update(lastEnd.x, lastEnd.y, 1);
     }
 }

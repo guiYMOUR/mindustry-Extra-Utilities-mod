@@ -155,8 +155,7 @@ public class MinerPoint extends Block {
 
     public static void minerPointDroneSpawned(Tile tile, int id){
         if(tile == null || !(tile.build instanceof MinerPointBuild)) return;
-        MinerPointBuild build = (MinerPointBuild)tile.build;
-        build.spawned(id);
+        ((MinerPointBuild)tile.build).spawned(id);
     }
 
     public class MinerPointBuild extends Building {
@@ -216,8 +215,7 @@ public class MinerPoint extends Block {
                 if(!net.client()){
                     Unit unit = MinerUnit.create(team);
                     if(unit instanceof BuildingTetherc){
-                        BuildingTetherc bt = (BuildingTetherc) unit;
-                        bt.building(this);
+                        ((BuildingTetherc) unit).building(this);
                     }
                     unit.set(x, y);
                     unit.rotation = 90f;

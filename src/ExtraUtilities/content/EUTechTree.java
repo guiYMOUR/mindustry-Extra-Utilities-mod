@@ -1,11 +1,13 @@
 package ExtraUtilities.content;
 
 import arc.struct.*;
+import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.ctype.*;
 import mindustry.game.Objectives.*;
 import mindustry.type.*;
 
+import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static mindustry.content.Blocks.*;
 import static mindustry.content.TechTree.*;
 import static ExtraUtilities.content.EUBlocks.*;
@@ -22,11 +24,24 @@ public class EUTechTree {
                 node(LG);
             });
         });
+        addToNode(pyrolysisGenerator, () -> {
+            node(liquidConsumeGenerator);
+        });
+        addToNode(thermalGenerator, () -> {
+            node(thermalReactor);
+        });
         addToNode(tetrativeReconstructor, () -> {
             node(imaginaryReconstructor, () -> {
                 node(suzerain);
                 node(asphyxia);
+                node(apocalypse);
             });
+        });
+        addToNode(segment, () -> {
+            node(dissipation);
+        });
+        addToNode(Vars.content.block(name("shotgun")), () -> {
+            node(onyxBlaster);
         });
         addToNode(cyclone, () -> {
             node(celebration, () -> {
@@ -38,6 +53,12 @@ public class EUTechTree {
             node(heatTransfer, () -> {
                 node(heatDriver);
             });
+        });
+        addToNode(heatRouter, () -> {
+            node(heatDistributor);
+        });
+        addToNode(slagHeater, () -> {
+            node(slagReheater);
         });
         addToNode(electricHeater, () -> {
             node(thermalHeater, () -> {});

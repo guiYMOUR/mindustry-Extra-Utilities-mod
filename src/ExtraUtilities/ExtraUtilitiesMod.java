@@ -64,18 +64,23 @@ public class ExtraUtilitiesMod extends Mod{
                     cont.add(Core.bundle.format("tips.name")).row();
                     cont.add(Core.bundle.format("tips.description")).row();
                     cont.pane(t -> {
+                        addToTable(EUBlocks.heatDistributor, t);
+                        addToTable(EUBlocks.liquidConsumeGenerator, t);
+                        addToTable(EUBlocks.onyxBlaster, t);
+                        addToTable(EUBlocks.celebration, t);
+                        addToTable(EUBlocks.celebrationMk2, t);
                         addToTable(EUBlocks.liquidIncinerator, t);
                         addToTable(EUBlocks.ELA, t);
                         addToTable(EUBlocks.ekMessDriver, t);
-                        addToTable(EUBlocks.liquidSorter, t);
-                        addToTable(EUBlocks.liquidValve, t);
-                        addToTable(EUBlocks.arkyciteExtractor, t);
-                        addToTable(EUBlocks.minerPoint, t);
-                        addToTable(EUBlocks.minerCenter, t);
-                        addToTable(EUBlocks.heatDriver, t);
-                        addToTable(EUBlocks.heatTransfer, t);
-                        addToTable(EUBlocks.thermalHeater, t);
-                        addToTable(EUBlocks.T2oxide, t);
+//                        addToTable(EUBlocks.liquidSorter, t);
+//                        addToTable(EUBlocks.liquidValve, t);
+//                        addToTable(EUBlocks.arkyciteExtractor, t);
+//                        addToTable(EUBlocks.minerPoint, t);
+//                        addToTable(EUBlocks.minerCenter, t);
+//                        addToTable(EUBlocks.heatDriver, t);
+//                        addToTable(EUBlocks.heatTransfer, t);
+//                        addToTable(EUBlocks.thermalHeater, t);
+//                        addToTable(EUBlocks.T2oxide, t);
                         addToTable(EUBlocks.guiY, t);
                     }).grow().center().maxWidth(960f);
                     buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
@@ -113,7 +118,7 @@ public class ExtraUtilitiesMod extends Mod{
     public ExtraUtilitiesMod() {
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
-        Events.on(ClientLoadEvent.class, e -> Time.runTask(30f, ExtraUtilitiesMod::override));
+        //Events.on(ClientLoadEvent.class, e -> Time.runTask(30f, ExtraUtilitiesMod::override));
     }
 
     @Override

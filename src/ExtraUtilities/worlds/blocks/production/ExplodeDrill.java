@@ -191,7 +191,7 @@ public class ExplodeDrill extends Drill {
 
                 if(wasVisible){
                     Effect.shake(shake, shake, this);
-                    burstSound.at(this);
+                    burstSound.at(x, y, 1, 0.3f);
                     //到时候在独立？
                     for(int i = 0; i < 6; i++) {
                         float rx = x + Mathf.range(size * size), ry = y + Mathf.range(size * size);
@@ -216,6 +216,14 @@ public class ExplodeDrill extends Drill {
             Draw.color();
             Draw.blend();
             Draw.rect(region, x, y);
+            if(drawRim){
+                Draw.color(glowColor);
+                Draw.alpha(warmup * 0.6f * (1f - 0.2f + Mathf.absin(Time.time, 4f, 0.2f)));
+                Draw.blend(Blending.additive);
+                Draw.rect(rimRegion, x, y);
+                Draw.blend();
+                Draw.color();
+            }
             Draw.color(dominantItem.color);
             Draw.rect(itemRegion, x, y);
             Draw.z(Layer.bullet-0.01f);
