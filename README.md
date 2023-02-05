@@ -9,8 +9,7 @@
 - This module does not affect the game balance, and enrich the content of the game, making the original game easier
 
 
-- QQ Group①：513165958
-- QQ Group②：338651136
+- QQ Group①：588379643
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - Steam Workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720
 - Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
