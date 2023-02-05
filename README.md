@@ -1,8 +1,6 @@
 # Extra Utilities
 
 ![Logo](showImgs/logo.png)
-![Celebration](showImgs/c-mk1.png)
-![](showImgs/mk1.gif)
 ![Celebration Mk2](showImgs/c-mk2.png)
 ![](showImgs/mk2.gif)
 
