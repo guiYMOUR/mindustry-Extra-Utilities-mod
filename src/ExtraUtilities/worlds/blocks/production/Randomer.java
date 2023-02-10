@@ -9,7 +9,7 @@ import mindustry.world.meta.*;
 import static mindustry.Vars.*;
 
 public class Randomer extends Block {
-    public int itemsPerSecond = 100;
+    public int itemsPerSecond = 10000;
 
     public Randomer(String name){
         super(name);

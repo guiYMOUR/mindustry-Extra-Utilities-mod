@@ -1,7 +1,11 @@
 package ExtraUtilities.content;
 
+import arc.Core;
 import arc.func.Cons;
+import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.math.geom.Position;
+import arc.scene.style.Drawable;
 import arc.struct.Seq;
 import mindustry.content.Fx;
 import mindustry.entities.bullet.BulletType;
@@ -19,6 +23,7 @@ import mindustry.world.blocks.power.PowerBlock;
 import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.blocks.storage.CoreBlock;
 
+import static arc.Core.*;
 import static mindustry.Vars.*;
 
 /**unfinished*/

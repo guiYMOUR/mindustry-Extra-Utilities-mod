@@ -1,5 +1,6 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
@@ -11,10 +12,12 @@ import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
 import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
 import ExtraUtilities.worlds.blocks.turret.dissipation;
 import ExtraUtilities.worlds.blocks.turret.guiY;
+import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import ExtraUtilities.worlds.entity.bullet.FireWorkBullet;
 import arc.Core;
+import arc.Events;
 import arc.func.Prov;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -30,12 +33,15 @@ import arc.util.Time;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
+import mindustry.entities.Units;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
+import mindustry.game.EventType;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
+import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
@@ -70,7 +76,7 @@ public class EUBlocks {
         //liquid
             liquidSorter, liquidValve, liquidIncinerator,
         //transport
-            ekMessDriver,
+            itemNode, liquidNode, ekMessDriver,
         //production
             T2oxide,
         /** 光束合金到此一游*/
@@ -80,11 +86,11 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG,
         //turret
-        dissipation, guiY, onyxBlaster, celebration, celebrationMk2, turretResupplyPoint,
+            dissipation, guiY, onyxBlaster, celebration, celebrationMk2, turretResupplyPoint,
         //unit
-            imaginaryReconstructor,
+            imaginaryReconstructor, finalF,
         //other&sandbox
-            randomer, fireWork;
+            randomer, fireWork, allNode, ADC;
     public static void load(){
         arkyciteExtractor = new DrawSolidPump("arkycite-extractor"){{
             requirements(Category.production, with(Items.carbide, 35, Items.oxide, 50, Items.thorium, 150, Items.tungsten, 100));
@@ -100,7 +106,7 @@ public class EUBlocks {
             size = 3;
         }};
         quantumExplosion = new ExplodeDrill("quantum-explosion"){{
-            requirements(Category.production, with(Items.thorium, 999, Items.silicon, 300, Items.phaseFabric, 100, Items.surgeAlloy, 200));
+            requirements(Category.production, with(Items.thorium, 600, Items.silicon, 800, Items.phaseFabric, 200, Items.surgeAlloy, 200));
             drillTime = 60f * 3f;
             size = 5;
             drillMultipliers.put(Items.beryllium, 2f);
@@ -185,6 +191,27 @@ public class EUBlocks {
         }};
 
 
+        itemNode = new PhaseNode("i-node"){{
+            requirements(Category.distribution, with(Items.copper, 110, Items.lead, 80, Items.silicon, 100, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 18));
+            buildCostMultiplier = 0.5f;
+            range = 25;
+            hasPower = true;
+            envEnabled |= Env.space;
+            consumePower(1f);
+            transportTime = 1f;
+        }};
+        liquidNode = new PhaseNode("lb"){{
+            requirements(Category.liquid, with(Items.metaglass, 80, Items.silicon, 90, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 25));
+            buildCostMultiplier = 0.5f;
+            range = 25;
+            hasPower = true;
+            canOverdrive = false;
+            hasLiquids = true;
+            hasItems = false;
+            outputsLiquid = true;
+            consumePower(1f);
+            //transportTime = 1;
+        }};
         ekMessDriver = new MassDriver("Ek-md"){{
             requirements(Category.distribution, with(Items.silicon, 75, Items.tungsten, 100, Items.thorium, 55, Items.carbide, 45));
             size = 2;
@@ -350,7 +377,7 @@ public class EUBlocks {
         liquidConsumeGenerator = new ConsumeGenerator("liquid-generator"){{
             requirements(Category.power, with(Items.graphite, 120, Items.silicon, 115, Items.thorium, 65, Items.phaseFabric, 40));
             size = 3;
-            powerProduction = 510/60f;
+            powerProduction = 660/60f;
             drawer = new DrawMulti(
                     new DrawDefault(),
                     new DrawWarmupRegion(){{
@@ -823,6 +850,7 @@ public class EUBlocks {
                     stopFrom = 0.7f;
                     stopTo = 0.7f;
                     rotSpeed = 666;
+                    hittable = true;
                     //speedRod = 0.3f;
                 }};
                 textFire = new spriteBullet(name("fire-EU"));
@@ -867,6 +895,7 @@ public class EUBlocks {
                     stopFrom = 0.55f;
                     stopTo = 0.55f;
                     rotSpeed = 666;
+                    hittable = true;
                 }};
                 textFire = new spriteBullet(name("fire-Carrot"));
                 status = StatusEffects.none;
@@ -943,7 +972,9 @@ public class EUBlocks {
                 width = 9;
                 height = 9;
                 status = StatusEffects.sapped;
-                fire = new colorFire(true, 4, 60);
+                fire = new colorFire(true, 4, 60){{
+                    hittable = true;
+                }};
             }
 
                 @Override
@@ -984,6 +1015,7 @@ public class EUBlocks {
                     stopFrom = 0.6f;
                     stopTo = 0.6f;
                     rotSpeed = 666;
+                    hittable = true;
                 }};
             }};
 
@@ -999,24 +1031,88 @@ public class EUBlocks {
         }};
 
         imaginaryReconstructor = new Reconstructor("imaginary-reconstructor"){{
-            requirements(Category.units, with(Items.silicon, 6000, Items.graphite, 3500, Items.titanium, 1000, Items.thorium, 800, Items.plastanium, 600, Items.phaseFabric, 350, EUItems.lightninAlloy, 200));
+            requirements(Category.units, with(Items.silicon, 3000, Items.graphite, 3500, Items.titanium, 1000, Items.thorium, 800, Items.plastanium, 600, Items.phaseFabric, 350, EUItems.lightninAlloy, 200));
             size = 11;
             upgrades.addAll(
                     new UnitType[]{UnitTypes.reign, EUUnitTypes.suzerain},
                     new UnitType[]{UnitTypes.toxopid, EUUnitTypes.asphyxia},
-                    new UnitType[]{UnitTypes.eclipse, EUUnitTypes.apocalypse}
+                    new UnitType[]{UnitTypes.eclipse, EUUnitTypes.apocalypse},
+                    new UnitType[]{UnitTypes.omura, EUUnitTypes.nihilo}
             );
             researchCostMultiplier = 0.4f;
             buildCostMultiplier = 0.7f;
             constructTime = 60 * 60 * 4.2f;
 
-            consumePower(3f);
-            consumeItems(with(Items.silicon, 900, Items.titanium, 750, Items.plastanium, 450, Items.phaseFabric, 250, EUItems.lightninAlloy, 210));
+            consumePower(30f);
+            consumeItems(with(Items.silicon, 1200, Items.titanium, 750, Items.plastanium, 450, Items.phaseFabric, 250, EUItems.lightninAlloy, 210));
             consumeLiquid(Liquids.cryofluid, 3.2f);
+            liquidCapacity = 192;
         }};
+        finalF = new UnitFactory("finalF"){{
+            requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1200));
+            size = 5;
+            consumePower(30);
+            consumeLiquid(Liquids.water, 1);
+            alwaysUnlocked = true;
+            config(Integer.class, (UnitFactoryBuild tile, Integer i) -> {
+                tile.currentPlan = i < 0 || i >= plans.size ? -1 : i;
+                tile.progress = 0;
+                tile.payload = null;
+            });
+            config(UnitType.class, (UnitFactoryBuild tile, UnitType val) -> {
+                tile.currentPlan = plans.indexOf(p -> p.unit == val);
+                tile.progress = 0;
+                tile.payload = null;
+            });
+            liquidCapacity = 60;
+            //buildVisibility = BuildVisibility.sandboxOnly;
+        }
+
+            @Override
+            public void init() {
+                for(int i = 0; i < Vars.content.units().size; i++){
+                    UnitType u = Vars.content.unit(i);
+                    if(u != null && u.getFirstRequirements() != null){
+                        ItemStack[] is = u.getFirstRequirements();
+                        ItemStack[] os = new ItemStack[is.length];
+                        for (int a = 0; a < is.length; a++) {
+                            os[a] = new ItemStack(is[a].item, is[a].amount >= 40 ? (int) (is[a].amount * 1.5) : is[a].amount);
+                        }
+                        float time = 0;
+                        if(u.getFirstRequirements().length > 0) {
+                            for (ItemStack itemStack : os) {
+                                time += itemStack.amount * itemStack.item.cost;
+                            }
+                        }
+                        if(u.armor < 30) plans.add(new UnitPlan(u, time * 6, os));
+                        else plans.add(new UnitPlan(u, time * 8, is));
+                    }
+                }
+                super.init();
+            }
+        };
+
 
         randomer = new Randomer("randomer"){{
             requirements(Category.distribution, with(Items.silicon, 1));
+            alwaysUnlocked = true;
+            buildVisibility = BuildVisibility.sandboxOnly;
+        }};
+        allNode = new PhaseNode("a-n"){{
+            requirements(Category.effect, with(Items.silicon, 1));
+            range = 35;
+            hasPower = false;
+            canOverdrive = false;
+            hasLiquids = true;
+            hasItems = true;
+            outputsLiquid = true;
+            transportTime = 1;
+            alwaysUnlocked = true;
+            buildVisibility = BuildVisibility.sandboxOnly;
+        }};
+        ADC = new ADCPayloadSource("ADC"){{
+            requirements(Category.units, with());
+            size = 5;
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.sandboxOnly;
         }};
@@ -1028,6 +1124,7 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
         //override
+        Blocks.arc.consumePower(2f);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
     }
 }

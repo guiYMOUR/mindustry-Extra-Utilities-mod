@@ -19,6 +19,8 @@ public class EUTechTree {
 
     public static void load() {
         //S
+        addToNode(phaseConveyor, () -> node(itemNode));
+        addToNode(phaseConduit, () -> node(liquidNode));
         addToNode(surgeSmelter, ()->{
             node(LA, () ->{
                 node(LG);

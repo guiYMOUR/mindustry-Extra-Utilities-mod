@@ -9,13 +9,16 @@ import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.type.ItemStack;
+import mindustry.type.UnitType;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.blocks.units.UnitFactory;
 
 import javax.swing.*;
 import javax.swing.text.Style;
@@ -43,7 +46,7 @@ public class ExtraUtilitiesMod extends Mod{
         show = true;
         if(Core.settings.getBool("eu-first-load")){
             BaseDialog dialog = new BaseDialog("ExtraUtilities"){
-                private float leave = 4f * 60;
+                private float leave = 5f * 60;
                 private boolean canClose = false;
                 {
                     update(() -> {
@@ -64,23 +67,14 @@ public class ExtraUtilitiesMod extends Mod{
                     cont.add(Core.bundle.format("tips.name")).row();
                     cont.add(Core.bundle.format("tips.description")).row();
                     cont.pane(t -> {
+                        addToTable(EUBlocks.finalF, t);
+                        addToTable(EUBlocks.ADC, t);
                         addToTable(EUBlocks.heatDistributor, t);
                         addToTable(EUBlocks.liquidConsumeGenerator, t);
                         addToTable(EUBlocks.onyxBlaster, t);
                         addToTable(EUBlocks.celebration, t);
                         addToTable(EUBlocks.celebrationMk2, t);
                         addToTable(EUBlocks.liquidIncinerator, t);
-                        addToTable(EUBlocks.ELA, t);
-                        addToTable(EUBlocks.ekMessDriver, t);
-//                        addToTable(EUBlocks.liquidSorter, t);
-//                        addToTable(EUBlocks.liquidValve, t);
-//                        addToTable(EUBlocks.arkyciteExtractor, t);
-//                        addToTable(EUBlocks.minerPoint, t);
-//                        addToTable(EUBlocks.minerCenter, t);
-//                        addToTable(EUBlocks.heatDriver, t);
-//                        addToTable(EUBlocks.heatTransfer, t);
-//                        addToTable(EUBlocks.thermalHeater, t);
-//                        addToTable(EUBlocks.T2oxide, t);
                         addToTable(EUBlocks.guiY, t);
                     }).grow().center().maxWidth(960f);
                     buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
@@ -129,9 +123,6 @@ public class ExtraUtilitiesMod extends Mod{
 
     @Override
     public void loadContent(){
-        //EU = Vars.mods.getMod(getClass());
-//        if(!Vars.headless)
-//            EUSounds.load();
 
         EUUnitTypes.load();
         EUBlocks.load();

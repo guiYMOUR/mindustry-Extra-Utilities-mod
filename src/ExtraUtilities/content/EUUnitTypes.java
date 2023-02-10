@@ -45,6 +45,7 @@ import mindustry.type.Weapon;
 import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
+import mindustry.type.weapons.PointDefenseWeapon;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.meta.Env;
@@ -61,12 +62,13 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("suzerain"), EntityMapping.idMap[4]);
         EntityMapping.nameMap.put(name("asphyxia"), EntityMapping.idMap[33]);
         EntityMapping.nameMap.put(name("apocalypse"), EntityMapping.idMap[3]);
+        EntityMapping.nameMap.put(name("nihilo"), EntityMapping.idMap[20]);
     }
 
     public static UnitType
         miner, T2miner,
         //T6
-        suzerain, asphyxia, apocalypse;
+        suzerain, asphyxia, apocalypse, nihilo;
     public static void load(){
         miner = new ErekirUnitType("miner"){{
             defaultCommand = UnitCommand.mineCommand;
@@ -162,7 +164,7 @@ public class EUUnitTypes {
             ammoType = new ItemAmmoType(Items.thorium);
             abilities.add(new TerritoryFieldAbility(20 * 8, 90, 210){{
                 open = true;
-            }}, new ShieldRegenFieldAbility(100, 1000, 120, 20 * 8), new preventCheatingAbility());
+            }}, new ShieldRegenFieldAbility(100, 1000, 60 * 4, 20 * 8), new preventCheatingAbility());
             weapons.add(
                     new Weapon(name("suzerain-weapon")){{
                         shake = 5;
@@ -562,6 +564,175 @@ public class EUUnitTypes {
                         shootSound = Sounds.railgun;
                         x = 28;
                         y = -3;
+                    }}
+            );
+        }};
+
+        nihilo = new UnitType("nihilo"){{
+            float spawnTime = 60 * 14;
+            trailLength = 70;
+            waveTrailX = 25f;
+            waveTrailY = -32f;
+            trailScl = 3.5f;
+            abilities.add(new TerritoryFieldAbility(220, -1, 150){{
+                active = false;
+            }});
+            abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 4, 200));
+            abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
+            armor = 19;
+            drag = 0.2f;
+            flying = false;
+            speed = 0.6f;
+            accel = 0.2f;
+            hitSize = 60;
+            rotateSpeed = 0.9f;
+            health = 61000;
+            itemCapacity = 350;
+            ammoType = new ItemAmmoType(Items.surgeAlloy);
+            BulletType air = new PointBulletType(){{
+                trailEffect = Fx.railTrail;
+                splashDamage = 520;
+                splashDamageRadius = 88;
+                shootEffect = new Effect(10, e -> {
+                    Draw.color(Color.white, Color.valueOf("767a84"), e.fin());
+                    Lines.stroke(e.fout() * 2 + 0.2f);
+                    Lines.circle(e.x, e.y, e.fin() * 28);
+                });
+                hitEffect = despawnEffect = new Effect(15, e -> {
+                    Draw.color(Color.white, Color.valueOf("767a84"), e.fin());
+                    Lines.stroke(e.fout() * 2 + 0.2f);
+                    Lines.circle(e.x, e.y, e.fin() * splashDamageRadius);
+                });
+                trailSpacing = 40;
+                damage = 100;
+                collidesGround = false;
+                lifetime = 1;
+                speed = 320;
+                status = StatusEffects.shocked;
+                hitShake = 6;
+            }};
+            BulletType r = new RailBulletType(){{
+                shootEffect = Fx.railShoot;
+                length = 500;
+                pierceEffect = Fx.railHit;
+                hitEffect = Fx.massiveExplosion;
+                smokeEffect = Fx.shootBig2;
+                damage = 1350;
+                pointEffectSpace = 30f;
+                pointEffect = Fx.railTrail;
+                pierceDamageFactor = 0.6f;
+            }};
+            weapons.add(
+                    new PointDefenseWeapon(name("nihilo-defense")){{
+                        top = false;
+                        x = 0;
+                        y = -17;
+                        reload = 6;
+                        targetInterval = 8;
+                        targetSwitchInterval = 8;
+                        mirror = false;
+                        shootSound = Sounds.lasershoot;
+                        bullet = new BulletType(){{
+                            shootEffect = Fx.sparkShoot;
+                            hitEffect = Fx.pointHit;
+                            maxRange = 288;
+                            damage = 40;
+                        }};
+                    }},
+                    new Weapon(name("nihilo-m")){{
+                        top = false;
+                        shake = 3;
+                        shootY = 2;
+                        bullet = new MissileBulletType(3.7f, 30){{
+                            lifetime = 60;
+                            width = 8f;
+                            height = 8f;
+                            shrinkY = 0f;
+                            splashDamageRadius = 32f;
+                            splashDamage = 30f * 1.4f;
+                            hitEffect = Fx.blastExplosion;
+                            despawnEffect = Fx.blastExplosion;
+                            lightningDamage = 12;
+                            lightning = 3;
+                            lightningLength = 10;
+                        }};
+                        rotate = true;
+                        rotateSpeed = 4;
+                        x = 24;
+                        y = 1;
+                        shoot.shotDelay = 1;
+                        xRand = 10;
+                        shoot.shots = 6;
+                        inaccuracy = 4;
+                        ejectEffect = Fx.none;
+                        shootSound = Sounds.missile;
+                        reload = 36;
+                        recoil = 2;
+                    }},
+                    new Weapon(name("nihilo-a")){{
+                        shake = 4;
+                        shootY = 6;
+                        top = false;
+                        shoot.shots = 4;
+                        inaccuracy = 12;
+                        velocityRnd = 0.2f;
+                        bullet = new ArtilleryBulletType(2.8f, 30){{
+                            hitEffect = Fx.blastExplosion;
+                            knockback = 0.8f;
+                            lifetime = 100;
+                            width = 14;
+                            height = 14;
+                            collidesTiles = false;
+                            ammoMultiplier = 3;
+                            splashDamageRadius = 28;
+                            splashDamage = 38;
+                            frontColor = Pal.surge;
+                            lightningDamage = 12;
+                            lightning = 2;
+                            lightningLength = 8;
+                        }};
+                        rotate = true;
+                        rotateSpeed = 4;
+                        x = 14.5f;
+                        y = -10;
+                        shootSound = Sounds.artillery;
+                        reload = 60;
+                        recoil = 4;
+                    }},
+                    new Weapon(name("nihilo-air")){{
+                        shake = 5;
+                        shootY = 9;
+                        bullet = air;
+                        mirror = false;
+                        top = false;
+                        rotate = true;
+                        rotateSpeed = 8;
+                        controllable = false;
+                        autoTarget = true;
+                        x = 0;
+                        y = 38;
+                        ejectEffect = Fx.none;
+                        shootSound = Sounds.railgun;
+                        reload = 180;
+                        recoil = 4;
+                    }}
+            );
+            weapons.add(
+                    new Weapon(name("nihilo-main")){{
+                        shake = 6;
+                        shootY = 23;
+                        bullet = r;
+                        mirror = false;
+                        top = false;
+                        rotate = true;
+                        rotateSpeed = 2;
+                        x = 0;
+                        y = 5;
+                        ejectEffect = Fx.none;
+                        shootSound = Sounds.railgun;
+                        reload = 110;
+                        cooldownTime = 90;
+                        recoil = 5;
                     }}
             );
         }};
