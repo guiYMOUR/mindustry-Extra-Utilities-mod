@@ -11,6 +11,7 @@ import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
+import mindustry.world.Edges;
 import mindustry.world.Tile;
 import mindustry.world.blocks.distribution.ItemBridge;
 import mindustry.world.draw.DrawBlock;
@@ -115,7 +116,8 @@ public class PhaseNode extends ItemBridge {
 
         @Override
         protected boolean checkAccept(Building source, Tile other) {
-            return true;
+            if(tile == null || linked(source)) return true;
+            return linkValid(tile, other);
         }
 
         @Override

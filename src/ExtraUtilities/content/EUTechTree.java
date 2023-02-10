@@ -37,6 +37,7 @@ public class EUTechTree {
                 node(suzerain);
                 node(asphyxia);
                 node(apocalypse);
+                node(nihilo);
             });
         });
         addToNode(segment, () -> {
