@@ -149,8 +149,9 @@ public class EUUnitTypes {
 
         //T6
         suzerain = new UnitType("suzerain"){{
-            armor = 20;
+            armor = 25;
             speed = 0.3f;
+            canBoost = true;
             hitSize = 40;
             rotateSpeed = 1.8f;
             canDrown = false;
@@ -162,6 +163,9 @@ public class EUUnitTypes {
             health = 63000;
             itemCapacity = 240;
             ammoType = new ItemAmmoType(Items.thorium);
+
+            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped);
+
             abilities.add(new TerritoryFieldAbility(20 * 8, 90, 210){{
                 open = true;
             }}, new ShieldRegenFieldAbility(100, 1000, 60 * 4, 20 * 8), new preventCheatingAbility());
@@ -289,7 +293,7 @@ public class EUUnitTypes {
         }};
 
         asphyxia = new UnitType("asphyxia"){{
-            armor = 17;
+            armor = 23;
             flying = false;
             speed = 0.4f;
             hitSize = 33;
@@ -317,6 +321,8 @@ public class EUUnitTypes {
             ammoType = new PowerAmmoType(3000);
             legSplashDamage = 100;
             legSplashRange = 64;
+
+            immunities = ObjectSet.with(StatusEffects.wet, StatusEffects.sapped);
             
             BulletType sapper = new SapBulletType(){{
                 sapStrength = 1.5f;
@@ -431,7 +437,7 @@ public class EUUnitTypes {
             );
         }};
         apocalypse = new UnitType("apocalypse"){{
-            armor = 18;
+            armor = 23;
             flying = true;
             speed = 0.51f;
             hitSize = 62;
@@ -445,7 +451,7 @@ public class EUUnitTypes {
             engineOffset = 41;
             engineSize = 11;
             targetFlags = UnitTypes.eclipse.targetFlags;
-            immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting);
+            immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting, StatusEffects.wet);
             ammoType = new ItemAmmoType(Items.pyratite);
 
             abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
@@ -579,7 +585,7 @@ public class EUUnitTypes {
             }});
             abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 4, 200));
             abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
-            armor = 19;
+            armor = 26;
             drag = 0.2f;
             flying = false;
             speed = 0.6f;
@@ -589,6 +595,9 @@ public class EUUnitTypes {
             health = 61000;
             itemCapacity = 350;
             ammoType = new ItemAmmoType(Items.surgeAlloy);
+
+            immunities.add(EUStatusEffects.speedDown);
+
             BulletType air = new PointBulletType(){{
                 trailEffect = Fx.railTrail;
                 splashDamage = 520;
@@ -736,119 +745,5 @@ public class EUUnitTypes {
                     }}
             );
         }};
-
-        //override
-        UnitTypes.quell.health = 6500;
-        UnitTypes.quell.armor = 7;
-        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{
-            shootEffect = Fx.shootBig;
-            smokeEffect = Fx.shootBigSmoke2;
-            speed = 4.3f;
-            keepVelocity = false;
-            maxRange = 6f;
-            lifetime = 60f * 1.6f;
-            damage = 110;
-            splashDamage = 110;
-            splashDamageRadius = 25;
-            buildingDamageMultiplier = 0.8f;
-            hitEffect = despawnEffect = Fx.massiveExplosion;
-            trailColor = Pal.sapBulletBack;
-        }};
-        UnitTypes.quell.weapons.get(0).shake = 1;
-
-        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{
-            shootEffect = Fx.sparkShoot;
-            smokeEffect = Fx.shootSmokeTitan;
-            hitColor = Pal.suppress;
-            maxRange = 5f;
-            speed = 4.6f;
-            keepVelocity = false;
-            homingDelay = 10f;
-            trailColor = Pal.sapBulletBack;
-            trailLength = 8;
-            hitEffect = despawnEffect = new ExplosionEffect(){{
-                lifetime = 50f;
-                waveStroke = 5f;
-                waveLife = 8f;
-                waveColor = Color.white;
-                sparkColor = smokeColor = Pal.suppress;
-                waveRad = 40f;
-                smokeSize = 4f;
-                smokes = 7;
-                smokeSizeBase = 0f;
-                sparks = 10;
-                sparkRad = 40f;
-                sparkLen = 6f;
-                sparkStroke = 2f;
-            }};
-            damage = 150;
-            splashDamage = 150;
-            splashDamageRadius = 25;
-            buildingDamageMultiplier = 0.8f;
-
-            parts.add(new ShapePart(){{
-                layer = Layer.effect;
-                circle = true;
-                y = -3.5f;
-                radius = 1.6f;
-                color = Pal.suppress;
-                colorTo = Color.white;
-                progress = PartProgress.life.curve(Interp.pow5In);
-            }});
-        }};
-        UnitTypes.disrupt.weapons.get(0).shake = 1f;
-
-        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", -1, -1){{
-            shootEffect = new MultiEffect(Fx.shootBigColor, new Effect(9, e -> {
-                color(Color.white, e.color, e.fin());
-                stroke(0.7f + e.fout());
-                Lines.square(e.x, e.y, e.fin() * 5f, e.rotation + 45f);
-
-                Drawf.light(e.x, e.y, 23f, e.color, e.fout() * 0.7f);
-            }), new WaveEffect(){{
-                colorFrom = colorTo = Pal.techBlue;
-                sizeTo = 15f;
-                lifetime = 12f;
-                strokeFrom = 3f;
-            }});
-
-            smokeEffect = Fx.shootBigSmoke2;
-            speed = 3.7f;
-            keepVelocity = false;
-            inaccuracy = 2f;
-            maxRange = 6;
-            trailWidth = 2;
-            trailColor = Pal.techBlue;
-            low = true;
-            absorbable = true;
-
-            damage = 110;
-            splashDamage = 110;
-            splashDamageRadius = 25;
-            buildingDamageMultiplier = 0.8f;
-
-            despawnEffect = hitEffect = new MultiEffect(Fx.massiveExplosion, new WrapEffect(Fx.dynamicSpikes, Pal.techBlue, 24f), new WaveEffect(){{
-                colorFrom = colorTo = Pal.techBlue;
-                sizeTo = 40f;
-                lifetime = 12f;
-                strokeFrom = 4f;
-            }});
-
-            parts.add(new FlarePart(){{
-                progress = PartProgress.life.slope().curve(Interp.pow2In);
-                radius = 0f;
-                radiusTo = 35f;
-                stroke = 3f;
-                rotation = 45f;
-                y = -5f;
-                followRotation = true;
-            }});
-        }};
-        UnitTypes.anthicus.weapons.get(0).shake = 2;
-        UnitTypes.anthicus.weapons.get(0).reload = 120;
-
-        UnitTypes.tecta.weapons.get(0).bullet.damage = 0;
-        UnitTypes.tecta.weapons.get(0).bullet.splashDamage = 95;
-        UnitTypes.tecta.health = 9000;
     }
 }

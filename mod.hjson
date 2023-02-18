@@ -2,7 +2,7 @@ displayName: ExtraUtilities
 name:"extra-utilities"
 author: guiY
 main: "ExtraUtilities.ExtraUtilitiesMod"
-description: "我TM来辣！"
-version: 1.09
+description: "An extended mod for Mindustry"
+version: 1.093
 java: true
 minGameVersion: 138

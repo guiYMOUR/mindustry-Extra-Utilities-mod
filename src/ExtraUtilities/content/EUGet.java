@@ -44,6 +44,14 @@ public class EUGet {
         };
     }
 
+    public static float dx(float px, float r, float angel){
+        return px + r * (float) Math.cos(angel * Math.PI/180);
+    }
+
+    public static float dy(float py, float r, float angel){
+        return py + r * (float) Math.sin(angel * Math.PI/180);
+    }
+
     public static Seq<Turret> turrets(){
         Seq<Turret> turretSeq = new Seq<>();
         int size = content.blocks().size;

@@ -16,6 +16,7 @@ import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import ExtraUtilities.worlds.entity.bullet.FireWorkBullet;
+import ExtraUtilities.worlds.entity.bullet.ScarletDevil;
 import arc.Core;
 import arc.Events;
 import arc.func.Prov;
@@ -30,6 +31,7 @@ import arc.math.Rand;
 import arc.math.geom.Vec2;
 import arc.struct.Seq;
 import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -42,6 +44,7 @@ import mindustry.game.EventType;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
 import mindustry.gen.Unit;
+import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
@@ -86,7 +89,7 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG,
         //turret
-            dissipation, guiY, onyxBlaster, celebration, celebrationMk2, turretResupplyPoint,
+            dissipation, guiY, onyxBlaster, celebration, celebrationMk2, sancta, turretResupplyPoint,
         //unit
             imaginaryReconstructor, finalF,
         //other&sandbox
@@ -138,9 +141,9 @@ public class EUBlocks {
             consumePower(2);
             consumeLiquid(Liquids.ozone, 6/60f);
 
-            blockedItem = Items.titanium;
+            blockedItem = Items.thorium;
             droneConstructTime = 60 * 10f;
-            tier = 3;
+            tier = 5;
             //alwaysUnlocked = true;
         }};
         minerCenter = new MinerPoint("miner-center"){{
@@ -150,10 +153,10 @@ public class EUBlocks {
 
             range = 18;
             alwaysCons = true;
-            blockedItem = Items.thorium;
+            //blockedItem = Items.thorium;
             dronesCreated = 6;
             droneConstructTime = 60 * 7f;
-            tier = 5;
+            tier = 7;
             size = 4;
             itemCapacity = 300;
 
@@ -193,16 +196,18 @@ public class EUBlocks {
 
         itemNode = new PhaseNode("i-node"){{
             requirements(Category.distribution, with(Items.copper, 110, Items.lead, 80, Items.silicon, 100, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 18));
-            buildCostMultiplier = 0.5f;
+            buildCostMultiplier = 0.25f;
             range = 25;
             hasPower = true;
             envEnabled |= Env.space;
             consumePower(1f);
             transportTime = 1f;
+
+            placeableLiquid = true;
         }};
         liquidNode = new PhaseNode("lb"){{
             requirements(Category.liquid, with(Items.metaglass, 80, Items.silicon, 90, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 25));
-            buildCostMultiplier = 0.5f;
+            buildCostMultiplier = 0.25f;
             range = 25;
             hasPower = true;
             canOverdrive = false;
@@ -210,6 +215,8 @@ public class EUBlocks {
             hasItems = false;
             outputsLiquid = true;
             consumePower(1f);
+
+            placeableLiquid = true;
             //transportTime = 1;
         }};
         ekMessDriver = new MassDriver("Ek-md"){{
@@ -262,7 +269,7 @@ public class EUBlocks {
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidRegion(Liquids.ozone), new DrawDefault(), new DrawRegion("-top"), new DrawHeatOutput());
 
             regionRotated1 = 2;
-            craftTime = 60f * 5f;
+            craftTime = 60f * 4f;
             liquidCapacity = 50f;
             itemCapacity = 80;
             heatOutput = 25f;
@@ -408,7 +415,7 @@ public class EUBlocks {
             effectChance = 0.2f;
         }};
         thermalReactor = new ThermalReactor("T2ther"){{
-            requirements(Category.power, with(Items.copper, 130, Items.graphite, 80, Items.lead, 120, Items.silicon, 95, Items.titanium, 70, Items.thorium, 55, Items.metaglass, 65));
+            requirements(Category.power, with(Items.silicon, 95, Items.titanium, 70, Items.thorium, 55, Items.metaglass, 65, Items.plastanium, 60, Items.surgeAlloy, 30));
             size = 3;
             powerProduction = 276/60f;
             generateEffect = Fx.none;
@@ -436,7 +443,7 @@ public class EUBlocks {
 
 
         dissipation = new dissipation("dissipation"){{
-            requirements(Category.turret, with(Items.silicon, 180, Items.thorium, 100, Items.surgeAlloy, 70, Items.phaseFabric, 55));
+            requirements(Category.turret, with(Items.silicon, 180, Items.thorium, 100,EUItems.lightninAlloy, 60, Items.phaseFabric, 80));
             hasPower = true;
             size = 3;
             range = 220;
@@ -784,20 +791,20 @@ public class EUBlocks {
             }};
             BulletType[] bullets1 = new BulletType[]{f1, f2, f3};
             BulletType[] bullets2 = new BulletType[]{fp1, fp2, fp3};
-            ammo(Items.blastCompound, bullets1, Items.plastanium, bullets2);
+            ammo(Items.blastCompound, bullets1, Items.plastanium, bullets2, EUItems.lightninAlloy);
         }};
 
         celebrationMk2 = new MultiBulletTurret("celebration-mk2"){{
             size = 5;
             drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawMk2());
-            requirements(Category.turret, with(Items.silicon, 410, Items.graphite, 330, Items.thorium, 280, EUItems.lightninAlloy, 200));
+            requirements(Category.turret, with(Items.silicon, 410, Items.graphite, 330, Items.thorium, 280, EUItems.lightninAlloy, 250));
             inaccuracy = 3;
             shootEffect = EUFx.Mk2Shoot(90);
             smokeEffect = Fx.none;
             scaledHealth = 180;
             range = 32 * 8;
             shake = 2f;
-            recoil = 1.5f;
+            recoil = 2f;
             reload = 10;
             shootY = 20;
             rotateSpeed = 2.6f;
@@ -806,6 +813,7 @@ public class EUBlocks {
             shootSound = Sounds.missile;
             shootCone = 16;
             canOverdrive = false;
+            maxAmmo = 10;
 
             //红
             BulletType f1 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FF1A44"), 6 * 8){{
@@ -1023,6 +1031,90 @@ public class EUBlocks {
             ammo(Items.thorium, bullets);
         }};
 
+        sancta = new ItemTurret("sancta"){{
+            requirements(Category.turret, with(EUItems.lightninAlloy, 1000, Items.phaseFabric, 1500));
+            size = 7;
+            ammo(
+                    EUItems.lightninAlloy,
+                            new ScarletDevil(EUItems.lightninAlloy.color){{
+                                speed = 16;
+                                lifetime = 35;
+                                trailColor = EUItems.lightninAlloy.color;
+                                trailLength = 10;
+                                trailWidth = 10;
+                                splashDamage = damage = 900;
+                                ammoMultiplier = 1;
+                                hitSound = despawnSound = Sounds.explosionbig;
+                                healColor = EUItems.lightninAlloy.color;
+                            }
+
+                                @Override
+                                public void draw(Bullet b) {
+                                    super.draw(b);
+                                    Draw.color(Pal.surge);
+                                    Drawf.tri(b.x, b.y, 20, 16, b.rotation());
+                                    Drawf.tri(b.x, b.y, 10, 8, b.rotation()-180);
+                                }
+
+                                @Override
+                                public void update(Bullet b) {
+                                    super.update(b);
+                                    float x = b.x + Angles.trnsx(b.rotation() - 90, 0, -trailLength * 2);
+                                    float y = b.y + Angles.trnsy(b.rotation() - 90, 0, -trailLength * 2);
+                                    float rx = b.x + Angles.trnsx(b.rotation() - 90, Mathf.random(3), 0);
+                                    float ry = b.y + Angles.trnsy(b.rotation() - 90, Mathf.random(3), 0);
+                                    if(b.timer.get(2, 6)){
+                                        Fx.chainLightning.at(rx, ry, b.rotation(), Pal.surge, EUGet.pos(x, y));
+                                    }
+                                }
+                            }
+            );
+            drawer = new DrawMulti(
+                    new DrawTurret(){{
+                        parts.add(
+                                new RegionPart("-behind"){{
+                                    progress = PartProgress.warmup;
+                                    moveY = 7f;
+                                    mirror = false;
+                                    moves.add(new PartMove(PartProgress.recoil, 0f, -3f, 0f));
+                                    under = true;
+                                }},
+                                new RegionPart("-mid"){{
+                                    mirror = false;
+                                }},
+                                new RegionPart("-front"){{
+                                    progress = PartProgress.warmup;
+                                    moveY = 7f;
+                                    mirror = false;
+                                    moves.add(new PartMove(PartProgress.recoil, 0f, -3f, 0f));
+                                }}
+                        );
+                        parts.add(
+                                new BowHalo(){{
+                                    progress = PartProgress.warmup.delay(0.8f);
+                                }}
+                        );
+            }}, new RunningLight(6), new DrawBow(), new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8));
+            scaledHealth = 180;
+
+            range = 80 * 8;
+            ammoPerShot = 10;
+            maxAmmo = ammoPerShot * 3;
+            shake = 6f;
+            recoil = 4f;
+            reload = 360f;
+            shootY = 0f;
+            rotateSpeed = 1.2f;
+            minWarmup = 0.95f;
+            shootWarmupSpeed = 0.04f;
+            shootSound = Sounds.largeCannon;
+
+            coolant = consumeCoolant(2);
+            coolantMultiplier = 0.5f;
+            coolEffect = Fx.none;
+            canOverdrive = false;
+        }};
+
         turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
             requirements(Category.turret, with(Items.graphite, 90, Items.silicon, 180, Items.thorium, 70));
             size = 2;
@@ -1049,7 +1141,7 @@ public class EUBlocks {
             liquidCapacity = 192;
         }};
         finalF = new UnitFactory("finalF"){{
-            requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1200));
+            requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1500));
             size = 5;
             consumePower(30);
             consumeLiquid(Liquids.water, 1);
@@ -1123,8 +1215,5 @@ public class EUBlocks {
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.editorOnly;
         }};
-        //override
-        Blocks.arc.consumePower(2f);
-        Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
     }
 }

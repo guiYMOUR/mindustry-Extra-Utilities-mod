@@ -89,35 +89,18 @@ public class ExtraUtilitiesMod extends Mod{
             dialog.show();
         }
     }
-    public static void override(){
-        for(int i = 0; i < Vars.content.blocks().size; i ++){
-            Block block = Vars.content.blocks().get(i);
-            if(block instanceof Turret && block.size >= 5){
-                boolean has = false;
-                for(ItemStack stack : block.requirements){
-                    if(stack.item == EUItems.lightninAlloy){
-                        has = true;
-                        break;
-                    }
-                }
-                if(has) continue;
-                ItemStack[] copy = new ItemStack[block.requirements.length + 1];
-                System.arraycopy(block.requirements, 0, copy, 0, block.requirements.length);
-                copy[block.requirements.length] = new ItemStack(EUItems.lightninAlloy, 50 + 50 * (block.size - 5));
-                block.requirements = copy;
-            }
-        }
-    }
 
     public ExtraUtilitiesMod() {
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
-        //Events.on(ClientLoadEvent.class, e -> Time.runTask(30f, ExtraUtilitiesMod::override));
     }
 
     @Override
     public void init() {
         EUCall.registerPackets();
+        EUOverride.overrideBlock1();
+        EUOverride.overrideUnit1();
+        EUOverride.overrideBuilder();
         Vars.ui.settings.game.checkPref("eu-first-load", true);
     }
 

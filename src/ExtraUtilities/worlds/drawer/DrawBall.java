@@ -31,7 +31,7 @@ public class DrawBall extends DrawPart {
 
     public boolean line = false;
 
-    //public transient Trail trail;
+    public DrawBall(){}
 
     @Override
     public void draw(PartParams params) {
@@ -77,10 +77,9 @@ public class DrawBall extends DrawPart {
         )).rotate(rotation);
         lastEnd.add(x, y);
         float sin = Mathf.sin(Time.time, 6, 0.6f) * p;
-
         Draw.color(color);
-        if(line){
-            Lines.stroke(trailWid/2f + sin);
+        if (line) {
+            Lines.stroke(trailWid / 2f + sin);
             Lines.circle(lastEnd.x, lastEnd.y, trailWid + sin);
         } else Fill.circle(lastEnd.x, lastEnd.y, trailWid + sin);
 //        if(trail == null){

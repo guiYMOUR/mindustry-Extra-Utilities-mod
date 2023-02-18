@@ -51,6 +51,9 @@ public class EUTechTree {
                 node(celebrationMk2);
             });
         });
+        addToNode(foreshadow, () -> {
+            node(sancta);
+        });
         //E
         addToNode(heatRedirector, () -> {
             node(heatTransfer, () -> {

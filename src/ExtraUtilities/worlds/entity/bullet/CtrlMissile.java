@@ -1,6 +1,7 @@
 package ExtraUtilities.worlds.entity.bullet;
 
 import ExtraUtilities.content.EUGet;
+import ExtraUtilities.net.EUCall;
 import arc.Core;
 import arc.audio.Sound;
 import arc.graphics.g2d.Draw;
@@ -39,7 +40,7 @@ public class CtrlMissile extends BulletType {
         this.width = width;
         this.height = height;
         homingPower = 2.5f;
-        homingRange = 80;
+        homingRange = 64;
         trailWidth = 3;
         trailLength = 7;
         lifetime = 60 * 1.7f;
@@ -70,12 +71,12 @@ public class CtrlMissile extends BulletType {
 
     @Override
     public void updateHoming(Bullet b) {
+        //autoHoming时候优先寻找目标，无目标时依然会跟随瞄准方向
         if (homingPower > 0.0001f && b.time >= homingDelay) {
             float realAimX = b.aimX < 0 ? b.x : b.aimX;
             float realAimY = b.aimY < 0 ? b.y : b.aimY;
 
             Teamc target;
-            //home in on allies if possible
             if (heals()) {
                 target = Units.closestTarget(null, realAimX, realAimY, homingRange,
                         e -> e.checkTarget(collidesAir, collidesGround) && e.team != b.team && !b.hasCollided(e.id),
@@ -97,7 +98,12 @@ public class CtrlMissile extends BulletType {
                 if(b.owner instanceof Unit) shooter = (Unit)b.owner;
                 if(b.owner instanceof ControlBlock) shooter = ((ControlBlock)b.owner).unit();
                 if (shooter != null) {
-                    lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
+                    //if(!Vars.net.client() || shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
+                    if(shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
+                    else {
+                        Teamc tc = Units.closestTarget(b.team, realAimX, realAimY, homingRange, e -> e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id), t -> collidesGround && !b.hasCollided(t.id));
+                        if(tc != null) lookAt(tc, b);
+                    }
                 }
             }
         }
