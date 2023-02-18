@@ -152,6 +152,8 @@ public class EUUnitTypes {
             armor = 25;
             speed = 0.3f;
             canBoost = true;
+            engineOffset = 20;
+            engineSize = 10;
             hitSize = 40;
             rotateSpeed = 1.8f;
             canDrown = false;
@@ -173,7 +175,6 @@ public class EUUnitTypes {
                     new Weapon(name("suzerain-weapon")){{
                         shake = 5;
                         shootY = 13;
-                        top = false;
                         shoot.shots = 5;
                         inaccuracy = 1;
                         shoot.shotDelay = 3;
@@ -209,8 +210,8 @@ public class EUUnitTypes {
                                 splashDamageRadius = 10f;
                             }};
                         }};
-                        x = 30;
-                        y = 1;
+                        x = 25.5f;
+                        y = 0;
                         shootCone = 80f;
                         shootSound = Sounds.bang;
                         reload = 24;
@@ -283,8 +284,8 @@ public class EUUnitTypes {
                         }};
                         rotate = true;
                         rotateSpeed = 2;
-                        x = 15;
-                        y = -2;
+                        x = 12;
+                        y = 2;
                         shootSound = Sounds.railgun;
                         reload = 27;
                         recoil = 4;

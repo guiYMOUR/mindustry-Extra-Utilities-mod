@@ -98,17 +98,16 @@ public class ExtraUtilitiesMod extends Mod{
     @Override
     public void init() {
         EUCall.registerPackets();
-        EUOverride.overrideBlock1();
-        EUOverride.overrideUnit1();
         EUOverride.overrideBuilder();
         Vars.ui.settings.game.checkPref("eu-first-load", true);
     }
 
     @Override
     public void loadContent(){
-
         EUUnitTypes.load();
+        EUOverride.overrideUnit1();
         EUBlocks.load();
+        EUOverride.overrideBlock1();
         EUTechTree.load();
     }
 
