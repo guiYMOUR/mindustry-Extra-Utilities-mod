@@ -14,6 +14,7 @@ alloyDuct.health = 240;
 alloyDuct.buildVisibility = BuildVisibility.shown;
 alloyDuct.category = Category.distribution;
 alloyDuct.speed = 2;
+alloyDuct.itemCapacity = 2;
 alloyDuct.placeableLiquid = true;
 exports.alloyDuct = alloyDuct;
 

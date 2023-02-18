@@ -30,7 +30,7 @@ hur.pierceBuilding = true
 
 const hurricane = extend(PowerTurret, 'hurricane', {});
 
-hurricane.consumePower(8.5);
+hurricane.consumePower(450/60);
 hurricane.shootType = hur;
 //hurricane.shots = 1;
 hurricane.shootShake = 0.5;

@@ -8,7 +8,7 @@ tiDrill.requirements = ItemStack.with(
 );
 tiDrill.buildVisibility = BuildVisibility.shown;
 tiDrill.category = Category.production;
-tiDrill.drillTime = 350;
+tiDrill.drillTime = 340;
 tiDrill.size = 2;
 tiDrill.tier = 4;
 tiDrill.consumeLiquid(Liquids.water, 0.06).boost();
@@ -320,7 +320,7 @@ T2WE.buildType = prov(() => {
 //const T2WE = new DrawSolidPump("T2-WE");
 T2WE.result = Liquids.water;
 //T2WE.consItem = Items.graphite;
-T2WE.pumpAmount = 0.28;
+T2WE.pumpAmount = 0.3;
 T2WE.size = 3;
 T2WE.liquidCapacity = 60;
 T2WE.rotateSpeed = 2;
@@ -409,7 +409,7 @@ Object.assign(blastOilExtractor, {
     updateEffectChance : 0.04,
     //rotateSpeed : 2,
     liquidCapacity : 100,
-    pumpAmount : 1,
+    pumpAmount : 1.5,
     size : 4,
     attribute : Attribute.oil,
     baseEfficiency : 0.2,
@@ -418,7 +418,7 @@ Object.assign(blastOilExtractor, {
 });
 blastOilExtractor.consumeItem(Items.blastCompound);
 blastOilExtractor.consumePower(6);
-blastOilExtractor.consumeLiquid(Liquids.water, 0.4);
+blastOilExtractor.consumeLiquid(Liquids.water, 0.5);
 blastOilExtractor.requirements = ItemStack.with(
     Items.copper, 220,
     Items.lead, 220,
