@@ -32,7 +32,7 @@ require("block/turret/prism");
 //require("block/turret/TurretResupplyPoint");
 
 //require("block/effect/DCF");
-//require("block/power/png");
+require("block/power/png");
 require("block/power/T2steam");
 //require("block/power/T2ther");
 require("block/power/th2");

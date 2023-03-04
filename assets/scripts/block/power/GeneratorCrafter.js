@@ -54,6 +54,11 @@ GC.buildType = prov(() => {
             this.produced(output);
             this.warmup = Mathf.lerpDelta(this.warmup, cons && !full ? 1 : 0, 0.05)
         },
+
+        shouldConsume(){
+            return this.super$shouldConsume() && !full;
+        },
+
         consValid(){
             return this.efficiency > 0;
         },

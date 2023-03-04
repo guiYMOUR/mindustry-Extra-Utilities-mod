@@ -13,7 +13,6 @@ const loadRegion = (name) => {
     if (c) {
         return c
     }
-    //这里'btm'是mod名字，改成你mod的名字，也可以套lib，我忘了就没改
     c = Core.atlas.find(lib.aModName + '-' + name, Core.atlas.find("error"))
     print('find ' + lib.aModName + '-' + name + ' result: ' + c)
     loadRegionCache[name] = c
@@ -143,9 +142,7 @@ ai.buildType = prov(() => {
 //ai.saveConfig = false;
 ai.sync = true;
 ai.requirements = ItemStack.with(
-    Items.lead, 8,
-    Items.graphite, 5,
-    Items.silicon, 3
+    Items.surgeAlloy, 9
 );
 ai.health = 110;
 ai.buildVisibility = BuildVisibility.shown;

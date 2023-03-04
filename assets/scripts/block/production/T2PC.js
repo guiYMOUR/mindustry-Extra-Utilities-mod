@@ -4,6 +4,7 @@ const T2PC = extend(GenericCrafter, "T2-PC", {});
 
 T2PC.hasItems = true;
 T2PC.liquidCapacity = 90;
+T2PC.itemCapacity = 20;
 T2PC.craftTime = 90;
 T2PC.outputItem = new ItemStack(Items.plastanium, 5);
 T2PC.size = 3;
@@ -12,7 +13,7 @@ T2PC.hasPower = true;
 T2PC.hasLiquids = true;
 T2PC.craftEffect = Fx.formsmoke;
 T2PC.updateEffect = Fx.plasticburn;
-T2PC.drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawFrames(), new DrawDefault(), new DrawLiquidRegion(), new DrawFade());
+T2PC.drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawDefault(), new DrawLiquidRegion(), new DrawFrames(), new DrawFade());
 
 T2PC.consumeLiquid(Liquids.oil, 0.5);
 T2PC.consumePower(6.5);

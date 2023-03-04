@@ -1,9 +1,9 @@
 const lib = require("blib");
 
 const arNode = extend(PowerNode, "ar-node", {});
-arNode.maxNodes = 8;
-arNode.laserRange = 8.5;
-arNode.health = 130;
+arNode.maxNodes = 6;
+arNode.laserRange = 9;
+arNode.health = 220;
 arNode.placeableLiquid = true;
 arNode.requirements = ItemStack.with(
     Items.lead, 5,
@@ -14,29 +14,18 @@ arNode.buildVisibility = BuildVisibility.shown;
 arNode.category = Category.power;
 exports.arNode = arNode;
 
-const emptyLightColor = Color.valueOf("f8c266");//f7bd5d
-const fullLightColor = Color.valueOf("fb9567");
+const BatteryNode = lib.getClass("ExtraUtilities.worlds.blocks.power.BatteryNode");
 
-const png = extend(PowerNode, "power-node-giant", {});
-lib.setBuildingSimple(png, PowerNode.PowerNodeBuild, {
-    draw(){
-        this.super$draw();
-        Draw.z(Layer.power - 1);
-        Draw.color(emptyLightColor, fullLightColor, this.power.status);
-        Draw.rect(Core.atlas.find("btm-png-capacity"),this.x,this.y);
-    },
-});
+const png = new BatteryNode("power-node-giant");
 png.size = 3;
 png.maxNodes = 30;
-png.laserRange = 19;
-png.outputsPower = true;
-png.consumesPower = true;
-png.consumes.powerBuffered(30000);
+png.laserRange = 22;
+png.health = 450;
 png.requirements = ItemStack.with(
-    Items.titanium, 40,
-    Items.lead, 55,
-    Items.graphite, 30,
-    Items.silicon, 45
+    Items.titanium, 50,
+    Items.lead, 60,
+    Items.graphite, 40,
+    Items.silicon, 55
 );
 png.buildVisibility = BuildVisibility.shown;
 png.category = Category.power;
