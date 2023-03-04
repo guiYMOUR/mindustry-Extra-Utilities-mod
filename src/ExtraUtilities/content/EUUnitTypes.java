@@ -27,14 +27,6 @@ import mindustry.entities.abilities.ShieldRegenFieldAbility;
 import mindustry.entities.abilities.SuppressionFieldAbility;
 import mindustry.entities.abilities.UnitSpawnAbility;
 import mindustry.entities.bullet.*;
-import mindustry.entities.effect.ExplosionEffect;
-import mindustry.entities.effect.MultiEffect;
-import mindustry.entities.effect.WaveEffect;
-import mindustry.entities.effect.WrapEffect;
-import mindustry.entities.part.DrawPart;
-import mindustry.entities.part.FlarePart;
-import mindustry.entities.part.RegionPart;
-import mindustry.entities.part.ShapePart;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
@@ -46,6 +38,7 @@ import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.weapons.PointDefenseWeapon;
+import mindustry.type.weapons.RepairBeamWeapon;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.meta.Env;
@@ -60,6 +53,7 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("T2miner"), EntityMapping.idMap[36]);
 
         EntityMapping.nameMap.put(name("suzerain"), EntityMapping.idMap[4]);
+        EntityMapping.nameMap.put(name("nebula"), EntityMapping.idMap[24]);
         EntityMapping.nameMap.put(name("asphyxia"), EntityMapping.idMap[33]);
         EntityMapping.nameMap.put(name("apocalypse"), EntityMapping.idMap[3]);
         EntityMapping.nameMap.put(name("nihilo"), EntityMapping.idMap[20]);
@@ -68,7 +62,7 @@ public class EUUnitTypes {
     public static UnitType
         miner, T2miner,
         //T6
-        suzerain, asphyxia, apocalypse, nihilo;
+        suzerain, nebula, asphyxia, apocalypse, nihilo;
     public static void load(){
         miner = new ErekirUnitType("miner"){{
             defaultCommand = UnitCommand.mineCommand;
@@ -292,6 +286,118 @@ public class EUUnitTypes {
                     }}
             );
         }};
+        
+        nebula = new UnitType("nebula"){{
+            armor = 17;
+            flying = false;
+            speed = 0.25f;
+            hitSize = 41;
+            rotateSpeed = 1.8f;
+            health = 59000;
+            mineSpeed = 7;
+            mineTier = 3;
+            buildSpeed = 3;
+            itemCapacity = 300;
+            drawShields = false;
+            legCount = 6;
+            legLength = 24;
+            legBaseOffset = 3;
+            legMoveSpace = 1.5f;
+            legForwardScl = 0.58f;
+            stepShake = 1.8f;
+            hovering = true;
+            allowLegStep = true;
+            groundLayer = Layer.legUnit;
+            ammoType = new PowerAmmoType(3800);
+
+            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet);
+
+            abilities.add(new EnergyFieldAbility(60f, 90f, 200f){{
+                maxTargets = 25;
+                healPercent = 10f;
+                hitUnits = false;
+                y = - 20f;
+            }});
+
+            BulletType r = new RailBulletType(){{
+                shootEffect = new Effect(24, e ->{
+                    e.scaled(10, b -> {
+                        Draw.color(Color.white, Pal.heal, b.fin());
+                        Lines.stroke(b.fout() * 3 + 0.2f);
+                        Lines.circle(b.x, b.y, b.fin() * 50);
+                    });
+                    Draw.color(Pal.heal);
+                    for(int i : Mathf.signs){
+                        Drawf.tri(e.x, e.y, 13 * e.fout(), 85, e.rotation + 90 * i);
+                    }
+                });
+                length = 500;
+                pointEffectSpace = 30;
+                pierceEffect = Fx.railHit;
+                pointEffect = new Effect(16, e -> {
+                    Draw.color(Pal.heal);
+                    for(int i : Mathf.signs){
+                        Drawf.tri(e.x, e.y, 22 * e.fout(), 25, e.rotation + 90 + 90 * i);
+                    }
+                });
+                hitEffect = Fx.massiveExplosion;
+                smokeEffect = Fx.shootBig2;
+                damage = 1550;
+                pierceDamageFactor = 0.5f;
+            }};
+
+            weapons.add(
+                    new Weapon(name("nebula-weapon")){{
+                        shake = 4;
+                        shootY = 13;
+                        reload = 180;
+                        cooldownTime = 90;
+                        bullet = r;
+                        mirror = false;
+                        top = false;
+                        x = 0;
+                        y = 0;
+                        shootSound = Sounds.railgun;
+                        recoil = 0;
+                    }}
+            );
+            for(float wx : new Float[]{-20f, 20f}) {
+                weapons.add(
+                        new PointDefenseWeapon(name("nebula-defense")){{
+                            top = false;
+                            x = wx;
+                            y = -18;
+                            reload = 8;
+                            targetInterval = 8;
+                            targetSwitchInterval = 8;
+                            mirror = false;
+                            shootSound = Sounds.lasershoot;
+                            bullet = new BulletType(){{
+                                shootEffect = Fx.sparkShoot;
+                                hitEffect = Fx.pointHit;
+                                maxRange = 320;
+                                damage = 40;
+                            }};
+                        }}
+                );
+            }
+            for(float wx : new Float[]{-10.5f, 10.5f}) {
+                weapons.add(
+                        new RepairBeamWeapon(name("nebula-defense")){{
+                            top = false;
+                            x = wx;
+                            y = -4.5f;
+                            beamWidth = 0.8f;
+                            repairSpeed = 1.5f;
+                            mirror = false;
+                            bullet = new BulletType(){{
+                                drag = 1;
+                                maxRange = 200;
+                            }};
+                        }}
+                );
+            }
+        }};
 
         asphyxia = new UnitType("asphyxia"){{
             armor = 23;
@@ -456,7 +562,7 @@ public class EUUnitTypes {
             ammoType = new ItemAmmoType(Items.pyratite);
 
             abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
-            abilities.add(new EnergyFieldAbility(60f, 90f, 192f){{
+            abilities.add(new EnergyFieldAbility(180f, 90f, 192f){{
                 color = Color.valueOf("FFA665");
                 status = StatusEffects.unmoving;
                 statusDuration = 60f;

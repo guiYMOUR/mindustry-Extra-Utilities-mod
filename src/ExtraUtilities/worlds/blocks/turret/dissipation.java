@@ -47,8 +47,8 @@ public class dissipation extends PointDefenseTurret {
     }
 
     public class dissipationBuild extends PointDefenseBuild{
-        float shot = maxShot;
-        boolean cooldown = false;
+        float shot = 0;
+        boolean cooldown = true;
 
         public float getShot() {
             return shot/maxShot;
@@ -86,6 +86,7 @@ public class dissipation extends PointDefenseTurret {
                         coolEffect.at(x + Mathf.range(block.size * Vars.tilesize / 2), y + Mathf.range(block.size * Vars.tilesize / 2));
                     }
                 }
+                if(e < 0.01f) return;
                 if(this.target != null && target.within(this, range) && target.team != team && target.type != null && target.type.hittable){
                     float dest = angleTo(target);
                     this.rotation = Angles.moveToward(rotation, dest, rotateSpeed * edelta());

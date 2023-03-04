@@ -18,6 +18,7 @@ public class Randomer extends Block {
         solid = true;
         noUpdateDisabled = true;
         envEnabled = Env.any;
+        group = BlockGroup.transportation;
     }
 
     @Override

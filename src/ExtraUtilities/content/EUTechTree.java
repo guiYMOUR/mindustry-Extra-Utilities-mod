@@ -35,6 +35,7 @@ public class EUTechTree {
         addToNode(tetrativeReconstructor, () -> {
             node(imaginaryReconstructor, () -> {
                 node(suzerain);
+                node(nebula);
                 node(asphyxia);
                 node(apocalypse);
                 node(nihilo);
@@ -82,7 +83,9 @@ public class EUTechTree {
         });
         addToNode(reinforcedLiquidRouter, () -> {
             node(liquidSorter, () ->{});
-            node(liquidValve, () -> {});
+            node(liquidValve, () -> {
+                node(communicatingValve);
+            });
         });
 
         addToNode(breach, () -> {

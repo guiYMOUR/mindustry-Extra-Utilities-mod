@@ -17,7 +17,7 @@ import mindustry.world.meta.*;
 import static mindustry.Vars.*;
 
 public class LiquidUnloader extends Block {
-    public String center = name + "-center";
+    public String center;
     public float speed = 3f;
 
     public LiquidUnloader(String name){
@@ -35,8 +35,15 @@ public class LiquidUnloader extends Block {
         group = BlockGroup.liquids;
         envEnabled = Env.any;
         clearOnDoubleTap = true;
+
         config(Liquid.class, (LiquidUnloaderBuild tile, Liquid l) -> tile.sortLiquid = l);
         configClear((LiquidUnloaderBuild tile) -> tile.sortLiquid = null);
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        center = name + "-center";
     }
 
     @Override

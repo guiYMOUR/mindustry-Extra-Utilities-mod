@@ -54,6 +54,8 @@ public class LiquidMassDriver extends Block {
         envEnabled |= Env.space;
         outputsLiquid = true;
 
+        group = BlockGroup.liquids;
+
         //point2 is relative
         config(Point2.class, (LiquidMassDriverBuild tile, Point2 point) -> tile.link = Point2.pack(point.x + tile.tileX(), point.y + tile.tileY()));
         config(Integer.class, (LiquidMassDriverBuild tile, Integer point) -> tile.link = point);

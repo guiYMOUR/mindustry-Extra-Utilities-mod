@@ -6,8 +6,6 @@ import arc.graphics.g2d.Fill;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.util.Time;
-import arc.util.Tmp;
-import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Mover;
 import mindustry.entities.Units;
@@ -17,10 +15,7 @@ import mindustry.gen.Bullet;
 import mindustry.gen.Hitboxc;
 import mindustry.gen.Teamc;
 import mindustry.gen.Unit;
-import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
-import mindustry.graphics.Pal;
-import mindustry.type.StatusEffect;
 
 //是的，没做到完全还原，还在尽力
 
@@ -46,6 +41,7 @@ public class ScarletDevil extends BulletType {
             collidesTeam = true;
             reflectable = false;
             healColor = color;
+            buildingDamageMultiplier = 0.7f;
         }};
         ff = new BulletType(){
             {

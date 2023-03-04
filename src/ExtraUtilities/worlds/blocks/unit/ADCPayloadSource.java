@@ -133,5 +133,15 @@ public class ADCPayloadSource extends PayloadSource {
             drawPayload();
             Draw.reset();
         }
+
+        @Override
+        public void damage(float damage) {
+
+        }
+
+        @Override
+        public boolean canPickup() {
+            return false;
+        }
     }
 }

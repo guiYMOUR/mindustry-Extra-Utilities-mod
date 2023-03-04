@@ -67,6 +67,7 @@ public class ExtraUtilitiesMod extends Mod{
                     cont.add(Core.bundle.format("tips.name")).row();
                     cont.add(Core.bundle.format("tips.description")).row();
                     cont.pane(t -> {
+                        addToTable(EUBlocks.communicatingValve, t);
                         addToTable(EUBlocks.finalF, t);
                         addToTable(EUBlocks.ADC, t);
                         addToTable(EUBlocks.heatDistributor, t);
@@ -74,7 +75,6 @@ public class ExtraUtilitiesMod extends Mod{
                         addToTable(EUBlocks.onyxBlaster, t);
                         addToTable(EUBlocks.celebration, t);
                         addToTable(EUBlocks.celebrationMk2, t);
-                        addToTable(EUBlocks.liquidIncinerator, t);
                         addToTable(EUBlocks.guiY, t);
                     }).grow().center().maxWidth(960f);
                     buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
@@ -99,6 +99,7 @@ public class ExtraUtilitiesMod extends Mod{
     public void init() {
         EUCall.registerPackets();
         EUOverride.overrideBuilder();
+        //EUOverride.overrideBlockAll();
         Vars.ui.settings.game.checkPref("eu-first-load", true);
     }
 
@@ -108,6 +109,10 @@ public class ExtraUtilitiesMod extends Mod{
         EUOverride.overrideUnit1();
         EUBlocks.load();
         EUOverride.overrideBlock1();
+
+        TDPlanet.load();
+        TDSectorPresets.load();
+
         EUTechTree.load();
     }
 

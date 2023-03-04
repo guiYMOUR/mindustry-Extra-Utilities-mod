@@ -3,6 +3,7 @@ package ExtraUtilities.content;
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
+import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.power.LightenGenerator;
 import ExtraUtilities.worlds.blocks.power.ThermalReactor;
@@ -77,7 +78,7 @@ public class EUBlocks {
         //drill?
             arkyciteExtractor, quantumExplosion, minerPoint, minerCenter,
         //liquid
-            liquidSorter, liquidValve, liquidIncinerator,
+            liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
         //transport
             itemNode, liquidNode, ekMessDriver,
         //production
@@ -186,8 +187,13 @@ public class EUBlocks {
 
             //alwaysUnlocked = true;
         }};
+        communicatingValve = new LiquidUnloadingValve("communicating-valve"){{
+            requirements(Category.liquid, with(Items.silicon, 20, Items.oxide, 25, Items.graphite, 30));
+            health = 80;
+        }};
+
         liquidIncinerator = new LiquidIncinerator("liquid-incinerator"){{
-            requirements(Category.crafting, with(Items.silicon, 16, Items.carbide, 6));
+            requirements(Category.crafting, with(Items.carbide, 6));
             consumePower(0.9f);
             hasLiquids = true;
             size = 1;
@@ -220,7 +226,7 @@ public class EUBlocks {
             //transportTime = 1;
         }};
         ekMessDriver = new MassDriver("Ek-md"){{
-            requirements(Category.distribution, with(Items.silicon, 75, Items.tungsten, 100, Items.thorium, 55, Items.carbide, 45));
+            requirements(Category.distribution, with(Items.silicon, 75, Items.tungsten, 100, Items.thorium, 55, Items.oxide, 45));
             size = 2;
             itemCapacity = 50;
             reload = 200f;
@@ -371,7 +377,7 @@ public class EUBlocks {
             splitHeat = true;
         }};
         heatDriver = new HeatDriver("heat-driver"){{
-            requirements(Category.crafting, with(Items.tungsten, 150, Items.beryllium, 100, Items.oxide, 50, Items.graphite, 125));
+            requirements(Category.crafting, with(Items.tungsten, 150, Items.beryllium, 100, Items.oxide, 130, Items.graphite, 125));
             size = 3;
             drawer = new DrawMulti(new DrawDefault(), new DrawHeatOutput(), new DrawHeatInput("-heat"), new DrawHeatDriver());
             range = 360;
@@ -1046,6 +1052,7 @@ public class EUBlocks {
                                 ammoMultiplier = 1;
                                 hitSound = despawnSound = Sounds.explosionbig;
                                 healColor = EUItems.lightninAlloy.color;
+                                buildingDamageMultiplier = 0.7f;
                             }
 
                                 @Override
@@ -1127,6 +1134,7 @@ public class EUBlocks {
             size = 11;
             upgrades.addAll(
                     new UnitType[]{UnitTypes.reign, EUUnitTypes.suzerain},
+                    new UnitType[]{UnitTypes.corvus, EUUnitTypes.nebula},
                     new UnitType[]{UnitTypes.toxopid, EUUnitTypes.asphyxia},
                     new UnitType[]{UnitTypes.eclipse, EUUnitTypes.apocalypse},
                     new UnitType[]{UnitTypes.omura, EUUnitTypes.nihilo}
