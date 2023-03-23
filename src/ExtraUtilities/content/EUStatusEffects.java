@@ -14,7 +14,7 @@ public class EUStatusEffects {
         transitionDamage = 156;
         color = Color.valueOf("#cbd97f");
         speedMultiplier = 0.4f;
-        damage = 2.8f;
+        damage = 2f;
         healthMultiplier = 0.7f;
         effect = Fx.oily;
         init(() -> {

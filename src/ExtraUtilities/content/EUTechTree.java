@@ -12,6 +12,7 @@ import static mindustry.content.Blocks.*;
 import static mindustry.content.TechTree.*;
 import static ExtraUtilities.content.EUBlocks.*;
 import static ExtraUtilities.content.EUUnitTypes.*;
+import static ExtraUtilities.content.TDSectorPresets.*;
 
 
 public class EUTechTree {
@@ -19,6 +20,7 @@ public class EUTechTree {
 
     public static void load() {
         //S
+        addToNode(plastaniumConveyor, () -> node(stackHelper));
         addToNode(phaseConveyor, () -> node(itemNode));
         addToNode(phaseConduit, () -> node(liquidNode));
         addToNode(surgeSmelter, ()->{
@@ -40,6 +42,9 @@ public class EUTechTree {
                 node(apocalypse);
                 node(nihilo);
             });
+        });
+        addToNode(airFactory, () -> {
+            node(winglet);
         });
         addToNode(segment, () -> {
             node(dissipation);
@@ -98,6 +103,13 @@ public class EUTechTree {
         });
         addToNode(slagIncinerator, () ->{
             node(liquidIncinerator);
+        });
+
+        //TD
+        TDPlanet.TD.techTree = nodeRoot("TD", TD1, () -> {
+            addToNode(TD1, () -> {
+                node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
+            });
         });
     }
 

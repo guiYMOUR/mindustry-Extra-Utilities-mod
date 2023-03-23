@@ -57,12 +57,16 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("asphyxia"), EntityMapping.idMap[33]);
         EntityMapping.nameMap.put(name("apocalypse"), EntityMapping.idMap[3]);
         EntityMapping.nameMap.put(name("nihilo"), EntityMapping.idMap[20]);
+
+        EntityMapping.nameMap.put(name("winglet"), EntityMapping.idMap[3]);
     }
 
     public static UnitType
         miner, T2miner,
         //T6
-        suzerain, nebula, asphyxia, apocalypse, nihilo;
+        suzerain, nebula, asphyxia, apocalypse, nihilo,
+        //air sapper
+        winglet;
     public static void load(){
         miner = new ErekirUnitType("miner"){{
             defaultCommand = UnitCommand.mineCommand;
@@ -851,6 +855,50 @@ public class EUUnitTypes {
                         recoil = 5;
                     }}
             );
+        }};
+
+        winglet = new UnitType("winglet"){{
+            armor = 1;
+            flying = true;
+            hitSize = 12;
+            speed = 3;
+            accel = 0.04f;
+            drag = 0.02f;
+            health = 130;
+            mineSpeed = 2.5f;
+            mineTier = 1;
+            buildSpeed = 0.5f;
+            itemCapacity = 50;
+            engineOffset = 5.8f;
+            engineSize = 2.1f;
+            ammoType = new PowerAmmoType(500);
+
+            BulletType sapper = new SapBulletType(){{
+                sapStrength = 1f;
+                length = 72;
+                damage = 11;
+                shootEffect = Fx.shootSmall;
+                hitColor = Color.valueOf("bf92f9");
+                color = Color.valueOf("bf92f9");
+                despawnEffect = Fx.none;
+                width = 1f;
+                lifetime = 30;
+                knockback = -1;
+            }};
+
+            weapons.add(
+                    new Weapon(""){{
+                        x = 0;
+                        y = 3;
+                        mirror = false;
+                        reload = 21;
+                        rotate = false;
+                        bullet = sapper;
+                        shootSound = Sounds.sap;
+                    }}
+            );
+
+            setEnginesMirror(new UnitEngine(6, -5.8f, 1.6f, 315f));
         }};
     }
 }

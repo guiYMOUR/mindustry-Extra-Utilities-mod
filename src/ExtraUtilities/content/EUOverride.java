@@ -5,7 +5,6 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
 import arc.math.Interp;
 import mindustry.Vars;
-import mindustry.ai.types.BuilderAI;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
@@ -26,6 +25,7 @@ import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.blocks.units.UnitFactory;
 
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
@@ -56,6 +56,8 @@ public class EUOverride {
         Blocks.arc.consumePower(2f);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
         ((Turret)Blocks.scathe).fogRadiusMultiuplier = 0.75f;
+
+        ((UnitFactory)Blocks.airFactory).plans.add(new UnitFactory.UnitPlan(EUUnitTypes.winglet, 60f * 30, with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));
     }
 
     public static void overrideUnit1(){

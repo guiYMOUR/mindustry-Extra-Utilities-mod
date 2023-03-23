@@ -1,6 +1,7 @@
 package ExtraUtilities.content;
 
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
+import ExtraUtilities.worlds.blocks.distribution.StackHelper;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
@@ -80,7 +81,7 @@ public class EUBlocks {
         //liquid
             liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
         //transport
-            itemNode, liquidNode, ekMessDriver,
+            stackHelper, itemNode, liquidNode, ekMessDriver,
         //production
             T2oxide,
         /** 光束合金到此一游*/
@@ -200,6 +201,12 @@ public class EUBlocks {
         }};
 
 
+        stackHelper = new StackHelper("stack-helper"){{
+            requirements(Category.distribution, with(Items.silicon, 20, Items.phaseFabric, 10, Items.plastanium, 20));
+            size = 1;
+            health = 60;
+            buildCostMultiplier = 0.6f;
+        }};
         itemNode = new PhaseNode("i-node"){{
             requirements(Category.distribution, with(Items.copper, 110, Items.lead, 80, Items.silicon, 100, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 18));
             buildCostMultiplier = 0.25f;
@@ -1149,7 +1156,7 @@ public class EUBlocks {
             liquidCapacity = 192;
         }};
         finalF = new UnitFactory("finalF"){{
-            requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1500));
+            requirements(Category.units, with(EUItems.lightninAlloy, 1200, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1500));
             size = 5;
             consumePower(30);
             consumeLiquid(Liquids.water, 1);
@@ -1185,7 +1192,7 @@ public class EUBlocks {
                             }
                         }
                         if(u.armor < 30) plans.add(new UnitPlan(u, time * 6, os));
-                        else plans.add(new UnitPlan(u, time * 8, is));
+                        else plans.add(new UnitPlan(u, time * 2, is));
                     }
                 }
                 super.init();
