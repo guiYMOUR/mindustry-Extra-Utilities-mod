@@ -11,6 +11,7 @@
 - QQ ①群：588379643
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - 创意工坊：[https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720](https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527)
+- 如何下载？[点这里](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases)，然后点最上面的EU.版本号.jar就行了
 
 ## mod扩展方向
 
