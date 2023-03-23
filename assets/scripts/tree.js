@@ -15,8 +15,8 @@ const { rainbow } = require('block/turret/rainbow');
 const { hurricane } = require('block/turret/hurricane');
 const { ms } = require('block/turret/ms');
 // const { sunburst } =require('block/turret/sunburst');
-// const { T2lan } = require('block/turret/T2lancer');
-// const { stinger } = require('block/turret/stinger');
+const { T2lan } = require('block/turret/T2lancer');
+const { stinger } = require('block/turret/stinger');
 // const { swT2 } = require('block/turret/T2swarmer');
 // const { swMin } = require('block/turret/miniswarmer');
 const { T2rip } = require('block/turret/T2ripple');
@@ -27,7 +27,7 @@ const { T3fuse } = require('block/turret/T3fuse');
 // const { antiaircraft } = require('block/turret/antiaircraft');
 // const { sam } = require('block/turret/sam');
 // const { RG } = require('block/turret/RG');
-// const { prism } = require('block/turret/prism');
+const { prism } = require('block/turret/prism');
 // const { blackhole } = require('block/turret/blackhole');
 // const { sucker } = require('block/turret/sucker');
 // const { dissipation } = require('block/turret/dissipation');
@@ -60,7 +60,7 @@ const { T2CSm } = require("block/production/T2CrispSteelSmelter");
 const { ai } = require('block/production/AdjustableIncinerator');
 //const { DCF } = require('block/effect/DCF');
 const { tiDrill, /*drill, */shovel, slagE, T2WE, T2CU, blastOilExtractor, dustExtractor } = require('block/production/drill');
-//const { core, chest, cargo } = require('block/effect/core');
+const { chest, cargo } = require('block/effect/core');
 const { und } = require('block/effect/und');
 const { lu } = require('block/effect/LiquidUnloader');
 const { speeder } = require('block/effect/speeder');
@@ -103,11 +103,11 @@ lib.addToResearch(sakura, { parent: shotgun.name, });
 lib.addToResearch(rainbow, { parent: shotgun.name, });
 lib.addToResearch(hurricane, { parent: 'arc', });
 lib.addToResearch(ms, { parent: hurricane.name, });
-/*lib.addToResearch(sunburst, { parent: hurricane.name, });
-//lib.addToResearch(T2lan, { parent: 'lancer', });
+// lib.addToResearch(sunburst, { parent: hurricane.name, });
+lib.addToResearch(T2lan, { parent: 'lancer', });
 lib.addToResearch(stinger, { parent: T2lan.name, });
-lib.addToResearch(swT2, { parent: 'swarmer', });
-lib.addToResearch(swMin, { parent: 'swarmer', });*/
+// lib.addToResearch(swT2, { parent: 'swarmer', });
+// lib.addToResearch(swMin, { parent: 'swarmer', });
 lib.addToResearch(T2rip, { parent: 'ripple', });
 lib.addToResearch(T3rip, { parent: T2rip.name, });
 lib.addToResearch(T2fuse, { parent: 'fuse', });
@@ -127,13 +127,13 @@ lib.addToResearch(RG, { parent: 'foreshadow',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
-});
+});*/
 lib.addToResearch(prism, { parent: rainbow.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
 });
-lib.addToResearch(blackhole, { parent: sam.name, });
+/*lib.addToResearch(blackhole, { parent: sam.name, });
 lib.addToResearch(sucker, { parent: 'parallax', });
 lib.addToResearch(dissipation, { parent: 'segment', });
 lib.addToResearch(heal, { parent: 'mend-projector', objectives: Seq.with(new Objectives.Research(Blocks.repairTurret)) });
@@ -215,9 +215,9 @@ lib.addToResearch(dustExtractor, { parent: 'pneumatic-drill', });
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.extractionOutpost),
     )
-});
+});*/
 lib.addToResearch(chest, { parent: 'router', });
-lib.addToResearch(cargo, { parent: 'vault', });*/
+lib.addToResearch(cargo, { parent: 'vault', });
 lib.addToResearch(und, { parent: 'unloader', });
 lib.addToResearch(lu, { parent: 'liquid-tank', });
 lib.addToResearch(speeder, { parent: 'force-projector', });

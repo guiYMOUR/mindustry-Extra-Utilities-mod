@@ -1,22 +1,25 @@
 //
 const lib = require('blib');
 const status = require("other/status");
+const Stinger = lib.getClass("ExtraUtilities.worlds.blocks.turret.Stinger");
+const DeathLaser = lib.getClass("ExtraUtilities.worlds.entity.bullet.DeathLaser");
 
 const chargeTime = 40;
 const color = Color.valueOf("#C6D676");
 //const chargeSound = Sounds.none;
 
-const stingerLaser = extend(LaserBulletType, {});
+//const stingerLaser = extend(LaserBulletType, {});
+const stingerLaser = new DeathLaser();
 
 stingerLaser.chargeEffect = new MultiEffect(lib.Fx.lancerLaserCharge(color), lib.Fx.chargeBeginEffect(chargeTime, color));
 
-stingerLaser.damage = 316;
+stingerLaser.damage = 360;
 stingerLaser.sideAngle = 2;
 stingerLaser.sideWidth = 2;
 stingerLaser.sideLength = 40;
 stingerLaser.collidesAir = false
 stingerLaser.length = 230;
-stingerLaser.width = 22;
+stingerLaser.width = 26;
 stingerLaser.hitSize = 6;
 stingerLaser.lifetime = 48;
 stingerLaser.drawSize = 400;
@@ -34,15 +37,15 @@ stingerLaser.colors =[color, color, Color.white];
 stingerLaser.shootEffect = lib.Fx.stingerShoot(color);
 
 
-const stinger = extend(PowerTurret, 'stinger', {});
+//const stinger = extend(PowerTurret, 'stinger', {});
+const stinger = new Stinger("stinger");
 stinger.shoot.firstShotDelay = 40;
 stinger.accurateDelay = false;
 
 stinger.moveWhileCharging = false;
 stinger.consumePower(11);
 stinger.shootType = stingerLaser;
-stinger.shots = 1;
-stinger.shootShake = 3;
+stinger.shake = 3.5;
 stinger.reload = chargeTime * 2.5;
 stinger.range = 200;
 stinger.shootCone = 15;
@@ -80,13 +83,11 @@ stinger.drawer = (() => {
     return d;
 })();
 stinger.requirements = ItemStack.with(
-    Items.copper, 200,
-    Items.silicon, 150,
-    Items.graphite, 125,
+    Items.silicon, 250,
     Items.titanium, 100,
     Items.thorium, 100,
     Items.plastanium, 80,
-    Items.surgeAlloy, 10
+    Items.surgeAlloy, 100
 );
 stinger.buildVisibility = BuildVisibility.shown;
 stinger.category = Category.turret;

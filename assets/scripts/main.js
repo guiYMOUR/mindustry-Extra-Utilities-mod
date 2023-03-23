@@ -12,7 +12,7 @@ require("block/turret/rainbow");
 require("block/turret/hurricane");
 require("block/turret/ms");
 // require("block/turret/sunburst");
-// require("block/turret/T2lancer");
+require("block/turret/T2lancer");
 require("block/turret/stinger");
 // require("block/turret/miniswarmer");
 // require("block/turret/T2swarmer");
@@ -58,7 +58,7 @@ require("block/distribution/T2IB");
 require("block/distribution/IN");
 require("block/distribution/LB");*/
 require("block/distribution/driver");
-//require("block/effect/core");
+require("block/effect/core");
 require("block/effect/und");
 require("block/effect/LiquidUnloader");
 require("block/effect/speeder");
