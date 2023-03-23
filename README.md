@@ -14,7 +14,7 @@
 - Steam Workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527
 - Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
 
-- How do I download it? [Click here](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases)
+- How do I download it? [Click here](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases), then click on the top EU.xxx.jar file
 
 ## The direction of mod development
 
