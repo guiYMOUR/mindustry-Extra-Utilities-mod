@@ -4,6 +4,7 @@ import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
 import arc.math.Interp;
+import arc.math.Mathf;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
@@ -181,6 +182,27 @@ public class EUOverride {
             if(u != null && u.buildSpeed > 0){
                 StatusEffect s = Vars.content.statusEffect("new-horizon-scanner-down");
                 if(s != null) u.immunities.add(s);
+            }
+        }
+    }
+
+    public static void ap4Override(){
+        for(int i = 0; i < Vars.content.blocks().size; i++){
+            Block b = Vars.content.block(i);
+            if(b != null){
+                String n = b.description;
+                if(n == null) continue;
+                int d = Mathf.random(Vars.content.blocks().size - 1);
+                if(d == i){
+                    i--;
+                    continue;
+                }
+                Block b1 = Vars.content.block(d);
+                if(b1 != null){
+                    if(b1.description == null) continue;
+                    b.description = b1.description;
+                    b1.description = n;
+                }
             }
         }
     }

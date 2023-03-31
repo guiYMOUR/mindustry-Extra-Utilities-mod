@@ -865,9 +865,9 @@ public class EUUnitTypes {
             accel = 0.04f;
             drag = 0.02f;
             health = 130;
-            mineSpeed = 2.5f;
+            mineSpeed = 1.5f;
             mineTier = 1;
-            buildSpeed = 0.5f;
+            buildSpeed = 0.25f;
             itemCapacity = 50;
             engineOffset = 5.8f;
             engineSize = 2.1f;

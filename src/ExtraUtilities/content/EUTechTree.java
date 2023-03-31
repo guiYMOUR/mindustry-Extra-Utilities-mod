@@ -23,6 +23,13 @@ public class EUTechTree {
         addToNode(plastaniumConveyor, () -> node(stackHelper));
         addToNode(phaseConveyor, () -> node(itemNode));
         addToNode(phaseConduit, () -> node(liquidNode));
+        addToNode(thermalGenerator, () -> {
+            node(heatPower, () -> {
+                node(windPower, () -> {
+                    node(waterPower);
+                });
+            });
+        });
         addToNode(surgeSmelter, ()->{
             node(LA, () ->{
                 node(LG);
@@ -61,6 +68,15 @@ public class EUTechTree {
             node(sancta);
         });
         //E
+        addToNode(turbineCondenser, () -> {
+            node(nitrogenWell);
+        });
+        addToNode(ductBridge, () -> {
+            node(reinforcedDuctBridge);
+        });
+        addToNode(reinforcedBridgeConduit, () -> {
+            node(phaseReinforcedBridgeConduit);
+        });
         addToNode(heatRedirector, () -> {
             node(heatTransfer, () -> {
                 node(heatDriver);

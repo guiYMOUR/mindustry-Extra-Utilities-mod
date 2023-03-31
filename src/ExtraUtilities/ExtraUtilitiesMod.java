@@ -67,14 +67,14 @@ public class ExtraUtilitiesMod extends Mod{
                     cont.add(Core.bundle.format("tips.name")).row();
                     cont.add(Core.bundle.format("tips.description")).row();
                     cont.pane(t -> {
-                        addToTable(EUBlocks.communicatingValve, t);
-                        addToTable(EUBlocks.finalF, t);
+                        addToTable(EUBlocks.reinforcedDuctBridge, t);
+                        addToTable(EUBlocks.phaseReinforcedBridgeConduit, t);
+                        addToTable(EUBlocks.nitrogenWell, t);
+                        addToTable(EUBlocks.cyanogenPyrolysis, t);
+                        addToTable(EUBlocks.heatPower, t);
+                        addToTable(EUBlocks.windPower, t);
+                        addToTable(EUBlocks.waterPower, t);
                         addToTable(EUBlocks.ADC, t);
-                        addToTable(EUBlocks.heatDistributor, t);
-                        addToTable(EUBlocks.liquidConsumeGenerator, t);
-                        addToTable(EUBlocks.onyxBlaster, t);
-                        addToTable(EUBlocks.celebration, t);
-                        addToTable(EUBlocks.celebrationMk2, t);
                         addToTable(EUBlocks.guiY, t);
                     }).grow().center().maxWidth(960f);
                     buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
@@ -90,6 +90,7 @@ public class ExtraUtilitiesMod extends Mod{
         }
     }
 
+
     public ExtraUtilitiesMod() {
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
@@ -100,6 +101,7 @@ public class ExtraUtilitiesMod extends Mod{
         EUCall.registerPackets();
         EUOverride.overrideBuilder();
         //EUOverride.overrideBlockAll();
+        //EUOverride.ap4Override();
         Vars.ui.settings.game.checkPref("eu-first-load", true);
     }
 

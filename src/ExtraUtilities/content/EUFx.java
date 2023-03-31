@@ -73,6 +73,14 @@ public class EUFx {
         });
     });
 
+    public static Effect absorbEffect2 = new Effect(50, e -> {
+        Draw.color(Items.pyratite.color.cpy().a(0.7f));
+        Angles.randLenVectors(e.id, 2, 1 + 5 * e.fout(), e.rotation, e.rotation + 120, (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 3 + 1);
+            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
+        });
+    });
+
     public static Effect missileTrailSmokeSmall = new Effect(90f, 90f, b -> {
         float intensity = 1.1f;
 

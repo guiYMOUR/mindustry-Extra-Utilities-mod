@@ -7,6 +7,7 @@ import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.power.LightenGenerator;
+import ExtraUtilities.worlds.blocks.power.SpaceGenerator;
 import ExtraUtilities.worlds.blocks.power.ThermalReactor;
 import ExtraUtilities.worlds.blocks.production.*;
 //import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
@@ -43,6 +44,7 @@ import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
 import mindustry.game.EventType;
+import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
 import mindustry.gen.Unit;
@@ -52,9 +54,14 @@ import mindustry.graphics.Pal;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
+import mindustry.world.blocks.distribution.DirectionLiquidBridge;
+import mindustry.world.blocks.distribution.DuctBridge;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
+import mindustry.world.blocks.liquid.ArmoredConduit;
+import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.power.ConsumeGenerator;
+import mindustry.world.blocks.power.ThermalGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssembler;
@@ -70,6 +77,8 @@ import java.util.List;
 
 import static arc.graphics.g2d.Draw.alpha;
 import static arc.graphics.g2d.Draw.color;
+import static mindustry.content.Fx.rand;
+import static mindustry.content.Fx.v;
 import static mindustry.type.ItemStack.*;
 import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static ExtraUtilities.worlds.entity.bullet.FireWorkBullet.*;
@@ -81,15 +90,15 @@ public class EUBlocks {
         //liquid
             liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
         //transport
-            stackHelper, itemNode, liquidNode, ekMessDriver,
+            stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
-            T2oxide,
+            T2oxide, cyanogenPyrolysis,
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
             thermalHeater, slagReheater, heatTransfer, heatDistributor, heatDriver,
         //power
-            liquidConsumeGenerator, thermalReactor, LG,
+            liquidConsumeGenerator, thermalReactor, LG, nitrogenWell, heatPower, windPower, waterPower,
         //turret
             dissipation, guiY, onyxBlaster, celebration, celebrationMk2, sancta, turretResupplyPoint,
         //unit
@@ -232,6 +241,30 @@ public class EUBlocks {
             placeableLiquid = true;
             //transportTime = 1;
         }};
+
+        reinforcedDuctBridge = new DuctBridge("reinforced-duct-bridge"){{
+            requirements(Category.distribution, with(Items.beryllium, 15, Items.tungsten, 15, Items.graphite, 10));
+            health = 90;
+            speed = 4f;
+            buildCostMultiplier = 1.5f;
+            itemCapacity = 5;
+            range = 6;
+            researchCostMultiplier = 0.3f;
+            health = 150;
+        }};
+        phaseReinforcedBridgeConduit = new DirectionLiquidBridge("phase-reinforced-bridge-conduit"){{
+            requirements(Category.liquid, with(Items.graphite, 15, Items.beryllium, 15, Items.phaseFabric, 10));
+            range = 7;
+            hasPower = false;
+            researchCostMultiplier = 0.5f;
+            underBullets = true;
+            floating = true;
+            placeableLiquid = true;
+            Block p = Vars.content.block("extra-utilities-conduit");
+            if(p != null) ((ArmoredConduit)p).rotBridgeReplacement = this;
+
+            health = 120;
+        }};
         ekMessDriver = new MassDriver("Ek-md"){{
             requirements(Category.distribution, with(Items.silicon, 75, Items.tungsten, 100, Items.thorium, 55, Items.oxide, 45));
             size = 2;
@@ -287,6 +320,28 @@ public class EUBlocks {
             itemCapacity = 80;
             heatOutput = 25f;
         }};
+        cyanogenPyrolysis = new HeatCrafter("cyanogen-pyrolysis"){{
+            requirements(Category.crafting, with(Items.thorium, 100, Items.silicon, 150, Items.tungsten, 100, Items.oxide, 50, Items.carbide, 20));
+            size = 3;
+
+            drawer = new DrawMulti(new DrawDefault(), new DrawLiquidRegion(Liquids.arkycite), new DrawLiquidRegion(Liquids.cyanogen){{
+                suffix = "-liquid2";
+            }}, new DrawHeatInput());
+
+            ambientSound = Sounds.fire;
+            ambientSoundVolume = 0.02f;
+
+            hasLiquids = true;
+            liquidCapacity = 80f;
+            consumePower(3f);
+            heatRequirement = 8f;
+            consumeLiquid(Liquids.arkycite, 40/60f);
+            outputLiquid = new LiquidStack(Liquids.cyanogen, 2/60f);
+
+            maxEfficiency = 4;
+            craftTime = 4 * 60f;
+        }};
+
         LA = new GenericCrafter("LA"){{
             requirements(Category.crafting, with(Items.silicon, 135, Items.lead, 200, Items.titanium, 120, Items.thorium, 100, Items.surgeAlloy, 55));
             hasPower = true;
@@ -435,6 +490,98 @@ public class EUBlocks {
             floating = true;
             ambientSound = Sounds.hum;
             ambientSoundVolume = 0.06f;
+        }};
+
+        nitrogenWell = new ThermalGenerator("nitrogen-well"){{
+            requirements(Category.power, with(Items.graphite, 100, Items.silicon, 120, Items.tungsten, 50, Items.oxide, 50));
+            attribute = Attribute.steam;
+            group = BlockGroup.liquids;
+            displayEfficiencyScale = 1f / 9f;
+            minEfficiency = 9f - 0.0001f;
+            powerProduction = 150f/60f/9f;
+            displayEfficiency = false;
+            generateEffect = Fx.turbinegenerate;
+            effectChance = 0.04f;
+            size = 3;
+            ambientSound = Sounds.hum;
+            ambientSoundVolume = 0.06f;
+
+            drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin("-rotator", 0.5f * 9f){{
+                blurThresh = 0.01f;
+            }});
+
+            hasLiquids = true;
+            outputLiquid = new LiquidStack(Liquids.nitrogen, 10f / 60f/ 9);
+            liquidCapacity = 20f;
+            fogRadius = 3;
+        }};
+        heatPower = new SpaceGenerator("heatPower"){{
+            requirements(Category.power, with(Items.thorium, 150, Items.silicon, 150, Items.graphite, 200, Items.surgeAlloy, 50));
+            size = 3;
+            haveBasicPowerOutput = false;
+            attribute = Attribute.heat;
+            blockedOnlySolid = true;
+            powerProduction = 45/60f;
+            outEffect = new RadialEffect(EUFx.absorbEffect2, 4, 90f, 7f);
+            outTimer = EUFx.absorbEffect2.lifetime;
+            drawer = new DrawMulti(new DrawDefault(), new DrawBlock() {
+                @Override
+                public void draw(Building build) {
+                    Draw.color(Items.pyratite.color);
+                    Draw.alpha(build.warmup());
+                    Draw.rect(Core.atlas.find(name + "-heat"), build.x, build.y);
+                }
+            });
+        }};
+        windPower = new SpaceGenerator("windPower"){{
+            requirements(Category.power, with(Items.graphite, 300, Items.silicon, 200, Items.titanium, 100, EUItems.crispSteel, 80, Items.plastanium, 55));
+            space = 2;
+            size = 3;
+
+            drawer = new DrawMulti(new DrawDefault(), new DrawRegion("-rot", 4, true), new DrawRegion("-top"));
+            tileEffect = new Effect(220, (e) -> {
+                float length = 3f + e.finpow() * 20f;
+                rand.setSeed(e.id);
+
+                for(int i = 0; i < 6; ++i) {
+                    v.trns(rand.random(360), rand.random(length));
+                    float sizer = rand.random(1f, 2f);
+                    e.scaled(e.lifetime * rand.random(0.5f, 1), (b) -> {
+                        Draw.color(Color.gray, b.fslope() * 0.93f);
+                        Fill.circle(e.x + v.x, e.y + v.y, sizer + b.fslope());
+                    });
+                }
+
+            });
+
+            canOverdrive = false;
+        }};
+        waterPower = new SpaceGenerator("waterPower"){{
+            requirements(Category.power, with(Items.graphite, 300, Items.silicon, 250, Items.surgeAlloy, 150, Items.phaseFabric, 100, EUItems.crispSteel, 150));
+            size = 3;
+            attribute = Attribute.water;
+            attributeColor = Color.blue;
+            negativeAttributeColor = Color.white;
+            powerProduction = 18/60f;
+
+            drawer = new DrawMulti(new DrawDefault(), new DrawRegion("-rot", 4, true), new DrawRegion("-top"));
+
+            tileEffect = new Effect(220, (e) -> {
+                float length = 3f + e.finpow() * 20f;
+                rand.setSeed(e.id);
+
+                for(int i = 0; i < 5; ++i) {
+                    v.trns(rand.random(360), rand.random(length));
+                    float sizer = rand.random(1f, 2f);
+                    e.scaled(e.lifetime * rand.random(0.5f, 1), (b) -> {
+                        Draw.color(Color.valueOf("39c5bb"), b.fslope() * 0.93f);
+                        Fill.circle(e.x + v.x, e.y + v.y, sizer + b.fslope());
+                    });
+                }
+
+            });
+
+            canOverdrive = false;
         }};
         LG = new LightenGenerator("lightnin-generator"){{
             requirements(Category.power, with(Items.metaglass, 600, Items.graphite, 550, Items.silicon, 470, Items.surgeAlloy, 550, EUItems.lightninAlloy, 270));

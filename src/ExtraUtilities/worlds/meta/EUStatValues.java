@@ -2,8 +2,10 @@ package ExtraUtilities.worlds.meta;
 
 import arc.Core;
 import arc.func.Boolf;
+import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -167,5 +169,16 @@ public class EUStatValues {
 
     private static TextureRegion icon(UnlockableContent t){
         return t.uiIcon;
+    }
+
+    public static StatValue colorString(Color color, CharSequence s){
+        return table -> {
+            table.row();
+            table.table(c -> {
+                c.image(((TextureRegionDrawable)Tex.whiteui).tint(color)).size(32).scaling(Scaling.fit).padRight(4).left().top();
+                c.add(s).padRight(10).left().top();
+            }).left();
+            table.row();
+        };
     }
 }
