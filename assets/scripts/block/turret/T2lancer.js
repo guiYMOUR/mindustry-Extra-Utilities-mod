@@ -27,7 +27,7 @@ const T2lan = extend(PowerTurret, 'T2-lancer', {});
 
 T2lan.consumePower(11);
 T2lan.shootType = laser;
-T2lan.shoot = lib.moreShootAlternate(5, 2);
+T2lan.shoot = lib.moreShootAlternate(4, 2);
 T2lan.shake = 2;
 T2lan.shootEffect = Fx.lancerLaserShoot;
 T2lan.smokeEffect = Fx.none;
