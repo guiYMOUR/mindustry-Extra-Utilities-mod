@@ -11,6 +11,8 @@ import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
+import mindustry.entities.bullet.BulletType;
+import mindustry.entities.bullet.MissileBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.effect.WaveEffect;
@@ -20,14 +22,12 @@ import mindustry.entities.part.ShapePart;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
-import mindustry.type.Category;
-import mindustry.type.ItemStack;
-import mindustry.type.StatusEffect;
-import mindustry.type.UnitType;
+import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.units.UnitFactory;
 
+import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
 import static mindustry.type.ItemStack.with;
@@ -64,7 +64,7 @@ public class EUOverride {
     public static void overrideUnit1(){
         UnitTypes.quell.health = 6500;
         UnitTypes.quell.armor = 7;
-        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{
+        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", 20, 20){{//
             shootEffect = Fx.shootBig;
             smokeEffect = Fx.shootBigSmoke2;
             speed = 4.3f;
@@ -80,7 +80,7 @@ public class EUOverride {
         }};
         UnitTypes.quell.weapons.get(0).shake = 1;
 
-        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{
+        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", 18, 18){{//
             shootEffect = Fx.sparkShoot;
             smokeEffect = Fx.shootSmokeTitan;
             hitColor = Pal.suppress;
@@ -122,7 +122,7 @@ public class EUOverride {
         }};
         UnitTypes.disrupt.weapons.get(0).shake = 1f;
 
-        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", -1, -1){{
+        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", 15, 15){{//
             shootEffect = new MultiEffect(Fx.shootBigColor, new Effect(9, e -> {
                 color(Color.white, e.color, e.fin());
                 stroke(0.7f + e.fout());
@@ -186,18 +186,46 @@ public class EUOverride {
         }
     }
 
-    public static void ap4Override(){
+    //愚人节特别改动
+    public static void ap4sOverride(){
         for(int i = 0; i < Vars.content.blocks().size; i++){
             Block b = Vars.content.block(i);
             if(b != null){
                 String n = b.description;
                 if(n == null) continue;
                 int d = Mathf.random(Vars.content.blocks().size - 1);
-                if(d == i){
-                    i--;
-                    continue;
-                }
+                if(d == i) continue;
                 Block b1 = Vars.content.block(d);
+                if(b1 != null){
+                    if(b1.description == null) continue;
+                    b.description = b1.description;
+                    b1.description = n;
+                }
+            }
+        }
+        for(int i = 0; i < Vars.content.items().size; i++){
+            Item b = Vars.content.item(i);
+            if(b != null){
+                String n = b.description;
+                if(n == null) continue;
+                int d = Mathf.random(Vars.content.items().size - 1);
+                if(d == i) continue;
+                Item b1 = Vars.content.item(d);
+                if(b1 != null){
+                    if(b1.description == null) continue;
+                    b.description = b1.description;
+                    b1.description = n;
+                }
+            }
+        }
+        for(int i = 0; i < Vars.content.units().size; i++){
+            UnitType b = Vars.content.unit(i);
+            if(b != null){
+                String n = b.description;
+                if(n == null) continue;
+                int d = Mathf.random(Vars.content.units().size - 1);
+                if(d == i) continue;
+                UnitType b1 = Vars.content.unit(d);
                 if(b1 != null){
                     if(b1.description == null) continue;
                     b.description = b1.description;

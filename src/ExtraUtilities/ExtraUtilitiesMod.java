@@ -4,6 +4,7 @@ import ExtraUtilities.content.*;
 import ExtraUtilities.net.EUCall;
 import arc.*;
 import arc.files.Fi;
+import arc.math.Mathf;
 import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
@@ -90,10 +91,39 @@ public class ExtraUtilitiesMod extends Mod{
         }
     }
 
+    public static void log2(){
+        BaseDialog dialog = new BaseDialog("ExtraUtilities"){
+            private int con = 0;
+            private float bx, by;
+            {
+            cont.add("发现大量简介改动\n为了防止Mindustry崩溃，模组已被[red]全部禁用[]\n点击确定以继续");
+            buttons.button("", this::hide).update(b ->{
+                b.setText(con > 0 ? con == 5 ? "[red]愚人节快乐[]" : "再点我一下?" : "确定");
+                if(con > 0) {
+                    b.x = bx;
+                    b.y = by;
+                }
+            }).size(140, 50).center();
+        }
+
+            @Override
+            public void hide() {
+                if(con >= 5) {
+                    super.hide();
+                    return;
+                }
+                con++;
+                bx = Mathf.random(this.width * 0.8f);
+                by = Mathf.random(this.height * 0.8f);
+            }
+        };
+        dialog.show();
+    }
 
     public ExtraUtilitiesMod() {
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
+        //Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log2));
     }
 
     @Override
@@ -101,7 +131,7 @@ public class ExtraUtilitiesMod extends Mod{
         EUCall.registerPackets();
         EUOverride.overrideBuilder();
         //EUOverride.overrideBlockAll();
-        //EUOverride.ap4Override();
+        //EUOverride.ap4sOverride();
         Vars.ui.settings.game.checkPref("eu-first-load", true);
     }
 

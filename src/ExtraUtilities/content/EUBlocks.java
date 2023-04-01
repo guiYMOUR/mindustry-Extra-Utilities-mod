@@ -71,10 +71,6 @@ import mindustry.world.consumers.ConsumeLiquidFlammable;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static arc.graphics.g2d.Draw.alpha;
 import static arc.graphics.g2d.Draw.color;
 import static mindustry.content.Fx.rand;
@@ -493,12 +489,12 @@ public class EUBlocks {
         }};
 
         nitrogenWell = new ThermalGenerator("nitrogen-well"){{
-            requirements(Category.power, with(Items.graphite, 100, Items.silicon, 120, Items.tungsten, 50, Items.oxide, 50));
+            requirements(Category.power, with(Items.graphite, 100, Items.silicon, 120, Items.tungsten, 80, Items.oxide, 100));
             attribute = Attribute.steam;
             group = BlockGroup.liquids;
             displayEfficiencyScale = 1f / 9f;
             minEfficiency = 9f - 0.0001f;
-            powerProduction = 150f/60f/9f;
+            powerProduction = 90f/60f/9f;
             displayEfficiency = false;
             generateEffect = Fx.turbinegenerate;
             effectChance = 0.04f;
@@ -511,7 +507,7 @@ public class EUBlocks {
             }});
 
             hasLiquids = true;
-            outputLiquid = new LiquidStack(Liquids.nitrogen, 10f / 60f/ 9);
+            outputLiquid = new LiquidStack(Liquids.nitrogen, 8f / 60f/ 9);
             liquidCapacity = 20f;
             fogRadius = 3;
         }};
@@ -656,7 +652,7 @@ public class EUBlocks {
 //                                buildingDamageMultiplier = 0.3f;
 //                            }};
 //                        }}
-                    Items.silicon, new CtrlMissile(name("mb"), 16, 16){{
+                    Items.silicon, new CtrlMissile(name("胡萝卜"), 20, 20){{
                         shootEffect = Fx.shootBig;
                         smokeEffect = Fx.shootBigSmoke2;
                         speed = 4.3f;
