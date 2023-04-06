@@ -17,7 +17,7 @@ th2.requirements = ItemStack.with(
     Items.graphite, 250,
     Items.thorium, 300,
     Items.metaglass, 80,
-    Items.phaseFabric, 18
+    Items.phaseFabric, 30
     
 );
 th2.buildCostMultiplier = 0.85;

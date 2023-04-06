@@ -2,6 +2,7 @@
 const lib = require("blib");
 const shots = 2;
 const MultiShootTurret = lib.getClass("ExtraUtilities.worlds.blocks.turret.MultiShootTurret");
+const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const T2rip = new MultiShootTurret("T2-ripple");
 T2rip.reload = 30;
@@ -29,7 +30,7 @@ T2rip.requirements = ItemStack.with(
     Items.copper, 200,
     Items.graphite, 150,
     Items.titanium, 70,
-    Items.silicon, 30
+    Items.silicon, 30 + (hardMod ? 30 : 0)
 );
 T2rip.buildVisibility = BuildVisibility.shown;
 T2rip.category = Category.turret;

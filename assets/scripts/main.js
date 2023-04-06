@@ -145,16 +145,16 @@ lib.mod.meta.description = lib.getMessage('mod', 'description');
 require("other/override");
 
 //核心蓝图，这种方式不会在蓝图包出现
-const CoreSchematics = [
-"bXNjaAF4nCWLWwqAMBAD05eI/ngRD1XXBQt9yFpEb6+lCQRmIHAYNGz2iTHxU8WvVIQx73yRhLOGkgGDJTEdPgfycd0lxIiRSr75LYJxq6m/AIce9VdD6X9sY9OlafIDyOMXfA=="
-];
-(() => {
-    for (var schematic of CoreSchematics) {
-        let read = Schematics.readBase64(schematic);
-        if (read.hasCore()) {
-            Vars.schematics.getLoadouts(Blocks.coreShard).add(read);
-        }
-    }
-})();
+// const CoreSchematics = [
+// "bXNjaAF4nCWLWwqAMBAD05eI/ngRD1XXBQt9yFpEb6+lCQRmIHAYNGz2iTHxU8WvVIQx73yRhLOGkgGDJTEdPgfycd0lxIiRSr75LYJxq6m/AIce9VdD6X9sY9OlafIDyOMXfA=="
+// ];
+// (() => {
+//     for (var schematic of CoreSchematics) {
+//         let read = Schematics.readBase64(schematic);
+//         if (read.hasCore()) {
+//             Vars.schematics.getLoadouts(Blocks.coreShard).add(read);
+//         }
+//     }
+// })();
 
 //require("block/effect/pl");

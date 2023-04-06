@@ -5,6 +5,9 @@ const Prism = lib.getClass("ExtraUtilities.worlds.blocks.turret.Prism");
 const PrismLaser = lib.getClass("ExtraUtilities.worlds.entity.bullet.PrismLaser")
 const DrawRainbow = lib.getClass("ExtraUtilities.worlds.drawer.DrawRainbow");
 const prism = new Prism("prism");
+
+const hardMod = Core.settings.getBool("eu-hard-mode");
+
 prism.shootEffect = Fx.shootBigSmoke2;
 prism.shootCone = 40;
 prism.recoil = 4;
@@ -64,7 +67,7 @@ prism.shootType = (() => {
     //     Draw.blend();
     //     Draw.reset();
     // }));
-    const cl = new PrismLaser(900/12, 11, prism.range);
+    const cl = new PrismLaser((900 - (hardMod ? 100 : 0))/12, 11, prism.range);
     cl.drawSize = 320;
     cl.incendChance = -1;
     cl.incendAmount = -1;

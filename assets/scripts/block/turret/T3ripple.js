@@ -3,6 +3,7 @@ const lib = require("blib");
 const bullets = require("other/bullets");
 const MultiShootTurret = lib.getClass("ExtraUtilities.worlds.blocks.turret.MultiShootTurret");
 const shots = 3;
+const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const T3rip = new MultiShootTurret("T3-ripple");
 T3rip.reload = 20;
@@ -39,8 +40,8 @@ T3rip.requirements = ItemStack.with(
     Items.graphite, 220,
     Items.titanium, 155,
     Items.thorium, 100,
-    Items.silicon, 85,
-    Items.surgeAlloy, 80
+    Items.silicon, 85 + (hardMod ? 65 : 0),
+    Items.surgeAlloy, 80 + (hardMod ? 20 : 0)
 );
 T3rip.buildVisibility = BuildVisibility.shown;
 T3rip.category = Category.turret;

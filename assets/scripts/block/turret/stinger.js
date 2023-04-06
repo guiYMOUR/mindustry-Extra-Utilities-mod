@@ -3,6 +3,7 @@ const lib = require('blib');
 const status = require("other/status");
 const Stinger = lib.getClass("ExtraUtilities.worlds.blocks.turret.Stinger");
 const DeathLaser = lib.getClass("ExtraUtilities.worlds.entity.bullet.DeathLaser");
+const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const chargeTime = 40;
 const color = Color.valueOf("#C6D676");
@@ -13,7 +14,7 @@ const stingerLaser = new DeathLaser();
 
 stingerLaser.chargeEffect = new MultiEffect(lib.Fx.lancerLaserCharge(color), lib.Fx.chargeBeginEffect(chargeTime, color));
 
-stingerLaser.damage = 360;
+stingerLaser.damage = 360 - (hardMod ? 60 : 0);
 stingerLaser.sideAngle = 2;
 stingerLaser.sideWidth = 2;
 stingerLaser.sideLength = 40;
@@ -86,8 +87,8 @@ stinger.requirements = ItemStack.with(
     Items.silicon, 250,
     Items.titanium, 100,
     Items.thorium, 100,
-    Items.plastanium, 80,
-    Items.surgeAlloy, 100
+    Items.plastanium, 80 + (hardMod ? 80 : 0),
+    Items.surgeAlloy, 100 + (hardMod ? 20 : 0)
 );
 stinger.buildVisibility = BuildVisibility.shown;
 stinger.category = Category.turret;

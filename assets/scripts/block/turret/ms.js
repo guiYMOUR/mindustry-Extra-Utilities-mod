@@ -9,6 +9,8 @@ const DrawBall = lib.getClass("ExtraUtilities.worlds.drawer.DrawBall");
 const DrawArrow = lib.getClass("ExtraUtilities.worlds.drawer.DrawArrow");
 const DrawTri = lib.getClass("ExtraUtilities.worlds.drawer.DrawTri");
 
+const hardMod = Core.settings.getBool("eu-hard-mode");
+
 const MS = new MagneticStormBulletType(cor, liC);
 MS.homingRange = 100;
 MS.homingPower = 0.4;
@@ -178,7 +180,7 @@ storm.requirements = ItemStack.with(
     Items.graphite, 780,
     Items.silicon, 600,
     Items.thorium, 350,
-    Items.surgeAlloy, 220,
+    Items.surgeAlloy, 220 + (hardMod ? 30 : 0),
     items.lightninAlloy, 300
 );
 storm.buildVisibility = BuildVisibility.shown;

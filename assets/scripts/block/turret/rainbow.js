@@ -6,6 +6,7 @@ const DrawRainbow = lib.getClass("ExtraUtilities.worlds.drawer.DrawRainbow");
 
 var gone = lib.Fx.gone;
 const bSp = lib.aModName + "-shotgunShot";
+const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const r1 = extend(BasicBulletType,{});
 r1.sprite = bSp;
@@ -119,7 +120,7 @@ rainbow.requirements = ItemStack.with(
     Items.silicon, 200,
     Items.metaglass, 150,
     Items.thorium, 90,
-    items.crispSteel, 55
+    items.crispSteel, 55 + (hardMod ? 35 : 0)
 );
 rainbow.buildVisibility = BuildVisibility.shown;
 rainbow.category = Category.turret;

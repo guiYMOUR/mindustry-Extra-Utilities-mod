@@ -1,5 +1,6 @@
 //
 const lib = require("blib");
+const hardMod = Core.settings.getBool("eu-hard-mode");
 //钛
 const fuse1 = extend(ShrapnelBulletType, {});
 fuse1.length = 128;
@@ -39,8 +40,8 @@ T3fuse.requirements = ItemStack.with(
     Items.graphite, 320,
     Items.titanium, 270,
     Items.thorium, 150,
-    Items.silicon, 150,
-    Items.surgeAlloy, 140
+    Items.silicon, 150 + (hardMod ? 30 : 0),
+    Items.surgeAlloy, 140 + (hardMod ? 10 : 0)
 );
 T3fuse.buildVisibility = BuildVisibility.shown;
 T3fuse.category = Category.turret;

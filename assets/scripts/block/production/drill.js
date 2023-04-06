@@ -1,4 +1,5 @@
 const lib = require("blib");
+const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const tiDrill = extend(Drill, "tiDrill", {});
 tiDrill.requirements = ItemStack.with(
@@ -25,188 +26,6 @@ const eff1 = new Effect(12, cons(e => {
         Lines.circle(e.x, e.y, data.rad * e.fin());
     }
 }));
-// function filter(liquid){
-//     return liquid.temperature <= 0.5 && liquid.flammability < 0.1;
-// }
-// function boosters(speed, maxUsed, multiplier, baseTime){
-//     return new JavaAdapter(StatValue, {
-//         display(table){
-//             table.row();
-//             table.table(cons(c => {
-//                 for(var i = 0; i < Vars.content.liquids().size; i++){
-//                     var liquid = Vars.content.liquids().get(i);
-//                     if(!filter(liquid)) continue;
-//
-//                     c.image(liquid.uiIcon).size(3 * 8).padRight(4).right().top();
-//                     c.add(liquid.localizedName).padRight(10).left().top();
-//                     c.table(Tex.underline, cons(bt => {
-//                         bt.left().defaults().padRight(3).left();
-//
-//                         var speedRate = (baseTime ? 1 : 0) + maxUsed * multiplier * liquid.heatCapacity;
-//                         var standardSpeed = baseTime ? speed : speed / (maxUsed * multiplier * 0.4);
-//                         var result = standardSpeed / (speed / speedRate);
-//                         bt.add(Core.bundle.format("stat.btm-drillSpeed", Strings.autoFixed(result, 2)));
-//                     })).left().padTop(-9);
-//                     c.row();
-//                 }
-//             })).colspan(table.getColumns());
-//             table.row();
-//         }
-//     });
-// }
-//
-// const drill = extend(Drill, "drill", {
-//     setStats(){
-//         this.super$setStats();
-//         this.stats.add(Stat.booster, boosters(this.drillTime, this.consume.amount, this.liquidBoostIntensity, false));
-//         this.stats.remove(Stat.boostEffect);
-//     },
-// });
-//
-// //by EB Wilson & gm, Optimizations Provided
-// drill.buildType = prov(() => {
-//     let work = false;
-//     let warmup = 0;
-//     let progress = 0;
-//
-//     let dominantItem = null;
-//     let delta = 0;
-//     let block = drill;
-//     let size = 0;
-//     let itemCapacity = 0;
-//     let liquidCapacity = 0;
-//     let drillTime = 0;
-//     let hardnessDrillMultiplier = 0;
-//     let liquidBoostIntensity = 0;
-//     let warmupSpeed = 0;
-//     let dumpTime = 0;
-//     let timerDump = 0;
-//     let x = 0, y = 0;
-//     let liquids = null;
-//     let items = null;
-//     let dominantItems = 0;
-//
-//     let dmHardness = null;
-//     let dmColor = null;
-//     let current = null;
-//
-//     return new JavaAdapter(Drill.DrillBuild, {
-//         create(blockParam, team){
-//           this.super$create(blockParam, team)
-//           size = block.size;
-//           itemCapacity = block.itemCapacity;
-//           liquidCapacity = block.liquidCapacity;
-//           drillTime = block.drillTime;
-//           hardnessDrillMultiplier = block.hardnessDrillMultiplier;
-//           liquidBoostIntensity = block.liquidBoostIntensity;
-//           warmupSpeed = block.warmupSpeed;
-//           dumpTime = block.dumpTime;
-//           timerDump = block.timerDump;
-//           return this;
-//         },
-//
-//         updateTile(){
-//             x = this.x;
-//             y = this.y;
-//             this.warmup = warmup;
-//             progress = this.progress;
-//             delta = this.delta();
-//             liquids = this.liquids;
-//             items = this.items;
-//             dominantItems = this.dominantItems;
-//
-//             dominantItem = this.dominantItem;
-//             dmHardness = dominantItem.hardness;
-//             dmColor = dominantItem.color;
-//             current = liquids.current();
-//
-//             this.super$updateTile();
-//             if(dominantItem == null){
-//                 return;
-//             }
-//             if(this.timer.get(timerDump, dumpTime)){
-//                 this.dump(items.has(dominantItem) ? dominantItem : null);
-//             }
-//             this.timeDrilled += warmup * delta;
-//             if(items.total() < itemCapacity && dominantItems > 0 && this.consValid()){
-//                 let speed = 1;
-//                 if(this.cons.optionalValid()){
-//                     speed = liquidBoostIntensity;
-//                 }
-//                 speed *= (this.efficiency() * (1 + (current.heatCapacity - 0.4) * 0.9) * liquidBoostIntensity * 0.3087 * Mathf.num(work));
-//                 //limit display
-//                 this.lastDrillSpeed = Math.min((speed * dominantItems * warmup) / (drillTime + hardnessDrillMultiplier * dmHardness), 60);
-//                 warmup = Mathf.lerpDelta(warmup, speed, warmupSpeed);
-//                 progress += delta * dominantItems * speed * warmup;
-//                 if(Mathf.chanceDelta(block.updateEffectChance * warmup))
-//                     block.updateEffect.at(x + Mathf.range(size * 2), y + Mathf.range(size * 2));
-//             }else{
-//                 this.lastDrillSpeed = 0;
-//                 warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
-//                 return;
-//             }
-//             let delay = drillTime + hardnessDrillMultiplier * dmHardness;
-//             if(dominantItems > 0 && progress >= delay && items.total() < itemCapacity){
-//                 this.offload(dominantItem);
-//                 this.index ++;
-//                 progress %= delay;
-//
-//                 if(Mathf.chance(0.2)){
-//                     eff1.at(x + Mathf.range(size * 2), y + Mathf.range(size * 2), 0, {color:dmColor, fout:true, rad:10});
-//                     if(Mathf.chance(0.5)){
-//                         Fx.mineHuge.at(x + Mathf.range(size), y + Mathf.range(size), dmColor);
-//                     }
-//                 }
-//             }
-//
-//             if(liquids.get(current) / liquidCapacity >= 0.08 && !work) work = true;
-//             if(liquids.get(current) / liquidCapacity < 0.08 && work){
-//                 liquids.clear();
-//                 work = false;
-//             }
-//
-//             //this.warmup = warmup;
-//             this.progress = progress;
-//         },
-//         write(write) {
-//             this.super$write(write);
-//             write.bool(work);
-//             write.f(warmup);
-//         },
-//         read(read, revision) {
-//             this.super$read(read, revision);
-//             work = read.bool();
-//             warmup = read.f();
-//         },
-//     }, drill);
-// });
-// drill.requirements = ItemStack.with(
-//     Items.copper, 180,
-//     Items.graphite, 165,
-//     Items.silicon, 155,
-//     Items.titanium, 150,
-//     Items.thorium, 90,
-//     Items.plastanium, 155
-// );
-// drill.buildVisibility = BuildVisibility.shown;
-// drill.category = Category.production;
-// drill.itemCapacity = 20;
-// drill.drillTime = 80;
-// drill.size = 4;
-// drill.drawRim = true;
-// drill.hasPower = true;
-// drill.tier = 10;
-// drill.hardnessDrillMultiplier = 0;
-// drill.updateEffect = Fx.pulverizeRed;
-// drill.updateEffectChance = 0.01;
-// drill.drillEffect = Fx.none;
-// drill.rotateSpeed = 7;
-// drill.warmupSpeed = 0.01;
-// drill.liquidBoostIntensity = 1.8;
-// drill.consumePower(4);
-// drill.consume(new ConsumeLiquidFilter(boolf(liquid => filter(liquid)), 0.1));
-// drill.buildCostMultiplier = 0.6;
-// exports.drill = drill;
 
 const shovel = extend(Drill, "shovel", {});
 shovel.buildType = prov(() => {
@@ -234,7 +53,7 @@ shovel.requirements = ItemStack.with(
 );
 shovel.buildVisibility = BuildVisibility.shown;
 shovel.category = Category.production;
-shovel.drillTime = 36;
+shovel.drillTime = 36 + (hardMod ? 10 : 0);
 shovel.size = 3;
 //shovel.drawRim = true;
 shovel.hasPower = true;
@@ -320,7 +139,7 @@ T2WE.buildType = prov(() => {
 //const T2WE = new DrawSolidPump("T2-WE");
 T2WE.result = Liquids.water;
 //T2WE.consItem = Items.graphite;
-T2WE.pumpAmount = 0.3;
+T2WE.pumpAmount = 0.3 - (hardMod ? 0.02 : 0);
 T2WE.size = 3;
 T2WE.liquidCapacity = 60;
 T2WE.rotateSpeed = 2;

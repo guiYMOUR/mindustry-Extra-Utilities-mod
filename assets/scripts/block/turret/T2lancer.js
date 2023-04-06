@@ -1,6 +1,7 @@
 //
 const lib = require('blib');
 const items = require("game/items");
+const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const laser = extend(LaserBulletType, {});
 laser.damage = 120;
@@ -46,10 +47,10 @@ T2lan.shootSound = Sounds.laser;
 lib.Coolant(T2lan, 0.3, 3);
 T2lan.requirements = ItemStack.with(
     Items.lead, 120,
-    Items.silicon, 105,
-    Items.graphite, 85,
-    Items.plastanium, 50,
-    items.crispSteel, 95
+    Items.silicon, 105 + (hardMod ? 35 : 0),
+    Items.graphite, 85 + (hardMod ? 45 : 0),
+    Items.plastanium, 50 + (hardMod ? 50 : 0),
+    items.crispSteel, 95 + (hardMod ? 95 : 0)
 );
 T2lan.buildVisibility = BuildVisibility.shown;
 T2lan.category = Category.turret;

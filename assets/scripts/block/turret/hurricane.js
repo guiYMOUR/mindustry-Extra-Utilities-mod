@@ -4,6 +4,8 @@ const items = require("game/items");
 const liC = Color.valueOf("bf92f9");
 const dec = Color.valueOf("ffffff");
 const dec2 = Color.valueOf("ffffff");
+const hardMod = Core.settings.getBool("eu-hard-mode");
+
 const hur = extend(BasicBulletType, {});
 hur.bulletInterval = 6;
 hur.intervalBullets = 10;
@@ -50,7 +52,7 @@ hurricane.requirements = ItemStack.with(
     Items.lead, 60,
     Items.silicon, 90,
     //Items.graphite, 30,
-    items.crispSteel, 20
+    items.crispSteel, 30 + (hardMod ? 20 : 0)
 );
 hurricane.buildVisibility = BuildVisibility.shown;
 hurricane.category = Category.turret;
