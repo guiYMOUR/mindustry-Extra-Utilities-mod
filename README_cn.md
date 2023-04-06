@@ -8,7 +8,7 @@
 
 - 本模组不会太大程度影响游戏平衡，同时丰富游戏内容，使原版游戏更简单
 
-- QQ ①群：588379643
+- QQ ①群：613420467，密码在模组简介里，需要装载模组启动后查看
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - 创意工坊：[https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720](https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527)
 - 如何下载？[点这里](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases)，然后点最上面的EU.版本号.jar就行了
