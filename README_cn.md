@@ -12,6 +12,8 @@
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - 创意工坊：[https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720](https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527)
 - 如何下载？[点这里](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases)，然后点最上面的EU.版本号.jar就行了
+<img width="1439" alt="image" src="https://user-images.githubusercontent.com/77377005/230292712-f9921489-8b6c-4386-a545-b3f9080e1843.png">
+
 
 ## mod扩展方向
 
