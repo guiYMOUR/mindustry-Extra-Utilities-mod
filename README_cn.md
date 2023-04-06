@@ -1,7 +1,6 @@
 # 更多实用设备
 
 ![logo](https://user-images.githubusercontent.com/77377005/230295140-234fab8c-c995-4a13-b4a4-00eb2888e6d3.png)
-<img width="350" alt="Celebration Mk2" src="https://user-images.githubusercontent.com/77377005/230294428-4de0a2ac-34f5-4d50-b7e1-a08c52bb50de.png">
 ![mk2](https://user-images.githubusercontent.com/77377005/230294594-2f4aec93-a2ba-4857-ab90-26fc20e8420b.gif)
 
 [English](README.md) | 中文
