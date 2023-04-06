@@ -3,26 +3,17 @@ package ExtraUtilities;
 import ExtraUtilities.content.*;
 import ExtraUtilities.net.EUCall;
 import arc.*;
-import arc.files.Fi;
 import arc.math.Mathf;
-import arc.scene.style.Drawable;
-import arc.scene.style.TextureRegionDrawable;
+import arc.scene.ui.CheckBox;
 import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
-import mindustry.type.ItemStack;
-import mindustry.type.UnitType;
-import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.world.Block;
-import mindustry.world.blocks.defense.turrets.Turret;
-import mindustry.world.blocks.units.UnitFactory;
 
-import javax.swing.*;
-import javax.swing.text.Style;
+import static arc.Core.settings;
 
 public class ExtraUtilitiesMod extends Mod{
     public static String ModName = "extra-utilities";
@@ -37,6 +28,8 @@ public class ExtraUtilitiesMod extends Mod{
     public static String toText(String str){
         return Core.bundle.format(str);
     }
+
+    public static boolean hardMod = Core.settings.getBool("eu-hard-mode");
 
     private static boolean show = false;
 
@@ -89,6 +82,12 @@ public class ExtraUtilitiesMod extends Mod{
             };
             dialog.show();
         }
+        settings.getBoolOnce("eu-open-hard", () -> {
+            BaseDialog dialog = new BaseDialog("Hard Mode!");
+            dialog.cont.add(toText("eu-hard-mode-open"));
+            dialog.buttons.button("OK", dialog::hide).size(140, 50).center();
+            dialog.show();
+        });
     }
 
     public static void log2(){
@@ -130,9 +129,48 @@ public class ExtraUtilitiesMod extends Mod{
     public void init() {
         EUCall.registerPackets();
         EUOverride.overrideBuilder();
-        //EUOverride.overrideBlockAll();
+
         //EUOverride.ap4sOverride();
-        Vars.ui.settings.game.checkPref("eu-first-load", true);
+
+        settings.defaults("eu-hard-mode", false);
+
+        if(hardMod){
+            EUOverride.overrideBlockAll();
+            Mods.LoadedMod mod = Vars.mods.locateMod(ModName);
+            mod.meta.displayName = mod.meta.displayName + " Hard!";
+            mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-hard";
+        }
+
+        if(Vars.ui.settings != null) {
+            BaseDialog dialog = new BaseDialog("tips");
+            Runnable exit = () -> {
+                dialog.hide();
+                Core.app.exit();
+            };
+            dialog.cont.add(toText("eu-reset-exit"));
+            dialog.buttons.button("OK", exit).center().size(150, 50);
+
+            Vars.ui.settings.addCategory(toText("EU-SET"), name("fireWork"), settingsTable -> {
+                settingsTable.checkPref("eu-first-load", true);
+                settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null){
+                    @Override
+                    public void add(SettingsMenuDialog.SettingsTable table) {
+                        CheckBox box = new CheckBox(title);
+
+                        box.update(() -> box.setChecked(settings.getBool(name)));
+
+                        box.changed(() -> {
+                            settings.put(name, box.isChecked());
+                            settings.put("eu-open-hard", hardMod);
+                            dialog.show();
+                        });
+                        box.left();
+                        addDesc(table.add(box).left().padTop(3f).get());
+                        table.row();
+                    }
+                });
+            });
+        }
     }
 
     @Override
@@ -147,5 +185,4 @@ public class ExtraUtilitiesMod extends Mod{
 
         EUTechTree.load();
     }
-
 }

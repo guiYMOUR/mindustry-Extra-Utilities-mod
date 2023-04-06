@@ -10,15 +10,17 @@ import arc.math.Mathf;
 import arc.struct.FloatSeq;
 import arc.util.Time;
 import arc.util.Tmp;
+import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.world.Tile;
 
 import javax.xml.crypto.Data;
 
-import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Draw.*;
 import static arc.math.Angles.*;
 import static mindustry.content.Fx.*;
 
@@ -270,6 +272,21 @@ public class EUFx {
             }
             Draw.blend();
             Draw.reset();
+        });
+    }
+
+    public static Effect digTile(Color color){
+        return new Effect(30, e -> {
+            mixcol(color, 1);
+            alpha(e.fout());
+            Fill.square(e.x, e.y, Vars.tilesize/2f);
+        });
+    }
+
+    public static Effect expDillEffect(int size, Color color){
+        return new Effect(15, e -> {
+            Lines.stroke(3 * e.fout(), color);
+            Lines.square(e.x, e.y, size * Vars.tilesize/2f * e.fin(), 180 * e.fout());
         });
     }
 }

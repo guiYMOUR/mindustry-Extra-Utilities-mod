@@ -116,8 +116,14 @@ public class EUBlocks {
             size = 3;
         }};
         quantumExplosion = new ExplodeDrill("quantum-explosion"){{
-            requirements(Category.production, with(Items.thorium, 600, Items.silicon, 800, Items.phaseFabric, 200, Items.surgeAlloy, 200));
-            drillTime = 60f * 3f;
+            if(!hardMod) {
+                requirements(Category.production, with(Items.thorium, 600, Items.silicon, 800, Items.phaseFabric, 200, Items.surgeAlloy, 200));
+                drillTime = 60f * 3f;
+            } else {
+                requirements(Category.production, with(Items.thorium, 800, Items.silicon, 1000, Items.phaseFabric, 240, Items.surgeAlloy, 260));
+                drillTime = 60 * 4f;
+                drillTimeBurst = 60f * 5.5f;
+            }
             size = 5;
             drillMultipliers.put(Items.beryllium, 2f);
             drillMultipliers.put(Items.sand, 3f);
@@ -150,7 +156,7 @@ public class EUBlocks {
 
             blockedItem = Items.thorium;
             droneConstructTime = 60 * 10f;
-            tier = 5;
+            tier = 5 - (hardMod ? 1 : 0);
             //alwaysUnlocked = true;
         }};
         minerCenter = new MinerPoint("miner-center"){{
@@ -163,7 +169,7 @@ public class EUBlocks {
             //blockedItem = Items.thorium;
             dronesCreated = 6;
             droneConstructTime = 60 * 7f;
-            tier = 7;
+            tier = 7 - (hardMod ? 1 : 0);
             size = 4;
             itemCapacity = 300;
 
@@ -199,7 +205,7 @@ public class EUBlocks {
         }};
 
         liquidIncinerator = new LiquidIncinerator("liquid-incinerator"){{
-            requirements(Category.crafting, with(Items.carbide, 6));
+            requirements(Category.crafting, with(Items.oxide, 8, Items.silicon, 5));
             consumePower(0.9f);
             hasLiquids = true;
             size = 1;
@@ -215,7 +221,7 @@ public class EUBlocks {
         itemNode = new PhaseNode("i-node"){{
             requirements(Category.distribution, with(Items.copper, 110, Items.lead, 80, Items.silicon, 100, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 18));
             buildCostMultiplier = 0.25f;
-            range = 25;
+            range = 25 - (hardMod ? 5 : 0);
             hasPower = true;
             envEnabled |= Env.space;
             consumePower(1f);
@@ -226,7 +232,7 @@ public class EUBlocks {
         liquidNode = new PhaseNode("lb"){{
             requirements(Category.liquid, with(Items.metaglass, 80, Items.silicon, 90, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 25));
             buildCostMultiplier = 0.25f;
-            range = 25;
+            range = 25 - (hardMod ? 5 : 0);
             hasPower = true;
             canOverdrive = false;
             hasLiquids = true;
@@ -240,7 +246,6 @@ public class EUBlocks {
 
         reinforcedDuctBridge = new DuctBridge("reinforced-duct-bridge"){{
             requirements(Category.distribution, with(Items.beryllium, 15, Items.tungsten, 15, Items.graphite, 10));
-            health = 90;
             speed = 4f;
             buildCostMultiplier = 1.5f;
             itemCapacity = 5;
@@ -435,18 +440,19 @@ public class EUBlocks {
             splitHeat = true;
         }};
         heatDriver = new HeatDriver("heat-driver"){{
-            requirements(Category.crafting, with(Items.tungsten, 150, Items.beryllium, 100, Items.oxide, 130, Items.graphite, 125));
+            requirements(Category.crafting, with(Items.tungsten, 150, Items.silicon, 120, Items.oxide, 130, Items.carbide, 60));
             size = 3;
             drawer = new DrawMulti(new DrawDefault(), new DrawHeatOutput(), new DrawHeatInput("-heat"), new DrawHeatDriver());
             range = 360;
             regionRotated1 = 1;
+            if(hardMod) lost = 0.2f;
 
             consumePower(4);
         }};
 
 
         liquidConsumeGenerator = new ConsumeGenerator("liquid-generator"){{
-            requirements(Category.power, with(Items.graphite, 120, Items.silicon, 115, Items.thorium, 65, Items.phaseFabric, 40));
+            requirements(Category.power, with(Items.graphite, 120, Items.silicon, 115, Items.thorium, 65, Items.phaseFabric, 20));
             size = 3;
             powerProduction = 660/60f;
             drawer = new DrawMulti(
@@ -481,7 +487,8 @@ public class EUBlocks {
         thermalReactor = new ThermalReactor("T2ther"){{
             requirements(Category.power, with(Items.silicon, 95, Items.titanium, 70, Items.thorium, 55, Items.metaglass, 65, Items.plastanium, 60, Items.surgeAlloy, 30));
             size = 3;
-            powerProduction = 276/60f;
+            if(!hardMod) powerProduction = 276/60f;
+            else powerProduction = 220/60f;
             generateEffect = Fx.none;
             floating = true;
             ambientSound = Sounds.hum;
@@ -507,12 +514,12 @@ public class EUBlocks {
             }});
 
             hasLiquids = true;
-            outputLiquid = new LiquidStack(Liquids.nitrogen, 8f / 60f/ 9);
+            outputLiquid = new LiquidStack(Liquids.nitrogen, (8f - (hardMod ? 2 : 0)) / 60f/ 9);
             liquidCapacity = 20f;
             fogRadius = 3;
         }};
         heatPower = new SpaceGenerator("heatPower"){{
-            requirements(Category.power, with(Items.thorium, 150, Items.silicon, 150, Items.graphite, 200, Items.surgeAlloy, 50));
+            requirements(Category.power, with(Items.thorium, 150, Items.silicon, 150, Items.graphite, 200, Items.surgeAlloy, 80));
             size = 3;
             haveBasicPowerOutput = false;
             attribute = Attribute.heat;
@@ -533,6 +540,7 @@ public class EUBlocks {
             requirements(Category.power, with(Items.graphite, 300, Items.silicon, 200, Items.titanium, 100, EUItems.crispSteel, 80, Items.plastanium, 55));
             space = 2;
             size = 3;
+            if(hardMod) powerProduction = 10/60f;
 
             drawer = new DrawMulti(new DrawDefault(), new DrawRegion("-rot", 4, true), new DrawRegion("-top"));
             tileEffect = new Effect(220, (e) -> {
@@ -553,12 +561,13 @@ public class EUBlocks {
             canOverdrive = false;
         }};
         waterPower = new SpaceGenerator("waterPower"){{
-            requirements(Category.power, with(Items.graphite, 300, Items.silicon, 250, Items.surgeAlloy, 150, Items.phaseFabric, 100, EUItems.crispSteel, 150));
+            requirements(Category.power, with(Items.graphite, 300, Items.silicon, 250, Items.surgeAlloy, 150, Items.phaseFabric, 120, EUItems.crispSteel, 150));
             size = 3;
             attribute = Attribute.water;
             attributeColor = Color.blue;
             negativeAttributeColor = Color.white;
-            powerProduction = 18/60f;
+            if(hardMod) powerProduction = 9/60f;
+            else powerProduction = 13/60f;
 
             drawer = new DrawMulti(new DrawDefault(), new DrawRegion("-rot", 4, true), new DrawRegion("-top"));
 
@@ -609,49 +618,14 @@ public class EUBlocks {
             health = 250 * 3 * 3;
             coolantMultiplier = 5;
             coolant = consumeCoolant(0.3f);
-            consumePower(12f);
+            if(!hardMod) consumePower(12f);
+            else consumePower(18f);
         }};
 
         guiY = new ItemTurret("guiY"){{
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
             ammo(
-//                    Items.silicon, new MissileBulletType(0.5f, 0){
-//                        {
-//                            frontColor = backColor = Pal.gray;
-//                            width = 10f;
-//                            height = 12f;
-//                            shrinkY = 0f;
-//                            ammoMultiplier = 1f;
-//                            hitSound = Sounds.none;
-//                            shootEffect = despawnEffect = hitEffect = Fx.none;
-//                            trailEffect = EUFx.missileTrailSmokeSmall;
-//                            trailWidth = 2.2f;
-//                            trailLength = 11;
-//                            trailColor = Pal.lightTrail;
-//                            lifetime = 20f;
-//                            homingPower = 0;
-//                            fragRandomSpread = 0;
-//                            fragAngle = 0;
-//                            fragBullets = 1;
-//                            fragVelocityMin = 1f;
-//                            fragBullet = new MissileBulletType(3.7f, 0) {{
-//                                frontColor = backColor = Pal.gray;
-//                                width = 10f;
-//                                height = 12f;
-//                                shrinkY = 0f;
-//                                homingPower = 0.08f;
-//                                homingRange = 26.25f * 8;
-//                                splashDamageRadius = 32f;
-//                                splashDamage = 88f;
-//                                ammoMultiplier = 4f;
-//                                hitEffect = Fx.blastExplosion;
-//                                trailWidth = 2.2f;
-//                                trailLength = 11;
-//                                trailColor = Pal.lightTrail;
-//                                buildingDamageMultiplier = 0.3f;
-//                            }};
-//                        }}
                     Items.silicon, new CtrlMissile(name("胡萝卜"), 20, 20){{
                         shootEffect = Fx.shootBig;
                         smokeEffect = Fx.shootBigSmoke2;
@@ -659,8 +633,8 @@ public class EUBlocks {
                         keepVelocity = false;
                         maxRange = 6f;
                         lifetime = 60f;
-                        damage = 100;
-                        splashDamage = 120;
+                        damage = 100 - (hardMod ? 15 : 0);
+                        splashDamage = 120 - (hardMod ? 20 : 0);
                         splashDamageRadius = 32;
                         buildingDamageMultiplier = 0.8f;
                         absorbable = true;
@@ -1188,7 +1162,7 @@ public class EUBlocks {
         }};
 
         sancta = new ItemTurret("sancta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 1000, Items.phaseFabric, 1500));
+            requirements(Category.turret, with(EUItems.lightninAlloy, 1200, Items.phaseFabric, 1400));
             size = 7;
             ammo(
                     EUItems.lightninAlloy,
@@ -1198,11 +1172,15 @@ public class EUBlocks {
                                 trailColor = EUItems.lightninAlloy.color;
                                 trailLength = 10;
                                 trailWidth = 10;
-                                splashDamage = damage = 900;
+                                splashDamage = damage = 900 - (hardMod ? 300 : 0);
                                 ammoMultiplier = 1;
                                 hitSound = despawnSound = Sounds.explosionbig;
                                 healColor = EUItems.lightninAlloy.color;
                                 buildingDamageMultiplier = 0.7f;
+                                if(hardMod) {
+                                    fb.damage -= 15;
+                                    ff.damage -= 15;
+                                }
                             }
 
                                 @Override
@@ -1326,7 +1304,7 @@ public class EUBlocks {
                         ItemStack[] is = u.getFirstRequirements();
                         ItemStack[] os = new ItemStack[is.length];
                         for (int a = 0; a < is.length; a++) {
-                            os[a] = new ItemStack(is[a].item, is[a].amount >= 40 ? (int) (is[a].amount * 1.5) : is[a].amount);
+                            os[a] = new ItemStack(is[a].item, is[a].amount >= 40 ? (int) (is[a].amount * (1.5 + (hardMod ? 0.5f : 0))) : is[a].amount);
                         }
                         float time = 0;
                         if(u.getFirstRequirements().length > 0) {
@@ -1352,7 +1330,6 @@ public class EUBlocks {
             requirements(Category.effect, with(Items.silicon, 1));
             range = 35;
             hasPower = false;
-            canOverdrive = false;
             hasLiquids = true;
             hasItems = true;
             outputsLiquid = true;

@@ -160,7 +160,7 @@ public class EUUnitTypes {
             mechFrontSway = 1.9f;
             mechSideSway = 0.6f;
             singleTarget = true;
-            health = 63000;
+            health = 63000 - (hardMod ? 3000 : 0);
             itemCapacity = 240;
             ammoType = new ItemAmmoType(Items.thorium);
 
@@ -212,7 +212,7 @@ public class EUUnitTypes {
                         y = 0;
                         shootCone = 80f;
                         shootSound = Sounds.bang;
-                        reload = 24;
+                        reload = 24 + (hardMod ? 6 : 0);
                         recoil = 5;
 
                         rotate = true;
@@ -223,7 +223,7 @@ public class EUUnitTypes {
                         shake = 4;
                         shootY = 7;
                         shoot = new ShootSpread(2, 10f);
-                        bullet = new FlakBulletType(8f, 40f){{
+                        bullet = new FlakBulletType(8f, 40f - (hardMod ? 10 : 0)){{
                             sprite = "missile-large";
 
                             lifetime = 40f;
@@ -260,7 +260,7 @@ public class EUUnitTypes {
                             flakInterval = 20f;
                             despawnShake = 3f;
 
-                            fragBullet = new LaserBulletType(40f){{
+                            fragBullet = new LaserBulletType(40f - (hardMod ? 10 : 0)){{
                                 colors = new Color[]{Pal.surge.cpy().a(0.4f), Pal.surge, Color.white};
                                 buildingDamageMultiplier = 0.4f;
                                 width = 19f;
@@ -392,7 +392,7 @@ public class EUUnitTypes {
                             x = wx;
                             y = -4.5f;
                             beamWidth = 0.8f;
-                            repairSpeed = 1.5f;
+                            repairSpeed = 2.5f;
                             mirror = false;
                             bullet = new BulletType(){{
                                 drag = 1;
@@ -449,7 +449,7 @@ public class EUUnitTypes {
             }};
             
             BulletType asl = new ContinuousLaserBulletType(){{
-                damage = 106;
+                damage = 106 - (hardMod ? 12 : 0);
                 length = 240;
                 width = 7;
                 hitEffect = Fx.sapExplosion;
@@ -479,7 +479,7 @@ public class EUUnitTypes {
             };
 
             SCSBullet lineBullet = new SCSBullet(){{
-                damage = 150;
+                damage = 150 - (hardMod ? 30 : 0);
             }};
 
             weapons.add(
@@ -737,7 +737,7 @@ public class EUUnitTypes {
                 pierceEffect = Fx.railHit;
                 hitEffect = Fx.massiveExplosion;
                 smokeEffect = Fx.shootBig2;
-                damage = 1350;
+                damage = 1350 - (hardMod ? 150 : 0);
                 pointEffectSpace = 30f;
                 pointEffect = Fx.railTrail;
                 pierceDamageFactor = 0.6f;
@@ -865,9 +865,11 @@ public class EUUnitTypes {
             accel = 0.04f;
             drag = 0.02f;
             health = 130;
-            mineSpeed = 1f;
-            mineTier = 1;
-            buildSpeed = 0.2f;
+            if(!hardMod) {
+                mineSpeed = 1f;
+                mineTier = 1;
+                buildSpeed = 0.2f;
+            }
             itemCapacity = 50;
             engineOffset = 5.8f;
             engineSize = 2.1f;

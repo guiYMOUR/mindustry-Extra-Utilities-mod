@@ -10,7 +10,6 @@ import arc.struct.EnumSet;
 import arc.struct.Seq;
 import arc.util.Interval;
 import arc.util.Strings;
-import arc.util.Time;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.core.World;
@@ -133,7 +132,6 @@ public class SpaceGenerator extends PowerGenerator {
                     }
                 }
             }
-            //sum = sumAttribute();
         }
 
         @Override
@@ -145,11 +143,6 @@ public class SpaceGenerator extends PowerGenerator {
                 if(t != null) sum += (1 + t.floor().attributes.get(attribute) * efficiencyScale + attribute.env());
             }
             return productionEfficiency * powerProduction * sum;
-        }
-
-        private int isNegative(float v){
-            if(v >= 0) return 1;
-            return -1;
         }
 
         private int tileEmp(){

@@ -3,6 +3,6 @@ name:"extra-utilities"
 author: guiY
 main: "ExtraUtilities.ExtraUtilitiesMod"
 description: "An extended mod for Mindustry"
-version: 1.1.0.2
+version: 1.1.0.3
 java: true
 minGameVersion: 138

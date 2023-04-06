@@ -64,7 +64,7 @@ public class EUOverride {
     public static void overrideUnit1(){
         UnitTypes.quell.health = 6500;
         UnitTypes.quell.armor = 7;
-        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", 20, 20){{//
+        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{//
             shootEffect = Fx.shootBig;
             smokeEffect = Fx.shootBigSmoke2;
             speed = 4.3f;
@@ -80,7 +80,7 @@ public class EUOverride {
         }};
         UnitTypes.quell.weapons.get(0).shake = 1;
 
-        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", 18, 18){{//
+        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{//
             shootEffect = Fx.sparkShoot;
             smokeEffect = Fx.shootSmokeTitan;
             hitColor = Pal.suppress;
@@ -122,7 +122,7 @@ public class EUOverride {
         }};
         UnitTypes.disrupt.weapons.get(0).shake = 1f;
 
-        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", 15, 15){{//
+        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", -1, -1){{//
             shootEffect = new MultiEffect(Fx.shootBigColor, new Effect(9, e -> {
                 color(Color.white, e.color, e.fin());
                 stroke(0.7f + e.fout());
