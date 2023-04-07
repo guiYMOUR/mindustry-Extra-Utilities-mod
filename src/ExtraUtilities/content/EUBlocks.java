@@ -622,7 +622,7 @@ public class EUBlocks {
             else consumePower(18f);
         }};
 
-        guiY = new ItemTurret("guiY"){{
+        guiY = new guiY("guiY"){{
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
             ammo(

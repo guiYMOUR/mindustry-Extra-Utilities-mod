@@ -61,7 +61,7 @@ public class Stinger extends PowerTurret {
                         unit.health -= unit.health;
                         unit.kill();
                     } else {
-                        unit.apply(StatusEffects.unmoving, 60 * 2f);
+                        unit.apply(StatusEffects.unmoving, 60f * 1.5f);
                         rainBullet.create(this, unit.x, unit.y, Mathf.random(360));
                     }
                     unitMap.remove(unit);
