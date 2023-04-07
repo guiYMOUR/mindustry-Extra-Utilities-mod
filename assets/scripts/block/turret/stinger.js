@@ -42,7 +42,7 @@ stingerLaser.shootEffect = lib.Fx.stingerShoot(color);
 const stinger = new Stinger("stinger");
 stinger.shoot.firstShotDelay = 40;
 stinger.accurateDelay = false;
-
+if(hardMod) stinger.delay = 60 * 7;
 stinger.moveWhileCharging = false;
 stinger.consumePower(11);
 stinger.shootType = stingerLaser;
