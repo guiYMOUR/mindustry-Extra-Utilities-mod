@@ -40,7 +40,7 @@ public class CtrlMissile extends BulletType {
         this.width = width;
         this.height = height;
         homingPower = 2.5f;
-        homingRange = 64;
+        homingRange = 18 * 8;
         trailWidth = 3;
         trailLength = 7;
         lifetime = 60 * 1.7f;
@@ -101,7 +101,7 @@ public class CtrlMissile extends BulletType {
                     //if(!Vars.net.client() || shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
                     if(shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
                     else {
-                        Teamc tc = Units.closestTarget(b.team, realAimX, realAimY, homingRange, e -> e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id), t -> collidesGround && !b.hasCollided(t.id));
+                        Teamc tc = Units.closestTarget(b.team, realAimX, realAimY, Math.max(homingRange, shooter.range()), e -> e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id), t -> collidesGround && !b.hasCollided(t.id));
                         if(tc != null) lookAt(tc, b);
                     }
                 }

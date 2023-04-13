@@ -4,6 +4,7 @@ import arc.graphics.g2d.*;
 import mindustry.entities.abilities.Ability;
 import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
+import mindustry.type.UnitType;
 
 public class healthDisplay extends Ability {
     public float y, width, height;

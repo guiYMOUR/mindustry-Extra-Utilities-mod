@@ -11,8 +11,6 @@ import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatValues;
 import mindustry.world.meta.Stats;
 
-import static ExtraUtilities.content.EUGet.sandBox;
-
 /**unfinished(总之隐藏了先awa)*/
 
 public class guiY extends ItemTurret {
@@ -25,7 +23,7 @@ public class guiY extends ItemTurret {
 
         @Override
         protected void updateShooting(){
-            if(sandBox) {
+            if(Vars.state == null || Vars.state.rules.infiniteResources) {
                 if (reloadCounter >= 6 && !charging() && shootWarmup >= minWarmup) {
                     int j = Mathf.random(EUGet.bulletTypes().size - 1);
                     BulletType type = EUGet.bulletTypes().get(j);
@@ -37,7 +35,8 @@ public class guiY extends ItemTurret {
 
         @Override
         public BulletType useAmmo() {
-            return null;
+            if(Vars.state == null || Vars.state.rules.infiniteResources) return null;
+            else return super.useAmmo();
         }
     }
 }

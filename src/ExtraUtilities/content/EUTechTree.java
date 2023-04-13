@@ -125,6 +125,8 @@ public class EUTechTree {
         TDPlanet.TD.techTree = nodeRoot("TD", TD1, () -> {
             addToNode(TD1, () -> {
                 node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
+                node(guiYTD1, () -> {});
+                node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
             });
         });
     }

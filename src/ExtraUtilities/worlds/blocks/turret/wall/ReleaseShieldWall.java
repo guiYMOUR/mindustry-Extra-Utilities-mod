@@ -79,23 +79,28 @@ public class ReleaseShieldWall extends Wall {
 
     public class ReleaseShieldWallBuild extends WallBuild{
         public float totalDamage = 0;
+        public float clientDamage = 0;
         public float shieldLife = 0;
         public Bullet shieldBullet = null;
         public boolean acceptDamage = true;
+        public float rePacketTimer = 0;
 
         public float getCharge(){
-            return totalDamage / maxHandle;
+            return (net.client() ? clientDamage : totalDamage) / maxHandle;
         }
 
         @Override
         public void updateTile() {
+            rePacketTimer = Math.min(rePacketTimer + Time.delta, 60);
             //用于逻辑显示屏显示，显示接口为timeScale
             timeScale = getCharge();
             if(totalDamage > maxHandle){
+                EUCall.ReleaseShieldWallBuildSync(tile, totalDamage);
                 shieldBullet = new ShieldBullet(size * 64).create(this.tile.build, this.team, this.x, this.y, 0);
                 shieldLife = lifetime;
                 acceptDamage = false;
                 totalDamage = 0;
+                clientDamage = 0;
             }
             if(shieldLife > 0){
                 if(shieldBullet != null){
@@ -115,13 +120,21 @@ public class ReleaseShieldWall extends Wall {
             if(acceptDamage){
                 if(!net.client()) {
                     if (Mathf.chance(chargeChance)) totalDamage += damage;
-                    EUCall.ReleaseShieldWallBuildSync(tile, totalDamage);
+//                    if(rePacketTimer >= 60){//最多每秒发一次同步包
+//                        EUCall.ReleaseShieldWallBuildSync(tile, totalDamage);
+//                        rePacketTimer = 0;
+//                    }
+                } else {
+                    if (Mathf.chance(chargeChance)) clientDamage += damage;
                 }
             }
         }
 
         public void setDamage(float v){
-            if(net.client()) totalDamage = v;
+            if(net.client()) {
+                totalDamage = v;
+                //clientDamage = v;
+            }
         }
 
         @Override

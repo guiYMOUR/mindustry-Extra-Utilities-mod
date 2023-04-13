@@ -173,7 +173,7 @@ public class ScarletDevil extends BulletType {
         public void hitEntity(Bullet b, Hitboxc entity, float health) {
             if(entity instanceof Unit && ((Unit)entity).type != null) {
                 Unit u = (Unit) entity;
-                if(u.type.armor > 60){
+                if(u.type.armor > 80){
                     u.health -= u.health;
                     u.kill();
                 }

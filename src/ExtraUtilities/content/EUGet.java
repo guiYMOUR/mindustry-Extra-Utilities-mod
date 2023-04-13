@@ -1,7 +1,5 @@
 package ExtraUtilities.content;
 
-import arc.math.Angles;
-import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.struct.Seq;
 import mindustry.Vars;
@@ -10,7 +8,6 @@ import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.PointBulletType;
 import mindustry.entities.pattern.ShootSpread;
-import mindustry.gen.Bullet;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
@@ -21,7 +18,6 @@ import static mindustry.Vars.*;
 /**unfinished*/
 
 public class EUGet {
-    public static boolean sandBox = (Vars.state == null || Vars.state.rules.infiniteResources);
 
     public static Position pos(float x, float y){
         return new Position() {

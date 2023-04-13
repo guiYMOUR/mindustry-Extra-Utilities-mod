@@ -12,9 +12,11 @@ import ExtraUtilities.worlds.blocks.power.ThermalReactor;
 import ExtraUtilities.worlds.blocks.production.*;
 //import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
 import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
+import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
 import ExtraUtilities.worlds.blocks.turret.dissipation;
 import ExtraUtilities.worlds.blocks.turret.guiY;
+import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
@@ -84,7 +86,7 @@ public class EUBlocks {
         //drill?
             arkyciteExtractor, quantumExplosion, minerPoint, minerCenter,
         //liquid
-            liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
+            ekPump, liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
         //transport
             stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
@@ -100,7 +102,8 @@ public class EUBlocks {
         //unit
             imaginaryReconstructor, finalF,
         //other&sandbox
-            randomer, fireWork, allNode, ADC;
+            quantumDomain,
+            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static void load(){
         arkyciteExtractor = new DrawSolidPump("arkycite-extractor"){{
             requirements(Category.production, with(Items.carbide, 35, Items.oxide, 50, Items.thorium, 150, Items.tungsten, 100));
@@ -179,6 +182,14 @@ public class EUBlocks {
         }};
 
 
+        ekPump = new Pump("chemical-combustion-pump"){{
+            requirements(Category.liquid, with(Items.tungsten, 80, Items.silicon, 80, Items.oxide, 60, Items.carbide, 30, Items.surgeAlloy, 50));
+            consumeLiquid(Liquids.cyanogen, 1f / 60f);
+
+            pumpAmount = 240f / 60f / 9f;
+            liquidCapacity = 240f;
+            size = 3;
+        }};
         liquidSorter = new SortLiquidRouter("liquid-sorter"){{
             requirements(Category.liquid, with(Items.silicon, 8, Items.beryllium, 4));
             liquidCapacity = 30f;
@@ -325,9 +336,7 @@ public class EUBlocks {
             requirements(Category.crafting, with(Items.thorium, 100, Items.silicon, 150, Items.tungsten, 100, Items.oxide, 50, Items.carbide, 20));
             size = 3;
 
-            drawer = new DrawMulti(new DrawDefault(), new DrawLiquidRegion(Liquids.arkycite), new DrawLiquidRegion(Liquids.cyanogen){{
-                suffix = "-liquid2";
-            }}, new DrawHeatInput());
+            drawer = new DrawMulti(new DrawDefault(), new DrawHeatInput());
 
             ambientSound = Sounds.fire;
             ambientSoundVolume = 0.02f;
@@ -540,9 +549,9 @@ public class EUBlocks {
             requirements(Category.power, with(Items.graphite, 300, Items.silicon, 200, Items.titanium, 100, EUItems.crispSteel, 80, Items.plastanium, 55));
             space = 2;
             size = 3;
-            if(hardMod) powerProduction = 10/60f;
+            if(hardMod) powerProduction = 7/60f;
 
-            drawer = new DrawMulti(new DrawDefault(), new DrawRegion("-rot", 4, true), new DrawRegion("-top"));
+            drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin("-rot", 4));
             tileEffect = new Effect(220, (e) -> {
                 float length = 3f + e.finpow() * 20f;
                 rand.setSeed(e.id);
@@ -566,10 +575,10 @@ public class EUBlocks {
             attribute = Attribute.water;
             attributeColor = Color.blue;
             negativeAttributeColor = Color.white;
-            if(hardMod) powerProduction = 9/60f;
-            else powerProduction = 13/60f;
+            if(hardMod) powerProduction = 6/60f;
+            else powerProduction = 8.5f/60f;
 
-            drawer = new DrawMulti(new DrawDefault(), new DrawRegion("-rot", 4, true), new DrawRegion("-top"));
+            drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin("-rot", 4));
 
             tileEffect = new Effect(220, (e) -> {
                 float length = 3f + e.finpow() * 20f;
@@ -1321,6 +1330,16 @@ public class EUBlocks {
         };
 
 
+        quantumDomain = new Domain("quantum-domain"){{
+            requirements(Category.effect, with(EUItems.lightninAlloy, 200, Items.silicon, 500, Items.surgeAlloy, 350, Items.phaseFabric, 300));
+            size = 5;
+            health = 5000;
+            hasPower = true;
+            hasItems = false;
+            consumePower(9);
+        }};
+
+
         randomer = new Randomer("randomer"){{
             requirements(Category.distribution, with(Items.silicon, 1));
             alwaysUnlocked = true;
@@ -1342,6 +1361,28 @@ public class EUBlocks {
             size = 5;
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.sandboxOnly;
+        }};
+
+        guiYsDomain = new Domain("guiYs-domain"){{
+            requirements(Category.effect, with());
+            size = 2;
+            health = 600;
+            buildVisibility = BuildVisibility.sandboxOnly;
+            shieldHealth = coolDown = coolDownBk = Float.MAX_VALUE;
+            bulletAmount = 0;
+            fullEffect = EUFx.shieldDefense;
+            canBroken = false;
+            range = 30 * 8;
+            upSpeed = 5;
+            healPercent = healPercentUnit= 25;
+            reloadH = reloadHU = 30;
+            healByPercent = true;
+        }};
+
+        crystalTower = new CrystalTower("crystal-tower"){{
+            requirements(Category.effect, with());
+            buildVisibility = BuildVisibility.editorOnly;
+            size = 3;
         }};
 
         fireWork = new fireWork("fireWork"){{

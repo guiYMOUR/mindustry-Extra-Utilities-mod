@@ -64,7 +64,10 @@ public class TerritoryFieldAbility extends Ability {
 
         if(open){
             Units.nearbyEnemies(unit.team, unit.x, unit.y, range * 2, u -> {
-                if(!u.dead && u.type != null && (u.health > unit.maxHealth * 2 || u.type.armor >= unit.type.armor * 2)) u.kill();
+                if(!u.dead && u.type != null && (u.health > unit.maxHealth * 2 || u.type.armor >= unit.type.armor * 2)) {
+                    u.health -= u.health;
+                    u.kill();
+                }
             });
         }
 

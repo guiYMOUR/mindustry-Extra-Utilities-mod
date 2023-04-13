@@ -22,10 +22,7 @@ import mindustry.ai.UnitCommand;
 import mindustry.content.*;
 import mindustry.entities.Effect;
 import mindustry.entities.Lightning;
-import mindustry.entities.abilities.EnergyFieldAbility;
-import mindustry.entities.abilities.ShieldRegenFieldAbility;
-import mindustry.entities.abilities.SuppressionFieldAbility;
-import mindustry.entities.abilities.UnitSpawnAbility;
+import mindustry.entities.abilities.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.gen.*;
@@ -147,7 +144,7 @@ public class EUUnitTypes {
 
         //T6
         suzerain = new UnitType("suzerain"){{
-            armor = 25;
+            armor = 40;
             speed = 0.3f;
             canBoost = true;
             engineOffset = 20;
@@ -292,7 +289,7 @@ public class EUUnitTypes {
         }};
         
         nebula = new UnitType("nebula"){{
-            armor = 17;
+            armor = 32;
             flying = false;
             speed = 0.25f;
             hitSize = 41;
@@ -404,7 +401,7 @@ public class EUUnitTypes {
         }};
 
         asphyxia = new UnitType("asphyxia"){{
-            armor = 23;
+            armor = 38;
             flying = false;
             speed = 0.4f;
             hitSize = 33;
@@ -548,7 +545,7 @@ public class EUUnitTypes {
             );
         }};
         apocalypse = new UnitType("apocalypse"){{
-            armor = 23;
+            armor = 45;
             flying = true;
             speed = 0.51f;
             hitSize = 62;
@@ -696,7 +693,7 @@ public class EUUnitTypes {
             }});
             abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 4, 200));
             abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
-            armor = 26;
+            armor = 43;
             drag = 0.2f;
             flying = false;
             speed = 0.6f;

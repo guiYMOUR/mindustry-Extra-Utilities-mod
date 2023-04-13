@@ -54,6 +54,15 @@ public class EUOverride {
     }
 
     public static void overrideBlock1(){
+        Blocks.sandWater.itemDrop = Items.sand;
+        Blocks.sandWater.playerUnmineable = true;
+        Blocks.darksandWater.itemDrop = Items.sand;
+        Blocks.darksandWater.playerUnmineable = true;
+        Blocks.darksandTaintedWater.itemDrop = Items.sand;
+        Blocks.darksandTaintedWater.playerUnmineable = true;
+        Blocks.oxidationChamber.canOverdrive = true;
+        Blocks.neoplasiaReactor.canOverdrive = true;
+
         Blocks.arc.consumePower(2f);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
         ((Turret)Blocks.scathe).fogRadiusMultiuplier = 0.75f;
@@ -62,6 +71,10 @@ public class EUOverride {
     }
 
     public static void overrideUnit1(){
+        UnitTypes.corvus.mineTier = 2;
+        UnitTypes.corvus.mineSpeed = 7;
+        UnitTypes.corvus.buildSpeed = 2;
+
         UnitTypes.quell.health = 6500;
         UnitTypes.quell.armor = 7;
         UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{//
@@ -74,7 +87,7 @@ public class EUOverride {
             damage = 110;
             splashDamage = 110;
             splashDamageRadius = 25;
-            buildingDamageMultiplier = 0.8f;
+            buildingDamageMultiplier = 0.5f;
             hitEffect = despawnEffect = Fx.massiveExplosion;
             trailColor = Pal.sapBulletBack;
         }};
@@ -108,7 +121,7 @@ public class EUOverride {
             damage = 150;
             splashDamage = 150;
             splashDamageRadius = 25;
-            buildingDamageMultiplier = 0.8f;
+            buildingDamageMultiplier = 0.5f;
 
             parts.add(new ShapePart(){{
                 layer = Layer.effect;
@@ -182,6 +195,15 @@ public class EUOverride {
             if(u != null && u.buildSpeed > 0){
                 StatusEffect s = Vars.content.statusEffect("new-horizon-scanner-down");
                 if(s != null) u.immunities.add(s);
+            }
+        }
+    }
+
+    public static void overrideAmr(){
+        for(int i = 0; i < Vars.content.units().size; i++){
+            UnitType u = Vars.content.unit(i);
+            if(u != null){
+                u.armor = Math.min(u.armor, 80);
             }
         }
     }
