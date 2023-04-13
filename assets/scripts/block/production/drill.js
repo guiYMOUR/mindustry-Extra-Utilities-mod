@@ -53,7 +53,7 @@ shovel.requirements = ItemStack.with(
 );
 shovel.buildVisibility = BuildVisibility.shown;
 shovel.category = Category.production;
-shovel.drillTime = 36 + (hardMod ? 10 : 0);
+shovel.drillTime = 36 + (hardMod ? 9 : 0);
 shovel.size = 3;
 //shovel.drawRim = true;
 shovel.hasPower = true;

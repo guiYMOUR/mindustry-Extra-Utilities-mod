@@ -12,7 +12,7 @@ driver.knockback = 3;
 driver.hasPower = true;
 driver.consumePower(1.8);
 driver.size = 2;
-driver.liquidCapacity = 300;
+driver.liquidCapacity = 500;
 driver.requirements = ItemStack.with(
     Items.metaglass, 85,
     Items.silicon, 80,

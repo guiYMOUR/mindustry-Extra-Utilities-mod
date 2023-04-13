@@ -96,7 +96,7 @@ require("tree");
 //require("block/heat/heatDriver");
 //根据游戏设置的语言改模组介绍和名字
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
-lib.mod.meta.description = lib.getMessage('mod', 'description');
+lib.mod.meta.description = lib.getMessage('mod', 'version') + lib.mod.meta.version + "\n\n" + lib.getMessage('mod', 'description');
 //进游戏显示
 /*Events.on(EventType.ClientLoadEvent, cons(e => {
     var dialog = new BaseDialog("Extra Utilities alpha 1.0 Adapt 136+");
@@ -142,7 +142,7 @@ lib.mod.meta.description = lib.getMessage('mod', 'description');
 }));*/
 
 //override部分
-require("other/override");
+//require("other/override");
 
 //核心蓝图，这种方式不会在蓝图包出现
 // const CoreSchematics = [

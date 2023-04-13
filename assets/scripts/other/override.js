@@ -1,14 +1,9 @@
 // /*const lib = require("blib");
 // const up = require("unit/UF");
 
-UnitTypes.corvus.mineTier = 2;
-UnitTypes.corvus.mineSpeed = 7;
-UnitTypes.corvus.buildSpeed = 2;
 /*
 //Blocks.cultivator.consumes.liquid(Liquids.water, 15 / 60);
-Blocks.sandWater.itemDrop = Items.sand;
-Blocks.darksandWater.itemDrop = Items.sand;
-Blocks.darksandTaintedWater.itemDrop = Items.sand;
+
 Blocks.duct.buildVisibility = BuildVisibility.shown;
 Blocks.ductBridge.buildVisibility = BuildVisibility.shown;
 //if Anuke sees this, I hope he can change it early, it will cause the game to crash
@@ -51,6 +46,6 @@ Blocks.exponentialReconstructor.upgrades.add(
 Blocks.tetrativeReconstructor.upgrades.add(
     up.unitType(phantom, skyline),
 );*/
-Blocks.oxidationChamber.canOverdrive = true;
-Blocks.neoplasiaReactor.canOverdrive = true;
+
+
 //StatusEffects.sapped.reactive = true;

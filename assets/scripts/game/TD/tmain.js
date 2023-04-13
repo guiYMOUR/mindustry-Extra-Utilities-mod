@@ -255,6 +255,31 @@ navalEnemy1.armor = 10;
 navalEnemy1.abilities.add(new healthDisplay(30, 30, 4));
 flyEnemy1.alwaysUnlocked = true;
 
+const slime = new UnitType("slime");
+slime.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
+slime.aiController = prov(() => new SuicideAI());
+slime.targetAir = false;
+slime.speed = 0.4;
+slime.hitSize = 20;
+slime.health = 32000;
+slime.mechSideSway = 0.25;
+slime.range = 28;
+slime.weapons.add(
+    (() => {
+        const w = new Weapon();
+        w.reload = 12;
+        w.shootCone = 180;
+        w.ejectEffect = Fx.none;
+        w.shootSound = Sounds.explosion;
+        w.bullet = midDamage;
+        return w;
+    })()
+);
+slime.armor = 9;
+slime.abilities.add(new healthDisplay(20, 36, 5));
+slime.abilities.add(new SpawnDeathAbility(enemy1, 4, 2), new SpawnDeathAbility(enemy2, 4, 2));
+slime.alwaysUnlocked = true;
+
 /*const TD = new JavaAdapter(Planet, {
     load(){
         this.meshLoader = prov(() => new SunMesh(TD, 4, 6, 2.8, 1.4, 1.8, 1.4, 1.1,
