@@ -1,6 +1,7 @@
 # 更多实用设备
 
 ![logo](https://user-images.githubusercontent.com/77377005/230295140-234fab8c-c995-4a13-b4a4-00eb2888e6d3.png)
+![work](https://user-images.githubusercontent.com/77377005/231817466-63545b19-6286-4ab4-b151-8bc95ce501f0.gif)
 ![mk2](https://user-images.githubusercontent.com/77377005/230294594-2f4aec93-a2ba-4857-ab90-26fc20e8420b.gif)
 
 [English](README.md) | 中文
