@@ -20,6 +20,8 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.defense.turrets.Turret.TurretBuild;
 import mindustry.world.draw.DrawBlock;
 
+import static ExtraUtilities.ExtraUtilitiesMod.name;
+
 public class DrawBow extends DrawBlock {
     //弓弦走的距离，bowMoveY = 数值 - bowFY
     public float bowMoveY = -40 + 8, bowFY = -8;
@@ -31,6 +33,8 @@ public class DrawBow extends DrawBlock {
     public Color color = EUItems.lightninAlloy.color;
 
     public Drawable drawable;
+
+    public String arrowSp = null;
 
     @Override
     public void draw(Building build) {
@@ -78,8 +82,10 @@ public class DrawBow extends DrawBlock {
 //
 //        }
         float arx = rx + Angles.trnsx(rot, 0, -bowMoveY/2), ary = ry + Angles.trnsy(rot, 0, -bowMoveY/2);
+        //arrow
         Draw.color(color.cpy().a(p));
-        Drawf.tri(arx, ary, 16 * warmup, 16, rot + 90);
+        if(arrowSp != null) Draw.rect(Core.atlas.find(arrowSp), arx, ary, 32 * warmup, 50, rot);
+        else Drawf.tri(arx, ary, 16 * warmup, 20, rot + 90);
         Drawf.tri(arx, ary, 12 * warmup, 8, rot - 90);
         Draw.reset();
     }

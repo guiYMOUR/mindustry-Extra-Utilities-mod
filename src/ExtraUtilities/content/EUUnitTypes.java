@@ -95,6 +95,7 @@ public class EUUnitTypes {
             envDisabled = Env.none;
             hidden = true;
             targetable = false;
+            hittable = false;
 
             //alwaysUnlocked = true;
 
@@ -134,6 +135,7 @@ public class EUUnitTypes {
             envDisabled = Env.none;
             hidden = true;
             targetable = false;
+            hittable = false;
 
             //alwaysUnlocked = true;
 

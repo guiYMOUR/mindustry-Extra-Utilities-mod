@@ -11,6 +11,7 @@ import mindustry.content.Fx;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
+import mindustry.graphics.Layer;
 import mindustry.world.blocks.defense.turrets.Turret.TurretBuild;
 import mindustry.world.draw.DrawBlock;
 
@@ -20,6 +21,7 @@ public class DrawTrail extends DrawBlock {
     public float radius = 16, size;
     public int length;
     public Color color;
+    public int id = 0;
 
     public BulletType ball = null;
 
@@ -46,7 +48,7 @@ public class DrawTrail extends DrawBlock {
 
     public void drawBall(Building build, float x, float y, float rotation, float p, Vec2 lastEnd, Vec2 offset, Color color){
         if(p < 0.001) return;
-        rand.setSeed(build.id);
+        rand.setSeed(build.id + id);
         lastEnd.add(offset.trns(
                 rand.random(360f) + Time.time * 2f,
                 Mathf.sin(Time.time + rand.random(200f), scl, radius * 1.5f)
@@ -76,11 +78,11 @@ public class DrawTrail extends DrawBlock {
         public void draw(Bullet b) {
             super.draw(b);
             float p = b.time < 10 ? b.time/10 : 1 - (b.time - 10)/10;
-            float sin = Mathf.sin(Time.time, 6, 0.6f) * p;
+            float sin1 = Mathf.sin(Time.time, 6, 0.6f) * p;
             float ra = size * p;
 
             Draw.color(color);
-            Fill.circle(b.x, b.y, ra + sin);
+            Fill.circle(b.x, b.y, ra + sin1);
         }
     }
 }

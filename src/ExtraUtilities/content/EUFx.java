@@ -17,9 +17,11 @@ import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.world.Tile;
+import mindustry.world.meta.Attribute;
 
 import javax.xml.crypto.Data;
 
+import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static arc.graphics.g2d.Draw.*;
 import static arc.math.Angles.*;
 import static mindustry.content.Fx.*;
@@ -288,5 +290,48 @@ public class EUFx {
             Lines.stroke(3 * e.fout(), color);
             Lines.square(e.x, e.y, size * Vars.tilesize/2f * e.fin(), 180 * e.fout());
         });
+    }
+
+    public static Effect colorBall(Color color, float range){
+        return new Effect(80, e -> {
+            Draw.color(color.cpy().a(1/range));
+            for(int i = 0; i < range; i++){
+                Fill.circle(e.x, e.y, range * i/range * e.fout());
+            }
+        });
+    }
+
+    public static Effect aimEffect(float lifetime, Color color, float width, float length, float spacing){
+        return new Effect(lifetime, e -> {
+            Draw.color(color);
+            float track = Mathf.curve(e.fin(Interp.pow2Out), 0, 0.25f) * Mathf.curve(e.fout(Interp.pow4Out), 0, 0.3f) * e.fin();
+            for(int i = 0; i <= length / spacing; i++){
+                Tmp.v1.trns(e.rotation, i * spacing);
+                float f = Interp.pow3Out.apply(Mathf.clamp((e.fin() * length - i * spacing) / spacing)) * (0.6f + track * 0.4f);
+                Draw.rect(Core.atlas.find(name("aim-shoot")), e.x + Tmp.v1.x, e.y + Tmp.v1.y, 144 * Draw.scl * f, 144 * Draw.scl * f, e.rotation - 90);
+            }
+            Tmp.v1.trns(e.rotation, 0, (2 - track) * Vars.tilesize * width);
+            Lines.stroke(track * 2);
+            for(int i : Mathf.signs){
+                Lines.lineAngle(e.x + Tmp.v1.x * i, e.y + Tmp.v1.y * i, e.rotation, length * (0.75f + track / 4) * Mathf.curve(e.fout(Interp.pow5Out), 0, 0.1f));
+            }
+        });
+    }
+
+    public static Effect expFtEffect(int amount, float size, float len, float lifetime, float startDelay){
+        return new Effect(lifetime, e -> {
+            float length = len + e.finpow() * 20f;
+            rand.setSeed(e.id);
+            for(int i = 0; i < amount; i++){
+                v.trns(rand.random(360f), rand.random(length));
+                float sizer = rand.random(size/2, size);
+
+                e.scaled(e.lifetime * rand.random(0.5f, 1f), b -> {
+                    color(Pal.darkerGray, b.fslope() * 0.93f);
+
+                    Fill.circle(e.x + v.x, e.y + v.y, sizer + b.fslope() * 1.2f);
+                });
+            }
+        }).startDelay(startDelay);
     }
 }

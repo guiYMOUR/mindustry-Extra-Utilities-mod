@@ -10,7 +10,6 @@ import ExtraUtilities.worlds.blocks.power.LightenGenerator;
 import ExtraUtilities.worlds.blocks.power.SpaceGenerator;
 import ExtraUtilities.worlds.blocks.power.ThermalReactor;
 import ExtraUtilities.worlds.blocks.production.*;
-//import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
 import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
@@ -22,34 +21,28 @@ import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import ExtraUtilities.worlds.entity.bullet.FireWorkBullet;
 import ExtraUtilities.worlds.entity.bullet.ScarletDevil;
+import ExtraUtilities.worlds.entity.bullet.aimToPosBullet;
 import arc.Core;
-import arc.Events;
-import arc.func.Prov;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.math.Angles;
-import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.Rand;
+import arc.math.geom.Position;
 import arc.math.geom.Vec2;
-import arc.struct.Seq;
+import arc.struct.ObjectMap;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
-import mindustry.entities.Units;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
-import mindustry.game.EventType;
-import mindustry.gen.Building;
-import mindustry.gen.Bullet;
-import mindustry.gen.Sounds;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
@@ -61,12 +54,10 @@ import mindustry.world.blocks.distribution.DuctBridge;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.ArmoredConduit;
-import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.power.ConsumeGenerator;
 import mindustry.world.blocks.power.ThermalGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
-import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.consumers.ConsumeLiquidFlammable;
@@ -79,7 +70,6 @@ import static mindustry.content.Fx.rand;
 import static mindustry.content.Fx.v;
 import static mindustry.type.ItemStack.*;
 import static ExtraUtilities.ExtraUtilitiesMod.*;
-import static ExtraUtilities.worlds.entity.bullet.FireWorkBullet.*;
 
 public class EUBlocks {
     public static Block
@@ -98,7 +88,7 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG, nitrogenWell, heatPower, windPower, waterPower,
         //turret
-            dissipation, guiY, onyxBlaster, celebration, celebrationMk2, sancta, turretResupplyPoint,
+            dissipation, guiY, javelin, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint,
         //unit
             imaginaryReconstructor, finalF,
         //other&sandbox
@@ -688,6 +678,166 @@ public class EUBlocks {
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
         }};
 
+        javelin = new PowerTurret("javelin"){{
+            //1 + 1 = ⑨
+            requirements(Category.turret, with(Items.surgeAlloy, 350, Items.silicon, 500, Items.carbide, 500, EUItems.lightninAlloy, 300));
+            consumePower(12f);
+            heatRequirement = 45f;
+            maxHeatEfficiency = 2f;
+            range = 55 * 8;
+            reload = 2 * 60;
+            size = 5;
+            shootSound = Sounds.malignShoot;
+            shootWarmupSpeed = 0.06f;
+            minWarmup = 0.9f;
+            shootEffect = smokeEffect = Fx.none;
+            alwaysUnlocked = true;
+            rotateSpeed = 2.5f;
+            recoil = 2f;
+            recoilTime = 60f;
+            buildVisibility = BuildVisibility.sandboxOnly;
+
+            Color bcr = Color.valueOf("c0ecff");
+            Color bcrb = Color.valueOf("6d90bc");
+
+            drawer = new DrawTurret("reinforced-"){{
+                parts.add(
+                        new JavelinWing(){{
+                            x = 0;
+                            y = -7;
+                            layer = Layer.effect;
+                        }},
+                        new BowHalo(){{
+                            progress = PartProgress.warmup.delay(0.8f);
+                            x = 0;
+                            y = 18;
+                            stroke = 3;
+                            w2 = h2 = 0;
+                            w1 = 3;
+                            h1 = 6;
+                            radius = 4;
+                            color = bcr;
+                        }}
+                );
+            }};
+
+            BulletType iceBar = new aimToPosBullet(){{
+                damage = 180;
+                splashDamage = 180;
+                splashDamageRadius = 3 * 8;
+                speed = 10;
+                lifetime = 140;
+                hitEffect = despawnEffect = new MultiEffect(new ExplosionEffect(){{
+                    lifetime = 40f;
+                    sparkColor = bcr;
+                    waveRad = smokeSize = smokeSizeBase = 0f;
+                    smokes = 0;
+                    sparks = 5;
+                    sparkRad = 4 * 8;
+                    sparkLen = 5f;
+                    sparkStroke = 2f;
+                }}, new Effect(60, e -> {
+                    DrawFunc.drawSnow(e.x, e.y, 2 * 8 * e.foutpow(), 0, bcr);
+                }));
+                trailInterval = 0.5f;
+                trailEffect = new Effect(120, e -> {
+                    Draw.color(bcr);
+                   Fill.circle(e.x, e.y, 3 * e.foutpow());
+                });
+
+                buildingDamageMultiplier = 0.5f;
+            }
+
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    Draw.color(bcr);
+                    Drawf.tri(b.x, b.y, 5, 12, b.rotation());
+                    Drawf.tri(b.x, b.y, 5, 5, b.rotation() - 180);
+                    Lines.stroke(1, bcrb);
+                    Lines.lineAngle(b.x, b.y, b.rotation(), 9f);
+                    Lines.lineAngle(b.x, b.y, b.rotation() - 180, 3f);
+                }
+            };
+            int amount = 4;
+            float spread = 40f;
+            float inSpread = 5;
+
+            shootType = new BulletType(){{
+                reflectable = false;
+                speed = 20;
+                lifetime = 22;
+                damage = 520;
+                splashDamage = 390;
+                splashDamageRadius = 8 * 8;
+                trailColor = bcr;
+                trailLength = 8;
+                trailWidth = 5;
+                trailEffect = new Effect(40, e -> {
+                   DrawFunc.drawSnow(e.x, e.y, 12 * e.fout(), 360 * e.fin(), bcr);
+                });
+                trailInterval = 3;
+
+                fragBullets = amount;
+                fragBullet = iceBar;
+
+                status = StatusEffects.freezing;
+
+                hitEffect = despawnEffect = new ExplosionEffect(){{
+                    lifetime = 40f;
+                    waveStroke = 5f;
+                    waveLife = 8f;
+                    waveColor = bcrb;
+                    sparkColor = bcr;
+                    waveRad = 8 * 8;
+                    smokeSize = smokes = 0;
+                    smokeSizeBase = 0f;
+                    sparks = 6;
+                    sparkRad = 10 * 8;
+                    sparkLen = 7f;
+                    sparkStroke = 3f;
+                }};
+                shootEffect = smokeEffect = Fx.none;
+                buildingDamageMultiplier = 0.5f;
+            }
+
+                @Override
+                public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                    if(!pierce || b.collided.size >= pierceCap) explode(b);
+                    super.hitEntity(b, entity, health);
+                }
+
+                @Override
+                public void hit(Bullet b) {
+                    explode(b);
+                    super.hit(b);
+                }
+
+                public void explode(Bullet b){
+                    if(!(b.owner instanceof PowerTurretBuild)) return;
+                    PowerTurretBuild tb = (PowerTurretBuild) b.owner;
+                    for(int i = 0; i < amount; i++){
+                        float angleOffset = i * spread - (amount - 1) * spread / 2f;
+                        iceBar.create(tb, tb.team, tb.x, tb.y, tb.rotation - 180 + angleOffset + Mathf.random(-inSpread, inSpread), -1, 1, 1, new Position[]{EUGet.pos(tb.x, tb.y), EUGet.pos(b.x, b.y)});
+                    }
+                }
+
+                @Override
+                public void createFrags(Bullet b, float x, float y) { }
+
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    Draw.color(bcr);
+                    Drawf.tri(b.x, b.y, 15, 18, b.rotation());
+                    Drawf.tri(b.x, b.y, 15, 6, b.rotation() - 180);
+                    Lines.stroke(1, bcrb);
+                    Lines.lineAngle(b.x, b.y, b.rotation(), 15f);
+                    Lines.lineAngle(b.x, b.y, b.rotation() - 180, 4f);
+                }
+            };
+        }};
+
         // 梦幻联动
         onyxBlaster = new MultiBulletTurret("onyx-blaster"){{
             requirements(Category.turret, with(Items.graphite, 200, Items.silicon, 220, Items.thorium, 250, Items.surgeAlloy, 150));
@@ -1196,8 +1346,10 @@ public class EUBlocks {
                                 public void draw(Bullet b) {
                                     super.draw(b);
                                     Draw.color(Pal.surge);
-                                    Drawf.tri(b.x, b.y, 20, 16, b.rotation());
+                                    Drawf.tri(b.x, b.y, 20, 20, b.rotation());
                                     Drawf.tri(b.x, b.y, 10, 8, b.rotation()-180);
+                                    Draw.z(Layer.flyingUnit);
+                                    Draw.rect(Core.atlas.find(name("sancta-bt")), b.x, b.y, 32, 50, b.rotation() - 90);
                                 }
 
                                 @Override
@@ -1238,7 +1390,9 @@ public class EUBlocks {
                                     progress = PartProgress.warmup.delay(0.8f);
                                 }}
                         );
-            }}, new RunningLight(6), new DrawBow(), new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8));
+            }}, new RunningLight(6), new DrawBow(){{
+                arrowSp = name("sancta-bt");
+            }}, new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8));
             scaledHealth = 180;
 
             range = 80 * 8;
@@ -1257,6 +1411,101 @@ public class EUBlocks {
             coolantMultiplier = 0.5f;
             coolEffect = Fx.none;
             canOverdrive = false;
+        }};
+
+        fiammetta = new ItemTurret("fiammetta"){{
+            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 300, Items.carbide, 200, Items.silicon, 400, Items.surgeAlloy, 200));
+            size = 5;
+            shake = 10;
+            reload = 3 * 60;
+            ammoPerShot = 10;
+            maxAmmo = ammoPerShot * 3;
+            range = 57.5f * 8;
+            shootSound = Sounds.laserbig;
+            recoil = 5;
+            alwaysUnlocked = true;
+            buildVisibility = BuildVisibility.sandboxOnly;
+
+            Effect se = EUFx.aimEffect(40, EUItems.lightninAlloy.color, 1.5f, range, 13);
+            ammo(
+                    Items.surgeAlloy,
+                    new BulletType(){{
+                        chargeEffect = se;
+
+                        damage = 300;
+                        splashDamageRadius = 10 * 8;
+                        splashDamage = 550;
+                        lifetime = 30;
+                        speed = 15;
+                        pierce = true;
+                        pierceBuilding = true;
+                        hittable = false;
+                        absorbable = false;
+                        reflectable = false;
+                        intervalBullet = new BulletType(){{
+                            lifetime = 32;
+                            speed = 0;
+                            despawnEffect = hitEffect = new MultiEffect(new Effect(30, e -> {
+                                Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
+                                Fill.circle(e.x, e.y, Math.min(10 * 8 * e.fin(), 6 * 8));
+                            }), EUFx.expFtEffect(5, 12, 6 * 4, 30, 0.2f));
+                            despawnSound = hitSound = Sounds.explosion;
+                            collides = absorbable = hittable = false;
+                            splashDamageRadius = 6 * 8;
+                            splashDamage = 500;
+                        }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                float ft = (b.time > 16 ? b.fout() * 2 : 1);
+                                Lines.stroke(5, EUItems.lightninAlloy.color);
+                                Lines.circle(b.x, b.y, 12 * ft);
+                                Lines.poly(b.x, b.y, 3, 12 * ft, b.fout() * 180);
+                            }
+                        };
+                        intervalDelay = 4;
+                        intervalSpread = intervalRandomSpread = 0;
+                        bulletInterval = 4;
+                        hitSize = 20;
+                        despawnEffect = new MultiEffect(new Effect(30, e -> {
+                            Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
+                            Fill.circle(e.x, e.y, Math.min(16 * 8 * e.fin(), 10 * 8));
+                        }), EUFx.expFtEffect(6, 15, 10 * 4, 30, 0.2f));
+                        despawnSound = Sounds.explosion;
+                        hitEffect = Fx.none;
+                        trailLength = 15;
+                        trailColor = EUItems.lightninAlloy.color;
+                        trailWidth = 4;
+                        trailRotation = true;
+                        trailEffect = new Effect(15, e ->{
+                            color(e.color);
+                            for(int x : new int[]{-20, 20}){
+                                Tmp.v1.set(x, -10).rotate(e.rotation - 90);
+                                Fill.circle(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 4 * e.foutpow());
+                            }
+                        });
+                        trailInterval = 0.1f;
+                    }
+
+                        @Override
+                        public void draw(Bullet b) {
+                            super.draw(b);
+                            Draw.color(EUItems.lightninAlloy.color);
+                            Draw.rect(Core.atlas.find(name("phx")), b.x, b.y,48, 48,  b.rotation() - 90);
+                            //Drawf.tri(b.x + Angles.trnsx(b.rotation(), 10), b.x + Angles.trnsy(b.rotation(), 10), 10, 20, b.rotation());
+                        }
+                    }
+            );
+
+            shoot.firstShotDelay = se.lifetime;
+            moveWhileCharging = false;
+            accurateDelay = false;
+            coolant = consumeCoolant(1);
+            coolantMultiplier = 0.8f;
+            drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawTrail(2f, EUItems.lightninAlloy.color, 16){{
+                y = - 10;
+            }});
         }};
 
         turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
@@ -1337,6 +1586,7 @@ public class EUBlocks {
             hasPower = true;
             hasItems = false;
             consumePower(9);
+            alwaysUnlocked = true;
         }};
 
 

@@ -14,6 +14,7 @@ import mindustry.graphics.Layer;
 
 public class BowHalo  extends DrawPart {
     public float x = 0, y = -25;
+    public float stroke = 4;
     public float radius = 12f;
     public Color color = EUItems.lightninAlloy.color;
     public float rotateSpeed = 1, w1 = 3, h1 = 6, w2 = 4, h2 = 18;
@@ -23,7 +24,7 @@ public class BowHalo  extends DrawPart {
     @Override
     public void draw(PartParams params) {
         float warmup = progress.getClamp(params);
-        Lines.stroke(4 * warmup);
+        Lines.stroke(stroke * warmup);
         float sin = Mathf.absin(Time.time, 10, 1.5f);
         float realR = radius + sin;
         float rot = params.rotation - 90;

@@ -29,14 +29,15 @@ public class Stinger extends PowerTurret {
             absorbable = false;
             keepVelocity = false;
             collides = false;
-            rain =  new LaserBulletType(100){{
+            rain =  new LaserBulletType(60){{
                 colors = new Color[]{Color.valueOf("C6D676"), Color.valueOf("C6D676"), Color.white};
                 hitSize = 4;
-                lifetime = 14f;
+                lifetime = 16f;
                 drawSize = 340f;
                 collidesAir = false;
                 length = 130f;
                 keepVelocity = false;
+                pierceCap = 3;
             }};
         }};
     }

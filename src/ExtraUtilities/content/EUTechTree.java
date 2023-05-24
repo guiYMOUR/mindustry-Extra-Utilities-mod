@@ -73,9 +73,13 @@ public class EUTechTree {
         });
         addToNode(ductBridge, () -> {
             node(reinforcedDuctBridge);
+            node(ekMessDriver);
         });
         addToNode(reinforcedBridgeConduit, () -> {
             node(phaseReinforcedBridgeConduit);
+        });
+        addToNode(reinforcedPump, () -> {
+            node(ekPump);
         });
         addToNode(heatRedirector, () -> {
             node(heatTransfer, () -> {
@@ -100,7 +104,9 @@ public class EUTechTree {
             });
         });
         addToNode(reinforcedPump, () -> {
-            node(arkyciteExtractor, () ->{});
+            node(arkyciteExtractor, () ->{
+                node(cyanogenPyrolysis);
+            });
         });
         addToNode(reinforcedLiquidRouter, () -> {
             node(liquidSorter, () ->{});
@@ -112,7 +118,9 @@ public class EUTechTree {
         addToNode(breach, () -> {
             node(guiY, () -> {
                 node(turretResupplyPoint);
+                node(fiammetta);
             });
+            node(javelin);
         });
         addToNode(surgeCrucible, () -> {
             node(ELA);

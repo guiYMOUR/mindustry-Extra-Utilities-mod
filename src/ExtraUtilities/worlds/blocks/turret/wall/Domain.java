@@ -339,13 +339,13 @@ public class Domain extends Block {
                 Draw.color(team.color, Color.white, Mathf.clamp(hit));
 
                 if(renderer.animateShields){
-                    Fill.circle(x, y, radius);
+                    Fill.poly(x, y, 36, radius);
                 }else{
                     Lines.stroke(1.5f);
                     Draw.alpha(0.09f + Mathf.clamp(0.08f * hit));
-                    Fill.circle(x, y, radius);
+                    Fill.poly(x, y, 36, radius);
                     Draw.alpha(1f);
-                    Lines.circle(x, y, radius);
+                    Lines.poly(x, y, 36, radius);
                     Draw.reset();
                 }
             }

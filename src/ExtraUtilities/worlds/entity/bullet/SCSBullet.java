@@ -74,6 +74,7 @@ public class SCSBullet extends BasicBulletType {
     public void update(Bullet b) {
         super.update(b);
         Units.nearbyEnemies(b.team, b.x, b.y, homingRange, unitTarget::add);
+        //手撕玩家（
         unitTarget.removeAll(unit -> unit.dead || !unit.within(b, homingRange));
         unitTarget.sort(unit -> unit.dst2(b));
         int find = Math.min(maxFind, unitTarget.size);
