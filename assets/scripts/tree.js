@@ -26,7 +26,7 @@ const { T3fuse } = require('block/turret/T3fuse');
 // const { minisp } = require('block/turret/minisp');
 // const { antiaircraft } = require('block/turret/antiaircraft');
 // const { sam } = require('block/turret/sam');
-// const { RG } = require('block/turret/RG');
+const { RG } = require('block/turret/RG');
 const { prism } = require('block/turret/prism');
 // const { blackhole } = require('block/turret/blackhole');
 // const { sucker } = require('block/turret/sucker');
@@ -122,12 +122,12 @@ lib.addToResearch(sam, { parent: 'scatter',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),
     )
-});
+});*/
 lib.addToResearch(RG, { parent: 'foreshadow',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
     )
-});*/
+});
 lib.addToResearch(prism, { parent: rainbow.name,
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
@@ -177,6 +177,7 @@ lib.addToResearch(T2LB, { parent: 'bridge-conduit',
         new Objectives.SectorComplete(SectorPresets.craters),
     )
 });
+lib.addToResearch(conduit, { parent: 'pulse-conduit', });
 /*lib.addToResearch(TLR, { parent: 'liquid-router',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.craters),

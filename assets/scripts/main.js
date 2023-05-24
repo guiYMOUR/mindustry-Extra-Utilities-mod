@@ -25,7 +25,7 @@ require("block/turret/T3fuse");
 // require("block/turret/sam");
 require("block/turret/prism");
 // require("block/turret/blackhole");
-// require("block/turret/RG");
+require("block/turret/RG");
 // require("block/turret/sucker");
 // require("block/turret/dissipation");
 // require("block/turret/heal");

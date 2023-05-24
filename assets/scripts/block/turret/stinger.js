@@ -14,7 +14,7 @@ const stingerLaser = new DeathLaser();
 
 stingerLaser.chargeEffect = new MultiEffect(lib.Fx.lancerLaserCharge(color), lib.Fx.chargeBeginEffect(chargeTime, color));
 
-stingerLaser.damage = 360 - (hardMod ? 60 : 0);
+stingerLaser.damage = 320 - (hardMod ? 20 : 0);
 stingerLaser.sideAngle = 2;
 stingerLaser.sideWidth = 2;
 stingerLaser.sideLength = 40;
