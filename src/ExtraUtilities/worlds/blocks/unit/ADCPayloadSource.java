@@ -30,8 +30,8 @@ public class ADCPayloadSource extends PayloadSource {
         destructible = false;
 
         config(Block.class, (ADCPayloadSourceBuild build, Block block) -> {
-            if(canProduce(block) && build.block != block){
-                build.block = block;
+            if(canProduce(block) && build.configBlock != block){
+                build.configBlock = block;
                 build.unit = null;
                 build.payload = null;
                 build.scl = 0f;
@@ -41,7 +41,7 @@ public class ADCPayloadSource extends PayloadSource {
         config(UnitType.class, (ADCPayloadSourceBuild build, UnitType unit) -> {
             if(canProduce(unit) && build.unit != unit){
                 build.unit = unit;
-                build.block = null;
+                build.configBlock = null;
                 build.payload = null;
                 build.scl = 0f;
             }
@@ -49,13 +49,13 @@ public class ADCPayloadSource extends PayloadSource {
 
         config(Integer.class, (ADCPayloadSourceBuild build, Integer i) -> {
             build.unit = null;
-            build.block = null;
+            build.configBlock = null;
             build.payload = null;
             build.scl = 0;
         });
 
         configClear((ADCPayloadSourceBuild build) -> {
-            build.block = null;
+            build.configBlock = null;
             build.unit = null;
             build.payload = null;
             build.scl = 0f;

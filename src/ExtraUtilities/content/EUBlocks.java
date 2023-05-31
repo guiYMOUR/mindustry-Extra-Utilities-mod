@@ -66,6 +66,7 @@ import mindustry.world.meta.*;
 
 import static arc.graphics.g2d.Draw.alpha;
 import static arc.graphics.g2d.Draw.color;
+import static arc.math.Angles.randLenVectors;
 import static mindustry.content.Fx.rand;
 import static mindustry.content.Fx.v;
 import static mindustry.type.ItemStack.*;
@@ -80,7 +81,7 @@ public class EUBlocks {
         //transport
             stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
-            T2oxide, cyanogenPyrolysis,
+            stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
@@ -95,17 +96,21 @@ public class EUBlocks {
             quantumDomain,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static void load(){
-        arkyciteExtractor = new DrawSolidPump("arkycite-extractor"){{
+        arkyciteExtractor = new AttributeCrafter("arkycite-extractor"){{
             requirements(Category.production, with(Items.carbide, 35, Items.oxide, 50, Items.thorium, 150, Items.tungsten, 100));
             consumePower(8f);
             consumeLiquid(Liquids.nitrogen, 4/60f);
             consumeItem(Items.oxide);
+            baseEfficiency = 0.5f;
+            attribute = EUAttribute.EKOil;
+            maxBoost = 1.5f;
 
-            consumeTime = 60 * 2f;
+            hasPower = hasItems = hasLiquids = true;
+
+            craftTime = 60 * 2f;
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidRegion(Liquids.arkycite), new DrawDefault(), new DrawRegion("-top"));
-            result = Liquids.arkycite;
+            outputLiquid = new LiquidStack(Liquids.arkycite, 1);
             liquidCapacity = 120;
-            pumpAmount = 1;
             size = 3;
         }};
         quantumExplosion = new ExplodeDrill("quantum-explosion"){{
@@ -297,6 +302,80 @@ public class EUBlocks {
             };
         }};
 
+
+        //stone!!!
+        stoneExtractor = new AttributeCrafter("stoneExtractor"){{
+            requirements(Category.production, with(Items.silicon, 50, Items.graphite, 50));
+            outputItem = new ItemStack(EUItems.stone, 1);
+            craftTime = 100;
+            size = 2;
+            hasPower = true;
+            attribute = EUAttribute.stone;
+            baseEfficiency = 0;
+            minEfficiency = 0.001f;
+            maxBoost = 1f;
+
+            drawer = new DrawMulti(
+                    new DrawRegion("-bottom"),
+                    new DrawRegion("-rot", -4){{
+                        x = -2.8f;
+                        y = 2.8f;
+                    }},
+                    new DrawRegion("-rot", 4){{
+                        x = 2.8f;
+                        y = 2.8f;
+                    }},
+                    new DrawRegion("-rot", -4){{
+                        x = 2.8f;
+                        y = -2.8f;
+                    }},
+                    new DrawRegion("-rot", 4){{
+                        x = -2.8f;
+                        y = -2.8f;
+                    }},
+                    new DrawDefault()
+            );
+
+            craftEffect = Fx.smokeCloud;
+            updateEffect = new Effect(20, e -> {
+                color(Pal.gray, Color.lightGray, e.fin());
+                randLenVectors(e.id, 6, 3f + e.fin() * 6f, (x, y) -> {
+                    Fill.square(e.x + x, e.y + y, e.fout() * 2f, 45);
+                });
+            });
+
+            consumePower(1f);
+        }};
+        stoneCrusher = new GenericCrafter("stoneCrusher"){{
+            requirements(Category.crafting, with(Items.silicon, 55, Items.thorium, 40));
+            consumeItem(EUItems.stone, 2);
+            outputItems = ItemStack.with(Items.sand, 2, Items.scrap, 1);
+            craftTime = 60;
+            size = 2;
+            hasPower = hasItems = true;
+            consumePower(1.5f);
+            craftEffect = new Effect(23, e -> {
+                float scl = Math.max(e.rotation, 1);
+                color(Tmp.c1.set(Pal.gray).mul(1.1f), Items.sand.color, e.fin());
+                randLenVectors(e.id, 8, 19f * e.finpow() * scl, (x, y) -> {
+                    Fill.circle(e.x + x, e.y + y, e.fout() * 3.5f * scl + 0.3f);
+                });
+            }).layer(Layer.debris);
+
+            drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawFrames(){{frames = 5;}}, new DrawDefault(), new DrawRegion("-top"));
+        }};
+        stoneMelting = new HeatCrafter("stoneMelting"){{
+            requirements(Category.crafting, with(Items.silicon, 180, EUItems.stone, 100, Items.graphite, 80, Items.oxide, 40));
+            size = 3;
+            consumeItem(EUItems.stone);
+            heatRequirement = 6;
+            outputLiquid = new LiquidStack(Liquids.slag, 20f/60f);
+            hasItems = hasLiquids = true;
+            hasPower = false;
+            craftTime = 30f;
+            liquidCapacity = 120;
+            drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidRegion(), new DrawDefault(), new DrawHeatInput());
+        }};
 
         T2oxide = new HeatProducer("T2oxide"){{
             requirements(Category.crafting, with(Items.oxide, 150, Items.graphite, 300, Items.silicon, 300, Items.carbide, 110, Items.thorium, 100));
@@ -691,11 +770,9 @@ public class EUBlocks {
             shootWarmupSpeed = 0.06f;
             minWarmup = 0.9f;
             shootEffect = smokeEffect = Fx.none;
-            alwaysUnlocked = true;
             rotateSpeed = 2.5f;
             recoil = 2f;
             recoilTime = 60f;
-            buildVisibility = BuildVisibility.sandboxOnly;
 
             Color bcr = Color.valueOf("c0ecff");
             Color bcrb = Color.valueOf("6d90bc");
@@ -1423,8 +1500,6 @@ public class EUBlocks {
             range = 57.5f * 8;
             shootSound = Sounds.laserbig;
             recoil = 5;
-            alwaysUnlocked = true;
-            buildVisibility = BuildVisibility.sandboxOnly;
 
             Effect se = EUFx.aimEffect(40, EUItems.lightninAlloy.color, 1.5f, range, 13);
             ammo(

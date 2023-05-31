@@ -70,7 +70,7 @@ public class CrystalTower extends Block {
 
         @Override
         public void updateTile() {
-            if(Vars.content.statusEffects().get(conf[1]) == null){
+            if(conf[1] >= Vars.content.statusEffects().size || Vars.content.statusEffects().get(conf[1]) == null){
                 statusEffect = StatusEffects.none;
                 conf[1] = StatusEffects.none.id;
             } else {

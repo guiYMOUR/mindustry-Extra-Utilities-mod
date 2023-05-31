@@ -190,10 +190,11 @@ public class ExtraUtilitiesMod extends Mod{
 
     @Override
     public void loadContent(){
-        EUUnitTypes.load();
+        EUAttribute.load();
         EUOverride.overrideUnit1();
-        EUBlocks.load();
+        EUUnitTypes.load();
         EUOverride.overrideBlock1();
+        EUBlocks.load();
 
         TDPlanet.load();
         TDSectorPresets.load();

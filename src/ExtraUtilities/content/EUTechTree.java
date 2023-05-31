@@ -135,6 +135,12 @@ public class EUTechTree {
                 node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
                 node(guiYTD1, () -> {});
                 node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
+                node(EUItems.stone, () -> {
+                    node(stoneExtractor, () -> {
+                        node(stoneCrusher);
+                        node(stoneMelting);
+                    });
+                });
             });
         });
     }

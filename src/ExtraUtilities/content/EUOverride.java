@@ -28,6 +28,7 @@ import mindustry.world.blocks.defense.turrets.BaseTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.units.UnitFactory;
 
+import static ExtraUtilities.ExtraUtilitiesMod.EU;
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
@@ -63,6 +64,17 @@ public class EUOverride {
         Blocks.darksandTaintedWater.playerUnmineable = true;
         Blocks.oxidationChamber.canOverdrive = true;
         Blocks.neoplasiaReactor.canOverdrive = true;
+
+        //S
+        Blocks.stone.attributes.set(EUAttribute.stone, 0.25f);
+        Blocks.basalt.attributes.set(EUAttribute.stone, 0.15f);
+        Blocks.pebbles.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.craters.attributes.set(EUAttribute.stone, 0.1f);
+        //E
+        Blocks.yellowStone.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.carbonStone.attributes.set(EUAttribute.stone, 0.15f);
+        Blocks.arkyicStone.attributes.set(EUAttribute.EKOil, 100 * (0.15f/135));
+        Blocks.beryllicStone.attributes.set(EUAttribute.EKOil, 70 * (0.15f/135));
 
         Blocks.arc.consumePower(2f);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
