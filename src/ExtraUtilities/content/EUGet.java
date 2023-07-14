@@ -1,6 +1,10 @@
 package ExtraUtilities.content;
 
+import arc.Core;
+import arc.graphics.g2d.TextureAtlas;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.geom.Position;
+import arc.scene.style.TextureRegionDrawable;
 import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.content.Fx;
@@ -8,11 +12,16 @@ import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.PointBulletType;
 import mindustry.entities.pattern.ShootSpread;
+import mindustry.gen.Icon;
 import mindustry.type.Item;
+import mindustry.ui.Fonts;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 
+import java.awt.*;
+
+import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static mindustry.Vars.*;
 
 /**unfinished*/
@@ -39,6 +48,17 @@ public class EUGet {
 
     public static float dy(float py, float r, float angel){
         return py + r * (float) Math.sin(angel * Math.PI/180);
+    }
+
+    public static float posx(float x, float length, float angle){
+        float a = (float) ((Math.PI * angle)/180);
+        float cos = (float) Math.cos(a);
+        return x + length * cos;
+    }
+    public static float posy(float y, float length, float angle){
+        float a = (float) ((Math.PI * angle)/180);
+        float sin = (float) Math.sin(a);
+        return y + length * sin;
     }
 
     public static Seq<Turret> turrets(){

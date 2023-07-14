@@ -11,6 +11,7 @@ import arc.util.*;
 import mindustry.Vars;
 import mindustry.entities.bullet.BulletType;
 import mindustry.game.EventType.*;
+import mindustry.gen.Icon;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
 import mindustry.world.Block;
@@ -60,9 +61,9 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.breaker, t);
                     addToTable(EUBlocks.quantumDomain, t);
                     addToTable(EUBlocks.nitrogenWell, t);
-                    addToTable(EUBlocks.ekPump, t);
                     addToTable(EUBlocks.cyanogenPyrolysis, t);
                     addToTable(EUBlocks.heatPower, t);
                     addToTable(EUBlocks.windPower, t);

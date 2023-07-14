@@ -2,6 +2,7 @@ package ExtraUtilities.content;
 
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.distribution.StackHelper;
+import ExtraUtilities.worlds.blocks.effect.Breaker;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
@@ -93,7 +94,7 @@ public class EUBlocks {
         //unit
             imaginaryReconstructor, finalF,
         //other&sandbox
-            quantumDomain,
+            quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static void load(){
         arkyciteExtractor = new AttributeCrafter("arkycite-extractor"){{
@@ -307,13 +308,12 @@ public class EUBlocks {
         stoneExtractor = new AttributeCrafter("stoneExtractor"){{
             requirements(Category.production, with(Items.silicon, 50, Items.graphite, 50));
             outputItem = new ItemStack(EUItems.stone, 1);
-            craftTime = 100;
+            craftTime = 90;
             size = 2;
             hasPower = true;
             attribute = EUAttribute.stone;
             baseEfficiency = 0;
             minEfficiency = 0.001f;
-            maxBoost = 1f;
 
             drawer = new DrawMulti(
                     new DrawRegion("-bottom"),
@@ -349,7 +349,7 @@ public class EUBlocks {
         stoneCrusher = new GenericCrafter("stoneCrusher"){{
             requirements(Category.crafting, with(Items.silicon, 55, Items.thorium, 40));
             consumeItem(EUItems.stone, 2);
-            outputItems = ItemStack.with(Items.sand, 2, Items.scrap, 1);
+            outputItems = ItemStack.with(Items.sand, 1, Items.scrap, 2);
             craftTime = 60;
             size = 2;
             hasPower = hasItems = true;
@@ -1598,7 +1598,8 @@ public class EUBlocks {
                     new UnitType[]{UnitTypes.corvus, EUUnitTypes.nebula},
                     new UnitType[]{UnitTypes.toxopid, EUUnitTypes.asphyxia},
                     new UnitType[]{UnitTypes.eclipse, EUUnitTypes.apocalypse},
-                    new UnitType[]{UnitTypes.omura, EUUnitTypes.nihilo}
+                    new UnitType[]{UnitTypes.omura, EUUnitTypes.nihilo},
+                    new UnitType[]{UnitTypes.navanax, EUUnitTypes.narwhal}
             );
             researchCostMultiplier = 0.4f;
             buildCostMultiplier = 0.7f;
@@ -1645,7 +1646,7 @@ public class EUBlocks {
                                 time += itemStack.amount * itemStack.item.cost;
                             }
                         }
-                        if(u.armor < 30) plans.add(new UnitPlan(u, time * 6, os));
+                        if(u.armor < 50) plans.add(new UnitPlan(u, time * 6, os));
                         else plans.add(new UnitPlan(u, time * 2, is));
                     }
                 }
@@ -1661,6 +1662,12 @@ public class EUBlocks {
             hasPower = true;
             hasItems = false;
             consumePower(9);
+            alwaysUnlocked = true;
+        }};
+
+        breaker = new Breaker("breaker"){{
+            requirements(Category.effect, with(EUItems.lightninAlloy, 3));
+
             alwaysUnlocked = true;
         }};
 

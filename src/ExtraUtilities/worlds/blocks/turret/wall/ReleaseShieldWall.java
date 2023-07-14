@@ -178,7 +178,7 @@ public class ReleaseShieldWall extends Wall {
             Groups.bullet.intersect(b.x - realRange, b.y - realRange, realRange * 2, realRange * 2, trait ->{
                 if(trait.type.absorbable && trait.team != b.team && Intersector.isInsideHexagon(trait.getX(), trait.getY(), realRange, b.x, b.y) ){
                     trait.absorb();
-                    EUFx.shieldDefense.at(trait);
+                    EUFx.shieldDefense.at(trait.getX(), trait.getY(), EUItems.lightninAlloy.color);
                 }
             });
         }

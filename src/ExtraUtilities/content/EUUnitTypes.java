@@ -1,11 +1,14 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.ai.DefenderHealAI;
 import ExtraUtilities.ai.MinerPointAI;
+import ExtraUtilities.worlds.entity.ability.BatteryAbility;
 import ExtraUtilities.worlds.entity.ability.TerritoryFieldAbility;
 import ExtraUtilities.worlds.entity.ability.preventCheatingAbility;
-import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
-import ExtraUtilities.worlds.entity.bullet.PercentDamage;
-import ExtraUtilities.worlds.entity.bullet.SCSBullet;
+import ExtraUtilities.worlds.entity.ability.propeller;
+import ExtraUtilities.worlds.entity.bullet.*;
+import ExtraUtilities.worlds.entity.weapon.antiMissileWeapon;
+import ExtraUtilities.worlds.entity.weapon.healConeWeapon;
 import arc.Core;
 import arc.func.Prov;
 import arc.graphics.Blending;
@@ -15,6 +18,7 @@ import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectSet;
 import mindustry.Vars;
@@ -54,6 +58,7 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("asphyxia"), EntityMapping.idMap[33]);
         EntityMapping.nameMap.put(name("apocalypse"), EntityMapping.idMap[3]);
         EntityMapping.nameMap.put(name("nihilo"), EntityMapping.idMap[20]);
+        EntityMapping.nameMap.put(name("narwhal"), EntityMapping.idMap[20]);
 
         EntityMapping.nameMap.put(name("winglet"), EntityMapping.idMap[3]);
     }
@@ -61,7 +66,7 @@ public class EUUnitTypes {
     public static UnitType
         miner, T2miner,
         //T6
-        suzerain, nebula, asphyxia, apocalypse, nihilo,
+        suzerain, nebula, asphyxia, apocalypse, nihilo, narwhal,
         //air sapper
         winglet;
     public static void load(){
@@ -852,6 +857,89 @@ public class EUUnitTypes {
                         reload = 110;
                         cooldownTime = 90;
                         recoil = 5;
+                    }}
+            );
+        }};
+
+        narwhal = new UnitType("narwhal"){{
+            UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
+            defaultCommand = c;
+            commands = new UnitCommand[]{UnitCommand.moveCommand, UnitCommand.assistCommand, UnitCommand.rebuildCommand, c, UnitCommand.boostCommand};
+            armor = 41;
+            drag = 0.2f;
+            flying = false;
+            canBoost = true;
+            boostMultiplier = 1.2f;
+            riseSpeed = 0.02f;
+            lowAltitude = true;
+            engineOffset = 45;
+            engineSize = 8;
+            speed = 0.7f;
+            accel = 0.2f;
+            hitSize = 60;
+            rotateSpeed = 1;
+            drawShields = false;
+            health = 60000;
+            itemCapacity = 800;
+            ammoType = new PowerAmmoType(1800);
+
+            buildSpeed = 10;
+            //controller = u -> new DefenderHealAI();
+
+            abilities.add(new UnitSpawnAbility(UnitTypes.mega, 32 * 60, 0, 27));
+            abilities.add(new BatteryAbility(72000, 120, 120, 0, -15));
+            abilities.add(new RepairFieldAbility(400, 60 * 3, 120));
+
+            deathExplosionEffect = Fx.none;
+            deathSound = Sounds.none;
+
+            int[]
+            p1 = new int[]{22, 15, 0, 15, 6},
+            p2 = new int[]{-25, 20, 1, 15, -6},
+            p3 = new int[]{22, -15, 2, -15, -6},
+            p4 = new int[]{-25, -20, 3, -15, 6};
+            int[][] pos = new int[][]{p1, p2, p3, p4};
+            for(int[] p : pos){
+                abilities.add(new propeller(p[0], p[1], name("wing") + p[2], p[3], p[4]));
+            }
+
+            for(int xx : new int[]{18, -18}) {
+                weapons.add(
+                        new healConeWeapon(name("narwhal-heal")) {{
+                            x = xx;
+                            y = 7;
+                            mirror = false;
+                            bullet = new HealCone(){{
+                                lifetime = 240;
+                                healPercent = 10;
+                            }};
+                            reload = 90;
+                            rotate = true;
+                            rotateSpeed = 4;
+                            alternate = false;
+                            useAmmo = true;
+                            shootY = 8;
+                            recoil = 0;
+                            top = false;
+                        }}
+                );
+            }
+
+            weapons.add(
+                    new antiMissileWeapon(name("narwhal-defense")){{
+                        bullet = new antiMissile( 30 * 8, name("anti")){{
+                            y = -37;
+                            x = 0;
+                            loadSpeed = -1.5f;
+                        }};
+                        xRand = 8;
+                        reload = 6;
+                        mirror = false;
+                        shootY = 3;
+                        recoil = 1.5f;
+                        targetInterval = targetSwitchInterval = 0;
+                        inaccuracy = 0;
+                        top = false;
                     }}
             );
         }};

@@ -95,7 +95,7 @@ public class Domain extends Block {
     protected static final Cons<Bullet> bulletConsumer = bullet -> {
         if(bullet.team != db.team && bullet.type != null && bullet.type.absorbable && bullet.within(db, db.range())){
             if(canBK && db.absorbed < amount && bullet.type.reflectable && bullet.type.collides && bullet.type.collidesAir && bullet.type.collidesGround && bullet.type.collidesTiles && bullet.type.damage > 0) {
-                e.at(bullet);
+                e.at(bullet.getX(), bullet.getY(), db.team.color);
                 db.reBullet.put(bullet.type.copy(), new float[]{bullet.x, bullet.y, bullet.rotation()-180, bullet.fout()});
                 db.absorbed++;
             } else {

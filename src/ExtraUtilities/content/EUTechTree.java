@@ -48,6 +48,7 @@ public class EUTechTree {
                 node(asphyxia);
                 node(apocalypse);
                 node(nihilo);
+                node(narwhal);
             });
         });
         addToNode(airFactory, () -> {
@@ -141,6 +142,7 @@ public class EUTechTree {
                         node(stoneMelting);
                     });
                 });
+                node(breaker);
             });
         });
     }

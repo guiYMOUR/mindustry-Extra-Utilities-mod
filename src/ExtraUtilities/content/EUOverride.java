@@ -66,13 +66,13 @@ public class EUOverride {
         Blocks.neoplasiaReactor.canOverdrive = true;
 
         //S
-        Blocks.stone.attributes.set(EUAttribute.stone, 0.25f);
-        Blocks.basalt.attributes.set(EUAttribute.stone, 0.15f);
-        Blocks.pebbles.attributes.set(EUAttribute.stone, 0.2f);
-        Blocks.craters.attributes.set(EUAttribute.stone, 0.1f);
+        Blocks.stone.attributes.set(EUAttribute.stone, 0.3f);
+        Blocks.basalt.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.pebbles.attributes.set(EUAttribute.stone, 0.25f);
+        Blocks.craters.attributes.set(EUAttribute.stone, 0.15f);
         //E
-        Blocks.yellowStone.attributes.set(EUAttribute.stone, 0.2f);
-        Blocks.carbonStone.attributes.set(EUAttribute.stone, 0.15f);
+        Blocks.yellowStone.attributes.set(EUAttribute.stone, 0.25f);
+        Blocks.carbonStone.attributes.set(EUAttribute.stone, 0.2f);
         Blocks.arkyicStone.attributes.set(EUAttribute.EKOil, 100 * (0.15f/135));
         Blocks.beryllicStone.attributes.set(EUAttribute.EKOil, 70 * (0.15f/135));
 

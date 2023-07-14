@@ -1,12 +1,16 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.entity.bullet.HealCone;
 import arc.Core;
+import arc.flabel.effects.ShakeEffect;
+import arc.func.Func;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.math.geom.Position;
 import arc.struct.FloatSeq;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -22,7 +26,9 @@ import mindustry.world.meta.Attribute;
 import javax.xml.crypto.Data;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
+import static ExtraUtilities.content.EUGet.*;
 import static arc.graphics.g2d.Draw.*;
+import static arc.graphics.g2d.Lines.lineAngle;
 import static arc.math.Angles.*;
 import static mindustry.content.Fx.*;
 
@@ -193,7 +199,7 @@ public class EUFx {
     });
 
     public static Effect shieldDefense = new Effect(20, e -> {
-        Draw.color(EUItems.lightninAlloy.color);
+        Draw.color(e.color);
         Lines.stroke(e.fslope() * 2.5f);
         Lines.poly(e.x, e.y, 6, 3 * e.fout() + 9);
         Angles.randLenVectors(e.id, 2, 32 * e.fin(), 0, 360,(x, y) -> {
@@ -231,6 +237,7 @@ public class EUFx {
 
             Draw.color(color);
 
+            //half
             for(int i = 0; i <= num; i++){
                 float rot = -90f + 180f * i / (float)num;
                 Tmp.v1.trnsExact(rot, width);
@@ -244,13 +251,14 @@ public class EUFx {
                 );
             }
 
+            //the other half
             for(int i = 0; i <= num; i++){
                 float rot = 90f + 180f * i / (float)num;
                 Tmp.v1.trnsExact(rot, width);
 
                 point(
-                        (Tmp.v1.x) / width * length, //convert to 0..1, then multiply by desired length and offset relative to previous segment
-                        Tmp.v1.y, //Y axis remains unchanged
+                        (Tmp.v1.x) / width * length,
+                        Tmp.v1.y,
                         e.x, e.y,
                         e.rotation + 90,
                         2f * e.fout()
@@ -333,5 +341,95 @@ public class EUFx {
                 });
             }
         }).startDelay(startDelay);
+    }
+
+    public static Effect wind = new Effect(30, e -> {
+        Draw.z(Layer.debris);
+        Draw.color(e.color);
+        Fill.circle(e.x, e.y, e.fout() * 6 + 0.3f);
+    });
+
+    public static Effect coneFade(float findRange, float findAngle){
+        return new Effect(15, e -> {
+            float range = findRange * e.fout();
+            Draw.color(Pal.heal);
+            Draw.z(Layer.buildBeam);
+            Draw.alpha(0.8f);
+            for(float i = e.rotation - findAngle /2; i < e.rotation + findAngle /2; i+=2){
+                float px1 = posx(e.x, range, i);
+                float py1 = posy(e.y, range, i);
+                float px2 = posx(e.x, range, i+2);
+                float py2 = posy(e.y, range, i+2);
+                Fill.tri(e.x, e.y, px1, py1, px2, py2);
+            }
+        });
+    }
+
+    //感谢老y
+    public static Effect chainLightningFade = new Effect(45f, 500f, e -> {
+        if(!(e.data instanceof Position)) return;
+        Position p = e.data();
+        float tx = p.getX(), ty = p.getY(), dst = Mathf.dst(e.x, e.y, tx, ty);
+        Tmp.v1.set(p).sub(e.x, e.y).nor();
+
+        float normx = Tmp.v1.x, normy = Tmp.v1.y;
+        float range = e.rotation;
+        int links = Mathf.ceil(dst / range);
+        float spacing = dst / links;
+
+        Lines.stroke(2.5f * Mathf.curve(e.fout(), 0, 0.7f));
+        Draw.color(Color.white, e.color, e.fin());
+
+        Lines.beginLine();
+
+        Fill.circle(e.x, e.y, Lines.getStroke() / 2);
+        Lines.linePoint(e.x, e.y);
+
+        rand.setSeed(e.id);
+
+        float fin = Mathf.curve(e.fin(), 0, 0.5f);
+        float i;
+        for(i = 0; i < links * fin; i++){
+            float nx, ny;
+            if(i == links - 1){
+                nx = tx;
+                ny = ty;
+            }else{
+                float len = (i + 1) * spacing;
+                Tmp.v1.setToRandomDirection(rand).scl(range/2f);
+                nx = e.x + normx * len + Tmp.v1.x;
+                ny = e.y + normy * len + Tmp.v1.y;
+            }
+
+            Lines.linePoint(nx, ny);
+        }
+
+        Lines.endLine();
+    }).followParent(false);
+
+    public static Effect ElectricExp(float lifetime, float sw, float r){
+        return new Effect(lifetime, e -> {
+            if(e.time < sw) {
+                float fin = e.time/sw, fout = 1 - fin;
+                Lines.stroke(r/12 * fout, Pal.heal);
+                Lines.circle(e.x, e.y, r * fout);
+            } else {
+                float fin = (e.time - sw) / (e.lifetime - sw), fout = 1 - fin;
+                float fbig = Math.min(fin * 10, 1);
+                Lines.stroke(r/2 * fout, Pal.heal);
+                Lines.circle(e.x, e.y, r * fbig);
+                for(int i = 0; i < 2; i++){
+                    float angle = i * 180 + 60;
+                    Drawf.tri(e.x + Angles.trnsx(angle, r * fbig), e.y + Angles.trnsy(angle, r * fbig), 40 * fout, r/1.5f, angle);
+                }
+                Draw.z(Layer.effect + 0.001f);
+                Lines.stroke(r/18 * fout, Pal.heal);
+                randLenVectors(e.id + 1, fin * fin + 0.001f, 20, r * 2, (x, y, in, out) -> {
+                    lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + out * r/4);
+                    Drawf.light(e.x + x, e.y + y, out * r, Draw.getColor(), 0.8f);
+                });
+                Effect.shake(3, 3, EUGet.pos(e.x, e.y));
+            }
+        });
     }
 }
