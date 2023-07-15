@@ -140,7 +140,7 @@ const healProjectorWeapon = (() => {
         h.autoTarget = options.autoTarget;
         h.controllable = options.controllable;
         h.rotate = options.rotate;
-        h.alternate = options.alternate,
+        h.alternate = options.alternate;
         h.useAmmo = options.useAmmo;
         h.recoil = options.recoil;
         h.x = options.x;
