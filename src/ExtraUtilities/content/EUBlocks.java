@@ -704,7 +704,7 @@ public class EUBlocks {
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
             ammo(
-                    Items.silicon, new CtrlMissile(name("胡萝卜"), 20, 20){{
+                    Items.silicon, new CtrlMissile(name("carrot"), 20, 20){{
                         shootEffect = Fx.shootBig;
                         smokeEffect = Fx.shootBigSmoke2;
                         speed = 4.3f;

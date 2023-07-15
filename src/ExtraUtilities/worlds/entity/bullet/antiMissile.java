@@ -59,20 +59,20 @@ public class antiMissile extends BasicBulletType {
         if(target == null) target = Groups.bullet.intersect(b.x - homingRange, b.y - homingRange, homingRange*2, homingRange*2).min(bt -> bt.team != b.team && (bt.type() != null && (bt.type().homingPower > 0 || bt.type().spawnUnit != null)), bt -> bt.dst2(b.x, b.y));
         if(target instanceof Bullet){
             b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), 30 * Time.delta));
-            if(target.within(b.x, b.y, ((Bullet) target).type().homingRange)){
+            if(target.within(b.x, b.y, ((Bullet) target).type().homingRange * Math.max(Time.delta, 1))){
                 ((Bullet) target).vel.setAngle(Angles.moveToward(((Bullet) target).rotation(), target.angleTo(b), ((Bullet) target).type().homingPower * Time.delta * 50));
             }
-            if(target.within(b.x, b.y, splashDamageRadius * ((Bullet) target).type().speed)){
+            if(target.within(b.x, b.y, splashDamageRadius * ((Bullet) target).type().speed * Math.max(Time.delta, 1))){
                 target.remove();
                 b.remove();
             }
         }
         if(target instanceof Unit && ((Unit)target).type instanceof MissileUnitType){
             b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), 30 * Time.delta));
-            if(target.within(b.x, b.y, homingRange)){
+            if(target.within(b.x, b.y, homingRange * Math.max(Time.delta, 1))){
                 ((Unit) target).vel.setAngle(Angles.moveToward(((Unit) target).rotation(), target.angleTo(b), ((Unit) target).type.rotateSpeed * Time.delta * 50));
             }
-            if(target.within(b.x, b.y, splashDamageRadius)){
+            if(target.within(b.x, b.y, splashDamageRadius * Math.max(Time.delta, 1))){
                 target.remove();
                 b.remove();
             }
