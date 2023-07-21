@@ -10,6 +10,7 @@ import arc.graphics.g2d.*;
 import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.math.geom.Geometry;
 import arc.math.geom.Position;
 import arc.struct.FloatSeq;
 import arc.util.Time;
@@ -23,14 +24,13 @@ import mindustry.graphics.Pal;
 import mindustry.world.Tile;
 import mindustry.world.meta.Attribute;
 
-import javax.xml.crypto.Data;
-
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static ExtraUtilities.content.EUGet.*;
 import static arc.graphics.g2d.Draw.*;
 import static arc.graphics.g2d.Lines.lineAngle;
 import static arc.math.Angles.*;
 import static mindustry.content.Fx.*;
+import static mindustry.Vars.*;
 
 public class EUFx {
 
@@ -230,6 +230,7 @@ public class EUFx {
         });
     }
 
+    //divide into two parts for easy adjustment of layers, but ... after writing it, I realized that seem useless : (
     public static Effect ellipse(float startRad, int num, float lifetime, Color color){
         return new Effect(lifetime, e ->{
             float length = startRad * e.fin();
@@ -432,4 +433,18 @@ public class EUFx {
             }
         });
     }
+
+    public static Effect diffuse = new Effect(30, e -> {
+        if(!(e.data instanceof Integer)) return;
+        int size = (int) e.data;
+        float f = e.fout();
+        float r = Math.max(0f, Mathf.clamp(2f - f * 2f) * size * tilesize / 2f - f - 0.2f), w = Mathf.clamp(0.5f - f) * size * tilesize;
+        Lines.stroke(3f * f, e.color);
+        Lines.beginLine();
+        for(int i = 0; i < 4; i++){
+            Lines.linePoint(e.x + Geometry.d4(i).x * r + Geometry.d4(i).y * w, e.y + Geometry.d4(i).y * r - Geometry.d4(i).x * w);
+            if(f < 0.5f) Lines.linePoint(e.x + Geometry.d4(i).x * r - Geometry.d4(i).y * w, e.y + Geometry.d4(i).y * r + Geometry.d4(i).x * w);
+        }
+        Lines.endLine(true);
+    });
 }

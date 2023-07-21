@@ -143,6 +143,7 @@ public class EUTechTree {
                     });
                 });
                 node(breaker);
+                node(coreKeeper);
             });
         });
     }

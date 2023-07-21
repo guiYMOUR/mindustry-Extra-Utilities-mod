@@ -36,7 +36,7 @@ public class ThermalHeater extends ThermalGenerator {
     public void setBars(){
         super.setBars();
 
-        addBar("heat", (ThermalHeaterBuild entity) -> new Bar("bar.heat", Pal.lightOrange, () -> entity.heat / basicHeatOut * entity.productionEfficiency));
+        addBar("heat", (ThermalHeaterBuild entity) -> new Bar("bar.heat", Pal.lightOrange, () -> entity.heat > 0 ? 1 : 0));
     }
 
     public class ThermalHeaterBuild extends ThermalGeneratorBuild implements HeatBlock{

@@ -3,20 +3,26 @@ package ExtraUtilities;
 import ExtraUtilities.content.*;
 import ExtraUtilities.net.EUCall;
 import arc.*;
+import arc.Graphics;
+import arc.graphics.Pixmap;
+import arc.graphics.Pixmaps;
 import arc.math.Mathf;
 import arc.scene.ui.Button;
 import arc.scene.ui.CheckBox;
 import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.core.UI;
 import mindustry.entities.bullet.BulletType;
 import mindustry.game.EventType.*;
 import mindustry.gen.Icon;
 import mindustry.mod.*;
+import mindustry.ui.Fonts;
 import mindustry.ui.dialogs.*;
 import mindustry.world.Block;
 
 import static arc.Core.settings;
+import static mindustry.Vars.ui;
 
 public class ExtraUtilitiesMod extends Mod{
     public static String ModName = "extra-utilities";
@@ -61,10 +67,10 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.coreKeeper, t);
                     addToTable(EUBlocks.breaker, t);
                     addToTable(EUBlocks.quantumDomain, t);
                     addToTable(EUBlocks.nitrogenWell, t);
-                    addToTable(EUBlocks.cyanogenPyrolysis, t);
                     addToTable(EUBlocks.heatPower, t);
                     addToTable(EUBlocks.windPower, t);
                     addToTable(EUBlocks.waterPower, t);
@@ -133,6 +139,29 @@ public class ExtraUtilitiesMod extends Mod{
         //Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log2));
     }
 
+    public Graphics.Cursor newCursor(String filename){
+        Pixmap p = new Pixmap(EU.root.child("cursor").child(filename));
+        return Core.graphics.newCursor(p, p.width /2, p.height /2);
+    }
+
+    public Graphics.Cursor newCursor(String filename, int scale){
+        if(scale == 1 || OS.isAndroid || OS.isIos) return newCursor(filename);
+        Pixmap base = new Pixmap(EU.root.child("cursor").child(filename));
+        Pixmap result = Pixmaps.scale(base, base.width * scale, base.height * scale);
+        base.dispose();
+        return Core.graphics.newCursor(result, result.width /2, result.height /2);
+    }
+
+    private void overrideUI(){
+        EU = Vars.mods.getMod(ExtraUtilitiesMod.class);
+        Graphics.Cursor.SystemCursor.arrow.set(newCursor("cursor.png", Fonts.cursorScale()));
+        Graphics.Cursor.SystemCursor.hand.set(newCursor("hand.png", Fonts.cursorScale()));
+        Graphics.Cursor.SystemCursor.ibeam.set(newCursor("ibeam.png", Fonts.cursorScale()));
+        ui.drillCursor = newCursor("drill.png", Fonts.cursorScale());
+        ui.unloadCursor = newCursor("unload.png", Fonts.cursorScale());
+        ui.targetCursor = newCursor("target.png", Fonts.cursorScale());
+    }
+
     @Override
     public void init() {
         EUCall.registerPackets();
@@ -142,6 +171,7 @@ public class ExtraUtilitiesMod extends Mod{
         //EUOverride.ap4sOverride();
 
         settings.defaults("eu-hard-mode", false);
+        settings.defaults("use-eu-cursor", true);
 
         if(hardMod){
             EUOverride.overrideBlockAll();
@@ -150,42 +180,46 @@ public class ExtraUtilitiesMod extends Mod{
             mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-hard";
         }
 
-        if(Vars.ui != null && Vars.ui.settings != null) {
-            BaseDialog dialog = new BaseDialog("tips");
-            Runnable exit = () -> {
-                dialog.hide();
-                Core.app.exit();
-            };
-            dialog.cont.add(toText("eu-reset-exit"));
-            dialog.buttons.button("OK", exit).center().size(150, 50);
+        if(ui != null) {
+            if(Core.settings.getBool("use-eu-cursor")) overrideUI();
+            if (ui.settings != null) {
+                BaseDialog dialog = new BaseDialog("tips");
+                Runnable exit = () -> {
+                    dialog.hide();
+                    Core.app.exit();
+                };
+                dialog.cont.add(toText("eu-reset-exit"));
+                dialog.buttons.button("OK", exit).center().size(150, 50);
 
-            Vars.ui.settings.addCategory(toText("EU-SET"), name("fireWork"), settingsTable -> {
-                settingsTable.checkPref("eu-first-load", true);
-                settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {
-                    @Override
-                    public void add(SettingsMenuDialog.SettingsTable table) {
-                        table.button(name, ExtraUtilitiesMod::toShow).margin(14).width(200f).pad(6);
-                        table.row();
-                    }
+                ui.settings.addCategory(toText("EU-SET"), name("fireWork"), settingsTable -> {
+                    settingsTable.checkPref("use-eu-cursor", true);
+                    settingsTable.checkPref("eu-first-load", true);
+                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {
+                        @Override
+                        public void add(SettingsMenuDialog.SettingsTable table) {
+                            table.button(name, ExtraUtilitiesMod::toShow).margin(14).width(200f).pad(6);
+                            table.row();
+                        }
+                    });
+                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null) {
+                        @Override
+                        public void add(SettingsMenuDialog.SettingsTable table) {
+                            CheckBox box = new CheckBox(title);
+
+                            box.update(() -> box.setChecked(settings.getBool(name)));
+
+                            box.changed(() -> {
+                                settings.put(name, box.isChecked());
+                                settings.put("eu-open-hard", hardMod);
+                                dialog.show();
+                            });
+                            box.left();
+                            addDesc(table.add(box).left().padTop(3f).get());
+                            table.row();
+                        }
+                    });
                 });
-                settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null){
-                    @Override
-                    public void add(SettingsMenuDialog.SettingsTable table) {
-                        CheckBox box = new CheckBox(title);
-
-                        box.update(() -> box.setChecked(settings.getBool(name)));
-
-                        box.changed(() -> {
-                            settings.put(name, box.isChecked());
-                            settings.put("eu-open-hard", hardMod);
-                            dialog.show();
-                        });
-                        box.left();
-                        addDesc(table.add(box).left().padTop(3f).get());
-                        table.row();
-                    }
-                });
-            });
+            }
         }
     }
 

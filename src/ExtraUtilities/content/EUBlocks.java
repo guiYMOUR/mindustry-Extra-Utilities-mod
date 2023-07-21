@@ -3,6 +3,7 @@ package ExtraUtilities.content;
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.distribution.StackHelper;
 import ExtraUtilities.worlds.blocks.effect.Breaker;
+import ExtraUtilities.worlds.blocks.effect.CoreKeeper;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
@@ -24,6 +25,7 @@ import ExtraUtilities.worlds.entity.bullet.FireWorkBullet;
 import ExtraUtilities.worlds.entity.bullet.ScarletDevil;
 import ExtraUtilities.worlds.entity.bullet.aimToPosBullet;
 import arc.Core;
+import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -47,6 +49,7 @@ import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.graphics.Trail;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
@@ -65,8 +68,7 @@ import mindustry.world.consumers.ConsumeLiquidFlammable;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
-import static arc.graphics.g2d.Draw.alpha;
-import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Draw.*;
 import static arc.math.Angles.randLenVectors;
 import static mindustry.content.Fx.rand;
 import static mindustry.content.Fx.v;
@@ -94,7 +96,7 @@ public class EUBlocks {
         //unit
             imaginaryReconstructor, finalF,
         //other&sandbox
-            quantumDomain, breaker,
+            coreKeeper, quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static void load(){
         arkyciteExtractor = new AttributeCrafter("arkycite-extractor"){{
@@ -464,7 +466,7 @@ public class EUBlocks {
             consumeLiquid(Liquids.nitrogen, 0.1f);
             outputItem = new ItemStack(EUItems.lightninAlloy, 3);
 
-            maxEfficiency = 2;
+            maxEfficiency = 3;
             craftTime = 4 * 60f;
         }};
 
@@ -759,7 +761,7 @@ public class EUBlocks {
 
         javelin = new PowerTurret("javelin"){{
             //1 + 1 = ⑨
-            requirements(Category.turret, with(Items.surgeAlloy, 350, Items.silicon, 500, Items.carbide, 500, EUItems.lightninAlloy, 300));
+            requirements(Category.turret, with(Items.surgeAlloy, 450, Items.silicon, 650, Items.carbide, 500, Items.phaseFabric, 300));
             consumePower(12f);
             heatRequirement = 45f;
             maxHeatEfficiency = 2f;
@@ -1654,6 +1656,49 @@ public class EUBlocks {
             }
         };
 
+        coreKeeper = new CoreKeeper("core-keeper"){{
+            requirements(Category.effect, with(EUItems.lightninAlloy, 50, Items.silicon, 400, Items.thorium, 200));
+            size = 3;
+            health = 1080;
+            consumePower(6);
+
+            alwaysUnlocked = true;
+
+            drawer = new DrawBlock() {
+                @Override
+                public void draw(Building build) {
+                    float x = build.x, y = build.y;
+
+                    Draw.color(build.team.color);
+                    Draw.alpha(build.warmup());
+                    Draw.z(Layer.effect);
+                    for(int i = 0; i < 4; i++){
+                        float angle = i * 90;
+                        Drawf.tri(x + Angles.trnsx(angle + build.progress() * 2, size * Vars.tilesize/2f * build.warmup()), y + Angles.trnsy(angle + build.progress() * 2, size * Vars.tilesize/2f * build.warmup()), 6, -5, angle + build.progress() * 2);
+                        Drawf.tri(x + Angles.trnsx(angle - build.progress() * 3, (size * Vars.tilesize/2f + 3) * build.warmup()), y + Angles.trnsy(angle - build.progress() * 3, (size * Vars.tilesize/2f + 3) * build.warmup()), 4, -3, angle - build.progress() * 3);
+                    }
+
+                    if(!(build instanceof CoreKeeperBuild)) return;
+                    if(Mathf.equal(build.warmup(), 1, 0.01f)) {
+                        Draw.color(build.team.color);
+                        Fill.circle(x, y, size * 1.7f);
+
+                        CoreKeeperBuild b = (CoreKeeperBuild) build;
+                        float rot = (Time.time * 3) % 360;
+                        Tmp.v1.trnsExact(rot, size * 2.7f);
+                        float tx = x + Tmp.v1.x, ty = y + Tmp.v1.y/2.2f;
+                        if(rot > 50 && rot < 230) Draw.z(Layer.effect - 0.01f);
+                        else Draw.z(Layer.effect);
+                        b.trail.draw(build.team.color.cpy().mul(EUItems.lightninAlloy.color), size/2f);
+                        b.trail.update(tx, ty);
+                        Draw.color(build.team.color.cpy().mul(EUItems.lightninAlloy.color));
+                        Fill.circle(tx, ty, size / 2f);
+                    }
+
+                    Draw.reset();
+                }
+            };
+        }};
 
         quantumDomain = new Domain("quantum-domain"){{
             requirements(Category.effect, with(EUItems.lightninAlloy, 200, Items.silicon, 500, Items.surgeAlloy, 350, Items.phaseFabric, 300));

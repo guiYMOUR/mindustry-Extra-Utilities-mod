@@ -78,7 +78,7 @@ public class EUOverride {
 
         Blocks.arc.consumePower(2f);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
-        Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, EUItems.lightninAlloy, 100));
+        Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, Items.surgeAlloy, 100));
         ((BaseTurret)Blocks.scathe).fogRadiusMultiplier = 0.75f;
 
         ((UnitFactory)Blocks.airFactory).plans.add(new UnitFactory.UnitPlan(EUUnitTypes.winglet, 60f * 30, with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));

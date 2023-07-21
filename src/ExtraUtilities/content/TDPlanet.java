@@ -39,12 +39,12 @@ public class TDPlanet {
             allowLaunchSchematics = true;
             enemyCoreSpawnReplace = true;
             allowLaunchLoadout = true;
+            allowLaunchToNumbered = false;
             ruleSetter = r -> {
                 r.enemyCoreBuildRadius = 1;
                 r.bannedBlocks.add(Blocks.smite);
                 
             };
-
         }};
     }
 }
