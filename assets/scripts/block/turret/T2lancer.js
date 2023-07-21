@@ -4,7 +4,7 @@ const items = require("game/items");
 const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const laser = extend(LaserBulletType, {});
-laser.damage = 120;
+laser.damage = 150 - (hardMod ? 20 : 0);
 laser.sideAngle = 1;
 laser.sideWidth = 3;
 laser.sideLength = 35;
@@ -22,11 +22,12 @@ laser.lightningAngleRand = 30;
 laser.lightColor = Pal.lancerLaser;
 laser.lightningColor = Pal.lancerLaser;
 laser.buildingDamageMultiplier = 0.2;
+laser.pierceCap = 6;
 
 
 const T2lan = extend(PowerTurret, 'T2-lancer', {});
 
-T2lan.consumePower(11);
+T2lan.consumePower(10);
 T2lan.shootType = laser;
 T2lan.shoot = lib.moreShootAlternate(4, 2);
 T2lan.shake = 2;
