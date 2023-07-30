@@ -6,6 +6,7 @@
 //星球设置区块
 
 //读取我自己的Java class
+const {aModName} = require("./blib");
 const urlLoader = Packages.java.net.URLClassLoader([Vars.mods.getMod(modName).file.file().toURI().toURL()], Vars.mods.mainLoader());
 exports.getClass = function (name){
     return Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, urlLoader.loadClass(name));
@@ -47,6 +48,10 @@ exports.Coolant = function(block, v, coolantMultiplier){
     block.coolant = block.consumeCoolant(v);
     if(coolantMultiplier) block.coolantMultiplier = coolantMultiplier;
 }
+
+// exports.getStatus = function (name){
+//     return Vars.content.statusEffect(exports.aModName + "-" + name);
+// }
 
 //function from abomb4's lib.js
 //加载声音

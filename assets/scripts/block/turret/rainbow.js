@@ -119,7 +119,8 @@ rainbow.requirements = ItemStack.with(
     Items.lead, 240,
     Items.silicon, 200,
     Items.metaglass, 150,
-    Items.thorium, 90,
+    Items.thorium, 110,
+    Items.surgeAlloy, 30,
     items.crispSteel, 55 + (hardMod ? 35 : 0)
 );
 rainbow.buildVisibility = BuildVisibility.shown;

@@ -27,8 +27,8 @@ hur.speed = 3;
 hur.status = StatusEffects.shocked;
 hur.despawnEffect =lib.Fx.elDsp(dec, dec2);
 hur.hitEffect = Fx.hitLancer;
-hur.pierceCap = 2
-hur.pierceBuilding = true
+hur.pierceCap = 2;
+hur.pierceBuilding = true;
 
 const hurricane = extend(PowerTurret, 'hurricane', {});
 

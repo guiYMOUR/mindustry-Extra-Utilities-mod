@@ -85,9 +85,9 @@ stinger.drawer = (() => {
 })();
 stinger.requirements = ItemStack.with(
     Items.silicon, 250,
-    Items.titanium, 100,
-    Items.thorium, 100,
-    Items.plastanium, 80 + (hardMod ? 80 : 0),
+    Items.titanium, 200,
+    Items.thorium, 200,
+    Items.plastanium, 130 + (hardMod ? 80 : 0),
     Items.surgeAlloy, 100 + (hardMod ? 20 : 0)
 );
 stinger.buildVisibility = BuildVisibility.shown;
