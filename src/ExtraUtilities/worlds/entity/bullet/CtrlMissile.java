@@ -33,7 +33,7 @@ public class CtrlMissile extends BulletType {
     //public boolean flipSprite = false;
     public Sound loopSound = Sounds.missileTrail;
     public float loopSoundVolume = 0.1f;
-    public Seq<DrawPart> parts = new Seq<>(DrawPart.class);
+    //public Seq<DrawPart> parts = new Seq<>(DrawPart.class);
 
     public CtrlMissile(String sprite, float width, float height) {
         this.sprite = sprite;
@@ -116,16 +116,17 @@ public class CtrlMissile extends BulletType {
         if (width > 0 && height > 0) Draw.rect(Core.atlas.find(sprite), b.x, b.y, width, height, b.rotation() - 90);
         else Draw.rect(Core.atlas.find(sprite), b.x, b.y, b.rotation() - 90);
 
-        if(parts.size > 0){
-            for(int i = 0; i < parts.size; i++){
-                DrawPart part = parts.get(i);
-                DrawPart.params.set(0f, 0f, 0f, 0f, 0f, 0f, b.x, b.y, b.rotation());
-
-                DrawPart.params.life = b.fin();
-
-                part.draw(DrawPart.params);
-            }
-        }
+        //555,明明我先来的（
+//        if(parts.size > 0){
+//            for(int i = 0; i < parts.size; i++){
+//                DrawPart part = parts.get(i);
+//                DrawPart.params.set(0f, 0f, 0f, 0f, 0f, 0f, b.x, b.y, b.rotation());
+//
+//                DrawPart.params.life = b.fin();
+//
+//                part.draw(DrawPart.params);
+//            }
+//        }
         Draw.reset();
     }
 }

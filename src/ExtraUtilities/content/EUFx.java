@@ -1,5 +1,6 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.drawer.DrawFunc;
 import ExtraUtilities.worlds.entity.bullet.HealCone;
 import arc.Core;
 import arc.flabel.effects.ShakeEffect;
@@ -446,5 +447,26 @@ public class EUFx {
             if(f < 0.5f) Lines.linePoint(e.x + Geometry.d4(i).x * r - Geometry.d4(i).y * w, e.y + Geometry.d4(i).y * r + Geometry.d4(i).x * w);
         }
         Lines.endLine(true);
+    });
+
+    public static Effect fiammettaExp(float r){
+        return new Effect(30, e -> {
+            float fin = Math.min(e.time/10, 1), fout = 1 - ((e.time - 10)/(e.lifetime - 10));
+            Draw.color(EUItems.lightninAlloy.color.cpy().a(e.time > 10 ? 0.3f * fout : 0.3f));
+            Fill.circle(e.x, e.y, r * fin);
+            float ww = r * 2f * fin, hh = r * 2f * fin;
+            Draw.color(EUItems.lightninAlloy.color.cpy().a(e.time > 10 ? fout : 1));
+            Draw.rect(Core.atlas.find(name("firebird-light")), e.x, e.y, ww, hh);
+        });
+    }
+
+    public static Effect normalTrail = new Effect(90, e -> {
+        Draw.color(e.color);
+        float r = e.rotation;
+        Fill.circle(e.x, e.y, r * e.foutpow());
+    }).layer(Layer.bullet - 1f);
+
+    public static Effect normalIceTrail = new Effect(90, e -> {
+        DrawFunc.drawSnow(e.x, e.y, e.rotation * e.foutpow(), e.fin() * 180f, e.color);
     });
 }

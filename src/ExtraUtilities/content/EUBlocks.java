@@ -12,11 +12,8 @@ import ExtraUtilities.worlds.blocks.power.LightenGenerator;
 import ExtraUtilities.worlds.blocks.power.SpaceGenerator;
 import ExtraUtilities.worlds.blocks.power.ThermalReactor;
 import ExtraUtilities.worlds.blocks.production.*;
-import ExtraUtilities.worlds.blocks.turret.MultiBulletTurret;
+import ExtraUtilities.worlds.blocks.turret.*;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
-import ExtraUtilities.worlds.blocks.turret.TurretResupplyPoint;
-import ExtraUtilities.worlds.blocks.turret.dissipation;
-import ExtraUtilities.worlds.blocks.turret.guiY;
 import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
 import ExtraUtilities.worlds.drawer.*;
@@ -30,6 +27,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.Rand;
@@ -70,6 +68,7 @@ import mindustry.world.meta.*;
 
 import static arc.graphics.g2d.Draw.*;
 import static arc.math.Angles.randLenVectors;
+import static mindustry.Vars.headless;
 import static mindustry.content.Fx.rand;
 import static mindustry.content.Fx.v;
 import static mindustry.type.ItemStack.*;
@@ -88,7 +87,7 @@ public class EUBlocks {
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
-            thermalHeater, slagReheater, heatTransfer, heatDistributor, heatDriver,
+            thermalHeater, largeElectricHeater, slagReheater, heatTransfer, heatDistributor, heatDriver,
         //power
             liquidConsumeGenerator, thermalReactor, LG, nitrogenWell, heatPower, windPower, waterPower,
         //turret
@@ -482,6 +481,18 @@ public class EUBlocks {
             canOverdrive = true;
             basicHeatOut = 2f;
         }};
+        largeElectricHeater = new HeatProducer("large-electric-heater"){{
+            requirements(Category.crafting, with(Items.beryllium, 100, Items.tungsten, 65, Items.oxide, 75, Items.silicon, 90, Items.carbide, 50));
+
+            drawer = new DrawMulti(new DrawDefault(), new DrawHeatOutput());
+            rotateDraw = false;
+            size = 5;
+            heatOutput = 20f;
+            regionRotated1 = 1;
+            ambientSound = Sounds.hum;
+            itemCapacity = 0;
+            consumePower(600f / 60f);
+        }};
         slagReheater = new HeatProducer("slag-reheater"){{
             requirements(Category.crafting, with(Items.tungsten, 30, Items.oxide, 30, Items.beryllium, 20));
 
@@ -771,13 +782,16 @@ public class EUBlocks {
             shootSound = Sounds.malignShoot;
             shootWarmupSpeed = 0.06f;
             minWarmup = 0.9f;
-            shootEffect = smokeEffect = Fx.none;
+
+            smokeEffect = Fx.none;
             rotateSpeed = 2.5f;
             recoil = 2f;
             recoilTime = 60f;
 
             Color bcr = Color.valueOf("c0ecff");
             Color bcrb = Color.valueOf("6d90bc");
+
+            shootEffect = EUFx.ellipse(30, 30, 15, bcr);
 
             drawer = new DrawTurret("reinforced-"){{
                 parts.add(
@@ -823,6 +837,9 @@ public class EUBlocks {
                     Draw.color(bcr);
                    Fill.circle(e.x, e.y, 3 * e.foutpow());
                 });
+                trailLength = 16;
+                trailWidth = 3;
+                trailColor = bcr;
 
                 buildingDamageMultiplier = 0.5f;
             }
@@ -836,6 +853,12 @@ public class EUBlocks {
                     Lines.stroke(1, bcrb);
                     Lines.lineAngle(b.x, b.y, b.rotation(), 9f);
                     Lines.lineAngle(b.x, b.y, b.rotation() - 180, 3f);
+                }
+
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    if(b.timer.get(1, 6)) EUFx.normalIceTrail.at(b.x + Mathf.random(-6, 6), b.y + Mathf.random(-6, 6), 7, bcr);
                 }
             };
             int amount = 4;
@@ -1165,7 +1188,7 @@ public class EUBlocks {
         celebrationMk2 = new MultiBulletTurret("celebration-mk2"){{
             size = 5;
             drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawMk2());
-            requirements(Category.turret, with(Items.silicon, 410, Items.graphite, 330, Items.thorium, 280, EUItems.lightninAlloy, 250));
+            requirements(Category.turret, with(Items.silicon, 410, Items.graphite, 520, Items.thorium, 380, EUItems.lightninAlloy, 280));
             inaccuracy = 3;
             shootEffect = EUFx.Mk2Shoot(90);
             smokeEffect = Fx.none;
@@ -1400,7 +1423,7 @@ public class EUBlocks {
         }};
 
         sancta = new ItemTurret("sancta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 1200, Items.phaseFabric, 1400));
+            requirements(Category.turret, with(EUItems.lightninAlloy, 1500, Items.phaseFabric, 1800));
             size = 7;
             ammo(
                     EUItems.lightninAlloy,
@@ -1410,11 +1433,15 @@ public class EUBlocks {
                                 trailColor = EUItems.lightninAlloy.color;
                                 trailLength = 10;
                                 trailWidth = 10;
-                                splashDamage = damage = 900 - (hardMod ? 300 : 0);
+                                splashDamage = damage = 1200 - (hardMod ? 300 : 0);
                                 ammoMultiplier = 1;
                                 hitSound = despawnSound = Sounds.explosionbig;
                                 healColor = EUItems.lightninAlloy.color;
                                 buildingDamageMultiplier = 0.7f;
+
+                                fb.splashDamage = 80;
+                                fb.splashDamageRadius = 3 * 8f;
+
                                 if(hardMod) {
                                     fb.damage -= 15;
                                     ff.damage -= 15;
@@ -1492,16 +1519,46 @@ public class EUBlocks {
             canOverdrive = false;
         }};
 
-        fiammetta = new ItemTurret("fiammetta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 300, Items.carbide, 200, Items.silicon, 400, Items.surgeAlloy, 200));
+        fiammetta = new Fiammetta("fiammetta"){{
+            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 400, Items.carbide, 240, Items.silicon, 500, Items.surgeAlloy, 300));
             size = 5;
             shake = 10;
             reload = 3 * 60;
-            ammoPerShot = 10;
+            ammoPerShot = 8;
             maxAmmo = ammoPerShot * 3;
             range = 57.5f * 8;
+            minRange = 20 * 8f;
             shootSound = Sounds.laserbig;
             recoil = 5;
+
+            BulletType fall = new BulletType(){{
+                speed = 0;
+                lifetime = 20;
+                collides = collidesTiles = hittable = absorbable = false;
+                collidesAir = collidesGround = true;
+                splashDamage = 1800;
+                splashDamageRadius = 14 * 8f;
+                despawnEffect = hitEffect = EUFx.fiammettaExp(splashDamageRadius);
+                keepVelocity = false;
+
+                hitSound = despawnSound = Sounds.explosionbig;
+            }
+
+                @Override
+                public void draw(Bullet b) {
+                    TextureRegion region = Core.atlas.find(name("mb-mk2"));
+                    if(b.time < 10){
+                        float fin = b.time/10, fout = 1 - fin;
+                        float ww = 15 * 8, hh = 15 * 8 * fout;
+                        Draw.color(EUItems.lightninAlloy.color);
+                        Draw.alpha(fin);
+                        Draw.rect(region, b.x, b.y, ww, hh, b.rotation() - 90);
+                    }
+                    Draw.color(EUItems.lightninAlloy.color);
+                    Draw.alpha(b.fin());
+                    Fill.circle(b.x, b.y, 20 * (b.time < 10 ? b.fin() * 2 : b.fout() * 2));
+                }
+            };
 
             Effect se = EUFx.aimEffect(40, EUItems.lightninAlloy.color, 1.5f, range, 13);
             ammo(
@@ -1509,9 +1566,10 @@ public class EUBlocks {
                     new BulletType(){{
                         chargeEffect = se;
 
-                        damage = 300;
+                        ammoMultiplier = 1;
+                        damage = 250;
                         splashDamageRadius = 10 * 8;
-                        splashDamage = 550;
+                        splashDamage = 500;
                         lifetime = 30;
                         speed = 15;
                         pierce = true;
@@ -1523,8 +1581,12 @@ public class EUBlocks {
                             lifetime = 32;
                             speed = 0;
                             despawnEffect = hitEffect = new MultiEffect(new Effect(30, e -> {
+                                float r = Math.min(10 * 8 * e.fin(), 6 * 8);
                                 Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
-                                Fill.circle(e.x, e.y, Math.min(10 * 8 * e.fin(), 6 * 8));
+                                Fill.circle(e.x, e.y, r);
+                                float ww = r * 2f, hh = r * 2f;
+                                Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
+                                Draw.rect(Core.atlas.find(name("firebird-light")), e.x, e.y, ww, hh);
                             }), EUFx.expFtEffect(5, 12, 6 * 4, 30, 0.2f));
                             despawnSound = hitSound = Sounds.explosion;
                             collides = absorbable = hittable = false;
@@ -1546,8 +1608,12 @@ public class EUBlocks {
                         bulletInterval = 4;
                         hitSize = 20;
                         despawnEffect = new MultiEffect(new Effect(30, e -> {
+                            float r = Math.min(16 * 8 * e.fin(), 10 * 8);
                             Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
-                            Fill.circle(e.x, e.y, Math.min(16 * 8 * e.fin(), 10 * 8));
+                            Fill.circle(e.x, e.y, r);
+                            float ww = r * 2f, hh = r * 2f;
+                            Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
+                            Draw.rect(Core.atlas.find(name("firebird-light")), e.x, e.y, ww, hh);
                         }), EUFx.expFtEffect(6, 15, 10 * 4, 30, 0.2f));
                         despawnSound = Sounds.explosion;
                         hitEffect = Fx.none;
@@ -1572,14 +1638,73 @@ public class EUBlocks {
                             Draw.rect(Core.atlas.find(name("phx")), b.x, b.y,48, 48,  b.rotation() - 90);
                             //Drawf.tri(b.x + Angles.trnsx(b.rotation(), 10), b.x + Angles.trnsy(b.rotation(), 10), 10, 20, b.rotation());
                         }
+                    },
+                    EUItems.lightninAlloy, new ArtilleryBulletType(){{
+                        speed = 10;
+                        ammoMultiplier = 8;
+                        splashDamage = 1800;
+                        splashDamageRadius = 14 * 8f;
+                        hittable = absorbable = false;
+                        collides = collidesTiles = false;
+                        collidesAir = collidesGround = false;
+                        despawnEffect = Fx.none;
+                        hitEffect = Fx.none;
+                        trailEffect = Fx.none;
+                        fragOnHit = false;
+                        rangeChange = 20 * 8;
+                        trailLength = 20;
+                        trailWidth = 12;
+                        trailColor = EUItems.lightninAlloy.color.cpy().a(0.6f);
+                    }
+
+                        @Override
+                        public void update(Bullet b) {
+                            super.update(b);
+                            EUFx.normalTrail.at(b.x + Mathf.random(-10, 10), b.y + Mathf.random(-10, 10), 15 * b.fin(), EUItems.lightninAlloy.color.cpy().a(0.6f));
+                        }
+
+                        @Override
+                        public void updateTrail(Bullet b) {
+                            if(!headless && trailLength > 0){
+                                if(b.trail == null){
+                                    b.trail = new Trail(trailLength);
+                                }
+                                b.trail.length = 2 + (int) (trailLength * b.fin());
+                                b.trail.update(b.x, b.y, trailInterp.apply(b.fin()) * (1f + (trailSinMag > 0 ? Mathf.absin(Time.time, trailSinScl, trailSinMag) : 0f)));
+                            }
+                        }
+
+                        @Override
+                        public void draw(Bullet b) {
+                            TextureRegion region = Core.atlas.find(name("mb-mk2"));
+                            float ww = 15 * 8 * b.fin(), hh = 15 * 8 * b.fin();
+                            Draw.color(EUItems.lightninAlloy.color);
+                            //Draw.alpha(b.fout());
+                            Draw.rect(region, b.x, b.y, ww, hh, b.rotation() - 90);
+                            drawTrail(b);
+                        }
+
+                        @Override
+                        public void drawTrail(Bullet b) {
+                            if(trailLength > 0 && b.trail != null){
+                                float z = Draw.z();
+                                Draw.z(z - 0.0001f);
+                                b.trail.draw(trailColor, 2 + trailWidth * b.fin());
+                                Draw.z(z);
+                            }
+                        }
+
+                        @Override
+                        public void createFrags(Bullet b, float x, float y) {
+                            fall.create(b, b.x, b.y, b.rotation());
+                        }
                     }
             );
 
             shoot.firstShotDelay = se.lifetime;
             moveWhileCharging = false;
             accurateDelay = false;
-            coolant = consumeCoolant(1);
-            coolantMultiplier = 0.8f;
+
             drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawTrail(2f, EUItems.lightninAlloy.color, 16){{
                 y = - 10;
             }});
@@ -1660,6 +1785,7 @@ public class EUBlocks {
             requirements(Category.effect, with(EUItems.lightninAlloy, 50, Items.silicon, 400, Items.thorium, 200));
             size = 3;
             health = 1080;
+            range = 30;
             consumePower(6);
 
             alwaysUnlocked = true;
@@ -1711,7 +1837,7 @@ public class EUBlocks {
         }};
 
         breaker = new Breaker("breaker"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 3));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 5));
 
             alwaysUnlocked = true;
         }};

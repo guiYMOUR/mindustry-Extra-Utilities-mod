@@ -5,6 +5,7 @@ import arc.func.Boolf;
 import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.scene.Element;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -179,6 +180,20 @@ public class EUStatValues {
                 c.add(s).padRight(10).left().top();
             }).left();
             table.row();
+        };
+    }
+
+    public static <T extends UnlockableContent> StatValue ammoString(ObjectMap<T, BulletType> map){
+        return table -> {
+            for(T i : map.keys()){
+                table.row();
+                table.table(c -> {
+                    c.image(icon(i)).size(32).scaling(Scaling.fit).padRight(4).left().top();
+                    c.add(Core.bundle.get("stat-" + i.name + ".ammo")).padRight(10).left().top();
+                    c.background(Tex.underline);
+                }).left();
+                table.row();
+            }
         };
     }
 }

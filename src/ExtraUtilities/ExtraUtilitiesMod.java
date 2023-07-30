@@ -67,6 +67,7 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.largeElectricHeater, t);
                     addToTable(EUBlocks.coreKeeper, t);
                     addToTable(EUBlocks.breaker, t);
                     addToTable(EUBlocks.quantumDomain, t);
@@ -219,6 +220,8 @@ public class ExtraUtilitiesMod extends Mod{
                         }
                     });
                 });
+
+                EUOverride.overrideVersion();
             }
         }
     }

@@ -1,6 +1,7 @@
 package ExtraUtilities.content;
 
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
+import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
 import arc.math.Interp;
@@ -22,6 +23,8 @@ import mindustry.entities.part.ShapePart;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.mod.Mod;
+import mindustry.mod.Mods;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
@@ -39,6 +42,7 @@ public class EUOverride {
         for(int i = 0; i < Vars.content.blocks().size; i ++){
             Block block = Vars.content.blocks().get(i);
             if(block instanceof Turret && block.size >= 5){
+                if(block.requirements == null || block.requirements.length == 0) continue;
                 boolean has = false;
                 for(ItemStack stack : block.requirements){
                     if(stack.item == EUItems.lightninAlloy){
@@ -49,7 +53,7 @@ public class EUOverride {
                 if(has) continue;
                 ItemStack[] copy = new ItemStack[block.requirements.length + 1];
                 System.arraycopy(block.requirements, 0, copy, 0, block.requirements.length);
-                copy[block.requirements.length] = new ItemStack(EUItems.lightninAlloy, 50 + 50 * (block.size - 5));
+                copy[block.requirements.length] = new ItemStack(EUItems.lightninAlloy, 50 * (block.size - 4));
                 block.requirements = copy;
             }
         }
@@ -267,6 +271,15 @@ public class EUOverride {
                     b.description = b1.description;
                     b1.description = n;
                 }
+            }
+        }
+    }
+
+    public static void overrideVersion(){
+        for(int i = 0; i < Vars.mods.list().size; i++){
+            Mods.LoadedMod mod = Vars.mods.list().get(i);
+            if(mod != null){
+                mod.meta.description = Core.bundle.get("mod.extra-utilities.version") + mod.meta.version + "\n\n" + mod.meta.description;
             }
         }
     }

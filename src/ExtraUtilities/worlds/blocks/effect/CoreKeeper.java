@@ -4,11 +4,15 @@ import ExtraUtilities.content.EUFx;
 import ExtraUtilities.worlds.blocks.production.MinerPoint;
 import arc.Core;
 import arc.graphics.Color;
+import arc.graphics.Texture;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureAtlas;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
+import arc.scene.style.Drawable;
+import arc.scene.style.TextureRegionDrawable;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.io.Reads;
@@ -72,7 +76,7 @@ public class CoreKeeper extends StorageBlock {
         x *= tilesize;
         y *= tilesize;
 
-        Drawf.dashSquare(player.team().color, x, y, range * tilesize * 2);
+        Drawf.square(x, y, range * tilesize * 1.414f, 90, player.team().color);
     }
 
     public Rect getRect(Rect rect, float x, float y, float range){
@@ -126,15 +130,16 @@ public class CoreKeeper extends StorageBlock {
         drawer.load(this);
     }
 
-    @Override
-    protected TextureRegion[] icons() {
-        TextureRegion[] t = new TextureRegion[drawer.icons(this).length + 1];
-        for(int i = 0; i < drawer.icons(this).length; i++){
-            t[i] = drawer.icons(this)[i];
-        }
-        t[drawer.icons(this).length] = teamRegion;
-        return t;
-    }
+//    @Override
+//    protected TextureRegion[] icons() {
+//        TextureRegion[] t = new TextureRegion[drawer.icons(this).length + 1];
+//        for(int i = 0; i < drawer.icons(this).length; i++){
+//            t[i] = drawer.icons(this)[i];
+//        }
+//
+//        t[drawer.icons(this).length] = teamRegion;
+//        return t;
+//    }
 
     public class CoreKeeperBuild extends StorageBuild{
         public float warmup, progress;

@@ -10,6 +10,7 @@ import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.gen.Building;
+import mindustry.gen.Call;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.ui.Fonts;
@@ -30,6 +31,8 @@ public class Breaker extends Block {
                         destructible = true;
         maxsize = 1;
         timerBreak = 300;
+
+        rebuildable = false;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class Breaker extends Block {
             if(tile != null && tile.block() != null && tile.build == null && tile.block().solid && !tile.block().breakable && tile.block().size <= maxsize){
                 Timer += Time.delta;
                 if(Timer >= timerBreak){
-                    Vars.world.tile(tile.x, tile.y).setAir();
+                    Call.removeTile(tile);
                     kill();
                 }
             }

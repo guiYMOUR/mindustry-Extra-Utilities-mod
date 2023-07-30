@@ -82,6 +82,9 @@ public class EUTechTree {
         addToNode(reinforcedPump, () -> {
             node(ekPump);
         });
+        addToNode(electricHeater, () -> {
+            node(largeElectricHeater);
+        });
         addToNode(heatRedirector, () -> {
             node(heatTransfer, () -> {
                 node(heatDriver);

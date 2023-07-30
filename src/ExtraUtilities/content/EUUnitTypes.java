@@ -913,11 +913,13 @@ public class EUUnitTypes {
                                 lifetime = 240;
                                 healPercent = 10;
                             }};
-                            reload = 90;
+                            reload = 150;
                             rotate = true;
                             rotateSpeed = 4;
                             alternate = false;
                             useAmmo = true;
+                            continuous = true;
+                            cooldownTime = 150;
                             shootY = 8;
                             recoil = 0;
                             top = false;
