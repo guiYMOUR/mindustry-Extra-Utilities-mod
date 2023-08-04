@@ -15,6 +15,10 @@
 - Steam Workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527
 - Due to my limited English level, If there are any grammar problems in the mod, please feedback to my mailbox:gyrweng@foxmail.com, I will treat every suggestion sincerely.
 
+- EU mod server : eu.mdtxy.top
+- EU & NH sever : eh.mdtxy.top
+- To get NH mod : https://github.com/Yuria-Shikibe/NewHorizonMod
+
 - How do I download it? [Click here](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases), then click on the top EU.xxx.jar file
 <img width="1439" alt="image" src="https://user-images.githubusercontent.com/77377005/230292602-417acb68-843c-4ab5-b718-ea7cc89468d9.png">
 
