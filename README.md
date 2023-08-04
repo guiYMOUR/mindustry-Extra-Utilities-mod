@@ -19,7 +19,7 @@
 - EU & NH sever : eh.mdtxy.top
 - To get NH mod : https://github.com/Yuria-Shikibe/NewHorizonMod
 
-- How do I download it? [Click here](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases), then click on the top EU.xxx.jar file
+### How do I download it? [Click here](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases), then click on the top EU.xxx.jar file
 <img width="1439" alt="image" src="https://user-images.githubusercontent.com/77377005/230292602-417acb68-843c-4ab5-b718-ea7cc89468d9.png">
 
 ## The direction of mod development
