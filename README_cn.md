@@ -13,8 +13,8 @@
 - Github : https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod
 - 创意工坊：[https://steamcommunity.com/sharedfiles/filedetails/?id=2520602720](https://steamcommunity.com/sharedfiles/filedetails/?id=2850241527)
 
-- EU mod 服务器 : `eu.mdtxy.top`
-- EU & NH 服务器 : `eh.mdtxy.top`
+- EU mod 服务器 : `cn.mindustry.ink`
+- EU & NH 服务器 : `EH.mindustry.ink`
 - 获取NH（新视界）模组 : https://github.com/Yuria-Shikibe/NewHorizonMod
 
 ### 如何下载？[点这里](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/releases)，然后点最上面的EU.版本号.jar就行了
