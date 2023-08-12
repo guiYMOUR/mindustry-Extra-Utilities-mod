@@ -30,6 +30,9 @@ public class EUTechTree {
                 });
             });
         });
+        addToNode(blastMixer, () -> {
+            node(T2blast);
+        });
         addToNode(surgeSmelter, ()->{
             node(LA, () ->{
                 node(LG);
@@ -71,6 +74,7 @@ public class EUTechTree {
         //E
         addToNode(turbineCondenser, () -> {
             node(nitrogenWell);
+            node(ventHeater);
         });
         addToNode(ductBridge, () -> {
             node(reinforcedDuctBridge);

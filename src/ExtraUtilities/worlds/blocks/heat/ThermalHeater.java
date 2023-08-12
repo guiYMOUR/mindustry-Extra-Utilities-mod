@@ -1,8 +1,11 @@
 package ExtraUtilities.worlds.blocks.heat;
 
 import arc.Core;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.util.Eachable;
 import arc.util.io.*;
+import mindustry.entities.units.BuildPlan;
 import mindustry.graphics.Pal;
 import mindustry.ui.Bar;
 import mindustry.world.blocks.heat.HeatBlock;
@@ -15,6 +18,7 @@ import static ExtraUtilities.ExtraUtilitiesMod.*;
 public class ThermalHeater extends ThermalGenerator {
     public float basicHeatOut = 5f;
     public float warmupRate = 0.15f;//as HeaterGenerator
+    public float sec = 1;
     public ThermalHeater(String name) {
         super(name);
 
@@ -29,7 +33,7 @@ public class ThermalHeater extends ThermalGenerator {
     public void setStats(){
         super.setStats();
 
-        stats.add(Stat.output, Core.bundle.format("stat." + name("basicHeat"), basicHeatOut));
+        stats.add(Stat.output, Core.bundle.format("stat." + name("basicHeat"), basicHeatOut * sec));
     }
 
     @Override

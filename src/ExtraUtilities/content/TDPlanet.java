@@ -42,8 +42,7 @@ public class TDPlanet {
             allowLaunchToNumbered = false;
             ruleSetter = r -> {
                 r.enemyCoreBuildRadius = 1;
-                r.bannedBlocks.add(Blocks.smite);
-                
+                r.bannedBlocks.addAll(Blocks.smite, EUBlocks.breaker, EUBlocks.quantumDomain);
             };
         }};
     }

@@ -449,6 +449,21 @@ public class EUFx {
         Lines.endLine(true);
     });
 
+    public static Effect diffuse(int size, Color color, float life) {
+        return new Effect(life, e -> {
+            float f = e.fout();
+            float r = Math.max(0f, Mathf.clamp(2f - f * 2f) * size * tilesize / 2f - f - 0.2f), w = Mathf.clamp(0.5f - f) * size * tilesize;
+            Lines.stroke(3f * f, color);
+            Lines.beginLine();
+            for (int i = 0; i < 4; i++) {
+                Lines.linePoint(e.x + Geometry.d4(i).x * r + Geometry.d4(i).y * w, e.y + Geometry.d4(i).y * r - Geometry.d4(i).x * w);
+                if (f < 0.5f)
+                    Lines.linePoint(e.x + Geometry.d4(i).x * r - Geometry.d4(i).y * w, e.y + Geometry.d4(i).y * r + Geometry.d4(i).x * w);
+            }
+            Lines.endLine(true);
+        });
+    }
+
     public static Effect fiammettaExp(float r){
         return new Effect(30, e -> {
             float fin = Math.min(e.time/10, 1), fout = 1 - ((e.time - 10)/(e.lifetime - 10));

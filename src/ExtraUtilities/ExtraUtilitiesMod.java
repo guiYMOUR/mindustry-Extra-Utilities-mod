@@ -67,14 +67,13 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.ventHeater, t);
+                    addToTable(EUBlocks.T2blast, t);
                     addToTable(EUBlocks.largeElectricHeater, t);
                     addToTable(EUBlocks.coreKeeper, t);
                     addToTable(EUBlocks.breaker, t);
                     addToTable(EUBlocks.quantumDomain, t);
                     addToTable(EUBlocks.nitrogenWell, t);
-                    addToTable(EUBlocks.heatPower, t);
-                    addToTable(EUBlocks.windPower, t);
-                    addToTable(EUBlocks.waterPower, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);

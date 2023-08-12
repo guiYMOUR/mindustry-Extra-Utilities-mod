@@ -88,10 +88,13 @@ public class Domain extends Block {
     public float reloadHUAfter = 120;//还是破盾后的
     //群内投票结果，选择用量治疗而不是百分百
 
+    public float unitDamage = 8;
+
     protected static DomainBuild db;
     protected static Effect e, ef;
     protected static int amount;
     protected static boolean canBK;
+    protected static float ud;
     protected static final Cons<Bullet> bulletConsumer = bullet -> {
         if(bullet.team != db.team && bullet.type != null && bullet.type.absorbable && bullet.within(db, db.range())){
             if(canBK && db.absorbed < amount && bullet.type.reflectable && bullet.type.collides && bullet.type.collidesAir && bullet.type.collidesGround && bullet.type.collidesTiles && bullet.type.damage > 0) {
@@ -111,7 +114,7 @@ public class Domain extends Block {
     protected static final Cons<Unit> unitShield = unit -> {
         float overlapDst = (unit.hitSize/2f + db.range()) - unit.dst(db);
         if(overlapDst > 0) {
-            db.buildup += (unit.hitSize * 5);
+            db.buildup += (unit.hitSize * ud);
             db.hit = 1;
         }
     };
@@ -301,6 +304,7 @@ public class Domain extends Block {
                 ef = fullEffect;
                 amount = bulletAmount;
                 canBK = canBroken;
+                ud = unitDamage;
                 float r = range() + 10;
                 Groups.bullet.intersect(x - r, y - r, r * 2f, r * 2f, bulletConsumer);
                 //优先扣除贴边单位

@@ -226,7 +226,7 @@ public class EUOverride {
         }
     }
 
-    //愚人节特别改动
+    //special changes on April Fools'Day
     public static void ap4sOverride(){
         for(int i = 0; i < Vars.content.blocks().size; i++){
             Block b = Vars.content.block(i);

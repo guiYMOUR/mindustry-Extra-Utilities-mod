@@ -8,15 +8,18 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
+import arc.util.Nullable;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
 import mindustry.game.EventType;
 import mindustry.gen.Bullet;
+import mindustry.gen.Call;
 import mindustry.gen.Sounds;
 import mindustry.gen.Teamc;
 import mindustry.graphics.Drawf;
@@ -40,6 +43,8 @@ public class LightenGenerator extends NuclearReactor {
     //下面是两个特效子弹，当然，可以自己写
     public BulletType effectBullet;
     public BulletType effectBullet2;
+
+    public @Nullable BulletType deathBullet;
 
     public LightenGenerator(String name) {
         super(name);
@@ -125,6 +130,7 @@ public class LightenGenerator extends NuclearReactor {
         super.setStats();
         stats.add(Stat.ammo, StatValues.ammo(ObjectMap.of(this, effectBullet)));
         stats.add(Stat.ammo, StatValues.ammo(ObjectMap.of(this, effectBullet2)));
+        if(deathBullet != null) stats.add(Stat.ammo, StatValues.ammo(ObjectMap.of(this, deathBullet)));
     }
 
     public class LightenGeneratorBuild extends NuclearReactorBuild{
@@ -182,9 +188,15 @@ public class LightenGenerator extends NuclearReactor {
 
             if(heat >= 0.999f){
                 Events.fire(EventType.Trigger.thoriumReactorOverheat);
+                if(deathBullet != null) Call.createBullet(deathBullet, team, x, y, 0, -1, 1, 1);
                 kill();
             }
             light = Mathf.lerpDelta(light, working ? 1 : 0, 0.05f);
+        }
+
+        @Override
+        public void createExplosion() {
+            //if(deathBullet != null) Call.createBullet(deathBullet, team, x, y, 0, -1, 1, 1);
         }
 
         @Override

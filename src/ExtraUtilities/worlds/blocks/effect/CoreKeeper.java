@@ -55,6 +55,7 @@ public class CoreKeeper extends StorageBlock {
         warmupSpeed = 0.01f;
         downSpeed = 0.04f;
 
+        canOverdrive = false;
         buildCostMultiplier = 0;
     }
 

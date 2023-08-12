@@ -101,6 +101,7 @@ public class EUUnitTypes {
             hidden = true;
             targetable = false;
             hittable = false;
+            targetPriority = -2;
 
             //alwaysUnlocked = true;
 
@@ -141,6 +142,7 @@ public class EUUnitTypes {
             hidden = true;
             targetable = false;
             hittable = false;
+            targetPriority = -2;
 
             //alwaysUnlocked = true;
 
