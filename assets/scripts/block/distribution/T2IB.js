@@ -21,9 +21,9 @@ exports.alloyDuct = alloyDuct;
 //Blocks.plastaniumConveyor.recharge = 1;
 const ppc = extend(StackConveyor, "ppc", {});
 ppc.health = 150;
-ppc.speed = 8.5 / 60;
+ppc.speed = 5 / 60;
 ppc.recharge = 1;
-ppc.itemCapacity = 10;
+ppc.itemCapacity = 20;
 ppc.requirements = ItemStack.with(
     Items.silicon, 1,
     Items.thorium, 1,
