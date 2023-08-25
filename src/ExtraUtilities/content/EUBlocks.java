@@ -82,7 +82,7 @@ public class EUBlocks {
         //transport
             stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
-            T2blast, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
+            T2blast, T2sporePress, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
@@ -371,6 +371,29 @@ public class EUBlocks {
             consumeLiquid(Liquids.water, 20f/60);
             consumePower(50f/60);
         }};
+        T2sporePress = new GenericCrafter("T2-spore-press"){{
+            requirements(Category.crafting, with(Items.plastanium, 60, Items.silicon, 120, EUItems.crispSteel, 45));
+            liquidCapacity = 60f;
+            craftTime = 30f;
+            outputLiquid = new LiquidStack(Liquids.oil, 1);
+            size = 3;
+            scaledHealth = 60;
+            hasLiquids = true;
+            hasPower = true;
+            craftEffect = new Effect(23, e -> {
+                float scl = Math.max(e.rotation, 1);
+                color(Tmp.c1.set(Pal.gray).mul(1.1f), Items.sporePod.color, e.fin());
+                randLenVectors(e.id, 8, size * 8f + 4 * e.finpow() * scl, (x, y) -> {
+                    Fill.circle(e.x + x, e.y + y, e.fout() * 3.5f * scl + 0.3f);
+                });
+            }).layer(Layer.debris);
+            updateEffect = sporeSlowed;
+            drawer = new DrawMulti(new DrawDefault(), new DrawFrames(), new DrawLiquidRegion());
+
+            consumeItem(Items.sporePod, 3);
+            consumePower(1.5f);
+        }};
+
         //stone!!!
         stoneExtractor = new AttributeCrafter("stoneExtractor"){{
             requirements(Category.production, with(Items.silicon, 50, Items.graphite, 50));
@@ -2129,4 +2152,85 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
     }
+
+    //by guiY for Twilight Fall
+//    public static Block ct = new PowerTurret("ct"){{
+//        requirements(Category.turret, with(Items.copper, 60, Items.lead, 70, Items.silicon, 60, Items.titanium, 30));
+//        range = 25 * 8;
+//        recoil = 2f;
+//        reload = 80f;
+//        shake = 2f;
+//        shootEffect = none;
+//        smokeEffect = none;
+//        size = 2;
+//        scaledHealth = 280;
+//        targetAir = false;
+//        moveWhileCharging = false;
+//        accurateDelay = false;
+//        shootSound = Sounds.laser;
+//        coolant = consumeCoolant(0.2f);
+//
+//        consumePower(6f);
+//
+//        //上面炮塔数据随意
+//        //下面子弹数据自己改
+//        float cont = 60;//扩散角度，1/2值，60 = 120
+//        float bRange = range;//范围
+//        shootType = new BulletType(){{
+//            damage = 100;
+//            lifetime = 120;
+//            speed = 0;
+//            keepVelocity = false;
+//            despawnEffect = hitEffect = none;
+//
+//            hittable = absorbable = reflectable = false;
+//        }
+//
+//            @Override
+//            public void update(Bullet b) {
+//                //super.update(b);
+//                Seq<Healthc> seq = new Seq<>();
+//                float r = bRange * (1 - b.foutpow());
+//                Vars.indexer.allBuildings(b.x, b.y, r, bd -> {
+//                    if(bd.team != b.team && Angles.within(b.rotation(), b.angleTo(bd), cont)) seq.addUnique(bd);
+//                });
+//                Units.nearbyEnemies(b.team, b.x - r, b.y - r, r * 2, r * 2, u -> {
+//                    if(u.type != null && u.type.targetable && b.within(u, r) && Angles.within(b.rotation(), b.angleTo(u), cont)) seq.addUnique(u);
+//                });
+//                for(int i = 0; i < seq.size; i++){
+//                    Healthc hc = seq.get(i);
+//                    if(hc != null && !hc.dead()) {
+//                        if(!b.hasCollided(hc.id())) {
+//                            //伤害的方式在这里改
+//
+//                            //普攻
+//                            hc.damage(damage);
+//
+//                            //穿甲
+//                            //hc.damagePierce(damage);
+//
+//                            //真伤
+//                            //if(hc.health() <= damage) hc.kill();
+//                            //else hc.health(hc.health() - damage);
+//                            b.collided.add(hc.id());
+//                        }
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void draw(Bullet b) {
+//                super.draw(b);
+//                float pin = (1 - b.foutpow());
+//                Lines.stroke(5 * pin, Pal.bulletYellowBack);
+//
+//                for(float i = b.rotation() - cont; i < b.rotation() + cont; i++){
+//                    float lx = EUGet.dx(b.x, bRange * pin, i);
+//                    float ly = EUGet.dy(b.y, bRange * pin, i);
+//                    Lines.lineAngle(lx, ly, i - 90, bRange/(cont * 2) * pin);
+//                    Lines.lineAngle(lx, ly, i + 90, bRange/(cont * 2) * pin);
+//                }
+//            }
+//        };
+//    }};
 }

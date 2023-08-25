@@ -7,8 +7,12 @@ import arc.Graphics;
 import arc.graphics.Pixmap;
 import arc.graphics.Pixmaps;
 import arc.math.Mathf;
+import arc.scene.Element;
+import arc.scene.event.Touchable;
 import arc.scene.ui.Button;
 import arc.scene.ui.CheckBox;
+import arc.scene.ui.Label;
+import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
@@ -18,6 +22,7 @@ import mindustry.game.EventType.*;
 import mindustry.gen.Icon;
 import mindustry.mod.*;
 import mindustry.ui.Fonts;
+import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.world.Block;
 
@@ -39,6 +44,7 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     public static boolean hardMod = Core.settings.getBool("eu-hard-mode");
+    public static boolean onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
 
     private static boolean show = false;
 
@@ -67,13 +73,13 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.T2sporePress, t);
                     addToTable(EUBlocks.ventHeater, t);
                     addToTable(EUBlocks.T2blast, t);
                     addToTable(EUBlocks.largeElectricHeater, t);
                     addToTable(EUBlocks.coreKeeper, t);
                     addToTable(EUBlocks.breaker, t);
                     addToTable(EUBlocks.quantumDomain, t);
-                    addToTable(EUBlocks.nitrogenWell, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);
@@ -91,7 +97,7 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     public static void log(){
-        if(show) return;
+        if(show || onlyPlugIn) return;
         show = true;
         if(Core.settings.getBool("eu-first-load")){
             toShow();
@@ -164,14 +170,25 @@ public class ExtraUtilitiesMod extends Mod{
 
     @Override
     public void init() {
-        EUCall.registerPackets();
-        EUOverride.overrideBuilder();
-        EUOverride.overrideAmr();
+        if(!onlyPlugIn) {
+            EUCall.registerPackets();
+            EUOverride.overrideBuilder();
+            EUOverride.overrideAmr();
 
-        //EUOverride.ap4sOverride();
+            //EUOverride.ap4sOverride();
+        }
 
+        settings.defaults("eu-plug-in-mode", false);
         settings.defaults("eu-hard-mode", false);
         settings.defaults("use-eu-cursor", true);
+        settings.defaults("eu-show-version", true);
+
+        Vars.mods.locateMod(ModName).meta.hidden = onlyPlugIn;
+        if(onlyPlugIn){
+            Mods.LoadedMod mod = Vars.mods.locateMod(ModName);
+            mod.meta.displayName = mod.meta.displayName + "-Plug-In";
+            mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-plug-in";
+        }
 
         if(hardMod){
             EUOverride.overrideBlockAll();
@@ -182,6 +199,7 @@ public class ExtraUtilitiesMod extends Mod{
 
         if(ui != null) {
             if(Core.settings.getBool("use-eu-cursor")) overrideUI();
+            if(Core.settings.getBool("eu-show-version")) EUOverride.overrideVersion();
             if (ui.settings != null) {
                 BaseDialog dialog = new BaseDialog("tips");
                 Runnable exit = () -> {
@@ -192,16 +210,83 @@ public class ExtraUtilitiesMod extends Mod{
                 dialog.buttons.button("OK", exit).center().size(150, 50);
 
                 ui.settings.addCategory(toText("EU-SET"), name("fireWork"), settingsTable -> {
-                    settingsTable.checkPref("use-eu-cursor", true);
-                    settingsTable.checkPref("eu-first-load", true);
-                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {
+//                    settingsTable.sliderPref("min-zoom", 10, 0, 60, (i) -> {
+//                        if(!Vars.headless) Vars.renderer.minZoom = i / 10f;
+//                        return Vars.renderer.minZoom + "x";
+//                    });
+//                    settingsTable.sliderPref("max-zoom", 10, 5, 50, (i) -> {
+//                        if(!Vars.headless) Vars.renderer.maxZoom = i;
+//                        return Vars.renderer.maxZoom + "x";
+//                    });
+
+
+                    //auto- listening
+                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting("min-zoom"){
+                        final int def = 10;
+                        final float min = 1f, max = 50f, step = 1f;
+
                         @Override
                         public void add(SettingsMenuDialog.SettingsTable table) {
-                            table.button(name, ExtraUtilitiesMod::toShow).margin(14).width(200f).pad(6);
+                            Core.settings.defaults(name, def);
+                            Slider slider = new Slider(min, max, step, false);
+                            slider.setValue((float)Core.settings.getInt(this.name));
+                            Label value = new Label("", Styles.outlineLabel);
+                            Table content = new Table();
+                            content.add(this.title, Styles.outlineLabel).left().growX().wrap();
+                            content.add(value).padLeft(10.0F).right();
+                            content.margin(3.0F, 33.0F, 3.0F, 33.0F);
+                            content.touchable = Touchable.disabled;
+                            slider.update(() -> {
+                                float v = Vars.renderer.minZoom * 10;
+                                slider.setValue(v);
+                                String st = v > max ? Core.bundle.get("zoom-over") : v < min ? Core.bundle.get("zoom-below") : "";
+                                value.setText(st + v/10 + "x");
+                            });
+                            slider.changed(() -> {
+                                Core.settings.put(this.name, (int)slider.getValue());
+                                if(!Vars.headless) Vars.renderer.minZoom = slider.getValue()/10f;
+                            });
+                            slider.change();
+                            this.addDesc(table.stack(new Element[]{slider, content}).width(Math.min((float)Core.graphics.getWidth() / 1.2F, 460.0F)).left().padTop(4.0F).get());
                             table.row();
                         }
                     });
-                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null) {
+
+                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting("max-zoom"){
+                        final int def = 10;
+                        final float min = 5f, max = 50f, step = 1f;
+
+                        @Override
+                        public void add(SettingsMenuDialog.SettingsTable table) {
+                            Core.settings.defaults(name, def);
+                            Slider slider = new Slider(min, max, step, false);
+                            slider.setValue((float)Core.settings.getInt(this.name));
+                            Label value = new Label("", Styles.outlineLabel);
+                            Table content = new Table();
+                            content.add(this.title, Styles.outlineLabel).left().growX().wrap();
+                            content.add(value).padLeft(10.0F).right();
+                            content.margin(3.0F, 33.0F, 3.0F, 33.0F);
+                            content.touchable = Touchable.disabled;
+                            slider.update(() -> {
+                                float v = Vars.renderer.maxZoom;
+                                slider.setValue(v);
+                                String st = v > max ? Core.bundle.get("zoom-over") : v < min ? Core.bundle.get("zoom-below") : "";
+                                value.setText(st + v + "x");
+                            });
+                            slider.changed(() -> {
+                                Core.settings.put(this.name, (int)slider.getValue());
+                                if(!Vars.headless) Vars.renderer.maxZoom = slider.getValue();
+                            });
+                            slider.change();
+                            this.addDesc(table.stack(new Element[]{slider, content}).width(Math.min((float)Core.graphics.getWidth() / 1.2F, 460.0F)).left().padTop(4.0F).get());
+                            table.row();
+                        }
+                    });
+
+                    settingsTable.checkPref("use-eu-cursor", true);
+                    settingsTable.checkPref("eu-show-version", true);
+
+                    settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-plug-in-mode", false, null) {
                         @Override
                         public void add(SettingsMenuDialog.SettingsTable table) {
                             CheckBox box = new CheckBox(title);
@@ -210,7 +295,7 @@ public class ExtraUtilitiesMod extends Mod{
 
                             box.changed(() -> {
                                 settings.put(name, box.isChecked());
-                                settings.put("eu-open-hard", hardMod);
+                                settings.remove("eu-hard-mode");
                                 dialog.show();
                             });
                             box.left();
@@ -218,15 +303,44 @@ public class ExtraUtilitiesMod extends Mod{
                             table.row();
                         }
                     });
-                });
 
-                EUOverride.overrideVersion();
+                    if(!onlyPlugIn) {
+                        settingsTable.checkPref("eu-first-load", true);
+                        settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {
+                            @Override
+                            public void add(SettingsMenuDialog.SettingsTable table) {
+                                table.button(name, ExtraUtilitiesMod::toShow).margin(14).width(200f).pad(6);
+                                table.row();
+                            }
+                        });
+                        settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null) {
+                            @Override
+                            public void add(SettingsMenuDialog.SettingsTable table) {
+                                CheckBox box = new CheckBox(title);
+
+                                box.update(() -> box.setChecked(settings.getBool(name)));
+
+                                box.changed(() -> {
+                                    if (!onlyPlugIn) {
+                                        settings.put(name, box.isChecked());
+                                        settings.put("eu-open-hard", hardMod);
+                                        dialog.show();
+                                    }
+                                });
+                                box.left();
+                                addDesc(table.add(box).left().padTop(3f).get());
+                                table.row();
+                            }
+                        });
+                    }
+                });
             }
         }
     }
 
     @Override
     public void loadContent(){
+        if(onlyPlugIn) return;
         EUAttribute.load();
         EUOverride.overrideUnit1();
         EUUnitTypes.load();

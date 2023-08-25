@@ -30,6 +30,9 @@ public class EUTechTree {
                 });
             });
         });
+        addToNode(sporePress, () -> {
+            node(T2sporePress);
+        });
         addToNode(blastMixer, () -> {
             node(T2blast);
         });
