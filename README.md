@@ -5,6 +5,8 @@
 ![mk2](https://user-images.githubusercontent.com/77377005/230294594-2f4aec93-a2ba-4857-ab90-26fc20e8420b.gif)
 ![sakana](https://user-images.githubusercontent.com/77377005/232401751-ea636aab-0129-44fa-a467-447fa2a74003.gif)
 
+![ET6 Ship](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/d90f6d88-5ddc-4055-9925-0a2c047df326)
+
 - English | [中文](README_cn.md)
 
 - This module does not affect the game balance, and enrich the content of the game, making the original game easier
