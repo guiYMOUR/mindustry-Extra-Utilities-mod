@@ -13,7 +13,7 @@ public class EUItems {
         flammability = 0.2f;
         explosiveness = 0.8f;
         charge = 1.3f;
-        cost = 1.2f;
+        cost = 1.3f;
     }};
     public static Item stone = new Item("stone", Pal.gray){{
         alwaysUnlocked = true;

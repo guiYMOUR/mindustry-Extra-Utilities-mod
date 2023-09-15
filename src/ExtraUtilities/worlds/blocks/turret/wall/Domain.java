@@ -112,25 +112,29 @@ public class Domain extends Block {
         }
     };
     protected static final Cons<Unit> unitShield = unit -> {
-        float overlapDst = (unit.hitSize/2f + db.range()) - unit.dst(db);
-        if(overlapDst > 0) {
-            db.buildup += (unit.hitSize * ud);
-            db.hit = 1;
+        if(unit != player.unit()) {
+            float overlapDst = (unit.hitSize / 2f + db.range()) - unit.dst(db);
+            if (overlapDst > 0) {
+                db.buildup += (unit.hitSize * ud);
+                db.hit = 1;
+            }
         }
     };
     protected static final Cons<Unit> unitConsumer = unit -> {
-        float overlapDst = (unit.hitSize/2f + db.range()) - unit.dst(db);
+        if(unit != player.unit()) {
+            float overlapDst = (unit.hitSize / 2f + db.range()) - unit.dst(db);
 
-        if(overlapDst > 0){
-            //stop
-            unit.vel.setZero();
-            //get out
-            unit.move(Tmp.v1.set(unit).sub(db).setLength(overlapDst + 0.01f));
+            if (overlapDst > 0) {
+                //stop
+                unit.vel.setZero();
+                //get out
+                unit.move(Tmp.v1.set(unit).sub(db).setLength(overlapDst + 0.01f));
 
-            if(Mathf.chanceDelta(0.12f * Time.delta)){
-                Fx.circleColorSpark.at(unit.x, unit.y, db.team.color);
+                if (Mathf.chanceDelta(0.12f * Time.delta)) {
+                    Fx.circleColorSpark.at(unit.x, unit.y, db.team.color);
+                }
+
             }
-
         }
     };
 

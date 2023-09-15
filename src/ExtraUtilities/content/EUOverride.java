@@ -6,6 +6,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.struct.Seq;
 import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
@@ -29,6 +30,9 @@ import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.blocks.payloads.Constructor;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
 
 import static ExtraUtilities.ExtraUtilitiesMod.EU;
@@ -86,7 +90,21 @@ public class EUOverride {
         ((BaseTurret)Blocks.scathe).fogRadiusMultiplier = 0.75f;
 
         ((UnitFactory)Blocks.airFactory).plans.add(new UnitFactory.UnitPlan(EUUnitTypes.winglet, 60f * 30, with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));
+
+        Block rwl = Vars.content.block(name("rwl"));
+        if(rwl != null) {
+            //WHY NOT USE 'filter.select(this::canProduce)'?
+            //Anuke aaaaa!!!!
+            Blocks.constructor.description += "\n[accent]Resetting py EU mod.";
+            ((Constructor)Blocks.constructor).filter = new Seq<>();
+            Blocks.largeConstructor.description += "\n[accent]Resetting py EU mod.";
+            ((Constructor)Blocks.largeConstructor).filter = new Seq<>();
+
+            ((UnitAssembler) Blocks.tankAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.napoleon, 220 * 60f, PayloadStack.list(UnitTypes.precept, 8, rwl, 19)));
+            ((UnitAssembler) Blocks.shipAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.havoc, 220 * 60f, PayloadStack.list(UnitTypes.obviate, 7, rwl, 20)));
+        }
     }
+
 
     public static void overrideUnit1(){
         UnitTypes.corvus.mineTier = 2;
@@ -95,6 +113,7 @@ public class EUOverride {
 
         UnitTypes.quell.health = 6500;
         UnitTypes.quell.armor = 7;
+        UnitTypes.quell.targetAir = true;
         UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{//
             shootEffect = Fx.shootBig;
             smokeEffect = Fx.shootBigSmoke2;
@@ -102,8 +121,8 @@ public class EUOverride {
             keepVelocity = false;
             maxRange = 6f;
             lifetime = 60f * 1.6f;
-            damage = 110;
-            splashDamage = 110;
+            damage = 100;
+            splashDamage = 100;
             splashDamageRadius = 25;
             buildingDamageMultiplier = 0.5f;
             hitEffect = despawnEffect = Fx.massiveExplosion;
@@ -111,6 +130,7 @@ public class EUOverride {
         }};
         UnitTypes.quell.weapons.get(0).shake = 1;
 
+        UnitTypes.disrupt.targetAir = true;
         UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{//
             shootEffect = Fx.sparkShoot;
             smokeEffect = Fx.shootSmokeTitan;
@@ -136,8 +156,8 @@ public class EUOverride {
                 sparkLen = 6f;
                 sparkStroke = 2f;
             }};
-            damage = 150;
-            splashDamage = 150;
+            damage = 135;
+            splashDamage = 135;
             splashDamageRadius = 25;
             buildingDamageMultiplier = 0.5f;
 

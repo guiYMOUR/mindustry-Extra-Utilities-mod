@@ -126,6 +126,13 @@ public class EUTechTree {
             });
         });
 
+        addToNode(basicAssemblerModule, () -> {
+            node(advAssemblerModule, () -> {
+                node(napoleon);
+                node(havoc);
+            });
+        });
+
         addToNode(breach, () -> {
             node(guiY, () -> {
                 node(turretResupplyPoint);

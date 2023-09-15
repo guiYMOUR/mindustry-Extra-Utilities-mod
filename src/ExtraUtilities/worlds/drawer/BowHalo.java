@@ -21,12 +21,14 @@ public class BowHalo  extends DrawPart {
     public float layer = Layer.effect;
     public PartProgress progress = PartProgress.warmup.delay(0.5f);
 
+    public boolean sinWave = true;
+
     @Override
     public void draw(PartParams params) {
         float warmup = progress.getClamp(params);
         Lines.stroke(stroke * warmup);
         float sin = Mathf.absin(Time.time, 10, 1.5f);
-        float realR = radius + sin;
+        float realR = radius + (sinWave ? sin : 0);
         float rot = params.rotation - 90;
         float bx = params.x, by = params.y;
         Draw.z(layer);

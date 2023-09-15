@@ -21,6 +21,7 @@ import mindustry.entities.bullet.BulletType;
 import mindustry.game.EventType.*;
 import mindustry.gen.Icon;
 import mindustry.mod.*;
+import mindustry.type.UnitType;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
@@ -38,6 +39,11 @@ public class ExtraUtilitiesMod extends Mod{
         t.image(block.uiIcon).pad(3f).row();
         t.add(Core.bundle.format("block."+block.name + ".name")).row();
         t.add(Core.bundle.format("block."+block.name + ".description")).row();
+    }
+    public static void addToTable(UnitType unitType, Table t){
+        t.image(unitType.uiIcon).pad(3f).row();
+        t.add(Core.bundle.format("unit."+unitType.name + ".name")).row();
+        t.add(Core.bundle.format("unit."+unitType.name + ".description")).row();
     }
     public static String toText(String str){
         return Core.bundle.format(str);
@@ -73,13 +79,15 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUUnitTypes.napoleon, t);
+                    addToTable(EUUnitTypes.havoc, t);
+                    addToTable(EUBlocks.advAssemblerModule, t);
                     addToTable(EUBlocks.T2sporePress, t);
                     addToTable(EUBlocks.ventHeater, t);
                     addToTable(EUBlocks.T2blast, t);
                     addToTable(EUBlocks.largeElectricHeater, t);
                     addToTable(EUBlocks.coreKeeper, t);
                     addToTable(EUBlocks.breaker, t);
-                    addToTable(EUBlocks.quantumDomain, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);
@@ -174,7 +182,6 @@ public class ExtraUtilitiesMod extends Mod{
             EUCall.registerPackets();
             EUOverride.overrideBuilder();
             EUOverride.overrideAmr();
-
             //EUOverride.ap4sOverride();
         }
 

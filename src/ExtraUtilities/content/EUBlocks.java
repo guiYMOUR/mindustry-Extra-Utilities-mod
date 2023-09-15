@@ -60,6 +60,7 @@ import mindustry.world.blocks.power.ConsumeGenerator;
 import mindustry.world.blocks.power.ThermalGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
+import mindustry.world.blocks.units.UnitAssemblerModule;
 import mindustry.world.blocks.units.UnitFactory;
 import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.consumers.ConsumeLiquidFlammable;
@@ -92,7 +93,7 @@ public class EUBlocks {
         //turret
             dissipation, guiY, javelin, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint,
         //unit
-            imaginaryReconstructor, finalF,
+            imaginaryReconstructor, advAssemblerModule, finalF,
         //other&sandbox
             coreKeeper, quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
@@ -971,8 +972,8 @@ public class EUBlocks {
                         keepVelocity = false;
                         maxRange = 6f;
                         lifetime = 60f;
-                        damage = 100 - (hardMod ? 15 : 0);
-                        splashDamage = 120 - (hardMod ? 20 : 0);
+                        damage = 90 - (hardMod ? 15 : 0);
+                        splashDamage = 110 - (hardMod ? 20 : 0);
                         splashDamageRadius = 32;
                         buildingDamageMultiplier = 0.8f;
                         absorbable = true;
@@ -1739,13 +1740,18 @@ public class EUBlocks {
                                 }}
                         );
                         parts.add(
+                                new PartBow(){{
+                                    arrowSp = name("sancta-bt");
+                                }},
                                 new BowHalo(){{
                                     progress = PartProgress.warmup.delay(0.8f);
                                 }}
                         );
-            }}, new RunningLight(6), new DrawBow(){{
-                arrowSp = name("sancta-bt");
-            }}, new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8));
+            }}, new RunningLight(6),
+//                    new DrawBow(){{
+//                        arrowSp = name("sancta-bt");
+//                    }},
+                    new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8));
             scaledHealth = 180;
 
             range = 80 * 8;
@@ -1992,6 +1998,16 @@ public class EUBlocks {
             consumeLiquid(Liquids.cryofluid, 3.2f);
             liquidCapacity = 192;
         }};
+
+        advAssemblerModule = new UnitAssemblerModule("adv-assembler-module"){{
+            requirements(Category.units, ItemStack.with(Items.carbide, 400, Items.surgeAlloy, 400, Items.thorium, 600, Items.phaseFabric, 400));
+            consumePower(5.5f);
+            regionSuffix = "-dark";
+            researchCostMultiplier = 0.75f;
+            size = 5;
+            tier = 2;
+        }};
+        
         finalF = new UnitFactory("finalF"){{
             requirements(Category.units, with(EUItems.lightninAlloy, 1200, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1500));
             size = 5;
@@ -2028,7 +2044,7 @@ public class EUBlocks {
                                 time += itemStack.amount * itemStack.item.cost;
                             }
                         }
-                        if(u.armor < 50) plans.add(new UnitPlan(u, time * 6, os));
+                        if(u.armor < 55) plans.add(new UnitPlan(u, time * 6, os));
                         else plans.add(new UnitPlan(u, time * 2, is));
                     }
                 }

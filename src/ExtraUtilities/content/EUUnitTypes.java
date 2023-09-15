@@ -2,6 +2,10 @@ package ExtraUtilities.content;
 
 import ExtraUtilities.ai.DefenderHealAI;
 import ExtraUtilities.ai.MinerPointAI;
+import ExtraUtilities.worlds.drawer.AimPart;
+import ExtraUtilities.worlds.drawer.BowHalo;
+import ExtraUtilities.worlds.drawer.DrawFunc;
+import ExtraUtilities.worlds.drawer.PartBow;
 import ExtraUtilities.worlds.entity.ability.BatteryAbility;
 import ExtraUtilities.worlds.entity.ability.TerritoryFieldAbility;
 import ExtraUtilities.worlds.entity.ability.preventCheatingAbility;
@@ -10,24 +14,33 @@ import ExtraUtilities.worlds.entity.bullet.*;
 import ExtraUtilities.worlds.entity.weapon.antiMissileWeapon;
 import ExtraUtilities.worlds.entity.weapon.healConeWeapon;
 import arc.Core;
-import arc.func.Prov;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
-import arc.graphics.g2d.TextureRegion;
-import arc.math.Interp;
+import arc.math.Angles;
 import arc.math.Mathf;
-import arc.scene.style.TextureRegionDrawable;
+import arc.math.geom.Rect;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectSet;
-import mindustry.Vars;
+import arc.struct.Seq;
+import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.ai.UnitCommand;
+import mindustry.ai.types.FlyingFollowAI;
 import mindustry.content.*;
 import mindustry.entities.Effect;
 import mindustry.entities.Lightning;
+import mindustry.entities.Mover;
+import mindustry.entities.Units;
 import mindustry.entities.abilities.*;
 import mindustry.entities.bullet.*;
+import mindustry.entities.effect.ExplosionEffect;
+import mindustry.entities.effect.MultiEffect;
+import mindustry.entities.part.DrawPart;
+import mindustry.entities.part.RegionPart;
+import mindustry.entities.part.ShapePart;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
@@ -38,15 +51,16 @@ import mindustry.type.Weapon;
 import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
+import mindustry.type.unit.TankUnitType;
 import mindustry.type.weapons.PointDefenseWeapon;
 import mindustry.type.weapons.RepairBeamWeapon;
-import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.world.blocks.defense.MendProjector;
+import mindustry.world.blocks.defense.RegenProjector;
 import mindustry.world.meta.Env;
 
 import static ExtraUtilities.ExtraUtilitiesMod.*;
-import static arc.graphics.g2d.Draw.color;
-import static arc.graphics.g2d.Lines.stroke;
+import static mindustry.content.Fx.rand;
+import static mindustry.content.Fx.turbinegenerate;
 
 public class EUUnitTypes {
     static {
@@ -60,6 +74,10 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("nihilo"), EntityMapping.idMap[20]);
         EntityMapping.nameMap.put(name("narwhal"), EntityMapping.idMap[20]);
 
+        EntityMapping.nameMap.put(name("napoleon"), EntityMapping.idMap[43]);
+        EntityMapping.nameMap.put(name("havoc"), EntityMapping.idMap[5]);
+
+
         EntityMapping.nameMap.put(name("winglet"), EntityMapping.idMap[3]);
     }
 
@@ -67,6 +85,8 @@ public class EUUnitTypes {
         miner, T2miner,
         //T6
         suzerain, nebula, asphyxia, apocalypse, nihilo, narwhal,
+        //E-T6
+        napoleon, havoc,
         //air sapper
         winglet;
     public static void load(){
@@ -184,7 +204,7 @@ public class EUUnitTypes {
                         shoot.shotDelay = 3;
                         ejectEffect = Fx.casing4;
                         //bullet = ((ItemTurret)Blocks.spectre).ammoTypes.get(Items.thorium);
-                        bullet = new BasicBulletType(13f, 66){{
+                        bullet = new BasicBulletType(13f, 80){{
                             pierce = true;
                             pierceCap = 10;
                             width = 14f;
@@ -201,7 +221,7 @@ public class EUUnitTypes {
                             fragLifeMin = 0f;
                             fragRandomSpread = 30f;
 
-                            fragBullet = new BasicBulletType(9f, 15){{
+                            fragBullet = new BasicBulletType(9f, 21){{
                                 width = 10f;
                                 height = 10f;
                                 pierce = true;
@@ -229,7 +249,7 @@ public class EUUnitTypes {
                         shake = 4;
                         shootY = 7;
                         shoot = new ShootSpread(2, 10f);
-                        bullet = new FlakBulletType(8f, 40f - (hardMod ? 10 : 0)){{
+                        bullet = new FlakBulletType(8f, 45f - (hardMod ? 10 : 0)){{
                             sprite = "missile-large";
 
                             lifetime = 40f;
@@ -266,7 +286,7 @@ public class EUUnitTypes {
                             flakInterval = 20f;
                             despawnShake = 3f;
 
-                            fragBullet = new LaserBulletType(40f - (hardMod ? 10 : 0)){{
+                            fragBullet = new LaserBulletType(45f - (hardMod ? 10 : 0)){{
                                 colors = new Color[]{Pal.surge.cpy().a(0.4f), Pal.surge, Color.white};
                                 buildingDamageMultiplier = 0.4f;
                                 width = 19f;
@@ -353,7 +373,6 @@ public class EUUnitTypes {
                 hitEffect = Fx.massiveExplosion;
                 smokeEffect = Fx.shootBig2;
                 damage = 1550;
-                pierceDamageFactor = 0.5f;
             }};
 
             weapons.add(
@@ -947,6 +966,864 @@ public class EUUnitTypes {
                     }}
             );
         }};
+
+
+        napoleon = new TankUnitType("napoleon"){{
+            hitSize = 57;
+            treadPullOffset = 1;
+            speed = 0.39f;
+            health = 60000;
+            armor = 52;
+            crushDamage = 10;
+            rotateSpeed = 0.8f;
+            treadRects = new Rect[]{
+                    new Rect(-113, -133 + 167, 62, 100),
+                    new Rect(-113 + 260, -133 + 167, 62, 100),
+                    new Rect(-113, -133, 62, 90),
+                    new Rect(-113 + 260, -133, 62, 90),
+            };
+
+            immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped);
+            ammoType = new ItemAmmoType(Items.blastCompound);
+
+            abilities.add(new ShieldArcAbility(){{
+                whenShooting = false;
+                radius = 8 * 8;
+                max = 8000;
+                regen = 3;
+                cooldown = 360;
+                angle = 160;
+                width = 10f;
+            }});
+
+            Color esc = Color.valueOf("feb380");
+            Mover mover = bullet -> {
+                if(bullet.type == null) return;
+                float fout = Math.max((60 - bullet.time)/60, 0);
+                if(bullet.time < 70) bullet.initVel(bullet.rotation(), bullet.type.speed * fout);
+            };
+
+            weapons.add(
+                    new Weapon(name("napoleon-wf")){{
+                        layerOffset = 0.1f;
+                        rotate = true;
+                        rotateSpeed = 2;
+                        shoot = new ShootSpread(3, 120);
+                        shoot.shotDelay = 8;
+                        shootSound = Sounds.malignShoot;
+                        x = 18;
+                        y = 19;
+                        shootY = -5;
+                        reload = 60;
+                        bullet = new CtrlMissile("", -1, -1){{
+                            damage = 110;
+                            speed = 15;
+                            lifetime = 24;
+                            homingRange = speed * lifetime;
+                            homingDelay = 3;
+                            homingPower = 11;
+                            trailLength = 5;
+                            trailWidth = 4;
+                            trailColor = esc;
+                            trailEffect = Fx.missileTrail;
+                            trailInterval = 1;
+                            despawnEffect = hitEffect = EUFx.gone(esc);
+                            despawnSound = hitSound = Sounds.artillery;
+                        }
+
+                            @Override
+                            public void update(Bullet b) {
+                                b.lifetime = lifetime * 2.5f;
+                                if(b.time > b.lifetime/2){
+                                    b.remove();
+                                    return;
+                                }
+                                super.update(b);
+                                b.initVel(b.rotation(), speed * b.finpow() * 1.8f);
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                drawTrail(b);
+                                drawParts(b);
+                                Draw.color(esc);
+                                Drawf.tri(b.x, b.y, 6f, 9f, b.rotation());
+                            }
+                        };
+                    }},
+                    new Weapon(name("napoleon-wm")){{
+                        mirror = false;
+                        rotate = true;
+                        layerOffset = 0.1f;
+                        rotateSpeed = 0.9f;
+                        shootSound = Sounds.release;
+                        reload = 180;
+                        recoil = 5.5f;
+                        shake = 5;
+                        x = 0;
+                        y = -1f;
+                        minWarmup = 0.9f;
+
+                        bullet = new ScarletDevil(esc){{
+                            hitSound = despawnSound = Sounds.explosionbig;
+                            damage = 410;
+                            splashDamage = 390;
+                            splashDamageRadius = 12 * 8f;
+                            buildingDamageMultiplier = 0.8f;
+                            hitEffect = despawnEffect = new ExplosionEffect(){{
+                                lifetime = 30f;
+                                waveStroke = 5f;
+                                waveLife = 10f;
+                                waveRad = splashDamageRadius;
+                                waveColor = esc;
+                                smokes = 7;
+                                smokeSize = 13;
+                                smokeColor = esc;
+                                smokeRad = splashDamageRadius;
+                                sparkColor = esc;
+                                sparks = 14;
+                                sparkRad = splashDamageRadius;
+                                sparkLen = 6f;
+                                sparkStroke = 2f;
+                            }};
+
+                            pierce = true;
+                            pierceCap = 2;
+                            pierceBuilding = true;
+
+                            speed = 10;
+                            trailWidth = 7;
+                            trailLength = 12;
+                            trailColor = esc;
+                            fragBullet = null;
+                            fragBullets= 0;
+                            healPercent = -1;
+                            ff.speed = 1.5f;
+                            ff.fragBullets = fragBullets;
+                            ff.buildingDamageMultiplier = fb.buildingDamageMultiplier = 0.6f;
+                            fb.healPercent = -1;
+                            fb.damage = 55f;
+                            intervalBullet = fb;
+                            intervalBullets = 2;
+                            bulletInterval = 6;
+                            intervalDelay = 6;
+                            intervalSpread = 180;
+                        }
+
+                            @Override
+                            public void updateBulletInterval(Bullet b) {
+                                if (ff != null && b.time >= intervalDelay && b.timer.get(2, bulletInterval)) {
+                                    float ang = b.rotation();
+
+                                    for(int i = 0; i < intervalBullets; i++) {
+                                        ff.create(b, b.team, b.x, b.y, ang - 90 + i * intervalSpread, 1, 1, mover);
+                                    }
+                                }
+
+                            }
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(esc);
+                                Drawf.tri(b.x, b.y, 13f, 12f, b.rotation());
+                            }
+                        };
+                        parts.add(
+                                new PartBow(){{
+                                    color = esc;
+                                    turretTk = 6;
+                                    bowFY = -4;
+                                    bowMoveY = -33 - bowFY;
+                                    bowTk = 6;
+                                    bowWidth = 28;
+                                    bowHeight = 12f;
+                                }},
+                                new BowHalo(){{
+                                    color = esc;
+                                    stroke = 3;
+                                    radius = 9;
+                                    w1 = 2.8f;
+                                    h1 = 6;
+                                    w2 = 4;
+                                    h2 = 13;
+                                    y = -21;
+                                    sinWave = false;
+                                }}
+                        );
+
+                        parts.add(
+                                new ShapePart() {{
+                                    progress = PartProgress.warmup.delay(0.5f);
+                                    color = esc;
+                                    circle = true;
+                                    hollow = true;
+                                    stroke = 0;
+                                    strokeTo = 2;
+                                    radius = 14;
+                                    layer = Layer.effect;
+                                    y = -21;
+                                }},
+//                                new HaloPart() {{
+//                                        progress = PartProgress.warmup.delay(0.5f);
+//                                        color = esc;
+//                                        layer = Layer.effect;
+//                                        y = -21;
+//                                        haloRotateSpeed = 2;
+//                                        shapes = 4;
+//                                        triLength = 0;
+//                                        triLengthTo = 4.2f;
+//                                        haloRadius = 13;
+//                                        tri = true;
+//                                        radius = 13;
+//                                }},
+                                new AimPart(){{
+                                    layer = Layer.effect;
+                                    y = 15;
+                                    width = 0.9f;
+                                    length = 10 * 8;
+                                    spacing = 10;
+                                    color = esc;
+                                }}
+                        );
+                    }},
+                    new Weapon(){{
+                        mirror = false;
+                        shootSound = Sounds.none;
+                        rotate = false;
+                        shootCone = 360f;
+                        x = 0;
+                        y = 0;
+                        shootY = -20;
+                        reload = 210;
+                        controllable = false;
+                        autoTarget = true;
+
+                        BulletType eb = new BulletType(){{
+                            keepVelocity = false;
+                            hitEffect = despawnEffect = Fx.none;
+                            damage = 0;
+                            speed = 4.1f;
+                            lifetime = 30;
+                            collides = collidesGround = collidesAir = collidesTiles = absorbable = hittable = false;
+                        }
+
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                if(!(b.data instanceof Float)) return;
+                                float ier = (Float) b.data;
+                                b.lifetime = lifetime + ier;
+                                if(b.time < ier){
+                                    b.initVel(b.rotation(), 0);
+                                } else {
+                                    b.initVel(b.rotation(), speed * Math.min(1 - (b.time - (Float)b.data)/lifetime, 1));
+                                }
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                float t = b.lifetime/2;
+                                Draw.color(esc);
+                                if(b.time < t) {
+                                    float fin = b.fin() * 2;
+                                    Drawf.tri(b.x, b.y, 10 * fin, 21 * fin, b.rotation() - 90);
+                                    Drawf.tri(b.x, b.y, 10 * fin, 21 * fin, b.rotation() + 90);
+                                } else {
+                                    float fout = b.fout() * 2;
+                                    Drawf.tri(b.x, b.y, 10 * fout, 21 * fout, b.rotation() - 90);
+                                    Drawf.tri(b.x, b.y, 10 * fout, 21 * fout, b.rotation() + 90);
+                                }
+                            }
+                        };
+
+                        bullet = new BulletType(){{
+                            hittable = absorbable = collides = collidesTiles = false;
+
+                            damage = 0;
+                            speed = 1;
+                            lifetime = 46 * 8;
+                            despawnSound = hitSound = Sounds.cannon;
+                            despawnShake = hitShake = 4;
+                            despawnEffect = hitEffect = new MultiEffect(new Effect(60, 160, (e) -> {
+                                Draw.color(esc);
+                                Lines.stroke(e.fout() * 5);
+                                float circleRad = 6 + e.finpow() * 60;
+                                Lines.circle(e.x, e.y, circleRad);
+                                rand.setSeed((long)e.id);
+
+                                for(int i = 0; i < 16; ++i) {
+                                    float angle = rand.random(360);
+                                    float lenRand = rand.random(0.5f, 1);
+                                    Tmp.v1.trns(angle, circleRad);
+                                    int[] signs = Mathf.signs;
+
+                                    for (int s : signs) {
+                                        Drawf.tri(e.x + Tmp.v1.x, e.y + Tmp.v1.y, e.foutpow() * 40, e.fout() * 30 * lenRand + 6, angle + 90 + (float) s * 90);
+                                    }
+                                }
+
+                            }), Fx.casing3Double);
+                            trailEffect = new Effect(38, e -> {
+                                Draw.color(esc);
+                                Angles.randLenVectors(e.id, 1, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> {
+                                    Fill.circle(e.x + x, e.y + y, e.foutpow() * 6);
+                                });
+                            });
+                            trailInterval = 5;
+                            fragBullets = 4;
+
+                            fragBullet = new BulletType(){{
+                                damage = splashDamage = 140;
+                                splashDamageRadius = 8 * 8;
+                                keepVelocity = false;
+                                homingRange = 45 * 8;
+                                homingPower = 0.3f;
+                                homingDelay = 10;
+                                speed = 8;
+                                lifetime = 48;
+                                trailColor = Color.valueOf("feb380");
+                                trailWidth = 7;
+                                trailLength = 7;
+                                hitEffect = despawnEffect = new MultiEffect(new Effect(30, e -> {
+                                    Lines.stroke(10 * e.foutpow(), esc);
+                                    Lines.circle(e.x, e.y, splashDamageRadius * e.finpow());
+                                }), EUFx.expFtEffect(7, 11, 8, 17, 0), new ExplosionEffect(){{
+                                    lifetime = 30f;
+                                    waveStroke = 0;
+                                    waveLife = 0;
+                                    smokes = 7;
+                                    smokeSizeBase = 0;
+                                    smokeSize = 11;
+                                    smokeRad = splashDamageRadius;
+                                    sparkColor = esc;
+                                    sparks = 9;
+                                    sparkRad = splashDamageRadius;
+                                    sparkLen = 6f;
+                                    sparkStroke = 2f;
+                                }});
+                                hitSound = despawnSound = Sounds.explosion;
+                            }
+
+                                @Override
+                                public void draw(Bullet b) {
+                                    super.draw(b);
+                                    Draw.color(esc);
+                                    Drawf.tri(b.x, b.y, 9f, 11f, b.rotation());
+                                }
+
+                                @Override
+                                public void createFrags(Bullet b, float x, float y) {
+                                    super.createFrags(b, x, y);
+                                    float a = Mathf.random(360);
+                                    for(int i = 0; i < 4; i++){
+                                        eb.create(b, b.team, x, y, a + i * (360/8f), -1, 1,  1, i * 3f);
+                                        eb.create(b, b.team, x, y, a + i * (360/8f) + 180, -1, 1,  1, i * 5f);
+                                    }
+                                }
+                            };
+                        }
+
+
+                            @Override
+                            public void createFrags(Bullet b, float x, float y) {
+                                if (fragBullet != null && (fragOnAbsorb || !b.absorbed)) {
+                                    for(int i = 0; i < fragBullets; ++i) {
+                                        fragBullet.create(b, b.x, b.y, b.rotation() - 90 + i * 60, 1, 1);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void update(Bullet b) {
+                                if(b.time > 90) {
+                                    b.remove();
+                                    return;
+                                }
+                                super.update(b);
+                                float f = b.time/90;
+                                b.initVel(b.rotation(), speed * f * f);
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(esc);
+                                float sin = Mathf.sin(Time.time, 4, 2);
+                                Fill.circle(b.x, b.y, 12);
+                                Draw.color(Color.black);
+                                Fill.circle(b.x, b.y, 7 + sin);
+                            }
+                        };
+                        parts.add(
+                                new AimPart(){{
+                                    layer = Layer.effect;
+                                    y = -42;
+                                    color = esc;
+                                    spacing = 5;
+                                    length = 15;
+                                    drawLine = false;
+                                    rt = -90;
+                                }},
+                                new AimPart(){{
+                                    layer = Layer.effect;
+                                    y = -42;
+                                    color = esc;
+                                    spacing = 5;
+                                    length = 15;
+                                    drawLine = false;
+                                    rt = 90;
+                                }}
+                        );
+                    }}
+            );
+
+            parts.add(new RegionPart("-glow") {{
+                    color = Color.red;
+                    blending = Blending.additive;
+                    layer = -1;
+                    outline = false;
+                }
+            });
+        }};
+
+        havoc = new ErekirUnitType("havoc"){{
+            aiController = FlyingFollowAI::new;
+            envDisabled = 0;
+            lowAltitude = false;
+            flying = true;
+            drag = 0.08f;
+            speed = 0.89f;
+            rotateSpeed = 1.8f;
+            accel = 0.1f;
+            health = 40000;
+            armor = 27;
+            hitSize = 48;
+            payloadCapacity = Mathf.sqr(7.6f) * 64;
+            engineSize = 6;
+            engineOffset = 28;
+            
+            abilities.add(
+                    new SuppressionFieldAbility() {{
+                            orbRadius = 14;
+                            particleSize = 9;
+                            y = -8;
+                            particles = 10;
+                    }}
+            );
+
+            weapons.add(
+                    new Weapon(){{
+                        shootSound = Sounds.missileLarge;
+                        baseRotation = 90;
+                        alternate = false;
+                        shoot.shots = 3;
+                        shoot.shotDelay = 8;
+                        xRand = 20;
+                        reload = 90;
+                        shootCone = 180;
+                        x = 12;
+                        float spr = 9 * 8f;
+                        Effect de = new ExplosionEffect(){{
+                            lifetime = 30f;
+                            waveStroke = 5f;
+                            waveLife = 8f;
+                            waveColor = Pal.sap;
+                            sparkColor = smokeColor = Pal.suppress;
+                            waveRad = spr;
+                            smokeSize = 5f;
+                            smokes = 7;
+                            smokeSizeBase = 0f;
+                            sparks = 9;
+                            sparkRad = spr;
+                            sparkLen = 6f;
+                            sparkStroke = 2f;
+                        }};
+                        BulletType ms = new CtrlMissile(name("havoc-a"), 10, 20){{
+                            damage = splashDamage = 160;
+                            splashDamageRadius = spr;
+                            despawnEffect = hitEffect = de;
+                            speed = 6;
+                            lifetime = 90;
+                            homingPower = 8;
+                            trailEffect = Fx.artilleryTrail;
+                            trailInterval = 1;
+                            trailWidth = 4;
+                            trailLength = 8;
+                            trailColor = Pal.suppress;
+
+                            autoHoming = true;
+
+                            buildingDamageMultiplier = 0.7f;
+                        }
+
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                b.initVel(b.rotation(), speed * Math.min(b.finpow() * 2, 1));
+                            }
+                        };
+                        bullet = new BulletType(){{
+                            damage = splashDamage = 160;
+                            splashDamageRadius = spr;
+                            hitEffect = despawnEffect = Fx.casing4;
+                            speed = 10;
+                            lifetime = 40;
+                            collides = collidesTiles = absorbable = hittable = false;
+                            buildingDamageMultiplier = 0.7f;
+                            fragOnHit = false;
+                        }
+
+                            @Override
+                            public void hitEntity(Bullet b, Hitboxc entity, float health) { }
+
+                            @Override
+                            public void hit(Bullet b, float x, float y) { }
+
+                            @Override
+                            public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) { }
+
+                            @Override
+                            public void createFrags(Bullet b, float x, float y) {
+                                super.createFrags(b, x, y);
+                                if(!(b.owner instanceof Unit)) return;
+                                Unit owner = (Unit) b.owner;
+                                if(!b.absorbed) ms.create(owner, owner.team, b.x, b.y, owner.rotation(), -1, 1, 1, EUGet.pos(owner.mounts[0].aimX, owner.mounts[0].aimY));
+                            }
+
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                b.initVel(b.rotation(), speed * Math.max(b.foutpow(), 0));
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                if(!(b.owner instanceof Unit)) return;
+                                Unit owner = (Unit) b.owner;
+                                float n = Math.max(b.foutpow(), 0.4f);
+                                Draw.z(Layer.flyingUnitLow);
+                                Draw.rect(Core.atlas.find(name("havoc-a")), b.x, b.y, 25 * n, 50 * n, owner.rotation - 90);
+                                Tmp.v1.set(0, -8).rotate(owner.rotation - 90);
+                                Draw.color(Pal.suppress);
+                                Draw.z(Layer.bullet);
+                                Fill.circle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, 8 * b.foutpow() + 2);
+                                Draw.reset();
+                            }
+                        };
+                    }},
+                    new Weapon(name("havoc-w")){{
+                        shootSound = Sounds.malignShoot;
+                        rotate = true;
+                        rotateSpeed = 3;
+                        rotationLimit = 80;
+                        x = 24;
+                        y = -8;
+                        reload = 15;
+                        recoil = 2;
+                        layerOffset = -0.1f;
+                        shootY = 10;
+                        bullet = new BulletType(){{
+                            damage = 120;
+                            speed = 10;
+                            lifetime = 55 * 8f / 10f;
+                            homingPower = 0.3f;
+                            homingRange = 64;
+                            trailColor = Pal.suppress;
+                            trailWidth = 4;
+                            trailLength = 7;
+                            shootEffect = new Effect(24, e -> {
+                                Draw.color(Pal.suppress);
+                                Angles.randLenVectors(e.id, 4, 20 * e.finpow(), e.rotation, 180, (x, y) -> {
+                                    Fill.square(e.x + x, e.y + y, 10 * e.foutpow());
+                                });
+                            });
+                            hitEffect = despawnEffect = new MultiEffect(shootEffect, new ExplosionEffect(){{
+                                lifetime = 24f;
+                                waveStroke = 5f;
+                                waveLife = 8f;
+                                waveColor = Pal.sap;
+                                sparkColor = Pal.suppress;
+                                waveRad = 20;
+                                smokes = 0;
+                                sparks = 8;
+                                sparkRad = 20;
+                                sparkLen = 6f;
+                                sparkStroke = 2f;
+                            }});
+                        }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(Pal.suppress);
+                                Drawf.tri(b.x, b.y, 8, 10, b.rotation());
+                            }
+                        };
+                    }}
+            );
+
+            weapons.add(
+                    new Weapon(){{
+                        shootSound = Sounds.cannon;
+                        reload = 300;
+                        autoTarget = true;
+                        controllable = false;
+                        mirror = false;
+                        x = 0;
+                        y = 0;
+                        shootCone = 360;
+                        BulletType cdd = new diffBullet(360, 3){{
+                            damage = splashDamage = 500;
+                            splashDamageRadius = 10f * 8;
+                            lifetime = 90;
+                            color = Pal.suppress;
+                            pfin = false;
+                        }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                float pin = (1 - b.foutpow());
+                                rand.setSeed(b.id);
+                                for(int i = 0; i < 5; i++){
+                                    float a = rand.random(180);
+                                    float lx = EUGet.dx(b.x, splashDamageRadius * pin, a);
+                                    float ly = EUGet.dy(b.y, splashDamageRadius * pin, a);
+                                    Draw.color(Pal.suppress);
+                                    Drawf.tri(lx, ly, 25 * b.foutpow(), (70 + rand.random(-10, 10)) * b.foutpow(), a + 180);
+                                }
+                                for(int i = 0; i < 5; i++){
+                                    float a = 180 + rand.random(180);
+                                    float lx = EUGet.dx(b.x, splashDamageRadius * pin, a);
+                                    float ly = EUGet.dy(b.y, splashDamageRadius * pin, a);
+                                    Draw.color(Pal.suppress);
+                                    Drawf.tri(lx, ly, 25 * b.foutpow(), (70 + rand.random(-10, 10)) * b.foutpow(), a + 180);
+                                }
+
+                                Effect.shake(2, 2, b);
+                            }
+                        };
+                        BulletType cff = new fBullet(cdd, 15){
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Lines.stroke(6 * b.fout(), Pal.suppress);
+                                Lines.circle(b.x, b.y, 18 * b.fout());
+                            }
+                            {
+                                despawnSound = Sounds.explosionbig;
+                            }
+                        };
+                        BulletType cll = new fBullet(cff, 90){{
+                            trailEffect = new Effect(38, e -> {
+                                Draw.color(Pal.suppress);
+                                Angles.randLenVectors(e.id, 1, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> {
+                                    Fill.circle(e.x + x, e.y + y, e.foutpow() * 6);
+                                });
+                            });
+                            trailInterval = 1;
+                        }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(Pal.suppress);
+                                Fill.circle(b.x, b.y, 18 * b.finpow());
+                                float sin = Mathf.sin(Time.time, 6, 2);
+                                Draw.color(Color.black);
+                                Fill.circle(b.x, b.y, (9 + sin) * b.finpow());
+                            }
+                        };
+                        bullet = new BulletType(){{
+                            speed = 1;
+                            lifetime = 24 * 8;
+                            damage = splashDamage = cdd.splashDamage;
+                            splashDamageRadius = cdd.splashDamageRadius;
+                            hittable = absorbable = collides = collidesTiles = false;
+                            smokeEffect = shootEffect = Fx.none;
+                            despawnEffect = hitEffect = Fx.none;
+                            fragOnHit = false;
+                        }
+
+                            @Override
+                            public void hit(Bullet b, float x, float y) { }
+
+                            @Override
+                            public void hitEntity(Bullet b, Hitboxc entity, float health) { }
+
+                            @Override
+                            public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) { }
+
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                b.initVel(b.rotation(), 0);
+                                if(!(b.owner instanceof Unit)) return;
+                                Seq<Building> ms = new Seq<>();
+                                Seq<Building> bs = new Seq<>();
+                                Unit owner = (Unit) b.owner;
+                                Units.nearbyBuildings(owner.x, owner.y, (speed + 0.1f) * lifetime, building -> {
+                                    if(building.team != b.team && building.block != null && building.block.targetable){
+                                        if(building instanceof MendProjector.MendBuild || building instanceof RegenProjector.RegenProjectorBuild)
+                                            ms.addUnique(building);
+                                        else
+                                            bs.addUnique(building);
+                                    }
+                                });
+                                ms.removeAll(building -> building == null || building.dead);
+                                bs.removeAll(building -> building == null || building.dead);
+                                ms.sort(building -> building.dst(owner));
+                                bs.sort(building -> building.dst(owner));
+                                Building building = ms.size > 0 ? ms.get(0) : bs.size > 0 ? bs.get(0) : null;
+                                if(building != null){
+                                    cll.create(b, building.x, building.y, 0);
+                                }
+                                b.remove();
+                            }
+                        };
+
+                        parts.add(
+                                new DrawPart(){
+                                    final PartProgress progress = PartProgress.warmup;
+                                    final PartProgress reload = PartProgress.reload;
+
+                                    @Override
+                                    public void draw(PartParams params) {
+                                        float warmup = progress.getClamp(params);
+                                        float rd = 1 - reload.getClamp(params);
+                                        Draw.z(Layer.effect);
+                                        Lines.stroke(7 * warmup, Pal.suppress);
+                                        DrawFunc.circlePercent(params.x, params.y, 72, rd, params.rotation + 180);
+                                    }
+
+                                    @Override
+                                    public void load(String s) {
+
+                                    }
+                                }
+                        );
+                    }},
+                    new Weapon(){{
+                        x = y = 0;
+                        mirror = false;
+                        reload = 180;
+                        shoot.shots = 4;
+                        shoot.shotDelay = 8;
+                        shootSound = Sounds.laser;
+                        bullet = new mixBoom(Pal.suppress){{
+                            damage = 0;
+                            splashDamage = 180;
+                            splashDamageRadius = 8 * 8;
+                            lifetime = 25;
+                            speed = 16;
+                            trailInterval = 0;
+                            collidesGround = collidesAir = true;
+                            despawnEffect = new ExplosionEffect(){{
+                                smokes = sparks = 6;
+                                waveLife = 6;
+                                waveRad = splashDamageRadius;
+                                waveStroke = 6;
+                                lifetime = 12;
+                                sparkRad = splashDamageRadius;
+                                sparkLen = 3f;
+                                sparkStroke = 2f;
+                                waveColor = sparkColor = smokeColor = Pal.suppress;
+                                smokeSize = 4;
+                                smokeSizeBase = 0;
+                            }};
+                            fragBullet = new mixExps(){{
+                                circle = false;
+                                lifetime = 20;
+                                speed = 3f;
+                                trailColor = color = Pal.suppress;
+                                damage = 0;
+                                splashDamage = 32;
+                                splashDamageRadius = 5.4f * 8;
+                                trailWidth = 4;
+                                trailLength = 8;
+                                hitEffect = despawnEffect = new ExplosionEffect(){{
+                                    lifetime = 20f;
+                                    waveLife = 6;
+                                    waveRad = splashDamageRadius;
+                                    waveColor = sparkColor = smokeColor = Pal.suppress;
+                                    smokeSize = 3;
+                                    smokeSizeBase = 0;
+                                    smokes = 4;
+                                    sparks = 5;
+                                    sparkRad = splashDamageRadius;
+                                    sparkLen = 2f;
+                                    sparkStroke = 1.5f;
+                                }};
+                            }
+
+                                @Override
+                                public void draw(Bullet b) {
+                                    drawTrail(b);
+                                    drawParts(b);
+                                    Draw.color(Pal.suppress);
+                                    Drawf.tri(b.x, b.y, 6, 11 * b.fout(), b.rotation());
+                                }
+                            };
+                            fragBullets = 6;
+                            fragAngle = 30;
+                            fragSpread = 60;
+                            fragRandomSpread = 0;
+                        }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                drawTrail(b);
+                                drawParts(b);
+                                Draw.color(Pal.suppress);
+                                Drawf.tri(b.x, b.y, 10, 30, b.rotation());
+                                Drawf.tri(b.x, b.y, 10, 40, b.rotation() - 180);
+                            }
+                        };
+                    }}
+            );
+
+            parts.add(
+                    new BowHalo(){{
+                        progress = PartProgress.constant(1);
+                        y = -8;
+                        radius = 19;
+                        w1 = 6;
+                        h1 = 11;
+                        w2 = 8;
+                        h2 = 36;
+                        color = Pal.suppress;
+                    }},
+                    new DrawPart(){
+                        final PartProgress progress = PartProgress.warmup;
+                        final PartProgress reload = PartProgress.reload;
+
+                        @Override
+                        public void draw(PartParams params) {
+                            float warmup = progress.getClamp(params);
+                            float rd = 1 - reload.getClamp(params);
+                            Draw.z(Layer.effect);
+                            Lines.stroke(5 * warmup, Pal.suppress);
+                            DrawFunc.circlePercent(params.x, params.y, 55, rd, params.rotation);
+                            for(int i = 0; i < 4; i++){
+                                float r = i * 90 + Time.time * 2;
+                                float dx = EUGet.dx(params.x, 68, r), dy = EUGet.dy(params.y, 68, r);
+                                Drawf.tri(dx, dy, 14 * warmup, 13 * warmup, r + 180);
+                            }
+                        }
+
+                        @Override
+                        public void load(String s) {
+
+                        }
+                    }
+            );
+
+            setEnginesMirror(new UnitEngine(10, -26.8f, 5f, 315f));
+            setEnginesMirror(new UnitEngine(26.8f, -26.8f, 5f, 315f));
+        }};
+
 
         winglet = new UnitType("winglet"){{
             armor = 1;

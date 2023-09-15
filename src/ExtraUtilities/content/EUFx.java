@@ -17,11 +17,16 @@ import arc.struct.FloatSeq;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
+import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
+import mindustry.gen.Building;
+import mindustry.gen.Healthc;
+import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.meta.Attribute;
 
@@ -483,5 +488,23 @@ public class EUFx {
 
     public static Effect normalIceTrail = new Effect(90, e -> {
         DrawFunc.drawSnow(e.x, e.y, e.rotation * e.foutpow(), e.fin() * 180f, e.color);
+    });
+
+    public static Effect diffHit = new Effect(30, e -> {
+        if(!(e.data instanceof Healthc)) return;
+        if(e.data instanceof Building){
+            Building b = (Building) e.data;
+            if(b.block == null) return;
+            Draw.mixcol(e.color, 1);
+            Draw.alpha(e.fout());
+            Draw.rect(b.block.fullIcon, e.x, e.y);
+        }
+        if(e.data instanceof Unit){
+            Unit u = (Unit) e.data;
+            if(u.type == null) return;
+            Draw.mixcol(e.color, 1);
+            Draw.alpha(e.fout());
+            Draw.rect(u.type.fullIcon, e.x, e.y);
+        }
     });
 }

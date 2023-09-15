@@ -12,14 +12,13 @@ import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
 import mindustry.Vars;
+import mindustry.entities.Mover;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.part.DrawPart;
 import mindustry.entities.units.WeaponMount;
-import mindustry.gen.Bullet;
-import mindustry.gen.Sounds;
-import mindustry.gen.Teamc;
-import mindustry.gen.Unit;
+import mindustry.game.Team;
+import mindustry.gen.*;
 import mindustry.graphics.Layer;
 import mindustry.world.blocks.ControlBlock;
 
@@ -40,7 +39,7 @@ public class CtrlMissile extends BulletType {
         this.width = width;
         this.height = height;
         homingPower = 2.5f;
-        homingRange = 18 * 8;
+        homingRange = 8 * 8;
         trailWidth = 3;
         trailLength = 7;
         lifetime = 60 * 1.7f;
@@ -73,8 +72,8 @@ public class CtrlMissile extends BulletType {
     public void updateHoming(Bullet b) {
         //autoHoming时候优先寻找目标，无目标时依然会跟随瞄准方向
         if (homingPower > 0.0001f && b.time >= homingDelay) {
-            float realAimX = b.aimX < 0 ? b.x : b.aimX;
-            float realAimY = b.aimY < 0 ? b.y : b.aimY;
+            float realAimX = b.aimX < 0 ? b.data instanceof Position ? ((Position) b.data).getX() : b.x : b.aimX;
+            float realAimY = b.aimY < 0 ? b.data instanceof Position ? ((Position) b.data).getY() : b.y : b.aimY;
 
             Teamc target;
             if (heals()) {
@@ -90,10 +89,10 @@ public class CtrlMissile extends BulletType {
                 }
             }
 
+            if(reflectable) return;
             if (target != null && autoHoming) {
                 b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), homingPower * Time.delta));
             } else {
-                if(reflectable) return;
                 @Nullable Unit shooter = null;
                 if(b.owner instanceof Unit) shooter = (Unit)b.owner;
                 if(b.owner instanceof ControlBlock) shooter = ((ControlBlock)b.owner).unit();
@@ -101,8 +100,10 @@ public class CtrlMissile extends BulletType {
                     //if(!Vars.net.client() || shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
                     if(shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
                     else {
-                        Teamc tc = Units.closestTarget(b.team, realAimX, realAimY, Math.max(homingRange, shooter.range()), e -> e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id), t -> collidesGround && !b.hasCollided(t.id));
-                        if(tc != null) lookAt(tc, b);
+                        if (b.data instanceof Position)
+                            lookAt((Position) b.data, b);
+                        else
+                            lookAt(EUGet.pos(realAimX, realAimY), b);
                     }
                 }
             }
