@@ -112,7 +112,7 @@ public class Domain extends Block {
         }
     };
     protected static final Cons<Unit> unitShield = unit -> {
-        if(unit != player.unit()) {
+        if(player == null || unit != player.unit()) {
             float overlapDst = (unit.hitSize / 2f + db.range()) - unit.dst(db);
             if (overlapDst > 0) {
                 db.buildup += (unit.hitSize * ud);
@@ -121,7 +121,7 @@ public class Domain extends Block {
         }
     };
     protected static final Cons<Unit> unitConsumer = unit -> {
-        if(unit != player.unit()) {
+        if(player == null || unit != player.unit()) {
             float overlapDst = (unit.hitSize / 2f + db.range()) - unit.dst(db);
 
             if (overlapDst > 0) {
