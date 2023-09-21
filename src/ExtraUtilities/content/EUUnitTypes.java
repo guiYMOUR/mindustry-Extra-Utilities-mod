@@ -970,17 +970,15 @@ public class EUUnitTypes {
 
         napoleon = new TankUnitType("napoleon"){{
             hitSize = 57;
-            treadPullOffset = 1;
+
             speed = 0.39f;
             health = 60000;
             armor = 52;
             crushDamage = 10;
             rotateSpeed = 0.8f;
             treadRects = new Rect[]{
-                    new Rect(-113, -133 + 167, 62, 100),
-                    new Rect(-113 + 260, -133 + 167, 62, 100),
-                    new Rect(-113, -133, 62, 90),
-                    new Rect(-113 + 260, -133, 62, 90),
+                    new Rect(-113, -133 + 167, 70, 100),
+                    new Rect(-113, -133, 70, 90)
             };
 
             immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped);
@@ -1152,6 +1150,11 @@ public class EUUnitTypes {
                         );
 
                         parts.add(
+                                new RegionPart("-glow") {{
+                                    color = esc;
+                                    blending = Blending.additive;
+                                    outline = mirror = false;
+                                }},
                                 new ShapePart() {{
                                     progress = PartProgress.warmup.delay(0.5f);
                                     color = esc;
@@ -1402,6 +1405,8 @@ public class EUUnitTypes {
             payloadCapacity = Mathf.sqr(7.6f) * 64;
             engineSize = 6;
             engineOffset = 28;
+
+            immunities.addAll(StatusEffects.wet, StatusEffects.freezing, StatusEffects.sapped, StatusEffects.disarmed, StatusEffects.electrified, EUStatusEffects.speedDown);
             
             abilities.add(
                     new SuppressionFieldAbility() {{
@@ -1439,7 +1444,7 @@ public class EUUnitTypes {
                             sparkLen = 6f;
                             sparkStroke = 2f;
                         }};
-                        BulletType ms = new CtrlMissile(name("havoc-a"), 10, 20){{
+                        BulletType ms = new CtrlMissile(name("havoc-missile"), 14, 20){{
                             damage = splashDamage = 160;
                             splashDamageRadius = spr;
                             despawnEffect = hitEffect = de;
@@ -1504,7 +1509,7 @@ public class EUUnitTypes {
                                 Unit owner = (Unit) b.owner;
                                 float n = Math.max(b.foutpow(), 0.4f);
                                 Draw.z(Layer.flyingUnitLow);
-                                Draw.rect(Core.atlas.find(name("havoc-a")), b.x, b.y, 25 * n, 50 * n, owner.rotation - 90);
+                                Draw.rect(Core.atlas.find(name("havoc-missile")), b.x, b.y, 35 * n, 50 * n, owner.rotation - 90);
                                 Tmp.v1.set(0, -8).rotate(owner.rotation - 90);
                                 Draw.color(Pal.suppress);
                                 Draw.z(Layer.bullet);

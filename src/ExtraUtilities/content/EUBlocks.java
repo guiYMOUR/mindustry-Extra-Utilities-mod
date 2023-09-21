@@ -16,10 +16,10 @@ import ExtraUtilities.worlds.blocks.turret.*;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
+import ExtraUtilities.worlds.consumers.ConsumeLiquidDynamic;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.*;
 import arc.Core;
-import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -30,13 +30,18 @@ import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Position;
 import arc.math.geom.Vec2;
+import arc.scene.style.TextureRegionDrawable;
+import arc.scene.ui.Image;
+import arc.scene.ui.layout.Stack;
+import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.util.Scaling;
+import arc.util.Strings;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.*;
-import mindustry.entities.Damage;
 import mindustry.entities.Effect;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.*;
@@ -49,6 +54,10 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.graphics.Trail;
 import mindustry.type.*;
+import mindustry.ui.ItemDisplay;
+import mindustry.ui.ItemImage;
+import mindustry.ui.LiquidDisplay;
+import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.distribution.DirectionLiquidBridge;
@@ -57,7 +66,6 @@ import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.ArmoredConduit;
 import mindustry.world.blocks.power.ConsumeGenerator;
-import mindustry.world.blocks.power.ThermalGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssemblerModule;
@@ -66,6 +74,8 @@ import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.consumers.ConsumeLiquidFlammable;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
+
+import java.util.Iterator;
 
 import static arc.graphics.g2d.Draw.*;
 import static arc.math.Angles.randLenVectors;
@@ -97,6 +107,14 @@ public class EUBlocks {
         //other&sandbox
             coreKeeper, quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
+    public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
+        public LiquidStack[] liquid;
+
+        public LiquidUnitPlan(UnitType unit, float time, ItemStack[] requirements, LiquidStack[] liquid){
+            super(unit, time, requirements);
+            this.liquid = liquid;
+        }
+    }
     public static void load(){
         arkyciteExtractor = new AttributeCrafter("arkycite-extractor"){{
             requirements(Category.production, with(Items.carbide, 35, Items.oxide, 50, Items.thorium, 150, Items.tungsten, 100));
@@ -2009,10 +2027,10 @@ public class EUBlocks {
         }};
         
         finalF = new UnitFactory("finalF"){{
-            requirements(Category.units, with(EUItems.lightninAlloy, 1200, Items.silicon, 4000, Items.thorium, 2200, Items.phaseFabric, 1500));
+            requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 3000, Items.thorium, 1800, Items.phaseFabric, 1200));
             size = 5;
             consumePower(30);
-            consumeLiquid(Liquids.water, 1);
+            consume(new ConsumeLiquidDynamic((e) -> ((UnitFactoryBuild)e).currentPlan != -1 ? ((LiquidUnitPlan)plans.get(Math.min(((UnitFactoryBuild)e).currentPlan, plans.size - 1))).liquid : LiquidStack.empty, new Liquid[]{Liquids.cryofluid, Liquids.slag, Liquids.water, Liquids.cyanogen}));
             alwaysUnlocked = true;
             config(Integer.class, (UnitFactoryBuild tile, Integer i) -> {
                 tile.currentPlan = i < 0 || i >= plans.size ? -1 : i;
@@ -2028,27 +2046,174 @@ public class EUBlocks {
             //buildVisibility = BuildVisibility.sandboxOnly;
         }
 
+            public final ObjectMap<Integer, Seq<UnitType>> utp = new ObjectMap<>();
+
+            BulletType frags(BulletType t){
+                BulletType b = t;
+                while(b != null){
+                    if(b.damage > 1000 || b.splashDamage > 1000) return b;
+                    b = b.fragBullet;
+                }
+                return null;
+            }
+
+            boolean ekOnly(ItemStack[] stacks){
+                if(stacks.length == 0) return false;
+                for(ItemStack stack : stacks) {
+                    if(Items.erekirOnlyItems.contains(stack.item)) return true;
+                }
+                return false;
+            }
+//
+//            boolean checkDamage(Seq<Weapon> ws){
+//                if(ws.size == 0) return false;
+//                for(Weapon w : ws){
+//                    if(w.bullet != null && frags(w.bullet) != null) return true;
+//                }
+//                return false;
+//            }
+
+
             @Override
             public void init() {
-                for(int i = 0; i < Vars.content.units().size; i++){
+                for(int i = 1; i <= 5; i++) utp.put(i, new Seq<>());
+                utp.put(1, new Seq<>());
+                for(int i = 0; i < Vars.content.units().size; i++) {
                     UnitType u = Vars.content.unit(i);
                     if(u != null && u.getFirstRequirements() != null){
-                        ItemStack[] is = u.getFirstRequirements();
-                        ItemStack[] os = new ItemStack[is.length];
-                        for (int a = 0; a < is.length; a++) {
-                            os[a] = new ItemStack(is[a].item, is[a].amount >= 40 ? (int) (is[a].amount * (1.5 + (hardMod ? 0.5f : 0))) : is[a].amount);
+                        if(u.armor <= 11 && u.health <= 5000){
+                            utp.get(1).addUnique(u);
+                        } else if(u.armor <= 20 && u.health <= 12000){
+                            utp.get(2).addUnique(u);
+                        } else if(u.armor <= 30 && u.health <= 30000){
+                            utp.get(3).addUnique(u);
+                        } else if(u.armor <= 55 && u.health <= 65000){
+                            utp.get(4).addUnique(u);
+                        } else {
+                            utp.get(5).addUnique(u);
                         }
-                        float time = 0;
-                        if(u.getFirstRequirements().length > 0) {
-                            for (ItemStack itemStack : os) {
-                                time += itemStack.amount * itemStack.item.cost;
+                    }
+                }
+                LiquidStack[][] ls = new LiquidStack[][]{
+                        LiquidStack.with(Liquids.water, 0.2f),
+                        LiquidStack.with(Liquids.cryofluid, 1), 
+                        LiquidStack.with(Liquids.cryofluid, 2, Liquids.slag, 0.2f),
+                        LiquidStack.with(Liquids.cryofluid, 3f, Liquids.slag, 0.5f),
+                        LiquidStack.with(Liquids.cryofluid, 4f, Liquids.slag, 1)
+                };
+                LiquidStack[][] le = new LiquidStack[][]{
+                        LiquidStack.with(Liquids.water, 0.2f),
+                        LiquidStack.with(Liquids.cyanogen, 0.15f),
+                        LiquidStack.with(Liquids.cyanogen, 0.25f),
+                        LiquidStack.with(Liquids.cyanogen, 0.4f, Liquids.slag, 0.5f),
+                        LiquidStack.with(Liquids.cyanogen, 0.6f, Liquids.slag, 1f)
+                };
+                Seq<Integer> tiers = utp.keys().toSeq();
+                for(int i : tiers){
+                    Seq<UnitType> unitTypes = utp.get(i);
+                    if(unitTypes.size > 0) {
+                        for(UnitType u : unitTypes){
+                            if(u != null){
+                                ItemStack[] is = u.getFirstRequirements();
+                                ItemStack[] os = new ItemStack[is.length];
+                                for (int a = 0; a < is.length; a++) {
+                                    os[a] = new ItemStack(is[a].item, is[a].amount >= 40 ? (int) (is[a].amount * (1.5 + (hardMod ? 0.5f : 0))) : is[a].amount);
+                                }
+                                float time = 0;
+                                if(u.getFirstRequirements().length > 0) {
+                                    for (ItemStack itemStack : os) {
+                                        time += itemStack.amount * itemStack.item.cost;
+                                    }
+                                }
+
+                                LiquidStack[][] cpl = ekOnly(is) ? le : ls;
+
+                                if(i < 5) plans.add(new LiquidUnitPlan(u, time * 6, os, cpl[i - 1]));
+                                else plans.add(new LiquidUnitPlan(u, time * 2, is, cpl[i - 1]));
                             }
                         }
-                        if(u.armor < 55) plans.add(new UnitPlan(u, time * 6, os));
-                        else plans.add(new UnitPlan(u, time * 2, is));
                     }
                 }
                 super.init();
+            }
+
+            final String[] nums = new String[]{"IV[]", "V[]", "VI[]"};
+            String checkTier(UnitType u){
+                Seq<Integer> tiers = utp.keys().toSeq();
+                for(int i : tiers) {
+                    Seq<UnitType> unitTypes = utp.get(i);
+                    if(u == null || unitTypes.size <= 0) return "null";
+                    if(unitTypes.contains(u)) {
+                        return i == 1 ? "[accent]below Tier IV[]" : i == 5 ? "[accent]over Tier VI[]" : "[accent]Tier " + nums[i - 2];
+                    }
+                }
+                return "";
+            }
+
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.remove(Stat.input);
+                stats.remove(Stat.output);
+                this.stats.add(Stat.output, (table) -> {
+                    table.row();
+
+                    for (UnitPlan plan : plans) {
+                        table.table(Styles.grayPanel, (t) -> {
+                            if (plan.unit.isBanned()) {
+                                t.image(Icon.cancel).color(Pal.remove).size(40);
+                            } else {
+                                if (plan.unit.unlockedNow()) {
+                                    t.button(new TextureRegionDrawable(plan.unit.uiIcon), () -> {
+                                        ui.content.show(plan.unit);
+                                    }).size(70).pad(10).left().scaling(Scaling.fit);
+                                    t.table((info) -> {
+                                        info.add(plan.unit.localizedName + " " + checkTier(plan.unit)).left();
+                                        info.row();
+                                        info.add(Strings.autoFixed(plan.time / 60, 1) + " " + Core.bundle.get("unit.seconds")).color(Color.lightGray);
+                                    }).left();
+                                    t.table((req) -> {
+                                        req.right();
+
+                                        for (int i = 0; i < plan.requirements.length; ++i) {
+                                            if (i % 6 == 0) {
+                                                req.row();
+                                            }
+
+                                            ItemStack stack = plan.requirements[i];
+                                            req.add(new ItemDisplay(stack.item, stack.amount, false)).pad(4);
+                                        }
+                                        req.row();
+                                        if(plan instanceof LiquidUnitPlan){
+                                            for (int i = 0; i < ((LiquidUnitPlan) plan).liquid.length; ++i) {
+                                                if(i % 6 == 0){
+                                                    req.row();
+                                                }
+                                                LiquidStack stack = ((LiquidUnitPlan) plan).liquid[i];
+                                                Liquid liquid = stack.liquid;
+                                                float amount = stack.amount * 60;
+                                                req.add(new Stack() {{
+                                                        add((new Image(liquid.uiIcon)).setScaling(Scaling.fit));
+                                                        if (amount != 0) {
+                                                            Table t = (new Table()).left().bottom();
+                                                            t.add(Strings.autoFixed(amount, 2)).style(Styles.outlineLabel);
+                                                            add(t);
+                                                        }
+                                                    }
+                                                }).size(32.0F).padRight((float)(3 + (amount != 0 && Strings.autoFixed(amount, 2).length() > 2 ? 8 : 0))).pad(4);
+                                            }
+                                        }
+
+                                    }).right().grow().pad(10);
+                                } else {
+                                    t.image(Icon.lock).color(Pal.darkerGray).size(40);
+                                }
+
+                            }
+                        }).growX().pad(5);
+                        table.row();
+                    }
+                });
             }
         };
 

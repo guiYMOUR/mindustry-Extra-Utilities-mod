@@ -14,7 +14,6 @@ import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
-import mindustry.entities.bullet.MissileBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.effect.WaveEffect;
@@ -24,13 +23,14 @@ import mindustry.entities.part.ShapePart;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
-import mindustry.mod.Mod;
 import mindustry.mod.Mods;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.payloads.Constructor;
+import mindustry.world.blocks.payloads.PayloadConveyor;
+import mindustry.world.blocks.payloads.PayloadRouter;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
@@ -91,6 +91,8 @@ public class EUOverride {
 
         ((UnitFactory)Blocks.airFactory).plans.add(new UnitFactory.UnitPlan(EUUnitTypes.winglet, 60f * 30, with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));
 
+        ((PayloadConveyor)Blocks.reinforcedPayloadConveyor).payloadLimit = 3.25f;
+        ((PayloadRouter)Blocks.reinforcedPayloadRouter).payloadLimit = 3.25f;
         Block rwl = Vars.content.block(name("rwl"));
         if(rwl != null) {
             //WHY NOT USE 'filter.select(this::canProduce)'?
@@ -100,8 +102,8 @@ public class EUOverride {
             Blocks.largeConstructor.description += "\n[accent]Resetting py EU mod.";
             ((Constructor)Blocks.largeConstructor).filter = new Seq<>();
 
-            ((UnitAssembler) Blocks.tankAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.napoleon, 220 * 60f, PayloadStack.list(UnitTypes.precept, 8, rwl, 19)));
-            ((UnitAssembler) Blocks.shipAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.havoc, 220 * 60f, PayloadStack.list(UnitTypes.obviate, 7, rwl, 20)));
+            ((UnitAssembler) Blocks.tankAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.napoleon, 240 * 60f, PayloadStack.list(UnitTypes.precept, 8, rwl, 20)));
+            ((UnitAssembler) Blocks.shipAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.havoc, 240 * 60f, PayloadStack.list(UnitTypes.obviate, 8, rwl, 20)));
         }
     }
 
@@ -130,6 +132,7 @@ public class EUOverride {
         }};
         UnitTypes.quell.weapons.get(0).shake = 1;
 
+        UnitTypes.disrupt.health = 13000;
         UnitTypes.disrupt.targetAir = true;
         UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{//
             shootEffect = Fx.sparkShoot;
@@ -244,6 +247,7 @@ public class EUOverride {
                 u.armor = Math.min(u.armor, 80);
             }
         }
+
     }
 
     //special changes on April Fools'Day
