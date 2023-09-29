@@ -243,8 +243,7 @@ public class HeatDriver extends Block {
             for(int i = 0; i<owners.size; i++){
                 int pos = owners.get(i).pos();
                 Building build = world.build(pos);
-                if (build instanceof HeatDriverBuild) {
-                    HeatDriverBuild owner = (HeatDriverBuild) build;
+                if (build instanceof HeatDriverBuild owner) {
                     if (owner.block != block || owner.link != this.pos()) owners.remove(i);
                 } else {
                     owners.remove(i);

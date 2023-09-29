@@ -34,7 +34,7 @@ public class propeller extends Ability {
 
     @Override
     public String localized() {
-        return "";
+        return Core.bundle.format("ability.extra-utilities-propeller", px, py);
     }
 
     @Override

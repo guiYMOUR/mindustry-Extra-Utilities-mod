@@ -18,8 +18,7 @@ public class LiquidMassDriverBolt extends BulletType {
 
     @Override
     public void draw(Bullet b) {
-        if(!(b.data() instanceof LiquidBulletData)) return;
-        LiquidBulletData data = (LiquidBulletData) b.data();
+        if(!(b.data() instanceof LiquidBulletData data)) return;
 
         float mid = 100;//阈值
 
@@ -35,11 +34,10 @@ public class LiquidMassDriverBolt extends BulletType {
 
     @Override
     public void update(Bullet b) {
-        if(!(b.data() instanceof LiquidBulletData)){
+        if(!(b.data() instanceof LiquidBulletData data)){
             hit(b);
             return;
         }
-        LiquidBulletData data = (LiquidBulletData) b.data();
 
         float hitDst = 7f;
 
@@ -76,8 +74,7 @@ public class LiquidMassDriverBolt extends BulletType {
     @Override
     public void despawned(Bullet b) {
         super.despawned(b);
-        if(!(b.data() instanceof LiquidBulletData)) return;
-        LiquidBulletData data = (LiquidBulletData) b.data();
+        if(!(b.data() instanceof LiquidBulletData data)) return;
         Fx.hitLiquid.at(b.x, b.y, b.rotation(), data.liquid.color);
     }
 

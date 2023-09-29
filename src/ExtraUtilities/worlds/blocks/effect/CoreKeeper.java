@@ -95,8 +95,7 @@ public class CoreKeeper extends StorageBlock {
 
         Rect rect = getRect(Tmp.r1, tile.worldx() + offset, tile.worldy() + offset, range).grow(0.1f);
         return !indexer.getFlagged(team, BlockFlag.storage).contains(b -> {
-            if(b instanceof CoreKeeperBuild) {
-                CoreKeeperBuild build = (CoreKeeperBuild) b;
+            if(b instanceof CoreKeeperBuild build) {
                 CoreKeeper block = (CoreKeeper) b.block;
                 return getRect(Tmp.r2, build.x, build.y, block.range).overlaps(rect);
             }

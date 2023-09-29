@@ -105,8 +105,7 @@ public class MinerPoint extends Block {
         if(!limitSize) return true;
         Rect rect = getRect(Tmp.r1, tile.worldx() + offset, tile.worldy() + offset, range).grow(0.1f);
         return !indexer.getFlagged(team, BlockFlag.factory).contains(b -> {
-            if(b instanceof MinerPointBuild) {
-                MinerPointBuild build = (MinerPointBuild) b;
+            if(b instanceof MinerPointBuild build) {
                 MinerPoint block = (MinerPoint) b.block;
                 return getRect(Tmp.r2, build.x, build.y, block.range).overlaps(rect);
             }
@@ -118,11 +117,9 @@ public class MinerPoint extends Block {
     public void setStats() {
         super.setStats();
         stats.add(Stat.drillTier, StatValues.blocks(b -> {
-            if(b instanceof  Floor){
-                Floor f = (Floor) b;
+            if(b instanceof Floor f){
                 return (f.wallOre && f.itemDrop != null && f.itemDrop != blockedItem && f.itemDrop.hardness <= tier) || (!f.wallOre && f.itemDrop != null && f.itemDrop.hardness <= tier && f.itemDrop != blockedItem && (indexer.isBlockPresent(f) || state.isMenu()));
-            } else if(b instanceof StaticWall){
-                StaticWall w = (StaticWall) b;
+            } else if(b instanceof StaticWall w){
                 return w.itemDrop != null && w.itemDrop != blockedItem && w.itemDrop.hardness <= tier;
             } else {
                 return false;

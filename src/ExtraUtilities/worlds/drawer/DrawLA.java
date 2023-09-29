@@ -138,8 +138,7 @@ public class DrawLA extends DrawBlock {
             if(b.time > 10 && b.time <= 30) b.rotation(b.rotation() + 18f * Time.delta);
             //控制间距（
             if(b.time > 33 && b.time <= 53) b.rotation(b.rotation() - 18f * Time.delta);
-            if(b.time > 63 && b.data instanceof Position){
-                Position pos = (Position)b.data;
+            if(b.time > 63 && b.data instanceof Position pos){
                 b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(pos), Time.delta * 6f));
                 b.initVel(b.rotation(), speed + b.dst(pos)/40f);
                 if(b.within(pos, tilesize)) b.remove();

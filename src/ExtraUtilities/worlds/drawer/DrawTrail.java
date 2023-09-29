@@ -34,8 +34,7 @@ public class DrawTrail extends DrawBlock {
 
     @Override
     public void draw(Building build) {
-        if(!(build instanceof TurretBuild)) return;
-        TurretBuild build1 = (TurretBuild) build;
+        if(!(build instanceof TurretBuild build1)) return;
         if(ball != null && build1.wasShooting){
             Tmp.v1.set(x, y).rotate(build1.rotation - 90);
 

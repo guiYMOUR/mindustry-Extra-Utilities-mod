@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.entity.ability;
 
+import arc.Core;
 import arc.util.Nullable;
 import mindustry.entities.abilities.Ability;
 import mindustry.gen.*;
@@ -10,7 +11,7 @@ public class preventCheatingAbility extends Ability {
 
     @Override
     public String localized() {
-        return "";
+        return Core.bundle.get("ability.extra-utilities-Death");
     }
 
     @Override

@@ -26,13 +26,14 @@ public class AimPart extends DrawPart {
 
     @Override
     public void draw(PartParams params) {
+        float z = Draw.z();
         Draw.color(color);
         Draw.z(layer);
         float wp = warmup.getClamp(params);
         float fout = 1 - progress.getClamp(params);
         float track = Mathf.curve(fout, 0, 0.25f) * Mathf.curve(fout, 0, 0.3f) * fout;
 
-        Tmp.v1.set(x, y).rotate(params.rotation - 90 + rt);
+        Tmp.v1.set(x, y).rotate(params.rotation - 90);
         float px = params.x + Tmp.v1.x, py = params.y + Tmp.v1.y;
         for(int i = 0; i <= length / spacing; i++){
             Tmp.v1.trns(params.rotation + rt, i * spacing);
@@ -45,6 +46,8 @@ public class AimPart extends DrawPart {
         for(int i : Mathf.signs){
             Lines.lineAngle(px + Tmp.v1.x * i, py + Tmp.v1.y * i, params.rotation + rt, length * (0.75f + track / 4) * Mathf.curve(fout, 0, 0.1f));
         }
+        Draw.reset();
+        Draw.z(z);
     }
 
     @Override

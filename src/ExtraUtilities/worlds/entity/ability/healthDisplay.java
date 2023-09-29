@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.entity.ability;
 
+import arc.Core;
 import arc.graphics.g2d.*;
 import mindustry.entities.abilities.Ability;
 import mindustry.gen.Unit;
@@ -16,7 +17,7 @@ public class healthDisplay extends Ability {
 
     @Override
     public String localized() {
-        return "";
+        return Core.bundle.get("ability.extra-utilities-healthDisplay");
     }
 
     @Override

@@ -15,6 +15,7 @@ public class JavelinWing extends DrawPart {
     public float layer = -1f, layerOffset = 0f;
     public PartProgress progress = PartProgress.warmup;
     public float rd = 20, rt = 35;
+    public float ap = 0.6f;
 
     public boolean mirror = true;
 
@@ -42,7 +43,7 @@ public class JavelinWing extends DrawPart {
 
             float rotation = params.rotation - 90 - 180 * s;
             float rotAdd = rt * p;
-            Draw.color(color.a(0.6f * p));
+            Draw.color(color.cpy().a(ap * p));
             Drawf.tri(rx + Angles.trnsx(rotation + rotAdd, rd), ry + Angles.trnsy(rotation + rotAdd, rd), w2 * p, h2 * p * 1.3f, rotation + rotAdd);
             Drawf.tri(rx + Angles.trnsx(rotation + rotAdd, rd), ry + Angles.trnsy(rotation + rotAdd, rd), w2 * p * 1.8f, h2, rotation + rotAdd - 180);
             Drawf.tri(rx + Angles.trnsx(rotation, rd), ry + Angles.trnsy(rotation, rd), w1 * p, h1 * p * 1.3f, rotation);
@@ -54,6 +55,8 @@ public class JavelinWing extends DrawPart {
             Drawf.tri(rx + Angles.trnsx(rotation - rotAdd, rd), ry + Angles.trnsy(rotation - rotAdd, rd), w2 * p, h2 * p * 1.3f, rotation - rotAdd);
             Drawf.tri(rx + Angles.trnsx(rotation - rotAdd, rd), ry + Angles.trnsy(rotation - rotAdd, rd), w2 * p * 1.8f, h2, rotation - rotAdd - 180);
         }
+        Draw.reset();
+        Draw.z(z);
     }
 
     @Override

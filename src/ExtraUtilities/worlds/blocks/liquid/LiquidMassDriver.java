@@ -314,8 +314,7 @@ public class LiquidMassDriver extends Block {
         }
 
         protected boolean shooterValid(Building other){
-            if(other instanceof LiquidMassDriverBuild && other.isValid() && other.efficiency > 0){
-                LiquidMassDriverBuild entity = (LiquidMassDriverBuild) other;
+            if(other instanceof LiquidMassDriverBuild entity && other.isValid() && other.efficiency > 0){
                 return entity.block == block && entity.link == pos() && within(other, range);
             }
             return false;
@@ -324,8 +323,7 @@ public class LiquidMassDriver extends Block {
         protected boolean linkValid(){
             if(link == -1) return false;
             Building linked = world.build(this.link);
-            if(linked instanceof  LiquidMassDriverBuild){
-                LiquidMassDriverBuild other = (LiquidMassDriverBuild) linked;
+            if(linked instanceof LiquidMassDriverBuild other){
                 return other.block == block && other.team == team && within(other, range);
             }
             return false;
