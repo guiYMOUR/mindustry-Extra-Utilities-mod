@@ -2,17 +2,11 @@ package ExtraUtilities.content;
 
 import ExtraUtilities.ai.DefenderHealAI;
 import ExtraUtilities.ai.MinerPointAI;
-import ExtraUtilities.worlds.drawer.AimPart;
-import ExtraUtilities.worlds.drawer.BowHalo;
-import ExtraUtilities.worlds.drawer.DrawFunc;
-import ExtraUtilities.worlds.drawer.PartBow;
-import ExtraUtilities.worlds.entity.ability.BatteryAbility;
-import ExtraUtilities.worlds.entity.ability.TerritoryFieldAbility;
-import ExtraUtilities.worlds.entity.ability.preventCheatingAbility;
-import ExtraUtilities.worlds.entity.ability.propeller;
+import ExtraUtilities.worlds.drawer.*;
+import ExtraUtilities.worlds.entity.ability.*;
 import ExtraUtilities.worlds.entity.bullet.*;
-import ExtraUtilities.worlds.entity.weapon.antiMissileWeapon;
-import ExtraUtilities.worlds.entity.weapon.healConeWeapon;
+import ExtraUtilities.worlds.entity.weapon.*;
+import ExtraUtilities.worlds.entity.weapon.mounts.reRotMount;
 import arc.Core;
 import arc.graphics.Blending;
 import arc.graphics.Color;
@@ -27,11 +21,14 @@ import arc.struct.ObjectSet;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
+import mindustry.Vars;
 import mindustry.ai.UnitCommand;
 import mindustry.ai.types.FlyingFollowAI;
-import mindustry.content.*;
+import mindustry.content.Fx;
+import mindustry.content.Items;
+import mindustry.content.StatusEffects;
+import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
-import mindustry.entities.Lightning;
 import mindustry.entities.Mover;
 import mindustry.entities.Units;
 import mindustry.entities.abilities.*;
@@ -41,7 +38,9 @@ import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.part.DrawPart;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.part.ShapePart;
+import mindustry.entities.pattern.ShootHelix;
 import mindustry.entities.pattern.ShootSpread;
+import mindustry.entities.units.WeaponMount;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -52,18 +51,18 @@ import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
-import mindustry.type.weapons.PointDefenseWeapon;
-import mindustry.type.weapons.RepairBeamWeapon;
 import mindustry.world.blocks.defense.MendProjector;
 import mindustry.world.blocks.defense.RegenProjector;
 import mindustry.world.meta.Env;
 
-import static ExtraUtilities.ExtraUtilitiesMod.*;
+import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
+import static ExtraUtilities.ExtraUtilitiesMod.name;
+import static arc.graphics.g2d.Draw.color;
 import static mindustry.content.Fx.rand;
-import static mindustry.content.Fx.turbinegenerate;
 
 public class EUUnitTypes {
     static {
+        //one day, someone asks me : why not use xxxUnit::new? ha, I say : I don't know...
         EntityMapping.nameMap.put(name("miner"), EntityMapping.idMap[36]);
         EntityMapping.nameMap.put(name("T2miner"), EntityMapping.idMap[36]);
 
@@ -71,11 +70,13 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("nebula"), EntityMapping.idMap[24]);
         EntityMapping.nameMap.put(name("asphyxia"), EntityMapping.idMap[33]);
         EntityMapping.nameMap.put(name("apocalypse"), EntityMapping.idMap[3]);
+        EntityMapping.nameMap.put(name("Tera"), EntityMapping.idMap[5]);
         EntityMapping.nameMap.put(name("nihilo"), EntityMapping.idMap[20]);
         EntityMapping.nameMap.put(name("narwhal"), EntityMapping.idMap[20]);
 
         EntityMapping.nameMap.put(name("napoleon"), EntityMapping.idMap[43]);
         EntityMapping.nameMap.put(name("havoc"), EntityMapping.idMap[5]);
+        EntityMapping.nameMap.put(name("arcana"), EntityMapping.idMap[24]);
 
 
         EntityMapping.nameMap.put(name("winglet"), EntityMapping.idMap[3]);
@@ -84,9 +85,9 @@ public class EUUnitTypes {
     public static UnitType
         miner, T2miner,
         //T6
-        suzerain, nebula, asphyxia, apocalypse, nihilo, narwhal,
+        suzerain, nebula, asphyxia, apocalypse, Tera, nihilo, narwhal,
         //E-T6
-        napoleon, havoc,
+        napoleon, havoc, arcana,
         //air sapper
         winglet;
     public static void load(){
@@ -392,7 +393,7 @@ public class EUUnitTypes {
             );
             for(float wx : new Float[]{-20f, 20f}) {
                 weapons.add(
-                        new PointDefenseWeapon(name("nebula-defense")){{
+                        new ReRotPointDefenseWeapon(name("nebula-defense")){{
                             top = false;
                             x = wx;
                             y = -18;
@@ -412,7 +413,7 @@ public class EUUnitTypes {
             }
             for(float wx : new Float[]{-10.5f, 10.5f}) {
                 weapons.add(
-                        new RepairBeamWeapon(name("nebula-defense")){{
+                        new ReRotRepairBeamWeapon(name("nebula-defense")){{
                             top = false;
                             x = wx;
                             y = -4.5f;
@@ -473,8 +474,8 @@ public class EUUnitTypes {
                 knockback = -1;
             }};
             
-            BulletType asl = new ContinuousLaserBulletType(){{
-                damage = 106 - (hardMod ? 12 : 0);
+            BulletType asl = new liContinuousLaserBullet(){{
+                damage = 96 - (hardMod ? 10 : 0);
                 length = 240;
                 width = 7;
                 hitEffect = Fx.sapExplosion;
@@ -492,16 +493,9 @@ public class EUUnitTypes {
                 incendSpread = 5;
                 incendAmount = 1;
                 colors = new Color[]{Pal.sapBullet, Pal.sapBullet, Pal.sapBulletBack};
-            }
-
-                @Override
-                public void update(Bullet b) {
-                    super.update(b);
-                    if(b.timer.get(8)){
-                        Lightning.create(b.team, Pal.sapBullet, damage/2, b.x, b.y, b.rotation() + (4 - Mathf.range(8)), (int)(length/6));
-                    }
-                }
-            };
+                chain = new ChainLightningFade(lifetime, -1, 2.5f, Pal.sapBullet, damage/3, hitEffect);
+                lTime = 8;
+            }};
 
             SCSBullet lineBullet = new SCSBullet(){{
                 damage = 150 - (hardMod ? 30 : 0);
@@ -554,22 +548,70 @@ public class EUUnitTypes {
                         y = 8;
                         reload = 9;
                         rotate = true;
+                        targetInterval = targetSwitchInterval = 12;
+
                         autoTarget = true;
                         controllable = false;
+                        mountType = reRotMount::new;
+
                         bullet = sapper;
                         shootSound = Sounds.sap;
-                    }},
+                    }
+                        @Override
+                        public void update(Unit unit, WeaponMount m) {
+                            super.update(unit, m);
+                            float  mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
+                                    mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
+                            reRotMount mount = (reRotMount) m;
+                            if(mount.target != null) {
+                                mount.reRotate = 180;
+                            } else {
+                                mount.reRotate = Math.max(mount.reRotate - Time.delta, 0f);
+                            }
+
+                            if(mount.target == null && !mount.shoot && !Angles.within(mount.rotation, mount.weapon.baseRotation, 0.01f) && mount.reRotate <= 0){
+                                mount.rotate = true;
+                                Tmp.v1.trns(unit.rotation + mount.weapon.baseRotation, 5f);
+                                mount.aimX = mountX + Tmp.v1.x;
+                                mount.aimY = mountY + Tmp.v1.y;
+                            }
+                        }
+                    },
                     new Weapon(name("asphyxia-f")){{
                         top = false;
                         x = 14;
                         y = 6;
                         reload = 9;
                         rotate = true;
+                        targetInterval = targetSwitchInterval = 12;
+
                         autoTarget = true;
                         controllable = false;
+                        mountType = reRotMount::new;
+
                         bullet = sapper;
                         shootSound = Sounds.sap;
-                    }}
+                    }
+                        @Override
+                        public void update(Unit unit, WeaponMount m) {
+                            super.update(unit, m);
+                            float  mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
+                                    mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
+                            reRotMount mount = (reRotMount) m;
+                            if(mount.target != null) {
+                                mount.reRotate = 180;
+                            } else {
+                                mount.reRotate = Math.max(mount.reRotate - Time.delta, 0f);
+                            }
+
+                            if(mount.target == null && !mount.shoot && !Angles.within(mount.rotation, mount.weapon.baseRotation, 0.01f) && mount.reRotate <= 0){
+                                mount.rotate = true;
+                                Tmp.v1.trns(unit.rotation + mount.weapon.baseRotation, 5f);
+                                mount.aimX = mountX + Tmp.v1.x;
+                                mount.aimY = mountY + Tmp.v1.y;
+                            }
+                        }
+                    }
             );
         }};
         apocalypse = new UnitType("apocalypse"){{
@@ -710,6 +752,132 @@ public class EUUnitTypes {
             );
         }};
 
+        Tera = new UnitType("Tera"){{
+            armor = 41;
+            flying = true;
+            speed = 0.7f;
+            hitSize = 66;
+            accel = 0.04f;
+            rotateSpeed = 1;
+            drag = 0.018f;
+            health = 61000;
+            mineSpeed = 7;
+            mineTier = 10;
+            buildSpeed = 8;
+            itemCapacity = 600;
+            engineOffset = 28.4f;
+            engineSize = 9;
+            drawShields = false;
+            lowAltitude = true;
+            payloadCapacity = Mathf.sqr(7.5f) * Vars.tilePayload;
+            ammoType = new PowerAmmoType(2500);
+
+            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+
+            abilities.add(
+                    new DeathBullet(new diffBullet(360, 1){{
+                        damage = splashDamage = 5000;
+                        splashDamageRadius = 30 * 8;
+                        lifetime = 240;
+                        color = Pal.heal;
+                        pfin = false;
+                    }
+
+                        @Override
+                        public void draw(Bullet b) {
+                            super.draw(b);
+                            float pin = (1 - b.foutpow());
+                            rand.setSeed(b.id);
+                            for(int i = 0; i < 5; i++){
+                                float a = rand.random(180);
+                                float lx = EUGet.dx(b.x, splashDamageRadius * pin, a);
+                                float ly = EUGet.dy(b.y, splashDamageRadius * pin, a);
+                                Draw.color(Pal.heal);
+                                Drawf.tri(lx, ly, 25 * b.foutpow(), (150 + rand.random(-40, 40)) * b.foutpow(), a + 180);
+                            }
+                            for(int i = 0; i < 5; i++){
+                                float a = 180 + rand.random(180);
+                                float lx = EUGet.dx(b.x, splashDamageRadius * pin, a);
+                                float ly = EUGet.dy(b.y, splashDamageRadius * pin, a);
+                                Draw.color(Pal.heal);
+                                Drawf.tri(lx, ly, 25 * b.foutpow(), (150 + rand.random(-40, 40)) * b.foutpow(), a + 180);
+                            }
+
+                            if(b.timer.get(3, lifetime/10)) Effect.shake(5, 5, b);
+                        }
+                    }, null)
+            );
+
+            float spawnTime = 30 * 60;
+            abilities.add(
+                    new UnitSpawnAbility(UnitTypes.poly, spawnTime, 30, -27.5f),
+                    new UnitSpawnAbility(UnitTypes.poly, spawnTime, -30, -27.5f)
+            );
+
+            float rd = 22 * 8f;
+            abilities.add(
+                    new RepairField(){{
+                        range = rd;
+                        blockHealPercent = 12;
+                        status = EUStatusEffects.regenBoost;
+                        unitHeal = 150;
+                    }},
+                    new PcShieldArcAbility(){{
+                        width = 18;
+                        radius = rd - width + 8;
+                        regen = 4;
+                        max = 9000;
+                        cooldown = 8 * 60;
+                        whenShooting = false;
+                        angle = 300;
+                    }}
+            );
+
+            BulletType l = new liLaserBullet(){{
+                damage = 220;
+                healPercent = 12;
+                collidesTeam = true;
+                colors = new Color[]{Pal.heal.cpy().a(0.4f), Pal.heal.cpy().a(0.7f), Pal.heal, Color.white};
+                color = colors[2];
+                length = 21.5f * 8;
+                width = 40;
+                largeHit = true;
+                sideAngle = 90;
+                sideLength = 24;
+                lifetime = 24;
+                status = StatusEffects.electrified;
+                statusDuration = 2 * 60;
+                chain = new ChainLightningFade(lifetime, -1, 2.5f, color, 60, hitEffect){{
+                    healPercent = 10;
+                    collidesTeam = true;
+                }};
+                spacing = 6;
+            }};
+
+            weapons.add(
+                    new Weapon(name("Tera-weapon")){{
+                        top = false;
+                        shake = 4;
+                        shootY = 9;
+                        reload = 60;
+                        bullet = l;
+                        rotate = true;
+                        recoil = 3;
+                        rotateSpeed = 2;
+                        shadow = 20;
+                        shootSound = Sounds.laser;
+                        x = 25;
+                        y = 3;
+
+                    }}
+            );
+
+            setEnginesMirror(
+                    new UnitEngine(25.5f, -37.5f, 6, 315f),
+                    new UnitEngine(17f, -22.5f, 9, 315f)
+            );
+        }};
+
         nihilo = new UnitType("nihilo"){{
             float spawnTime = 60 * 14;
             trailLength = 70;
@@ -768,7 +936,7 @@ public class EUUnitTypes {
                 pierceDamageFactor = 0.6f;
             }};
             weapons.add(
-                    new PointDefenseWeapon(name("nihilo-defense")){{
+                    new ReRotPointDefenseWeapon(name("nihilo-defense")){{
                         top = false;
                         x = 0;
                         y = -17;
@@ -852,15 +1020,39 @@ public class EUUnitTypes {
                         top = false;
                         rotate = true;
                         rotateSpeed = 8;
+
+                        predictTarget = false;
                         controllable = false;
                         autoTarget = true;
+                        mountType = reRotMount::new;
+
                         x = 0;
                         y = 38;
                         ejectEffect = Fx.none;
                         shootSound = Sounds.railgun;
-                        reload = 180;
+                        reload = 150;
                         recoil = 4;
-                    }}
+                    }
+                        @Override
+                        public void update(Unit unit, WeaponMount m) {
+                            super.update(unit, m);
+                            float  mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
+                                    mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
+                            reRotMount mount = (reRotMount) m;
+                            if(mount.target != null) {
+                                mount.reRotate = 180;
+                            } else {
+                                mount.reRotate = Math.max(mount.reRotate - Time.delta, 0f);
+                            }
+
+                            if(mount.target == null && !mount.shoot && !Angles.within(mount.rotation, mount.weapon.baseRotation, 0.01f) && mount.reRotate <= 0){
+                                mount.rotate = true;
+                                Tmp.v1.trns(unit.rotation + mount.weapon.baseRotation, 5f);
+                                mount.aimX = mountX + Tmp.v1.x;
+                                mount.aimY = mountY + Tmp.v1.y;
+                            }
+                        }
+                    }
             );
             weapons.add(
                     new Weapon(name("nihilo-main")){{
@@ -984,7 +1176,7 @@ public class EUUnitTypes {
             immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped);
             ammoType = new ItemAmmoType(Items.blastCompound);
 
-            abilities.add(new ShieldArcAbility(){{
+            abilities.add(new PcShieldArcAbility(){{
                 whenShooting = false;
                 radius = 8 * 8;
                 max = 8000;
@@ -1253,7 +1445,7 @@ public class EUUnitTypes {
                                 Lines.stroke(e.fout() * 5);
                                 float circleRad = 6 + e.finpow() * 60;
                                 Lines.circle(e.x, e.y, circleRad);
-                                rand.setSeed((long)e.id);
+                                rand.setSeed(e.id);
 
                                 for(int i = 0; i < 16; ++i) {
                                     float angle = rand.random(360);
@@ -1269,9 +1461,7 @@ public class EUUnitTypes {
                             }), Fx.casing3Double);
                             trailEffect = new Effect(38, e -> {
                                 Draw.color(esc);
-                                Angles.randLenVectors(e.id, 1, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> {
-                                    Fill.circle(e.x + x, e.y + y, e.foutpow() * 6);
-                                });
+                                Angles.randLenVectors(e.id, 1, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> Fill.circle(e.x + x, e.y + y, e.foutpow() * 6));
                             });
                             trailInterval = 5;
                             fragBullets = 4;
@@ -1361,21 +1551,21 @@ public class EUUnitTypes {
                         parts.add(
                                 new AimPart(){{
                                     layer = Layer.effect;
-                                    y = -42;
-                                    color = esc;
-                                    spacing = 5;
-                                    length = 15;
-                                    drawLine = false;
-                                    rt = -90;
-                                }},
-                                new AimPart(){{
-                                    layer = Layer.effect;
-                                    y = -42;
+                                    x = 45;
                                     color = esc;
                                     spacing = 5;
                                     length = 15;
                                     drawLine = false;
                                     rt = 90;
+                                }},
+                                new AimPart(){{
+                                    layer = Layer.effect;
+                                    x = -45;
+                                    color = esc;
+                                    spacing = 5;
+                                    length = 15;
+                                    drawLine = false;
+                                    rt = -90;
                                 }}
                         );
                     }}
@@ -1402,20 +1592,31 @@ public class EUUnitTypes {
             health = 40000;
             armor = 27;
             hitSize = 48;
-            payloadCapacity = Mathf.sqr(7.6f) * 64;
+            payloadCapacity = Mathf.sqr(7.2f) * 64;
             engineSize = 6;
-            engineOffset = 28;
+            engineOffset = 22.3f;
 
             immunities.addAll(StatusEffects.wet, StatusEffects.freezing, StatusEffects.sapped, StatusEffects.disarmed, StatusEffects.electrified, EUStatusEffects.speedDown);
             
             abilities.add(
                     new SuppressionFieldAbility() {{
-                            orbRadius = 14;
+                            orbRadius = 8;
                             particleSize = 9;
-                            y = -8;
-                            particles = 10;
+                            y = -3.2f;
+                            particles = 9;
                     }}
             );
+            for(float xx : new float[]{14.2f, -14.2f}){
+                abilities.add(
+                        new SuppressionFieldAbility() {{
+                            orbRadius = 5;
+                            particleSize = 9;
+                            y = -12.4f;
+                            x = xx;
+                            particles = 6;
+                        }}
+                );
+            }
 
             weapons.add(
                     new Weapon(){{
@@ -1491,8 +1692,7 @@ public class EUUnitTypes {
                             @Override
                             public void createFrags(Bullet b, float x, float y) {
                                 super.createFrags(b, x, y);
-                                if(!(b.owner instanceof Unit)) return;
-                                Unit owner = (Unit) b.owner;
+                                if(!(b.owner instanceof Unit owner)) return;
                                 if(!b.absorbed) ms.create(owner, owner.team, b.x, b.y, owner.rotation(), -1, 1, 1, EUGet.pos(owner.mounts[0].aimX, owner.mounts[0].aimY));
                             }
 
@@ -1505,8 +1705,7 @@ public class EUUnitTypes {
                             @Override
                             public void draw(Bullet b) {
                                 super.draw(b);
-                                if(!(b.owner instanceof Unit)) return;
-                                Unit owner = (Unit) b.owner;
+                                if(!(b.owner instanceof Unit owner)) return;
                                 float n = Math.max(b.foutpow(), 0.4f);
                                 Draw.z(Layer.flyingUnitLow);
                                 Draw.rect(Core.atlas.find(name("havoc-missile")), b.x, b.y, 35 * n, 50 * n, owner.rotation - 90);
@@ -1523,8 +1722,8 @@ public class EUUnitTypes {
                         rotate = true;
                         rotateSpeed = 3;
                         rotationLimit = 80;
-                        x = 24;
-                        y = -8;
+                        x = 26;
+                        y = -10;
                         reload = 15;
                         recoil = 2;
                         layerOffset = -0.1f;
@@ -1540,9 +1739,7 @@ public class EUUnitTypes {
                             trailLength = 7;
                             shootEffect = new Effect(24, e -> {
                                 Draw.color(Pal.suppress);
-                                Angles.randLenVectors(e.id, 4, 20 * e.finpow(), e.rotation, 180, (x, y) -> {
-                                    Fill.square(e.x + x, e.y + y, 10 * e.foutpow());
-                                });
+                                Angles.randLenVectors(e.id, 4, 20 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 10 * e.foutpow()));
                             });
                             hitEffect = despawnEffect = new MultiEffect(shootEffect, new ExplosionEffect(){{
                                 lifetime = 24f;
@@ -1624,9 +1821,7 @@ public class EUUnitTypes {
                         BulletType cll = new fBullet(cff, 90){{
                             trailEffect = new Effect(38, e -> {
                                 Draw.color(Pal.suppress);
-                                Angles.randLenVectors(e.id, 1, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> {
-                                    Fill.circle(e.x + x, e.y + y, e.foutpow() * 6);
-                                });
+                                Angles.randLenVectors(e.id, 1, 1 + 20 * e.fout(), e.rotation, 120, (x, y) -> Fill.circle(e.x + x, e.y + y, e.foutpow() * 6));
                             });
                             trailInterval = 1;
                         }
@@ -1665,10 +1860,9 @@ public class EUUnitTypes {
                             public void update(Bullet b) {
                                 super.update(b);
                                 b.initVel(b.rotation(), 0);
-                                if(!(b.owner instanceof Unit)) return;
+                                if(!(b.owner instanceof Unit owner)) return;
                                 Seq<Building> ms = new Seq<>();
                                 Seq<Building> bs = new Seq<>();
-                                Unit owner = (Unit) b.owner;
                                 Units.nearbyBuildings(owner.x, owner.y, (speed + 0.1f) * lifetime, building -> {
                                     if(building.team != b.team && building.block != null && building.block.targetable){
                                         if(building instanceof MendProjector.MendBuild || building instanceof RegenProjector.RegenProjectorBuild)
@@ -1786,18 +1980,41 @@ public class EUUnitTypes {
                                 Drawf.tri(b.x, b.y, 10, 40, b.rotation() - 180);
                             }
                         };
+
+                        parts.add(
+                                new AimPart(){{
+                                    layer = Layer.effect;
+                                    x = 10;
+                                    y = 10;
+                                    color = Pal.suppress;
+                                    spacing = 12;
+                                    length = 48;
+                                    drawLine = false;
+                                    rt = -90;
+                                }},
+                                new AimPart(){{
+                                    layer = Layer.effect;
+                                    x = -10;
+                                    y = 10;
+                                    color = Pal.suppress;
+                                    spacing = 12;
+                                    length = 48;
+                                    drawLine = false;
+                                    rt = 90;
+                                }}
+                        );
                     }}
             );
 
             parts.add(
                     new BowHalo(){{
                         progress = PartProgress.constant(1);
-                        y = -8;
+                        y = -4;
                         radius = 19;
                         w1 = 6;
-                        h1 = 11;
+                        h1 = 16;
                         w2 = 8;
-                        h2 = 36;
+                        h2 = 38;
                         color = Pal.suppress;
                     }},
                     new DrawPart(){
@@ -1825,8 +2042,395 @@ public class EUUnitTypes {
                     }
             );
 
-            setEnginesMirror(new UnitEngine(10, -26.8f, 5f, 315f));
-            setEnginesMirror(new UnitEngine(26.8f, -26.8f, 5f, 315f));
+            setEnginesMirror(new UnitEngine(14, -25f, 6f, 315f));
+            setEnginesMirror(new UnitEngine(28.9f, -24.3f, 3f, 315f));
+        }};
+
+        arcana = new UnitType("arcana"){{
+            drag = 0.12f;
+            speed = 0.9f;
+            hitSize = 50f;
+            health = 51000;
+            armor = 30f;
+            rotateSpeed = 1.1f;
+            lockLegBase = true;
+            legContinuousMove = true;
+            legStraightness = 0.4f;
+            baseLegStraightness = 1.2f;
+
+            legCount = 8;
+            legLength = 40f;
+            legForwardScl = 2.4f;
+            legMoveSpace = 1.1f;
+            rippleScale = 1.2f;
+            stepShake = 0.5f;
+            legGroupSize = 2;
+            legExtension = 2f;
+            legBaseOffset = 12f;
+            legStraightLength = 1.1f;
+            legMaxLength = 1.2f;
+
+            ammoType = new PowerAmmoType(3500);
+
+            legSplashDamage = 90;
+            legSplashRange = 40;
+            drownTimeMultiplier = 2f;
+
+            hovering = true;
+            shadowElevation = 0.8f;
+            groundLayer = Layer.legUnit;
+
+            alwaysShootWhenMoving = true;
+            maxRange = 50 * 8f;
+
+            outlineColor = Pal.darkOutline;
+
+            immunities.addAll(StatusEffects.wet, StatusEffects.unmoving, StatusEffects.disarmed, StatusEffects.slow);
+
+            weapons.add(
+                    new Weapon(name("arcana-wm")){{
+                        shootSound = Sounds.shotgun;
+                        reload = 120;
+                        recoil = 4;
+                        shake = 5;
+                        x = 14.3f;
+                        y = -10;
+                        rotate = true;
+                        rotateSpeed = 2;
+                        shootY = 10;
+
+                        BulletType crack = new LaserBulletType(){{
+                            damage= 130;
+                            length = 90;
+                            lifetime = 20;
+                            laserAbsorb = false;
+                        }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                Draw.z(Layer.bullet);
+                                Draw.color(Pal.techBlue);
+                                float in = Mathf.curve(b.fin(), 0f, 0.5f);
+                                Drawf.tri(b.x, b.y, 25 * b.fout(), length * in, b.rotation());
+                                Draw.z(Layer.effect + 1);
+                                Draw.color(Color.black);
+                                Drawf.tri(b.x, b.y, 18 * b.fout(), (length/1.3f) * in, b.rotation());
+                            }
+                        };
+                        BulletType crackFrag = new BulletType(){{
+                            keepVelocity = absorbable = hittable = collides = collidesTiles = collidesGround = collidesAir = false;
+                            damage = speed = 0;
+                            lifetime = 60;
+                            hitEffect = despawnEffect = Fx.none;
+                        }
+
+                            @Override
+                            public void update(Bullet b) {
+                                if(b.timer.get(lifetime/5) && b.time < lifetime - lifetime/5){
+                                    float r = Mathf.random(360);
+                                    float xx = b.x + Mathf.random(-12, 12);
+                                    float yy = b.y + Mathf.random(-12, 12);
+                                    crack.create(b, xx, yy, b.rotation() + 90 + r);
+                                    crack.create(b, xx, yy, b.rotation() - 90 + r);
+                                    Sounds.laserblast.at(xx, yy);
+                                    Effect.shake(5, 5, xx, yy);
+                                }
+                            }
+                        };
+                        BulletType fff = new fBullet(crackFrag, 10);
+
+                        bullet = new BulletType(){{
+                            lifetime = 22;
+                            speed = 20;
+                            splashDamage = 315;
+                            splashDamageRadius = 8 * 8;
+                            trailLength = 9;
+                            trailWidth = 5;
+                            trailColor = Pal.techBlue;
+                            trailRotation = true;
+                            trailEffect = new Effect(30, e ->{
+                                color(e.color);
+                                for(int x : new int[]{-8, 8}){
+                                    Tmp.v1.set(x, -3).rotate(e.rotation - 90);
+                                    Fill.circle(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 6 * e.foutpow());
+                                }
+                            });
+                            trailInterval = 0.1f;
+                            scaleLife = true;
+                            keepVelocity = false;
+                            collides = collidesTiles = absorbable = hittable = false;
+
+                            Effect e1 = new Effect(36, e -> {
+                                rand.setSeed(e.id);
+                                for(int i = 0; i < 6; i++){
+                                    Draw.color(Pal.techBlue);
+                                    float r = rand.random(360);
+                                    float rx = EUGet.dx(e.x, 25 * e.finpow(), r), ry = EUGet.dy(e.y, 25 * e.finpow(), r);
+
+                                    Drawf.tri(rx, ry, 24 * e.foutpow(), 36, r);
+                                    Drawf.tri(rx, ry, 24 * e.foutpow(), 18, r - 180);
+                                }
+                            });
+                            Effect e2 = new Effect(15, e -> {
+                                rand.setSeed(e.id);
+                                for(int i = 0; i < 10; i++){
+                                    Draw.color(Pal.techBlue);
+                                    float r = rand.random(360);
+                                    float rx = EUGet.dx(e.x, splashDamageRadius * e.finpow(), r), ry = EUGet.dy(e.y, splashDamageRadius * e.finpow(), r);
+
+                                    Drawf.tri(rx, ry, 30 * e.foutpow(), 30 * e.finpow(), r + 90);
+                                    Drawf.tri(rx, ry, 30 * e.foutpow(), 30 * e.finpow(), r - 90);
+                                }
+                            });
+                            Effect e3 = new Effect(54, e -> {
+                                Draw.color(Pal.techBlue);
+                                Angles.randLenVectors(e.id, 5, splashDamageRadius / 2f * e.finpow(), e.rotation, 360, (x, y) -> Fill.square(e.x + x, e.y + y, 20 * e.foutpow()));
+                            });
+                            hitEffect = despawnEffect = new MultiEffect(e1, e2, e3, new ExplosionEffect(){{
+                                lifetime = 24f;
+                                waveRad = 0;
+                                smokeColor = Pal.techBlue;
+                                smokes = 6;
+                                smokeSize = 6;smokeRad = splashDamageRadius;
+                                sparks = 0;
+                            }});
+                            shootEffect = e3;
+
+                            status = StatusEffects.slow;
+                            statusDuration = 60;
+
+                            fragBullet = crack;
+                            fragBullets = 4;
+                        }
+
+                            @Override
+                            public void init(Bullet b) {
+                                super.init(b);
+                                float ex, ey;
+                                ex = b.x + Angles.trnsx(b.rotation(), speed * b.lifetime);
+                                ey = b.y + Angles.trnsy(b.rotation(), speed * b.lifetime);
+                                EUFx.chainLightningFade(b.lifetime * 2).at(b.x, b.y, b.lifetime * 4, trailColor, EUGet.pos(ex, ey));
+                                EUFx.chainLightningFade(b.lifetime * 2).at(b.x, b.y, b.lifetime * 4, trailColor, EUGet.pos(ex, ey));
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(Pal.techBlue);
+                                Drawf.tri(b.x, b.y, 25, 20, b.rotation());
+                            }
+
+                            @Override
+                            public void createFrags(Bullet b, float x, float y) {
+                                fff.create(b, b.x, b.y, 0);
+                            }
+                        };
+
+                        parts.add(
+                                new JavelinWing(){{
+                                    y = -4;
+                                    w1 = 2;
+                                    h1 = 7;
+                                    w2 = 3;
+                                    h2 = 4;
+                                    rd = 10;
+                                    layer = Layer.bullet;
+                                    color = Pal.techBlue;
+                                    ap = 0.8f;
+                                }},
+                                new BowHalo(){{
+                                    y = -11;
+                                    color = Pal.techBlue;
+                                    w1 = h1 = 0;
+                                    w2 = 3;
+                                    h2 = 9;
+                                    stroke = 2;
+                                    radius = 3;
+                                }}
+                        );
+                    }},
+                    new Weapon(){{
+                        shootSound = Sounds.bioLoop;
+                        shootY = 16;
+                        reload = 240;
+                        mirror = false;
+                        x = y = 0;
+                        continuous = true;
+                        cooldownTime = 150;
+                        bullet = new liContinuousLaserBullet(){{
+                            damage = 1100/12f;
+                            lifetime = 150;
+                            colors = new Color[]{Pal.techBlue, Pal.lancerLaser, Color.white};
+                            incendAmount = 0;
+                            incendChance = -1;
+                            status = StatusEffects.shocked;
+                            width = 6;
+                            length = 30 * 8;
+                            pierceCap = 4;
+                            hitEffect = new Effect(18, e -> {
+                                Draw.color(Pal.techBlue);
+                                Angles.randLenVectors(e.id, 3, 16 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 9 * e.foutpow()));
+                            });
+                            shootEffect = despawnEffect = new Effect(24, e -> {
+                                Draw.color(Pal.techBlue);
+                                Angles.randLenVectors(e.id, 5, 40 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 17f * e.foutpow()));
+                            });
+                            chain = new ChainLightningFade(lifetime, -1, 2.5f, Pal.techBlue, damage/3, hitEffect);
+                        }};
+
+                        parts.add(
+                                new AimPart(){{
+                                    layer = Layer.bullet;
+                                    color = Pal.techBlue;
+                                    x = -27;
+                                    y = -7;
+                                    rt = -55;
+                                    drawLine = false;
+                                    length = 32;
+                                    spacing = 8;
+                                }},
+                                new AimPart(){{
+                                    layer = Layer.bullet;
+                                    color = Pal.techBlue;
+                                    x = 27;
+                                    y = -7;
+                                    rt = 55;
+                                    drawLine = false;
+                                    length = 32;
+                                    spacing = 8;
+                                }}
+                        );
+                        parts.add(
+                                new DrawPart() {
+                                    final PartProgress r = PartProgress.reload;
+                                    //final PartProgress w = PartProgress.warmup;
+                                    final float rad = 7;
+                                    @Override
+                                    public void draw(PartParams params) {
+                                        float z = Draw.z();
+                                        float reload = 1 - r.getClamp(params);
+                                        Tmp.v1.set(0, 13).rotate(params.rotation - 90);
+                                        float px = params.x + Tmp.v1.x, py = params.y + Tmp.v1.y;
+
+                                        Draw.z(Layer.bullet);
+                                        Draw.color(Pal.techBlue);
+                                        Fill.circle(px, py, rad * reload);
+
+                                        for(int i = 0; i < 3; i++){
+                                            float sin = Mathf.absin(Time.time + 120 * i, 15, 6 * reload);
+                                            float sin_m = Mathf.absin(Time.time + 120 * i, 30, 6 * reload);
+                                            float r = 360/3f * i + Time.time;
+                                            float r2 = r + 190;
+                                            Drawf.tri(px + Angles.trnsx(r, (rad - 1) * reload), py + Angles.trnsy(r, (rad - 1) * reload), 6 * reload, sin, r);
+                                            Drawf.tri(px + Angles.trnsx(r2, (rad - 1) * reload), py + Angles.trnsy(r2, (rad - 1) * reload), 6 * reload, sin_m, r2);
+                                        }
+
+                                        Draw.reset();
+                                        Draw.z(z);
+                                    }
+
+                                    @Override
+                                    public void load(String name) {
+
+                                    }
+                                }
+                        );
+                    }}
+            );
+
+
+            weapons.add(
+                    new Weapon(name("arcana-wp")){{
+                        shootSound = Sounds.blaster;
+                        x = 11.2f;
+                        y = 25f;
+                        recoil = 2;
+                        reload = 45;
+                        rotate = true;
+                        rotateSpeed = 4;
+                        shoot = new ShootHelix();
+                        shoot.shots = 2;
+                        ((ShootHelix)shoot).mag = 2.8f;
+                        predictTarget = false;
+
+                        autoTarget = true;
+                        controllable = false;
+                        targetInterval = targetSwitchInterval = 12;
+                        mountType = reRotMount::new;
+
+                        bullet = new BasicBulletType(6, 55){{
+                            width = 10;
+                            height = 15;
+                            shootEffect = Fx.lancerLaserShoot;
+                            smokeEffect = Fx.shootBigSmoke;
+                            lifetime = 24f;
+                            pierce = true;
+                            pierceBuilding = true;
+                            absorbable = false;
+                            trailLength = 7;
+                            trailWidth = 3;
+                            trailInterval = 1;
+                            trailEffect = Fx.artilleryTrail;
+                            backColor = frontColor = trailColor = Pal.techBlue;
+                            hitEffect = despawnEffect = EUFx.gone(Pal.techBlue);
+                        }};
+                    }
+
+                        @Override
+                        public void update(Unit unit, WeaponMount m) {
+                            super.update(unit, m);
+                            float  mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
+                                    mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
+                            reRotMount mount = (reRotMount) m;
+                            if(mount.target != null) {
+                                mount.reRotate = 180;
+                            } else {
+                                mount.reRotate = Math.max(mount.reRotate - Time.delta, 0f);
+                            }
+
+                            if(mount.target == null && !mount.shoot && !Angles.within(mount.rotation, mount.weapon.baseRotation, 0.01f) && mount.reRotate <= 0){
+                                mount.rotate = true;
+                                Tmp.v1.trns(unit.rotation + mount.weapon.baseRotation, 5f);
+                                mount.aimX = mountX + Tmp.v1.x;
+                                mount.aimY = mountY + Tmp.v1.y;
+                            }
+                        }
+                    }
+            );
+
+            for(float xx : new float[]{14.7f, -14.7f}){
+                weapons.add(
+                        new TractorBeamWeapon(name("arcana-wp")){{
+                            mirror = false;
+                            x = xx;
+                            y = 14.5f;
+                            trueDamage = true;
+                            force = 20;
+                            scaledForce = 10;
+                            bullet = new BulletType(){{
+                                damage = 4;
+                                maxRange = 30 * 8;
+                                collidesGround = false;
+                            }};
+                        }}
+                );
+            }
+            for(float xx : new float[]{22.2f, -22.2f}){
+                weapons.add(
+                        new ReRotPointDefenseWeapon(name("arcana-wp")){{
+                            mirror = false;
+                            x = xx;
+                            y = 5.3f;
+                            reload = 12;
+                            targetInterval = targetSwitchInterval = 5;
+                            recoil = 1;
+                            bullet = new BulletType(){{
+                                damage = 80;
+                                maxRange = 24 * 8;
+                            }};
+                        }}
+                );
+            }
         }};
 
 

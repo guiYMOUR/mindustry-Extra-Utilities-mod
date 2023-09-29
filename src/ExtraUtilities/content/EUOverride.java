@@ -104,6 +104,7 @@ public class EUOverride {
 
             ((UnitAssembler) Blocks.tankAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.napoleon, 240 * 60f, PayloadStack.list(UnitTypes.precept, 8, rwl, 20)));
             ((UnitAssembler) Blocks.shipAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.havoc, 240 * 60f, PayloadStack.list(UnitTypes.obviate, 8, rwl, 20)));
+            ((UnitAssembler) Blocks.mechAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.arcana, 240 * 60f, PayloadStack.list(UnitTypes.anthicus, 8, rwl, 20)));
         }
     }
 

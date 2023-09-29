@@ -52,6 +52,7 @@ public class EUTechTree {
                 node(suzerain);
                 node(nebula);
                 node(asphyxia);
+                node(Tera);
                 node(apocalypse);
                 node(nihilo);
                 node(narwhal);
@@ -130,6 +131,7 @@ public class EUTechTree {
             node(advAssemblerModule, () -> {
                 node(napoleon);
                 node(havoc);
+                node(arcana);
             });
         });
 

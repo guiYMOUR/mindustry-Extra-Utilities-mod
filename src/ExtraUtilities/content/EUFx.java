@@ -1,10 +1,8 @@
 package ExtraUtilities.content;
 
 import ExtraUtilities.worlds.drawer.DrawFunc;
-import ExtraUtilities.worlds.entity.bullet.HealCone;
+import ExtraUtilities.worlds.entity.ability.PcShieldArcAbility;
 import arc.Core;
-import arc.flabel.effects.ShakeEffect;
-import arc.func.Func;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
@@ -13,11 +11,11 @@ import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Position;
-import arc.struct.FloatSeq;
+import arc.math.geom.Vec2;
+import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
-import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.gen.Building;
@@ -26,9 +24,6 @@ import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
-import mindustry.world.Block;
-import mindustry.world.Tile;
-import mindustry.world.meta.Attribute;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static ExtraUtilities.content.EUGet.*;
@@ -52,18 +47,14 @@ public class EUFx {
                 Lines.stroke(e.fout() * 2);
                 Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fslope() * 12 + 1);
             });
-            randLenVectors(e.id, 85, 1 + 160 * e.fin(),  Time.time * 4, 360, (x, y) -> {
-                Fill.circle(e.x + x, e.y + y, e.fout() * 10);
-            });
+            randLenVectors(e.id, 85, 1 + 160 * e.fin(),  Time.time * 4, 360, (x, y) -> Fill.circle(e.x + x, e.y + y, e.fout() * 10));
         });
     }
 
     public static Effect flameShoot(Color colorBegin, Color colorTo, Color colorEnd, float length, float cone, int number, float lifetime){
         return new Effect(lifetime, 80, e -> {
                 Draw.color(colorBegin, colorTo, colorEnd, e.fin());
-            randLenVectors(e.id, number, e.finpow() * length, e.rotation, cone, (x, y) -> {
-                Fill.circle(e.x + x, e.y + y, 0.65f + e.fout() * 1.5f);
-            });
+            randLenVectors(e.id, number, e.finpow() * length, e.rotation, cone, (x, y) -> Fill.circle(e.x + x, e.y + y, 0.65f + e.fout() * 1.5f));
         });
     }
 
@@ -105,15 +96,13 @@ public class EUFx {
             rand.setSeed(b.id* 2L + i);
             float lenScl = rand.random(0.5f, 1f);
             int fi = i;
-            b.scaled(b.lifetime * lenScl, e -> {
-                randLenVectors(e.id + fi - 1, e.fin(Interp.pow10Out), (int)(2f * intensity), 9f * intensity, (x, y, in, out) -> {
-                    float fout = e.fout(Interp.pow5Out) * rand.random(0.5f, 1f);
-                    float rad = fout * ((2f + intensity) * 1.2f);
+            b.scaled(b.lifetime * lenScl, e -> randLenVectors(e.id + fi - 1, e.fin(Interp.pow10Out), (int)(2f * intensity), 9f * intensity, (x, y, in, out) -> {
+                float fout = e.fout(Interp.pow5Out) * rand.random(0.5f, 1f);
+                float rad = fout * ((2f + intensity) * 1.2f);
 
-                    Fill.circle(e.x + x, e.y + y, rad);
-                    Drawf.light(e.x + x, e.y + y, rad * 1.2f, b.color, 0.5f);
-                });
-            });
+                Fill.circle(e.x + x, e.y + y, rad);
+                Drawf.light(e.x + x, e.y + y, rad * 1.2f, b.color, 0.5f);
+            }));
         }
     }).layer(Layer.bullet - 1f);
 
@@ -143,9 +132,7 @@ public class EUFx {
     public static Effect lancerLaserCharge(Color color){
         return new Effect(38f, e -> {
             color(color);
-            randLenVectors(e.id, 14, 1f + 20f * e.fout(), e.rotation, 120f, (x, y) -> {
-                Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fslope() * 3f + 1f);
-            });
+            randLenVectors(e.id, 14, 1f + 20f * e.fout(), e.rotation, 120f, (x, y) -> Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fslope() * 3f + 1f));
         });
     }
 
@@ -186,13 +173,9 @@ public class EUFx {
     });
 
     public static Effect LACraft = new Effect(60, e ->{
-//        Draw.blend(Blending.additive);
-//        Draw.color(Color.valueOf("ff0000ff").shiftHue(e.fout() * 360f));
         Draw.color(Pal.surge, EUItems.lightninAlloy.color, e.fin());
         Lines.stroke(e.fout() * 5);
         Lines.circle(e.x, e.y, 20* e.fin());
-//        Draw.blend();
-//        Draw.reset();
     });
 
     public static Effect Start = new Effect(30, e -> {
@@ -208,9 +191,7 @@ public class EUFx {
         Draw.color(e.color);
         Lines.stroke(e.fslope() * 2.5f);
         Lines.poly(e.x, e.y, 6, 3 * e.fout() + 9);
-        Angles.randLenVectors(e.id, 2, 32 * e.fin(), 0, 360,(x, y) -> {
-            Lines.poly(e.x + x, e.y + y, 6, 2 * e.fout() + 2);
-        });
+        Angles.randLenVectors(e.id, 2, 32 * e.fin(), 0, 360,(x, y) -> Lines.poly(e.x + x, e.y + y, 6, 2 * e.fout() + 2));
     });
 
     public static Effect casingContinue(float lifetime, int shots){
@@ -283,9 +264,7 @@ public class EUFx {
             Draw.z(Layer.effect - 0.1f);
             Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
             for(float r : new float[]{-rotation, rotation}) {
-                Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + r, 0, (x, y) -> {
-                    Fill.circle(e.x + x, e.y + y, 2 * e.fout());
-                });
+                Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + r, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
             }
             Draw.blend();
             Draw.reset();
@@ -414,6 +393,51 @@ public class EUFx {
         Lines.endLine();
     }).followParent(false);
 
+    public static Effect chainLightningFade(float lifetime){
+        return new Effect(lifetime, 500f, e -> {
+            if(!(e.data instanceof Position)) return;
+            Position p = e.data();
+            float tx = p.getX(), ty = p.getY(), dst = Mathf.dst(e.x, e.y, tx, ty);
+            Tmp.v1.set(p).sub(e.x, e.y).nor();
+
+            float normx = Tmp.v1.x, normy = Tmp.v1.y;
+            float range = e.rotation;
+            int links = Mathf.ceil(dst / range);
+            float spacing = dst / links;
+
+            Lines.stroke(2.5f * Mathf.curve(e.fout(), 0, 0.7f));
+            Draw.color(Color.white, e.color, e.fin());
+
+            Lines.beginLine();
+
+            Fill.circle(e.x, e.y, Lines.getStroke() / 2);
+            Lines.linePoint(e.x, e.y);
+
+            rand.setSeed(e.id);
+
+            float fin = Mathf.curve(e.fin(), 0, 0.5f);
+            float i;
+
+            for(i = 0; i < links * fin; i++){
+                float nx, ny;
+                if(i == links - 1){
+                    nx = tx;
+                    ny = ty;
+                }else{
+                    float len = (i + 1) * spacing;
+                    Tmp.v1.setToRandomDirection(rand).scl(range/2f);
+                    nx = e.x + normx * len + Tmp.v1.x;
+                    ny = e.y + normy * len + Tmp.v1.y;
+                }
+
+                Lines.linePoint(nx, ny);
+            }
+
+            Lines.endLine();
+            Draw.reset();
+        }).followParent(false);
+    }
+
     public static Effect ElectricExp(float lifetime, float sw, float r){
         return new Effect(lifetime, e -> {
             if(e.time < sw) {
@@ -486,25 +510,41 @@ public class EUFx {
         Fill.circle(e.x, e.y, r * e.foutpow());
     }).layer(Layer.bullet - 1f);
 
-    public static Effect normalIceTrail = new Effect(90, e -> {
-        DrawFunc.drawSnow(e.x, e.y, e.rotation * e.foutpow(), e.fin() * 180f, e.color);
-    });
+    public static Effect normalIceTrail = new Effect(90, e -> DrawFunc.drawSnow(e.x, e.y, e.rotation * e.foutpow(), e.fin() * 180f, e.color));
 
     public static Effect diffHit = new Effect(30, e -> {
         if(!(e.data instanceof Healthc)) return;
-        if(e.data instanceof Building){
-            Building b = (Building) e.data;
+        if(e.data instanceof Building b){
             if(b.block == null) return;
             Draw.mixcol(e.color, 1);
             Draw.alpha(e.fout());
             Draw.rect(b.block.fullIcon, e.x, e.y);
         }
-        if(e.data instanceof Unit){
-            Unit u = (Unit) e.data;
+        if(e.data instanceof Unit u){
             if(u.type == null) return;
             Draw.mixcol(e.color, 1);
             Draw.alpha(e.fout());
-            Draw.rect(u.type.fullIcon, e.x, e.y);
+            Draw.rect(u.type.fullIcon, e.x, e.y, u.rotation - 90);
+        }
+    });
+
+    public static Effect arcShieldBreak = new Effect(40, e -> {
+        Lines.stroke(3 * e.fout(), e.color);
+        if(e.data instanceof Unit u){
+            PcShieldArcAbility ab = (PcShieldArcAbility) Structs.find(u.abilities, a -> a instanceof PcShieldArcAbility);
+            if(ab != null){
+                Vec2 pos = Tmp.v1.set(ab.x, ab.y).rotate(u.rotation - 90f).add(u);
+                Lines.arc(pos.x, pos.y, ab.radius + ab.width/2, ab.angle / 360f, u.rotation + ab.angleOffset - ab.angle / 2f);
+                Lines.arc(pos.x, pos.y, ab.radius - ab.width/2, ab.angle / 360f, u.rotation + ab.angleOffset - ab.angle / 2f);
+                for(int i : Mathf.signs){
+                    float
+                            px = pos.x + Angles.trnsx(u.rotation + ab.angleOffset - ab.angle / 2f * i, ab.radius + ab.width / 2),
+                            py = pos.y + Angles.trnsy(u.rotation + ab.angleOffset - ab.angle / 2f * i, ab.radius + ab.width / 2),
+                            px1 = pos.x + Angles.trnsx(u.rotation + ab.angleOffset - ab.angle / 2f * i, ab.radius - ab.width / 2),
+                            py1 = pos.y + Angles.trnsy(u.rotation + ab.angleOffset - ab.angle / 2f * i, ab.radius - ab.width / 2);
+                    Lines.line(px, py, px1, py1);
+                }
+            }
         }
     });
 }

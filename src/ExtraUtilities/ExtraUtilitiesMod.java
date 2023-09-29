@@ -79,6 +79,7 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUUnitTypes.arcana, t);
                     addToTable(EUUnitTypes.napoleon, t);
                     addToTable(EUUnitTypes.havoc, t);
                     addToTable(EUBlocks.advAssemblerModule, t);
@@ -86,8 +87,6 @@ public class ExtraUtilitiesMod extends Mod{
                     addToTable(EUBlocks.ventHeater, t);
                     addToTable(EUBlocks.T2blast, t);
                     addToTable(EUBlocks.largeElectricHeater, t);
-                    addToTable(EUBlocks.coreKeeper, t);
-                    addToTable(EUBlocks.breaker, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);

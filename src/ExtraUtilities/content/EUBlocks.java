@@ -55,8 +55,6 @@ import mindustry.graphics.Pal;
 import mindustry.graphics.Trail;
 import mindustry.type.*;
 import mindustry.ui.ItemDisplay;
-import mindustry.ui.ItemImage;
-import mindustry.ui.LiquidDisplay;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
@@ -75,8 +73,6 @@ import mindustry.world.consumers.ConsumeLiquidFlammable;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 
-import java.util.Iterator;
-
 import static arc.graphics.g2d.Draw.*;
 import static arc.math.Angles.randLenVectors;
 import static mindustry.Vars.*;
@@ -86,7 +82,7 @@ import static ExtraUtilities.ExtraUtilitiesMod.*;
 
 public class EUBlocks {
     public static Block
-        //drill?
+        //drill!
             arkyciteExtractor, nitrogenWell, quantumExplosion, minerPoint, minerCenter,
         //liquid
             ekPump, liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
@@ -402,9 +398,7 @@ public class EUBlocks {
             craftEffect = new Effect(23, e -> {
                 float scl = Math.max(e.rotation, 1);
                 color(Tmp.c1.set(Pal.gray).mul(1.1f), Items.sporePod.color, e.fin());
-                randLenVectors(e.id, 8, size * 8f + 4 * e.finpow() * scl, (x, y) -> {
-                    Fill.circle(e.x + x, e.y + y, e.fout() * 3.5f * scl + 0.3f);
-                });
+                randLenVectors(e.id, 8, size * 8f + 4 * e.finpow() * scl, (x, y) -> Fill.circle(e.x + x, e.y + y, e.fout() * 3.5f * scl + 0.3f));
             }).layer(Layer.debris);
             updateEffect = sporeSlowed;
             drawer = new DrawMulti(new DrawDefault(), new DrawFrames(), new DrawLiquidRegion());
@@ -415,9 +409,9 @@ public class EUBlocks {
 
         //stone!!!
         stoneExtractor = new AttributeCrafter("stoneExtractor"){{
-            requirements(Category.production, with(Items.silicon, 50, Items.graphite, 50));
+            requirements(Category.production, with(Items.silicon, 100, Items.graphite, 120));
             outputItem = new ItemStack(EUItems.stone, 1);
-            craftTime = 90;
+            craftTime = 30;
             size = 2;
             hasPower = true;
             attribute = EUAttribute.stone;
@@ -448,9 +442,7 @@ public class EUBlocks {
             craftEffect = Fx.smokeCloud;
             updateEffect = new Effect(20, e -> {
                 color(Pal.gray, Color.lightGray, e.fin());
-                randLenVectors(e.id, 6, 3f + e.fin() * 6f, (x, y) -> {
-                    Fill.square(e.x + x, e.y + y, e.fout() * 2f, 45);
-                });
+                randLenVectors(e.id, 6, 3f + e.fin() * 6f, (x, y) -> Fill.square(e.x + x, e.y + y, e.fout() * 2f, 45));
             });
 
             consumePower(1f);
@@ -466,9 +458,7 @@ public class EUBlocks {
             craftEffect = new Effect(23, e -> {
                 float scl = Math.max(e.rotation, 1);
                 color(Tmp.c1.set(Pal.gray).mul(1.1f), Items.sand.color, e.fin());
-                randLenVectors(e.id, 8, 19f * e.finpow() * scl, (x, y) -> {
-                    Fill.circle(e.x + x, e.y + y, e.fout() * 3.5f * scl + 0.3f);
-                });
+                randLenVectors(e.id, 8, 19f * e.finpow() * scl, (x, y) -> Fill.circle(e.x + x, e.y + y, e.fout() * 3.5f * scl + 0.3f));
             }).layer(Layer.debris);
 
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawFrames(){{frames = 5;}}, new DrawDefault(), new DrawRegion("-top"));
@@ -724,7 +714,7 @@ public class EUBlocks {
             haveBasicPowerOutput = false;
             attribute = Attribute.heat;
             blockedOnlySolid = true;
-            powerProduction = 45/60f;
+            powerProduction = 36/60f;
             outEffect = new RadialEffect(EUFx.absorbEffect2, 4, 90f, 7f);
             outTimer = EUFx.absorbEffect2.lifetime;
             drawer = new DrawMulti(new DrawDefault(), new DrawBlock() {
@@ -884,7 +874,6 @@ public class EUBlocks {
                         float ag = Mathf.random(360);
                         float px = EUGet.dx(b.x, r, ag), py = EUGet.dy(b.y, r, ag);
                         EUFx.chainLightningFade.at(b.x, b.y, 10, EUItems.lightninAlloy.color, EUGet.pos(px, py));
-                        //EUFx.chainLightningFade.at(px, py, 10, EUItems.lightninAlloy.color, b);
                     }
                 }
             };
@@ -1095,9 +1084,7 @@ public class EUBlocks {
                     sparkRad = 4 * 8;
                     sparkLen = 5f;
                     sparkStroke = 2f;
-                }}, new Effect(60, e -> {
-                    DrawFunc.drawSnow(e.x, e.y, 2 * 8 * e.foutpow(), 0, bcr);
-                }));
+                }}, new Effect(60, e -> DrawFunc.drawSnow(e.x, e.y, 2 * 8 * e.foutpow(), 0, bcr)));
                 trailInterval = 0.5f;
                 trailEffect = new Effect(120, e -> {
                     Draw.color(bcr);
@@ -1141,9 +1128,7 @@ public class EUBlocks {
                 trailColor = bcr;
                 trailLength = 8;
                 trailWidth = 5;
-                trailEffect = new Effect(40, e -> {
-                   DrawFunc.drawSnow(e.x, e.y, 12 * e.fout(), 360 * e.fin(), bcr);
-                });
+                trailEffect = new Effect(40, e -> DrawFunc.drawSnow(e.x, e.y, 12 * e.fout(), 360 * e.fin(), bcr));
                 trailInterval = 3;
 
                 fragBullets = amount;
@@ -1182,8 +1167,7 @@ public class EUBlocks {
                 }
 
                 public void explode(Bullet b){
-                    if(!(b.owner instanceof PowerTurretBuild)) return;
-                    PowerTurretBuild tb = (PowerTurretBuild) b.owner;
+                    if(!(b.owner instanceof PowerTurretBuild tb)) return;
                     for(int i = 0; i < amount; i++){
                         float angleOffset = i * spread - (amount - 1) * spread / 2f;
                         iceBar.create(tb, tb.team, tb.x, tb.y, tb.rotation - 180 + angleOffset + Mathf.random(-inSpread, inSpread), -1, 1, 1, new Position[]{EUGet.pos(tb.x, tb.y), EUGet.pos(b.x, b.y)});
@@ -1246,9 +1230,7 @@ public class EUBlocks {
             shootSound = Sounds.shootAltLong;
             smokeEffect = new Effect(20, e -> {
                 Draw.color(Pal.sap);
-                Angles.randLenVectors(e.id, 5, 20 * e.fin(), e.rotation, 30, (x, y) -> {
-                    Fill.circle(e.x + x, e.y + y, 5 * e.fout());
-                });
+                Angles.randLenVectors(e.id, 5, 20 * e.fin(), e.rotation, 30, (x, y) -> Fill.circle(e.x + x, e.y + y, 5 * e.fout()));
             });
             shootEffect = new Effect(20, e -> {
                 Draw.color(Pal.sapBullet);
@@ -1261,7 +1243,7 @@ public class EUBlocks {
             BulletType bb1 = new BulletType(){{
                 homingPower = 1;
                 homingRange = 10 * 8;
-                damage = 88;
+                damage = 138;
                 speed = 9;
                 lifetime = 30;
                 trailWidth = 1;
@@ -2003,6 +1985,7 @@ public class EUBlocks {
                     new UnitType[]{UnitTypes.reign, EUUnitTypes.suzerain},
                     new UnitType[]{UnitTypes.corvus, EUUnitTypes.nebula},
                     new UnitType[]{UnitTypes.toxopid, EUUnitTypes.asphyxia},
+                    new UnitType[]{UnitTypes.oct, EUUnitTypes.Tera},
                     new UnitType[]{UnitTypes.eclipse, EUUnitTypes.apocalypse},
                     new UnitType[]{UnitTypes.omura, EUUnitTypes.nihilo},
                     new UnitType[]{UnitTypes.navanax, EUUnitTypes.narwhal}
@@ -2027,6 +2010,7 @@ public class EUBlocks {
         }};
         
         finalF = new UnitFactory("finalF"){{
+            //TODO Production methods and details Fx?
             requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 3000, Items.thorium, 1800, Items.phaseFabric, 1200));
             size = 5;
             consumePower(30);
@@ -2043,6 +2027,8 @@ public class EUBlocks {
                 tile.payload = null;
             });
             liquidCapacity = 60;
+            placeableLiquid = true;
+            floating = true;
             //buildVisibility = BuildVisibility.sandboxOnly;
         }
 
@@ -2164,9 +2150,7 @@ public class EUBlocks {
                                 t.image(Icon.cancel).color(Pal.remove).size(40);
                             } else {
                                 if (plan.unit.unlockedNow()) {
-                                    t.button(new TextureRegionDrawable(plan.unit.uiIcon), () -> {
-                                        ui.content.show(plan.unit);
-                                    }).size(70).pad(10).left().scaling(Scaling.fit);
+                                    t.button(new TextureRegionDrawable(plan.unit.uiIcon), () -> ui.content.show(plan.unit)).size(70).pad(10).left().scaling(Scaling.fit);
                                     t.table((info) -> {
                                         info.add(plan.unit.localizedName + " " + checkTier(plan.unit)).left();
                                         info.row();
@@ -2302,6 +2286,8 @@ public class EUBlocks {
             size = 5;
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.sandboxOnly;
+            placeableLiquid = true;
+            floating = true;
         }};
 
         guiYsDomain = new Domain("guiYs-domain"){{

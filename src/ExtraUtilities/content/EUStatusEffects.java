@@ -1,10 +1,14 @@
 package ExtraUtilities.content;
 
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.struct.ObjectSet;
 import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
+import mindustry.entities.Effect;
 import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
 
@@ -43,6 +47,14 @@ public class EUStatusEffects {
         damage = 15/60f;
         effectChance = 0.07f;
         effect = Fx.overclocked;
+    }};
+
+    public static StatusEffect regenBoost = new StatusEffect("regenBoost"){{
+        color = Pal.heal;
+        reloadMultiplier = 1.2f;
+        damage = -30/60f;
+        healthMultiplier = 1.5f;
+        effect = Fx.none;
     }};
 
     public static StatusEffect fireSpeedUp = new StatusEffect("fireSpeedUp"){{
