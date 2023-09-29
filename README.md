@@ -9,7 +9,7 @@
 
 - English | [中文](README_cn.md)
 
-- This module does not affect the game balance, and enrich the content of the game, making the original game easier
+- This mod does not affect the game balance, and enrich the content of the game, making the original game easier
 
 
 - QQ Group①：613420467, the password is included in the mod description
