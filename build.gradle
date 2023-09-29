@@ -1,10 +1,15 @@
-apply plugin: "java"
+/**
+ * W: Why is my compiler unable to use pattern variables dnd other methods that require higher versions of Java?
+ * A: Possible issue with Gradle script
+ * W: But the script is fine
+ * A: Check your compiler settings, If you are using IntelliJ IDEA, it in 'Build, Execution, Deployment' > 'Build Tools' > 'Gradle', and check what version of the Gradle JVM you are using
+ * */
+
+plugins{
+    id "java"
+}
 
 version '1.0'
-
-//compile java 16 code, targeting java 8
-targetCompatibility = 8
-sourceCompatibility = JavaVersion.VERSION_17
 
 sourceSets.main.java.srcDirs = ["src"]
 
@@ -13,13 +18,15 @@ repositories{
     maven{ url 'https://www.jitpack.io' }
 }
 
+targetCompatibility = 8
+sourceCompatibility = 17
+
 ext{
     //the build number that this mod is made for
-    mindustryVersion = 'v145.1'
-    jabelVersion = "0.6.0"
-    //sdkVersion = '30'
+    mindustryVersion = 'v146'
+    jabelVersion = "0.9.0"
+    sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
-    //sdkRoot = "/Users/guiymour/Library/Android/sdk"
 }
 
 //java 8 backwards compatibility flag
@@ -30,7 +37,7 @@ allprojects{
 }
 
 dependencies{
-    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'org.jetbrains:annotations:24.0.1'
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
