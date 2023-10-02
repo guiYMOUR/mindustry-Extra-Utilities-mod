@@ -18,6 +18,8 @@ import mindustry.ui.Fonts;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -28,7 +30,8 @@ import static mindustry.Vars.*;
 
 public class EUGet {
 
-    public static Position pos(float x, float y){
+    @Contract(value = "_, _ -> new", pure = true)
+    public static @NotNull Position pos(float x, float y){
         return new Position() {
             @Override
             public float getX() {

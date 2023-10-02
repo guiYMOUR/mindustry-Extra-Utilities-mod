@@ -16,6 +16,7 @@ import ExtraUtilities.worlds.blocks.turret.*;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
+import ExtraUtilities.worlds.blocks.unit.UnitBoost;
 import ExtraUtilities.worlds.consumers.ConsumeLiquidDynamic;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.*;
@@ -99,9 +100,9 @@ public class EUBlocks {
         //turret
             dissipation, guiY, javelin, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint,
         //unit
-            imaginaryReconstructor, advAssemblerModule, finalF,
+            imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
-            coreKeeper, quantumDomain, breaker,
+            turretSpeeder, coreKeeper, quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
         public LiquidStack[] liquid;
@@ -1972,10 +1973,18 @@ public class EUBlocks {
         }};
 
         turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
-            requirements(Category.turret, with(Items.graphite, 90, Items.silicon, 180, Items.thorium, 70));
+            requirements(Category.turret, with(Items.graphite, 80, Items.silicon, 120, Items.thorium, 70, Items.titanium, 50));
             size = 2;
             hasPower = true;
             consumePower(1);
+        }};
+
+        turretSpeeder = new TurretSpeeder("turret-speeder"){{
+            requirements(Category.turret, with(Items.oxide, 120, Items.silicon, 200, Items.thorium, 100, Items.surgeAlloy, 40));
+            size = 3;
+            speedBoost = 1.33f;
+
+            consumePower(280/60f);
         }};
 
         imaginaryReconstructor = new Reconstructor("imaginary-reconstructor"){{
@@ -1998,6 +2007,17 @@ public class EUBlocks {
             consumeItems(with(Items.silicon, 1200, Items.titanium, 750, Items.plastanium, 450, Items.phaseFabric, 250, EUItems.lightninAlloy, 210));
             consumeLiquid(Liquids.cryofluid, 3.2f);
             liquidCapacity = 192;
+        }};
+
+
+        unitBooster = new UnitBoost("unit-boost"){{
+            requirements(Category.units, ItemStack.with(Items.thorium, 200, Items.surgeAlloy, 100, Items.silicon, 250, Items.tungsten, 200, Items.carbide, 150));
+            size = 3;
+            status = new StatusEffect[]{StatusEffects.fast, StatusEffects.overclock};
+            boostStatus = new StatusEffect[]{EUStatusEffects.defenseUp, EUStatusEffects.fireDamageUp};
+            hasPower = true;
+            consumePower(6);
+            consumeItem(Items.phaseFabric).boost();
         }};
 
         advAssemblerModule = new UnitAssemblerModule("adv-assembler-module"){{

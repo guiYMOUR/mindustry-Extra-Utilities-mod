@@ -246,6 +246,7 @@ public class EUOverride {
             UnitType u = Vars.content.unit(i);
             if(u != null){
                 u.armor = Math.min(u.armor, 80);
+                u.health = Math.min(u.health, 130000);
             }
         }
 

@@ -192,6 +192,7 @@ public class EUUnitTypes {
             ammoType = new ItemAmmoType(Items.thorium);
 
             immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped);
+            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> !immunities.contains(s) && s.reloadMultiplier >= 1));
 
             abilities.add(new TerritoryFieldAbility(20 * 8, 90, 210){{
                 open = true;
@@ -341,7 +342,7 @@ public class EUUnitTypes {
             groundLayer = Layer.legUnit;
             ammoType = new PowerAmmoType(3800);
 
-            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet);
+            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet, StatusEffects.electrified);
 
             abilities.add(new EnergyFieldAbility(60f, 90f, 200f){{
                 maxTargets = 25;
@@ -776,7 +777,7 @@ public class EUUnitTypes {
 
             abilities.add(
                     new DeathBullet(new diffBullet(360, 1){{
-                        damage = splashDamage = 5000;
+                        damage = splashDamage = 2500;
                         splashDamageRadius = 30 * 8;
                         lifetime = 240;
                         color = Pal.heal;
@@ -818,10 +819,19 @@ public class EUUnitTypes {
             abilities.add(
                     new RepairField(){{
                         range = rd;
-                        blockHealPercent = 12;
+                        blockHealPercent = 10;
                         status = EUStatusEffects.regenBoost;
-                        unitHeal = 150;
-                    }},
+                        unitHeal = 100;
+                    }
+
+                        @Override
+                        public void death(Unit unit) {
+                            Units.nearby(unit.team, unit.x, unit.y, range, u -> {
+                                u.apply(StatusEffects.shielded, 8 * 60);
+                                u.apply(EUStatusEffects.speedUp, 8 * 60);
+                            });
+                        }
+                    },
                     new PcShieldArcAbility(){{
                         width = 18;
                         radius = rd - width + 8;
@@ -834,7 +844,7 @@ public class EUUnitTypes {
             );
 
             BulletType l = new liLaserBullet(){{
-                damage = 220;
+                damage = 200;
                 healPercent = 12;
                 collidesTeam = true;
                 colors = new Color[]{Pal.heal.cpy().a(0.4f), Pal.heal.cpy().a(0.7f), Pal.heal, Color.white};
@@ -847,7 +857,7 @@ public class EUUnitTypes {
                 lifetime = 24;
                 status = StatusEffects.electrified;
                 statusDuration = 2 * 60;
-                chain = new ChainLightningFade(lifetime, -1, 2.5f, color, 60, hitEffect){{
+                chain = new ChainLightningFade(lifetime, -1, 2.5f, color, 50, hitEffect){{
                     healPercent = 10;
                     collidesTeam = true;
                 }};
@@ -889,18 +899,18 @@ public class EUUnitTypes {
             }});
             abilities.add(new ShieldRegenFieldAbility(100, 600, 60 * 4, 200));
             abilities.add(new UnitSpawnAbility(UnitTypes.flare, spawnTime, 9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.flare, spawnTime, -9.5f, -35.5f), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, 29, -25), new UnitSpawnAbility(UnitTypes.zenith, spawnTime * 5, -29, -25));
-            armor = 43;
+            armor = 46;
             drag = 0.2f;
             flying = false;
             speed = 0.6f;
             accel = 0.2f;
             hitSize = 60;
             rotateSpeed = 0.9f;
-            health = 61000;
+            health = 63000;
             itemCapacity = 350;
             ammoType = new ItemAmmoType(Items.surgeAlloy);
 
-            immunities.add(EUStatusEffects.speedDown);
+            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s.reloadMultiplier >= 1));
 
             BulletType air = new PointBulletType(){{
                 trailEffect = Fx.railTrail;
@@ -1078,7 +1088,7 @@ public class EUUnitTypes {
             UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
             defaultCommand = c;
             commands = new UnitCommand[]{UnitCommand.moveCommand, UnitCommand.assistCommand, UnitCommand.rebuildCommand, c, UnitCommand.boostCommand};
-            armor = 41;
+            armor = 48;
             drag = 0.2f;
             flying = false;
             canBoost = true;
@@ -1092,15 +1102,16 @@ public class EUUnitTypes {
             hitSize = 60;
             rotateSpeed = 1;
             drawShields = false;
-            health = 60000;
+            health = 62500;
             itemCapacity = 800;
             ammoType = new PowerAmmoType(1800);
 
             buildSpeed = 10;
-            //controller = u -> new DefenderHealAI();
+
+            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
 
             abilities.add(new UnitSpawnAbility(UnitTypes.mega, 32 * 60, 0, 27));
-            abilities.add(new BatteryAbility(72000, 120, 120, 0, -15));
+            abilities.add(new BatteryAbility(80000, 120, 120, 0, -15));
             abilities.add(new RepairFieldAbility(400, 60 * 3, 120));
 
             deathExplosionEffect = Fx.none;
@@ -2046,7 +2057,7 @@ public class EUUnitTypes {
             setEnginesMirror(new UnitEngine(28.9f, -24.3f, 3f, 315f));
         }};
 
-        arcana = new UnitType("arcana"){{
+        arcana = new ErekirUnitType("arcana"){{
             drag = 0.12f;
             speed = 0.9f;
             hitSize = 50f;
@@ -2082,8 +2093,6 @@ public class EUUnitTypes {
 
             alwaysShootWhenMoving = true;
             maxRange = 50 * 8f;
-
-            outlineColor = Pal.darkOutline;
 
             immunities.addAll(StatusEffects.wet, StatusEffects.unmoving, StatusEffects.disarmed, StatusEffects.slow);
 

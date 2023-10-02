@@ -68,6 +68,7 @@ public class EUTechTree {
             node(onyxBlaster);
         });
         addToNode(cyclone, () -> {
+            node(turretResupplyPoint);
             node(celebration, () -> {
                 node(celebrationMk2);
             });
@@ -127,6 +128,7 @@ public class EUTechTree {
             });
         });
 
+        addToNode(unitRepairTower, () -> node(unitBooster));
         addToNode(basicAssemblerModule, () -> {
             node(advAssemblerModule, () -> {
                 node(napoleon);
@@ -137,7 +139,7 @@ public class EUTechTree {
 
         addToNode(breach, () -> {
             node(guiY, () -> {
-                node(turretResupplyPoint);
+                node(turretSpeeder);
                 node(fiammetta);
             });
             node(javelin);

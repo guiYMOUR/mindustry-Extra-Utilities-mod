@@ -52,7 +52,7 @@ public class EUStatusEffects {
     public static StatusEffect regenBoost = new StatusEffect("regenBoost"){{
         color = Pal.heal;
         reloadMultiplier = 1.2f;
-        damage = -30/60f;
+        damage = -80/60f;
         healthMultiplier = 1.5f;
         effect = Fx.none;
     }};
