@@ -54,17 +54,19 @@ public class ElectricStorm extends BulletType {
                 if(hc != null){
                     EUFx.chainLightningFade.at(b.x, b.y, 4, color.cpy().a(0.3f), hc);
                     Fx.randLifeSpark.at(hc.getX(), hc.getY(), b.angleTo(hc), color);
-                    if(hc instanceof Building){
-                        ((Building) hc).applySlowdown(0, 300);
+                    if(hc instanceof Building bd){
+                        bd.applySlowdown(0, 300);
                     }
-                    if(hc instanceof Unit){
-                        ((Unit)hc).apply(StatusEffects.disarmed, 300);
+                    if(hc instanceof Unit uc){
+                        uc.apply(StatusEffects.disarmed, 300);
                     }
+
                     hc.damage(damage * Vars.state.rules.unitCrashDamage(b.team));
+                    if(hc.health() < (hc.maxHealth() * 0.04)) hc.kill();
                 }
             }
         }
-        Effect.shake(2, 2, b);
+        if(!Vars.state.isPaused()) Effect.shake(2, 2, b);
     }
 
     @Override

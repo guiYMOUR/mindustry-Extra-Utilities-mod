@@ -16,15 +16,15 @@ import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Tex;
-import mindustry.type.Liquid;
-import mindustry.type.UnitType;
+import mindustry.type.*;
+import mindustry.ui.ItemDisplay;
+import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.meta.StatUnit;
 import mindustry.world.meta.StatValue;
 import mindustry.world.meta.StatValues;
 
-import static mindustry.Vars.content;
-import static mindustry.Vars.tilesize;
+import static mindustry.Vars.*;
 
 public class EUStatValues {
     public static StatValue stringBoosters(float reload, float maxUsed, float multiplier, boolean baseReload, Boolf<Liquid> filter, String key){
@@ -194,6 +194,47 @@ public class EUStatValues {
                 }).left();
                 table.row();
             }
+        };
+    }
+
+    public static StatValue itemRangeBoosters(String unit, float timePeriod, StatusEffect[] status, float rangeBoost, ItemStack[] items, boolean replace, Boolf<Item> filter){
+        return table -> {
+            table.row();
+            table.table(c -> {
+                for(Item item : content.items()){
+                    if(!filter.get(item)) continue;
+
+                    c.table(Styles.grayPanel, b -> {
+                        for(ItemStack stack : items){
+                            if(timePeriod < 0){
+                                b.add(new ItemDisplay(stack.item, stack.amount, true)).pad(20f).left();
+                            }else{
+                                b.add(new ItemDisplay(stack.item, stack.amount, timePeriod, true)).pad(20f).left();
+                            }
+                            if(items.length > 1) b.row();
+                        }
+
+                        b.table(bt -> {
+                            bt.left().defaults().left();
+                            if(status.length > 0){
+                                for(StatusEffect s : status){
+                                    if(s == StatusEffects.none) continue;
+                                    bt.row();
+                                    bt.button(new TextureRegionDrawable(s.uiIcon), () -> ui.content.show(s)).padTop(2f).padBottom(2f).size(50);
+                                    bt.add(s.localizedName);
+                                }
+                                if(replace){
+                                    bt.row();
+                                    bt.add(Core.bundle.get("statValue.replace"));
+                                }
+                            }
+                            bt.row();
+                            if(rangeBoost != 0) bt.add("[lightgray]+[stat]" + Strings.autoFixed(rangeBoost / tilesize, 2) + "[lightgray] " + StatUnit.blocks.localized()).row();
+                        }).right().grow().pad(10f).padRight(15f);
+                    }).growX().pad(5).padBottom(-5).row();
+                }
+            }).growX().colspan(table.getColumns());
+            table.row();
         };
     }
 }

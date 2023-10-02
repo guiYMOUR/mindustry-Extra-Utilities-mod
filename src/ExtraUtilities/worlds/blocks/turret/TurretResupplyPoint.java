@@ -3,7 +3,6 @@ package ExtraUtilities.worlds.blocks.turret;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureRegion;
 import arc.scene.ui.layout.Table;
 import arc.util.io.*;
 import mindustry.content.Fx;
@@ -12,7 +11,6 @@ import mindustry.graphics.*;
 import mindustry.type.Item;
 import mindustry.world.Block;
 import mindustry.world.blocks.ItemSelection;
-import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.meta.*;
 
@@ -39,6 +37,7 @@ public class TurretResupplyPoint extends Block {
     @Override
     public void setStats() {
         super.setStats();
+        stats.remove(Stat.itemCapacity);
         stats.add(Stat.range, range / tilesize, StatUnit.blocks);
     }
 
@@ -50,6 +49,7 @@ public class TurretResupplyPoint extends Block {
 
     public class TurretResupplyPointBuild extends Building {
         public Item sortItem = null;
+
 
         @Override
         public void updateTile() {
