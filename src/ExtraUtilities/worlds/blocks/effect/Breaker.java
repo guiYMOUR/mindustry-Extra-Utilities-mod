@@ -1,7 +1,6 @@
 package ExtraUtilities.worlds.blocks.effect;
 
 import arc.graphics.Color;
-import arc.graphics.g2d.Font;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
@@ -57,7 +56,7 @@ public class Breaker extends Block {
 
         @Override
         public void updateTile() {
-            Tile tile = Vars.world.tile(tileX() + Geometry.d4x(rotation), this.tileY() + Geometry.d4y(rotation));
+            Tile tile = Vars.world.tile(tileX() + Geometry.d4x(rotation), tileY() + Geometry.d4y(rotation));
             if(tile != null && tile.block() != null && tile.build == null && tile.block().solid && !tile.block().breakable && tile.block().size <= maxsize){
                 Timer += Time.delta;
                 if(Timer >= timerBreak){

@@ -75,13 +75,13 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.anti_Missile, t);
                     addToTable(EUBlocks.unitBooster, t);
                     addToTable(EUBlocks.turretSpeeder, t);
                     addToTable(EUUnitTypes.arcana, t);
                     addToTable(EUUnitTypes.napoleon, t);
                     addToTable(EUUnitTypes.havoc, t);
                     addToTable(EUBlocks.advAssemblerModule, t);
-                    addToTable(EUBlocks.T2sporePress, t);
                     addToTable(EUBlocks.ventHeater, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
@@ -343,6 +343,9 @@ public class ExtraUtilitiesMod extends Mod{
     @Override
     public void loadContent(){
         if(onlyPlugIn) return;
+
+        EUOverride.overrideJs();
+
         EUAttribute.load();
         EUOverride.overrideUnit1();
         EUUnitTypes.load();

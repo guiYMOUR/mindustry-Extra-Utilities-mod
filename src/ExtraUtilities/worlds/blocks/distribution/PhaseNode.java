@@ -5,13 +5,18 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.math.geom.Intersector;
+import arc.math.geom.Point2;
+import arc.struct.Seq;
 import arc.util.Eachable;
+import arc.util.Nullable;
 import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
-import mindustry.world.Edges;
+import mindustry.input.Placement;
 import mindustry.world.Tile;
 import mindustry.world.blocks.distribution.ItemBridge;
 import mindustry.world.draw.DrawBlock;
@@ -27,6 +32,7 @@ public class PhaseNode extends ItemBridge {
 
     public PhaseNode(String name) {
         super(name);
+        swapDiagonalPlacement = true;
     }
 
     @Override
@@ -39,10 +45,15 @@ public class PhaseNode extends ItemBridge {
     @Override
     public boolean linkValid(Tile tile, Tile other, boolean checkDouble) {
         if(other == null || tile == null || other == tile) return false;
-        if(!tile.within(other, range * tilesize + 0.1f)) return false;
+        if(!tile.within(other, (range + size) * tilesize)) return false;
         return ((other.block() == tile.block() && tile.block() == this) || (!(tile.block() instanceof PhaseNode) && other.block() == this))
                 && (other.team() == tile.team() || tile.block() != this)
                 && (!checkDouble || ((PhaseNodeBuild)other.build).link != tile.pos());
+    }
+
+    public Tile findLink(int x, int y){
+
+        return null;
     }
 
     @Override
@@ -65,6 +76,20 @@ public class PhaseNode extends ItemBridge {
     @Override
     public TextureRegion[] icons(){
         return drawer.finalIcons(this);
+    }
+
+    public boolean overlaps(@Nullable Tile src, @Nullable Tile other){
+        if(src == null || other == null) return true;
+        return Intersector.overlaps(Tmp.cr1.set(src.worldx() + offset, src.worldy() + offset, range * tilesize), Tmp.r1.setSize(size * tilesize).setCenter(other.worldx() + offset, other.worldy() + offset));
+    }
+
+    public boolean positionsValid(int x1, int y1, int x2, int y2){
+        return Mathf.dst(x1, y1, x2, y2) <= (range + size) * tilesize;
+    }
+
+    @Override
+    public void changePlacementPath(Seq<Point2> points, int rotation){
+        Placement.calculateNodes(points, this, rotation, (point, other) -> overlaps(world.tile(point.x, point.y), world.tile(other.x, other.y)));
     }
 
     public class PhaseNodeBuild extends ItemBridgeBuild{
@@ -90,7 +115,9 @@ public class PhaseNode extends ItemBridge {
 
         @Override
         public void doDump(){
-            if(hasItems) super.doDump();
+            if(hasItems) {
+                for(int i = 0; i < items.total() / transportTime; i++) dumpAccumulate();
+            }
             if(hasLiquids) dumpLiquid(liquids.current(), 1f);
         }
 
@@ -123,6 +150,12 @@ public class PhaseNode extends ItemBridge {
         @Override
         protected boolean checkDump(Building to) {
             return true;
+        }
+
+        @Override
+        public boolean onConfigureBuildTapped(Building other) {
+            if(other == this) configure(-1);
+            return super.onConfigureBuildTapped(other);
         }
     }
 }
