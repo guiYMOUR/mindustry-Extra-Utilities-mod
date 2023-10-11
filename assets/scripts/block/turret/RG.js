@@ -106,7 +106,6 @@ RGS.intervalBullets = 6;
 
 const RG = extend(ItemTurret, 'RG', {});
 
-RG.buildType = prov(() => {return new JavaAdapter(ItemTurret.ItemTurretBuild, {}, RG)});
 RG.shootSound = Sounds.laser;
 RG.chargeSound = chargeSound;
 RG.reload = 60 * 3.5;

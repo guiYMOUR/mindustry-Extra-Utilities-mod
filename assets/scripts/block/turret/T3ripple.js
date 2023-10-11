@@ -27,14 +27,8 @@ T3rip.minRange = 50;
 T3rip.health = 250 * 3 * 3;
 T3rip.shootSound = Sounds.artillery;
 lib.Coolant(T3rip, 0.4, 1.5);
-T3rip.ammo(
-    Items.graphite, lib.toBullet(Blocks.ripple, Items.graphite),
-    Items.silicon, lib.toBullet(Blocks.ripple, Items.silicon),
-    Items.pyratite, lib.toBullet(Blocks.ripple, Items.pyratite),
-    Items.blastCompound, lib.toBullet(Blocks.ripple, Items.blastCompound),
-    Items.plastanium, lib.toBullet(Blocks.ripple, Items.plastanium),
-    Items.surgeAlloy, bullets.artillerySurge
-);
+T3rip.ammoTypes = Blocks.ripple.ammoTypes;
+T3rip.ammoTypes.put(Items.surgeAlloy, bullets.artillerySurge);
 T3rip.requirements = ItemStack.with(
     Items.copper, 300,
     Items.graphite, 220,

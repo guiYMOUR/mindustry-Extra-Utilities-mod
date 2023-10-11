@@ -36,7 +36,7 @@ T3fuse.ammo(
     Items.thorium, fuse2
 );
 T3fuse.requirements = ItemStack.with(
-    Items.copper, 350,
+    Items.copper, 550,
     Items.graphite, 320,
     Items.titanium, 270,
     Items.thorium, 150,
