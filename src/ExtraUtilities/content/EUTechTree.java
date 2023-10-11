@@ -72,6 +72,7 @@ public class EUTechTree {
             node(celebration, () -> {
                 node(celebrationMk2);
             });
+            node(antiaircraft);
         });
         addToNode(foreshadow, () -> {
             node(sancta);
@@ -141,6 +142,7 @@ public class EUTechTree {
             node(guiY, () -> {
                 node(turretSpeeder);
                 node(fiammetta);
+                node(anti_Missile);
             });
             node(javelin);
         });

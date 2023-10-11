@@ -634,7 +634,7 @@ public class EUUnitTypes {
             ammoType = new ItemAmmoType(Items.pyratite);
 
             abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
-            abilities.add(new EnergyFieldAbility(180f, 90f, 192f){{
+            abilities.add(new EnergyFieldAbility(220f, 90f, 192f){{
                 color = Color.valueOf("FFA665");
                 status = StatusEffects.unmoving;
                 statusDuration = 60f;
@@ -739,10 +739,12 @@ public class EUUnitTypes {
                             pierceEffect = Fx.railHit;
                             hitEffect = Fx.massiveExplosion;
                             smokeEffect = Fx.shootBig2;
-                            damage = 986;
-                            pierceDamageFactor = 0.5f;
+                            damage = 980;
                             pointEffectSpace = 60f;
                             pointEffect = Fx.railTrail;
+                            pierce = true;
+                            pierceBuilding = true;
+                            pierceCap = 6;
                         }};
                         rotate = true;
                         rotateSpeed = 2;
@@ -1153,11 +1155,10 @@ public class EUUnitTypes {
 
             weapons.add(
                     new antiMissileWeapon(name("narwhal-defense")){{
-                        bullet = new antiMissile( 30 * 8, name("anti")){{
-                            y = -37;
-                            x = 0;
-                            loadSpeed = -1.5f;
-                        }};
+                        bullet = new antiMissile( 30 * 8, name("anti"));
+                        y = -37;
+                        x = 0;
+                        loadSpeed = -1.5f;
                         xRand = 8;
                         reload = 6;
                         mirror = false;
@@ -1303,12 +1304,13 @@ public class EUUnitTypes {
                             ff.fragBullets = fragBullets;
                             ff.buildingDamageMultiplier = fb.buildingDamageMultiplier = 0.6f;
                             fb.healPercent = -1;
-                            fb.damage = 55f;
+                            fb.damage = 22.5f;
                             intervalBullet = fb;
-                            intervalBullets = 2;
+                            intervalBullets = 4;
                             bulletInterval = 6;
                             intervalDelay = 6;
-                            intervalSpread = 180;
+                            intervalAngle = - 30;
+                            intervalSpread = 240;
                         }
 
                             @Override
@@ -1316,8 +1318,11 @@ public class EUUnitTypes {
                                 if (ff != null && b.time >= intervalDelay && b.timer.get(2, bulletInterval)) {
                                     float ang = b.rotation();
 
-                                    for(int i = 0; i < intervalBullets; i++) {
-                                        ff.create(b, b.team, b.x, b.y, ang - 90 + i * intervalSpread, 1, 1, mover);
+                                    float[] fs = {-4f, 4f};
+                                    for(int i = 0; i < intervalBullets/2; i++) {
+                                        for(float as : fs) {
+                                            ff.create(b, b.team, b.x, b.y, ang - 90 + as + intervalAngle + i * intervalSpread, 1, 1, mover);
+                                        }
                                     }
                                 }
 
@@ -1815,7 +1820,7 @@ public class EUUnitTypes {
                                     Drawf.tri(lx, ly, 25 * b.foutpow(), (70 + rand.random(-10, 10)) * b.foutpow(), a + 180);
                                 }
 
-                                Effect.shake(2, 2, b);
+                                if(!Vars.state.isPaused()) Effect.shake(2, 2, b);
                             }
                         };
                         BulletType cff = new fBullet(cdd, 15){

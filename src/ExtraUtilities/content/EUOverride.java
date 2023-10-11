@@ -14,6 +14,7 @@ import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.bullet.MissileBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.effect.WaveEffect;
@@ -27,6 +28,7 @@ import mindustry.mod.Mods;
 import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadConveyor;
@@ -308,5 +310,32 @@ public class EUOverride {
                 mod.meta.description = Core.bundle.get("mod.extra-utilities.version") + mod.meta.version + "\n\n" + mod.meta.description;
             }
         }
+    }
+
+    public static void overrideJs(){
+        ((ItemTurret)Blocks.swarmer).ammoTypes.put(Items.graphite, new MissileBulletType(3.2f, 10){{
+            width = 7;
+            height = 8;
+            shrinkY = 0;
+            homingPower = 0.08f;
+            reloadMultiplier = 1.2f;
+            splashDamageRadius = 25;
+            splashDamage = 20;
+            hitEffect = Fx.blastExplosion;
+        }});
+        ((ItemTurret)Blocks.swarmer).limitRange(5f);
+
+        ItemTurret miniSw = (ItemTurret) Vars.content.block(name("mini-swarmer"));
+        ItemTurret T2Sw = (ItemTurret) Vars.content.block(name("T2-swarmer"));
+
+        var ammo = ((ItemTurret)Blocks.swarmer).ammoTypes;
+        var is = ammo.keys().toSeq();
+        for(Item i : is){
+            miniSw.ammoTypes.put(i, ammo.get(i).copy());
+            T2Sw.ammoTypes.put(i, ammo.get(i).copy());
+        }
+
+        miniSw.limitRange(5f);
+        T2Sw.limitRange(5f);
     }
 }

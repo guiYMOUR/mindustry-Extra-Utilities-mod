@@ -17,6 +17,7 @@ import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.Items;
+import mindustry.entities.Damage;
 import mindustry.entities.Effect;
 import mindustry.gen.Building;
 import mindustry.gen.Healthc;
@@ -217,8 +218,11 @@ public class EUFx {
         });
     }
 
-    //divide into two parts for easy adjustment of layers, but ... after writing it, I realized that seem useless : (
     public static Effect ellipse(float startRad, int num, float lifetime, Color color){
+        return ellipse(startRad, 2, num, lifetime, color);
+    }
+    //divide into two parts for easy adjustment of layers, but ... after writing it, I realized that seem useless : (
+    public static Effect ellipse(float startRad, float rad, int num, float lifetime, Color color){
         return new Effect(lifetime, e ->{
             float length = startRad * e.fin();
             float width = length/2;
@@ -235,7 +239,7 @@ public class EUFx {
                         Tmp.v1.y, //Y axis remains unchanged
                         e.x, e.y,
                         e.rotation + 90,
-                        2f * e.fout()
+                        rad * e.fout()
                 );
             }
 
@@ -249,7 +253,7 @@ public class EUFx {
                         Tmp.v1.y,
                         e.x, e.y,
                         e.rotation + 90,
-                        2f * e.fout()
+                        rad * e.fout()
                 );
             }
         });
@@ -351,52 +355,15 @@ public class EUFx {
         });
     }
 
-    //感谢老y
-    public static Effect chainLightningFade = new Effect(45f, 500f, e -> {
-        if(!(e.data instanceof Position)) return;
-        Position p = e.data();
-        float tx = p.getX(), ty = p.getY(), dst = Mathf.dst(e.x, e.y, tx, ty);
-        Tmp.v1.set(p).sub(e.x, e.y).nor();
+    public static Effect chainLightningFade = chainLightningFade(45, 2.5f);
 
-        float normx = Tmp.v1.x, normy = Tmp.v1.y;
-        float range = e.rotation;
-        int links = Mathf.ceil(dst / range);
-        float spacing = dst / links;
+    public static Effect chainLightningFade(float lifetime) {
+        return chainLightningFade(lifetime, 2.5f);
+    }
 
-        Lines.stroke(2.5f * Mathf.curve(e.fout(), 0, 0.7f));
-        Draw.color(Color.white, e.color, e.fin());
-
-        Lines.beginLine();
-
-        Fill.circle(e.x, e.y, Lines.getStroke() / 2);
-        Lines.linePoint(e.x, e.y);
-
-        rand.setSeed(e.id);
-
-        float fin = Mathf.curve(e.fin(), 0, 0.5f);
-        float i;
-        for(i = 0; i < links * fin; i++){
-            float nx, ny;
-            if(i == links - 1){
-                nx = tx;
-                ny = ty;
-            }else{
-                float len = (i + 1) * spacing;
-                Tmp.v1.setToRandomDirection(rand).scl(range/2f);
-                nx = e.x + normx * len + Tmp.v1.x;
-                ny = e.y + normy * len + Tmp.v1.y;
-            }
-
-            Lines.linePoint(nx, ny);
-        }
-
-        Lines.endLine();
-    }).followParent(false);
-
-    public static Effect chainLightningFade(float lifetime){
+    public static Effect chainLightningFade(float lifetime, float stroke){
         return new Effect(lifetime, 500f, e -> {
-            if(!(e.data instanceof Position)) return;
-            Position p = e.data();
+            if(!(e.data instanceof Position p)) return;
             float tx = p.getX(), ty = p.getY(), dst = Mathf.dst(e.x, e.y, tx, ty);
             Tmp.v1.set(p).sub(e.x, e.y).nor();
 
@@ -405,35 +372,41 @@ public class EUFx {
             int links = Mathf.ceil(dst / range);
             float spacing = dst / links;
 
-            Lines.stroke(2.5f * Mathf.curve(e.fout(), 0, 0.7f));
-            Draw.color(Color.white, e.color, e.fin());
-
-            Lines.beginLine();
-
-            Fill.circle(e.x, e.y, Lines.getStroke() / 2);
-            Lines.linePoint(e.x, e.y);
-
             rand.setSeed(e.id);
+            float[][] resetPos = new float[links + 1][2];
 
-            float fin = Mathf.curve(e.fin(), 0, 0.5f);
-            float i;
-
-            for(i = 0; i < links * fin; i++){
+            resetPos[0] = new float[]{e.x, e.y};
+            for(int i = 0; i < links; i++) {
                 float nx, ny;
-                if(i == links - 1){
+                if (i == links - 1) {
                     nx = tx;
                     ny = ty;
-                }else{
+                } else {
                     float len = (i + 1) * spacing;
-                    Tmp.v1.setToRandomDirection(rand).scl(range/2f);
+                    Tmp.v1.setToRandomDirection(rand).scl(range / 2f);
                     nx = e.x + normx * len + Tmp.v1.x;
                     ny = e.y + normy * len + Tmp.v1.y;
                 }
 
-                Lines.linePoint(nx, ny);
+                resetPos[i + 1] = new float[]{nx, ny};
             }
 
-            Lines.endLine();
+            Lines.stroke(stroke * Mathf.curve(e.fout(), 0, 0.7f));
+            Draw.color(Color.white, e.color, e.fin());
+
+            Fill.circle(e.x, e.y, Lines.getStroke() / 2);
+
+
+            rand.setSeed(e.id);
+            float fin = Mathf.curve(e.fin(), 0, 0.5f);
+
+            for (int j = 0; j < (resetPos.length - 1) * fin; j++) {
+                float ox = resetPos[j][0], oy = resetPos[j][1];
+                float nx = resetPos[j + 1][0], ny = resetPos[j + 1][1];
+
+                Lines.line(ox, oy, nx, ny);
+            }
+
             Draw.reset();
         }).followParent(false);
     }
