@@ -40,8 +40,8 @@ public class DrawLAE extends DrawBlock {
             for (float mx : new float[]{move, -move}) {
                 for (float my : new float[]{move, -move}) {
                     float rx = x + mx, ry = y + my;
-                    float rot = EUGet.pos(rx, ry).angleTo(build);
-                    float baseLen = EUGet.pos(rx, ry).dst(build)/1.3f * build.warmup();
+                    float rot = build.angleTo(rx, ry) + 180;
+                    float baseLen = build.dst(rx, ry)/1.3f * build.warmup();
                     for(int i = 0; i < colors.length; i++){
                         Draw.color(Tmp.c1.set(colors[i]).mul(1f + Mathf.absin(Time.time, 1f, 0.1f)));
                         Draw.alpha(0.6f);
