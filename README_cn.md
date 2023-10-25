@@ -5,6 +5,8 @@
 ![mk2](https://user-images.githubusercontent.com/77377005/230294594-2f4aec93-a2ba-4857-ab90-26fc20e8420b.gif)
 ![sakana](https://user-images.githubusercontent.com/77377005/232401751-ea636aab-0129-44fa-a467-447fa2a74003.gif)
 
+<img width="698" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/b60ac091-9394-42c7-85fe-bf5d83649644">
+
 [English](README.md) | 中文
 
 - 本模组不会太大程度影响游戏平衡，同时丰富游戏内容，使原版游戏更简单
