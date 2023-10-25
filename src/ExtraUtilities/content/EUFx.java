@@ -12,12 +12,12 @@ import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Position;
 import arc.math.geom.Vec2;
+import arc.struct.Seq;
 import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.Items;
-import mindustry.entities.Damage;
 import mindustry.entities.Effect;
 import mindustry.gen.Building;
 import mindustry.gen.Healthc;
@@ -25,6 +25,7 @@ import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.type.UnitType;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static ExtraUtilities.content.EUGet.*;
@@ -361,14 +362,18 @@ public class EUFx {
         return chainLightningFade(lifetime, 2.5f);
     }
 
-    public static Effect chainLightningFade(float lifetime, float stroke){
+    private static Effect chainLightningFade(float lifetime, float stroke) {
+        return chainLightningFade(lifetime, stroke, -1);
+    }
+
+    public static Effect chainLightningFade(float lifetime, float stroke, float rangeOverride){
         return new Effect(lifetime, 500f, e -> {
             if(!(e.data instanceof Position p)) return;
             float tx = p.getX(), ty = p.getY(), dst = Mathf.dst(e.x, e.y, tx, ty);
             Tmp.v1.set(p).sub(e.x, e.y).nor();
 
             float normx = Tmp.v1.x, normy = Tmp.v1.y;
-            float range = e.rotation;
+            float range = rangeOverride > 0 ? rangeOverride : e.rotation;
             int links = Mathf.ceil(dst / range);
             float spacing = dst / links;
 
@@ -432,7 +437,7 @@ public class EUFx {
                     lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + out * r/4);
                     Drawf.light(e.x + x, e.y + y, out * r, Draw.getColor(), 0.8f);
                 });
-                Effect.shake(3, 3, EUGet.pos(e.x, e.y));
+                Effect.shake(3, 3, e.x, e.y);
             }
         });
     }
@@ -520,4 +525,73 @@ public class EUFx {
             }
         }
     });
+
+    public static Effect edessp(TextureRegion region, float lifetime, float range, float rot, float rRot){
+        return new Effect(lifetime, e -> {
+
+            float ex = e.x + Angles.trnsx(e.rotation + rRot * e.fin(), range * e.fout()),
+                    ey = e.y + Angles.trnsy(e.rotation + rRot * e.fin(), range * e.fout());
+            Draw.rect(region, ex, ey, region.width/3f * e.fin(), region.height/3f * e.fin(), rot);
+        }).followParent(true);
+    }
+
+    public static Effect EUUtSp  = new Effect(80, e -> {
+        if(!(e.data instanceof UnitType type)) return;
+
+        Draw.color(Pal.accent);
+        Drawf.tri(e.x, e.y, 16 * e.fout(), type.hitSize * 8 * e.fin(), e.rotation - 90);
+
+        Draw.alpha(e.fout());
+        Draw.mixcol(Pal.accent, e.fout());
+        Draw.rect(type.fullIcon, e.x, e.y, e.rotation);
+    }).layer(Layer.flyingUnit + 5f);
+
+    public static Effect PlanetaryArray(float lifetime, int sp, float spl, Color color, float cr, float st, float over){
+        return new Effect(lifetime, e -> {
+            if(sp == 0) return;
+            float fin = Mathf.curve(e.fin(), 0, over);
+            float fout = Mathf.curve(e.fout(), 0, 1 - over);
+            Seq<Float> angles = new Seq<>();
+            rand.setSeed(e.id);
+            for(int i = 0; i < sp; i++){
+                angles.add(rand.random(45f, 135f));
+            }
+            float nx = e.x, ny = e.y;
+            for(int i = 0; i < sp * fin; i++){
+                float it = i * (e.lifetime/sp);
+                float ef = Math.min(1, ((e.time - it) / (e.lifetime - it)) * (1 / over));
+
+                float angle = e.rotation + angles.get(i) - 90;
+                Lines.stroke(e.fin() < over ? st * ef : st * fout, color);
+                if(cr > 0) Fill.circle(nx, ny, cr * (e.fin() < over ? ef : fout));
+                if(i == sp - 1) break;
+                Lines.lineAngle(nx, ny, angle, spl * Math.min(1, Math.max(0, ef) * 1/(1 - over)));
+                nx = EUGet.dx(nx, spl, angle);
+                ny = EUGet.dy(ny, spl, angle);
+            }
+        }).followParent(true);
+    }
+
+    public static Effect diffEffect(float lifetime, float st, float r, int amt, float len, float rndLen, float width, Color color, float shake){
+        return new Effect(lifetime, e -> {
+            rand.setSeed(e.id);
+            float pin = (1 - e.foutpow());
+            Lines.stroke(st * e.foutpow(), color);
+            Lines.circle(e.x, e.y, r * pin);
+            for(int i = 0; i < amt/2; i++){
+                float a = rand.random(180);
+                float lx = EUGet.dx(e.x, r * pin, a);
+                float ly = EUGet.dy(e.y, r * pin, a);
+                Drawf.tri(lx, ly, width * e.foutpow(), (len + rand.random(-rndLen, rndLen)) * e.foutpow(), a + 180);
+            }
+            for(int i = 0; i < amt/2; i++){
+                float a = 180 + rand.random(180);
+                float lx = EUGet.dx(e.x, r * pin, a);
+                float ly = EUGet.dy(e.y, r * pin, a);
+                Drawf.tri(lx, ly, width * e.foutpow(), (len + rand.random(-rndLen, rndLen)) * e.foutpow(), a + 180);
+            }
+
+            if(!Vars.state.isPaused() && shake > 0) Effect.shake(shake, shake, e.x, e.y);
+        });
+    }
 }

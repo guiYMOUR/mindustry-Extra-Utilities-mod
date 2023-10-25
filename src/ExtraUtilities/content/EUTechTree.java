@@ -167,6 +167,7 @@ public class EUTechTree {
                 });
                 node(breaker);
                 node(coreKeeper);
+                node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {});
             });
         });
     }

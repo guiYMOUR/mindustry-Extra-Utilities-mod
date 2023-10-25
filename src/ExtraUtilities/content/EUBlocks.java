@@ -41,6 +41,8 @@ import arc.util.Scaling;
 import arc.util.Strings;
 import arc.util.Time;
 import arc.util.Tmp;
+import arc.util.pooling.Pool;
+import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -970,9 +972,9 @@ public class EUBlocks {
         }};
 
         anti_Missile = new antiMissileTurret("anti-missile"){{
-            requirements(Category.turret, with(Items.surgeAlloy, 60, Items.tungsten, 130, Items.oxide, 120, Items.carbide, 60));
+            requirements(Category.turret, with(Items.graphite, 100, Items.silicon, 130, Items.oxide, 100, Items.thorium, 60));
             size = 2;
-            reload = 20;
+            reload = 60f / 2.67f;
             shoot = new ShootAlternate(5);
             range = 35 * 8;
             shootType = new antiMissile(10 * 8, name("mb")){{
@@ -1052,7 +1054,7 @@ public class EUBlocks {
 
         javelin = new PowerTurret("javelin"){{
             //1 + 1 = ⑨
-            requirements(Category.turret, with(Items.surgeAlloy, 450, Items.silicon, 650, Items.carbide, 500, Items.phaseFabric, 300));
+            requirements(Category.turret, with(Items.surgeAlloy, 250, Items.silicon, 850, Items.carbide, 500, Items.phaseFabric, 300));
             consumePower(12f);
             heatRequirement = 45f;
             maxHeatEfficiency = 2f;
@@ -1062,6 +1064,7 @@ public class EUBlocks {
             shootSound = Sounds.malignShoot;
             shootWarmupSpeed = 0.06f;
             minWarmup = 0.9f;
+            health = 8000;
 
             smokeEffect = Fx.none;
             rotateSpeed = 2.5f;
@@ -1195,7 +1198,13 @@ public class EUBlocks {
                     if(!(b.owner instanceof PowerTurretBuild tb)) return;
                     for(int i = 0; i < amount; i++){
                         float angleOffset = i * spread - (amount - 1) * spread / 2f;
-                        iceBar.create(tb, tb.team, tb.x, tb.y, tb.rotation - 180 + angleOffset + Mathf.random(-inSpread, inSpread), -1, 1, 1, new Position[]{EUGet.pos(tb.x, tb.y), EUGet.pos(b.x, b.y)});
+
+                        Position p1 = EUGet.pos(tb.x, tb.y);
+                        Position p2 = EUGet.pos(b.x, b.y);
+
+                        Position[] pos = {p1, p2};
+
+                        iceBar.create(tb, tb.team, tb.x, tb.y, tb.rotation - 180 + angleOffset + Mathf.random(-inSpread, inSpread), -1, 1, 1, pos);
                     }
                 }
 
@@ -1320,7 +1329,7 @@ public class EUBlocks {
                 @Override
                 public void despawned(Bullet b) {
                     Units.nearbyEnemies(b.team, b.x, b.y, splashDamageRadius, u -> {
-                        if(u.checkTarget(collidesAir, collidesGround) && u.type != null && (u.type.targetable || u.type.hittable)){
+                        if(u.checkTarget(collidesAir, collidesGround) && u.type != null && (u.targetable(b.team) || u.hittable())){
                             u.damagePierce(splashDamage);
                             float pDamage = damage * 0.2f;
                             if(u.health <= pDamage) u.kill();
@@ -1821,7 +1830,7 @@ public class EUBlocks {
         }};
 
         sancta = new ItemTurret("sancta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 1500, Items.phaseFabric, 1800));
+            requirements(Category.turret, with(EUItems.lightninAlloy, 1500, Items.phaseFabric, 1600, Items.surgeAlloy, 1800));
             size = 7;
             ammo(
                     EUItems.lightninAlloy,
@@ -1837,12 +1846,12 @@ public class EUBlocks {
                                 healColor = EUItems.lightninAlloy.color;
                                 buildingDamageMultiplier = 0.7f;
 
-                                fb.splashDamage = 80;
+                                fb.splashDamage = 70;
                                 fb.splashDamageRadius = 3 * 8f;
 
                                 if(hardMod) {
-                                    fb.damage -= 15;
-                                    ff.damage -= 15;
+                                    fb.damage -= 10;
+                                    fb.splashDamage -= 10;
                                 }
                             }
 
@@ -1937,6 +1946,7 @@ public class EUBlocks {
             minRange = 20 * 8f;
             shootSound = Sounds.laserbig;
             recoil = 5;
+            health = 6000;
 
             BulletType fall = new BulletType(){{
                 speed = 0;

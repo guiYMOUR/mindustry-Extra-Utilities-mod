@@ -5,6 +5,8 @@ import ExtraUtilities.ai.MinerPointAI;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.ability.*;
 import ExtraUtilities.worlds.entity.bullet.*;
+import ExtraUtilities.worlds.entity.unit.bossEntity;
+import ExtraUtilities.worlds.entity.unit.bossType;
 import ExtraUtilities.worlds.entity.weapon.*;
 import ExtraUtilities.worlds.entity.weapon.mounts.reRotMount;
 import arc.Core;
@@ -16,6 +18,7 @@ import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
+import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectSet;
 import arc.struct.Seq;
@@ -30,6 +33,7 @@ import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
 import mindustry.entities.Mover;
+import mindustry.entities.UnitSorts;
 import mindustry.entities.Units;
 import mindustry.entities.abilities.*;
 import mindustry.entities.bullet.*;
@@ -53,14 +57,19 @@ import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
 import mindustry.world.blocks.defense.MendProjector;
 import mindustry.world.blocks.defense.RegenProjector;
+import mindustry.world.meta.BlockFlag;
 import mindustry.world.meta.Env;
 
 import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Lines.stroke;
+import static arc.math.Angles.randLenVectors;
+import static mindustry.Vars.ui;
 import static mindustry.content.Fx.rand;
 
 public class EUUnitTypes {
+    public static int bossId;
     static {
         //one day, someone asks me : why not use xxxUnit::new? ha, I say : I don't know...
         EntityMapping.nameMap.put(name("miner"), EntityMapping.idMap[36]);
@@ -78,8 +87,9 @@ public class EUUnitTypes {
         EntityMapping.nameMap.put(name("havoc"), EntityMapping.idMap[5]);
         EntityMapping.nameMap.put(name("arcana"), EntityMapping.idMap[24]);
 
-
         EntityMapping.nameMap.put(name("winglet"), EntityMapping.idMap[3]);
+
+        bossId = EntityMapping.register(name("regency"), bossEntity::new);
     }
 
     public static UnitType
@@ -89,8 +99,777 @@ public class EUUnitTypes {
         //E-T6
         napoleon, havoc, arcana,
         //air sapper
-        winglet;
+        winglet,
+        //BOSS
+        regency;
+
+    public static void loadBoss(){
+        regency = new bossType("regency"){{
+            speed = 0.35f;
+            accel = 0.06f;
+            drag = 0.02f;
+            createScorch = false;
+            faceTarget = false;
+            flying = true;
+            lowAltitude = true;
+            health = 60000;
+            hitSize = 160f;
+            hideDetails = false;//use to test...
+
+            rotateSpeed = 0.2f;
+
+            engineOffset = 110;
+            engineSize = 40;
+
+            buildSpeed = 20;
+
+            deathExplosionEffect = Fx.none;
+            deathSound = Sounds.titanExplosion;
+            targetFlags = new BlockFlag[]{BlockFlag.turret, BlockFlag.core, null};
+
+            setEnginesMirror(
+                    new UnitEngine(40, -112, 20, 315f),
+                    new UnitEngine(88, -103, 14, 315f)
+            );
+
+            abilities.add(new bossUnitAbi(){
+                @Override
+                public void addStats(Table t) {
+                    super.addStats(t);
+                    if(locked() || hideDetails) {
+                        t.add("[red]Unknown...[]" + Iconc.lock + Core.bundle.get("unlock.incampaign"));
+                        return;
+                    }
+                    t.add(Core.bundle.get("ability.stat.boss"));
+                    t.row();
+                    t.add("SUMMON: ");
+                    t.row();
+                    t.button(new TextureRegionDrawable(havoc.uiIcon), () -> ui.content.show(havoc)).padTop(2f).padBottom(2f).size(50);
+                    t.row();
+                }
+            });
+
+            Color eccl = Color.valueOf("87CEEB");
+            Color eccb = Color.valueOf("6D90BC");
+            Color miku = Color.valueOf("39c5bb");
+
+            BulletType efb = new BulletType(){{
+                damage = speed = 0;
+                keepVelocity = absorbable = hittable = collides = collidesTiles = collidesGround = collidesAir = false;
+                hitEffect = despawnEffect = Fx.none;
+            }
+
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    for(int i = 0; i < 4; i ++){
+                        float ang = 90 * i;
+                        Draw.color(eccl);
+                        Drawf.tri(b.x, b.y, 16 * b.fout(), 55 * b.fin(), ang);
+                    }
+                }
+            };
+
+            abilities.add(new DeathBullet(new fBullet(new BulletType(){{
+                lifetime = 200;
+                damage = speed = 0;
+
+                keepVelocity = absorbable = hittable = collides = collidesTiles = collidesGround = collidesAir = false;
+            }
+
+                @Override
+                public void update(Bullet b) {
+                    if(b.timer.get(1 + 19 * b.fout())){
+                        efb.create(b, b.x + Mathf.random(-30 * 8, 30 * 8), b.y + + Mathf.random(-30 * 8, 30 * 8), 0);
+                    }
+                }
+            }, 1){{
+                hitEffect = despawnEffect = new MultiEffect(
+                        new Effect(200, e -> {
+                            rand.setSeed(e.id);
+                            float r = 45 * 8;
+                            float pin = (1 - e.foutpow());
+                            Lines.stroke(6 * e.foutpow(), eccl);
+                            Lines.circle(e.x, e.y, r * pin);
+                            for(int i = 0; i < 5; i++){
+                                float a = rand.random(180);
+                                float lx = EUGet.dx(e.x, r * pin, a);
+                                float ly = EUGet.dy(e.y, r * pin, a);
+                                Drawf.tri(lx, ly, 50 * e.foutpow(), (150 + rand.random(-50, 50)) * e.foutpow(), a + 180);
+                            }
+                            for(int i = 0; i < 5; i++){
+                                float a = 180 + rand.random(180);
+                                float lx = EUGet.dx(e.x, r * pin, a);
+                                float ly = EUGet.dy(e.y, r * pin, a);
+                                Drawf.tri(lx, ly, 50 * e.foutpow(), (150 + rand.random(-50, 50)) * e.foutpow(), a + 180);
+                            }
+
+                            if(!Vars.state.isPaused()) Effect.shake(5, 5, e.x, e.y);
+                        }),
+                        new ExplosionEffect(){{
+                            lifetime = 180f;
+                            waveStroke = 0f;
+                            waveLife = 0f;
+                            sparkColor = eccb;
+                            smokeColor = Pal.gray;
+                            smokes = 10;
+                            smokeSize = 56;
+                            sparks = 16;
+                            smokeRad = sparkRad = 45 * 8;
+                            sparkLen = 21f;
+                            sparkStroke = 9f;
+                        }}
+                );
+            }}, null){{
+                display = false;
+            }});
+
+            abilities.add(new aboveDamage());
+
+            PrismCtr btL = new PrismCtr();
+
+            float[] ags = {-10, 10, -30, 30};
+            for(float a : ags){
+                weapons.add(new Weapon(){{
+                    shootCone = 30;
+                    inaccuracy = 15f;
+                    reload = 240;
+                    baseRotation = a;
+                    rotate = true;
+                    mirror = false;
+                    x = y = 0;
+                    shootSound = Sounds.cannon;
+
+                    bullet = new BulletType(){{
+                        speed = 5;
+                        lifetime = 48;
+                        rangeOverride = 59 * 8;
+                        collides = collidesTiles = hittable = absorbable = keepVelocity = false;
+                        splashDamage = 300;
+                        splashDamageRadius = 10 * 8;
+                        despawnEffect = new ExplosionEffect(){{
+                            lifetime = 50f;
+                            waveStroke = 10f;
+                            waveLife = 12f;
+                            waveColor = eccb;
+                            sparkColor = smokeColor = eccl;
+                            waveRad = splashDamageRadius;
+                            smokeSize = 4f;
+                            smokes = 7;
+                            smokeSizeBase = 0f;
+                            sparks = 8;
+                            sparkRad = splashDamageRadius;
+                            sparkLen = 7f;
+                            sparkStroke = 2.4f;
+                        }};
+                        hitEffect = Fx.none;
+                        fragOnHit = false;
+
+                        fragBullets = 6;
+                        fragBullet = btL.laser;
+                    }
+
+
+                        @Override
+                        public void createFrags(Bullet b, float x, float y) {
+                            btL.create(b, x, y, 0);
+                        }
+
+                        @Override
+                        public void init(Bullet b) {
+                            super.init(b);
+                            float ex, ey;
+                            ex = b.x + Angles.trnsx(b.rotation(), speed * b.lifetime);
+                            ey = b.y + Angles.trnsy(b.rotation(), speed * b.lifetime);
+                            new ChainLightningFade(b.lifetime + 30, 4 * b.lifetime, 5, eccl, 50, Fx.hitLancer).create(b, b.team, b.x, b.y, 0, -1, 1, 1, EUGet.pos(ex, ey));
+                            new ChainLightningFade(b.lifetime + 30, 4 * b.lifetime, 5, eccl, 50, Fx.hitLancer).create(b, b.team, b.x, b.y, 0, -1, 1, 1, EUGet.pos(ex, ey));
+                        }
+                    };
+                }
+
+                    @Override
+                    public void update(Unit unit, WeaponMount mount) {
+                        if(a == -30 || a == 30){
+                            if(unit instanceof bossEntity be && be.abilities.length > 0){
+                                for(Ability ab : be.abilities){
+                                    if(ab instanceof bossUnitAbi ba){
+                                        if(!ba.isS1()) return;
+                                    }
+                                }
+                            }
+                        }
+                        super.update(unit, mount);
+                    }
+
+                    @Override
+                    public void addStats(UnitType u, Table t) {
+                        super.addStats(u, t);
+                        if(a == -30 || a == 30){
+                            t.row();
+                            t.add(Core.bundle.get("second-only"));
+                            t.row();
+                        }
+                    }
+                });
+            }
+
+            weapons.add(
+                    new Weapon(){{
+                        x = 160;
+                        y = -56;
+                        rotate = true;
+                        rotateSpeed = 10;
+                        shootCone = 360;
+                        targetInterval = 6;
+                        targetSwitchInterval = 6;
+                        shootSound = Sounds.malignShoot;
+                        float desTime = 30;
+                        float desLife = 60;
+                        float runTime = 20;
+                        BulletType hole = new BulletType(){{
+                            damage = 0;
+                            speed = 6;
+                            hittable = absorbable = collides = collidesTiles = keepVelocity = false;
+                            lifetime = desLife + desTime;
+                            despawnEffect = hitEffect = Fx.none;
+                            bulletInterval = 6;
+                            intervalDelay = runTime;
+                            intervalRandomSpread = 150;
+                            rangeOverride = 80 * 8;
+                            intervalBullet = new BulletType(){{
+                                homingPower = 0.4f;
+                                damage = 70;
+                                hitEffect = despawnEffect = new Effect(24, e -> {
+                                    Draw.color(Pal.techBlue);
+                                    Angles.randLenVectors(e.id, 4, 13 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 8 * e.foutpow()));
+                                });
+                                speed = 10;
+                                lifetime = 82;
+                                trailLength = 15;
+                                trailWidth = 2;
+                                trailColor = Pal.techBlue;
+                                pierceArmor = true;
+                                hitShake = despawnShake = 4;
+                                hitSound = despawnSound = Sounds.shootAlt;
+                                lightning = 1;
+                                lightningColor = eccl;
+                                lightningDamage = 15;
+                                lightningLength = 10;
+                            }
+
+                                @Override
+                                public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                                    if(entity instanceof Unit u){
+                                        u.health -= damage * 3;
+                                    }
+                                    super.hitEntity(b, entity, health);
+                                }
+
+                                @Override
+                                public void init(Bullet b) {
+                                    super.init(b);
+                                    b.data = Units.closestTarget(b.team, b.x, b.y, lifetime * speed, ut -> ut.checkTarget(collidesAir, collidesGround) && ut.targetable(b.team));
+                                    int i = 0;
+                                    while(b.owner instanceof Bullet bu){
+                                        b.owner = bu.owner;
+                                        i++;
+                                        if(i > 6) return;
+                                    }
+                                }
+
+                                @Override
+                                public void updateHoming(Bullet b) {
+                                    if(homingPower > 0.0001f && b.time >= homingDelay){
+                                        float realAimX = b.aimX < 0 ? b.x : b.aimX;
+                                        float realAimY = b.aimY < 0 ? b.y : b.aimY;
+
+                                        Teamc target;
+                                        //home in on allies if possible
+                                        if(heals()){
+                                            target = Units.closestTarget(null, realAimX, realAimY, homingRange,
+                                                    e -> e.checkTarget(collidesAir, collidesGround) && e.team != b.team && !b.hasCollided(e.id),
+                                                    t -> collidesGround && (t.team != b.team || t.damaged()) && !b.hasCollided(t.id)
+                                            );
+                                        }else{
+                                            if(b.aimTile != null && b.aimTile.build != null && b.aimTile.build.team != b.team && collidesGround && !b.hasCollided(b.aimTile.build.id)){
+                                                target = b.aimTile.build;
+                                            }else{
+                                                target = Units.closestTarget(b.team, realAimX, realAimY, homingRange,
+                                                        e -> e != null && e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id),
+                                                        t -> t != null && collidesGround && !b.hasCollided(t.id));
+                                            }
+                                        }
+
+                                        if(target != null){
+                                            b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), homingPower * Time.delta * 50f));
+                                        } else {
+                                            if(!(b.owner instanceof Unit u)) return;
+                                            b.vel.setAngle(Angles.moveToward(b.rotation(), b.data instanceof Teamc tc ? b.angleTo(tc) : b.angleTo(u.mounts[4].aimX, u.mounts[4].aimY), homingPower * Time.delta * 50f));
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void draw(Bullet b) {
+                                    super.draw(b);
+                                    Draw.color(Pal.techBlue.cpy().mul(miku));
+                                    Drawf.tri(b.x, b.y, 6, 9, b.rotation());
+                                }
+                            };
+                        }
+
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                b.initVel(b.rotation(), speed * Math.max(0, 1 - b.time/runTime));
+                            }
+
+                            @Override
+                            public void updateBulletInterval(Bullet b) {
+                                if(b.time > b.lifetime - desTime + 6) return;
+                                if(intervalBullet != null && b.time >= intervalDelay && b.timer.get(2, bulletInterval)){
+                                    float ang;
+                                    Teamc tc = Units.closestTarget(b.team, b.x, b.y, rangeOverride, ut -> ut.checkTarget(collidesAir, collidesGround) && ut.targetable(b.team));
+                                    ang = tc != null ? b.angleTo(tc) : b.owner instanceof Unit u ? b.angleTo(u.mounts[4].aimX, u.mounts[4].aimY) : b.rotation();
+                                    for(int i = 0; i < intervalBullets; i++){
+                                        intervalBullet.create(b, b.x, b.y, ang + Mathf.range(intervalRandomSpread) + intervalAngle + ((i - (intervalBullets - 1f)/2f) * intervalSpread));
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                float fin = b.time/(b.lifetime - desTime);
+                                float fout = 1 - (b.time - desLife)/(b.lifetime - desLife);
+                                float finOver = b.time < desLife ? Math.min(1, fin * 5) : fout;
+                                Draw.color(Pal.techBlue);
+                                Fill.circle(b.x, b.y, 12 * finOver);
+                                for(int i : Mathf.zeroOne){
+                                    Drawf.tri(b.x, b.y, 8 * finOver, 20, (b.rotation() - 90 + i * 180) * finOver);
+                                }
+                                Draw.z(Layer.flyingUnit - 0.1f);
+                                Draw.color(Color.black);
+                                Fill.circle(b.x, b.y, 9 * finOver);
+                            }
+                        };
+
+                        bullet = new BulletType(){{
+                            damage = 0;
+                            speed = 2;
+                            hittable = absorbable = collides = collidesTiles = keepVelocity = false;
+                            shootEffect = EUFx.PlanetaryArray(72, 4, 64, eccl, 18, 6, 0.6f);
+                            lifetime = 60;
+                            intervalBullet = hole;
+                            bulletInterval = 15;
+                            intervalRandomSpread = 270;
+                            hitEffect = despawnEffect = Fx.none;
+                            rangeOverride = 8 * 100;
+                        }};
+                        reload = 60;
+                    }}
+            );
+
+            weapons.add(
+                    new Weapon(name("regency-w3")){{
+                        x = 67;
+                        rotate = true;
+                        rotateSpeed = 2f;
+                        reload = 60;
+                        shootSound = Sounds.missileLarge;
+                        xRand = 4;
+                        shoot.shots = 3;
+                        shoot.shotDelay = 6;
+                        bullet = new BulletType(){{
+                            damage = 400;
+                            pierceArmor = true;
+                            trailWidth = 7.5f;
+                            trailLength = 10;
+                            trailColor = eccl;
+                            speed = 40;
+                            lifetime = 8 * 8;
+                            rangeOverride = 100 * 8;
+                            shootEffect = new Effect(30, e -> {
+                                Draw.color(eccl);
+                                Angles.randLenVectors(e.id, 5, 32 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 20 * e.foutpow()));
+                            });
+                            hitShake = despawnShake = 7;
+                            hitSound = despawnSound = Sounds.bang;
+                            hitEffect = despawnEffect = new MultiEffect(
+                                    new Effect(90, e -> {
+                                        Draw.color(trailColor);
+                                        rand.setSeed(e.id);
+                                        for(int i = 0; i < 5; i++){
+                                            Drawf.tri(e.x, e.y, 19, 120 * e.foutpow(), e.rotation + rand.random(-60, 60));
+                                        }
+                                    }),
+                                    shootEffect
+                            );
+                        }
+
+                            @Override
+                            public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                                if(entity instanceof Unit u){
+                                    u.health -= damage * 1.5f;
+                                }
+                                super.hitEntity(b, entity, health);
+                            }
+
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                b.initVel(b.rotation(), speed * b.fin() * b.fin());
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(trailColor);
+                                float x1, x2, y1, y2;
+                                Tmp.v1.set(0, 20).rotate(b.rotation() - 90);
+                                x1 = b.x + Tmp.v1.x;
+                                y1 = b.y + Tmp.v1.y;
+                                for(int i : Mathf.signs){
+                                    Tmp.v1.set(14 * i, -13).rotate(b.rotation() - 90);
+                                    x2 = b.x + Tmp.v1.x;
+                                    y2 = b.y + Tmp.v1.y;
+                                    Fill.tri(x1, y1, x2, y2, b.x, b.y);
+                                }
+                            }
+                        };
+                    }}
+            );
+
+            weapons.add(
+                    new ReRotPointDefenseWeapon(name("regency-w2")){{
+                        x = 50;
+                        y = 52;
+                        reload = 5;
+                        targetInterval = targetSwitchInterval = 6;
+                        beamEffect = EUFx.chainLightningFade(20, 2.5f, 8);//Fx.chainLightning
+                        color = eccl;
+                        bullet = new BulletType(){{
+                            rangeOverride = 60 * 8;
+                            damage = 80;
+                        }};
+                        shootSound = Sounds.spark;
+                    }},
+                    new ReRotPointDefenseWeapon(name("regency-w2")){{
+                        x = 55;
+                        y = 34;
+                        reload = 2;
+                        targetInterval = targetSwitchInterval = 6;
+                        beamEffect = EUFx.chainLightningFade(20, 2.5f, 8);
+                        color = eccl;
+                        bullet = new BulletType(){{
+                            rangeOverride = 60 * 8;
+                            damage = 80;
+                        }};
+                        shootSound = Sounds.spark;
+                    }
+
+                        @Override
+                        protected Teamc findTarget(Unit unit, float x, float y, float range, boolean air, boolean ground) {
+                            if(unit instanceof bossEntity be && be.abilities.length > 0){
+                                for(Ability ab : be.abilities){
+                                    if(ab instanceof bossUnitAbi ba){
+                                        if(!ba.isS1()) return null;
+                                    }
+                                }
+                            }
+                            return super.findTarget(unit, x, y, range, air, ground);
+                        }
+
+                        @Override
+                        public void addStats(UnitType u, Table t) {
+                            super.addStats(u, t);
+                            t.row();
+                            t.add(Core.bundle.get("second-only"));
+                            t.row();
+                        }
+                    }
+            );
+
+            weapons.add(new Weapon(name("regency-w1")){{
+                x = 55;
+                y = -60;
+                reload = 30;
+                rotate = true;
+                rotateSpeed = 5;
+                autoTarget = true;
+                controllable = false;
+                shootSound = Sounds.shotgun;
+                targetInterval = targetSwitchInterval = 10;
+                bullet = new BulletType(){{
+                    damage = 600;
+                    collidesTiles = hittable = absorbable = false;
+                    speed = 50;
+                    lifetime = 200 * 8 / speed;
+                    trailEffect = new Effect(40, e -> {
+                        Draw.color(e.color);
+                        rand.setSeed(e.id);
+                        float fin = 1 - Mathf.curve(e.fout(), 0, 0.85f);
+                        Tmp.v1.set((rand.chance(0.5f) ? 20 : -20) * (rand.chance(0.2f) ? 0 : fin), 0).rotate(e.rotation - 90);
+                        float ex = e.x + Tmp.v1.x;
+                        float ey = e.y + Tmp.v1.y;
+                        Draw.rect(name("aim-shoot"), ex, ey, 80 * e.fout(), 80 * e.fout(), e.rotation - 90);
+                    });
+                    trailInterval = 0.2f;
+                    trailColor = eccl;
+                    trailRotation = true;
+                    trailWidth = 8;
+                    trailLength = 12;
+                    hitEffect = despawnEffect = new Effect(90, e -> {
+                        float fin = Mathf.curve(e.fin(), 0, 0.09f);
+                        float fout = Mathf.curve(e.fout(), 0, 0.95f);
+                        for(int i = 0; i < 4; i ++){
+                            float ang = 90 * i;
+                            Draw.z(Layer.effect);
+                            Draw.color(eccb);
+                            Drawf.tri(e.x, e.y, 19 * fout, 90 * fin, ang);
+                            Drawf.tri(e.x, e.y, 15 * fout, 72 * fin, 45 + ang);
+
+                            Draw.color(Color.black);
+                            Draw.z(Layer.effect + 1);
+                            Drawf.tri(e.x, e.y, 15 * fout, 82 * fin, ang);
+                            Drawf.tri(e.x, e.y, 11 * fout, 66 * fin, 45 + ang);
+                        }
+                    });
+                    hitSound = Sounds.laser;
+                    hitShake = despawnShake = 10;
+                }
+
+                    @Override
+                    public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                        if(entity instanceof Unit u && u.type != null){
+                            u.health -= (damage * (u.type.hitSize/10f + 1) * ((u.type.armor)/10f + 1) + u.maxHealth * 0.2f);
+                        }
+                        super.hitEntity(b, entity, health);
+                    }
+
+                    @Override
+                    public void updateHoming(Bullet b) {
+                        if(b.time >= homingDelay){
+                            float realAimX = b.aimX < 0 ? b.x : b.aimX;
+                            float realAimY = b.aimY < 0 ? b.y : b.aimY;
+
+                            Teamc target;
+                            //home in on allies if possible
+                            if(heals()){
+                                target = Units.closestTarget(null, realAimX, realAimY, speed * lifetime,
+                                        e -> e.checkTarget(collidesAir, collidesGround) && e.team != b.team && !b.hasCollided(e.id),
+                                        t -> collidesGround && (t.team != b.team || t.damaged()) && !b.hasCollided(t.id)
+                                );
+                            }else{
+                                if(b.aimTile != null && b.aimTile.build != null && b.aimTile.build.team != b.team && collidesGround && !b.hasCollided(b.aimTile.build.id)){
+                                    target = b.aimTile.build;
+                                }else{
+                                    target = Units.closestTarget(b.team, realAimX, realAimY, speed * lifetime,
+                                            e -> e != null && e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id),
+                                            t -> t != null && collidesGround && !b.hasCollided(t.id));
+                                }
+                            }
+
+                            if(target != null){
+                                b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), 5 * Time.delta));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void draw(Bullet b) {
+                        super.draw(b);
+                        Draw.color(eccl);
+                        Draw.z(Layer.bullet);
+                        Drawf.tri(b.x, b.y, 30, 40, b.rotation());
+                    }
+                };
+
+                mountType = reRotMount::new;
+            }
+
+                @Override
+                protected Teamc findTarget(Unit unit, float x, float y, float range, boolean air, boolean ground) {
+                    return Units.bestEnemy(unit.team, x, y, range + Math.abs(shootY), u -> u.checkTarget(air, ground) && !(u instanceof bossEntity) && u.type != null && (u.type.hitSize >= 50 || u.type.armor >= 50 || u.maxHealth >= 60000), UnitSorts.strongest);
+                }
+
+                @Override
+                public void update(Unit unit, WeaponMount m) {
+                    super.update(unit, m);
+                    float  mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
+                            mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
+                    reRotMount mount = (reRotMount) m;
+                    if(mount.target != null) {
+                        mount.reRotate = 180;
+                    } else {
+                        mount.reRotate = Math.max(mount.reRotate - Time.delta, 0f);
+                    }
+
+                    if(mount.target == null && !mount.shoot && !Angles.within(mount.rotation, mount.weapon.baseRotation, 0.01f) && mount.reRotate <= 0){
+                        mount.rotate = true;
+                        Tmp.v1.trns(unit.rotation + mount.weapon.baseRotation, 5f);
+                        mount.aimX = mountX + Tmp.v1.x;
+                        mount.aimY = mountY + Tmp.v1.y;
+                    }
+                }
+            });
+
+            weapons.add(
+                    new Weapon(){{
+                        x = 0;
+                        y = 30;
+                        mirror = false;
+                        shootCone = 20;
+                        chargeSound = Sounds.lasercharge;
+                        reload = 120;
+                        shootSound = Sounds.missileLaunch;
+                        float chargeTime = 80;
+                        bullet = new BulletType(){{
+                            damage = splashDamage = 500;
+                            splashDamageRadius = 24 * 8;
+                            pierce = true;
+                            pierceArmor = true;
+                            pierceBuilding = false;
+                            hitSize = 40;
+                            speed = 80;
+                            lifetime = 5f * 8;
+                            rangeOverride = 120 * 8;
+                            trailLength = 18;
+                            trailWidth = 16;
+                            trailColor = eccl;
+                            chargeEffect = new Effect(chargeTime, 100f, e -> {
+                                color(eccl);
+                                stroke(e.fin() * 4f);
+                                Lines.circle(e.x, e.y, 10f + e.fout() * 150f);
+
+                                Fill.circle(e.x, e.y, e.fin() * 26);
+                                Drawf.tri(e.x, e.y, 40 * e.fin(), 50 * e.fin(), e.rotation);
+
+                                randLenVectors(e.id, 20, 60f * e.fout(), (x, y) -> {
+                                    Fill.circle(e.x + x, e.y + y, e.fin() * 12f);
+                                    Drawf.light(e.x + x, e.y + y, e.fin() * 20f, Pal.heal, 0.7f);
+                                });
+
+                                color();
+
+                                Fill.circle(e.x, e.y, e.fin() * 15);
+                                Drawf.light(e.x, e.y, e.fin() * 30f, Pal.heal, 0.7f);
+                            }).followParent(true).rotWithParent(true);
+                            hitEffect = new Effect(30, e -> {
+                                Draw.color(eccl);
+                                Angles.randLenVectors(e.id, 7, 55 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 33 * e.foutpow()));
+                            });
+                            despawnEffect = new MultiEffect(
+                                    new ExplosionEffect(){{
+                                        lifetime = 100f;
+                                        waveStroke = 8f;
+                                        waveLife = 20f;
+                                        sparkColor = eccb;
+                                        smokes = 8;
+                                        sparks = 0;
+                                        sparkRad = splashDamageRadius;
+                                        sparkLen = 12f;
+                                        sparkStroke = 5f;
+                                    }},
+                                    EUFx.diffEffect(100, 6, splashDamageRadius, 10, 140, 40, 40, eccl, -1)
+                            );
+                            hitShake = despawnShake = 14;
+                            hitSound = despawnSound = Sounds.explosionbig;
+                        }
+                            @Override
+                            public void update(Bullet b) {
+                                super.update(b);
+                                b.initVel(b.rotation(), speed * b.fin() * b.fin());
+                            }
+
+                            @Override
+                            public void draw(Bullet b) {
+                                super.draw(b);
+                                Draw.color(trailColor);
+                                float x1, x2, y1, y2;
+                                Tmp.v1.set(0, 50).rotate(b.rotation() - 90);
+                                x1 = b.x + Tmp.v1.x;
+                                y1 = b.y + Tmp.v1.y;
+                                for(int i : Mathf.signs){
+                                    Tmp.v1.set(30 * i, -30).rotate(b.rotation() - 90);
+                                    x2 = b.x + Tmp.v1.x;
+                                    y2 = b.y + Tmp.v1.y;
+                                    Fill.tri(x1, y1, x2, y2, b.x, b.y);
+                                }
+                            }
+
+                            @Override
+                            public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                                if(entity instanceof Unit u) u.health -= damage * 1.5f;
+                                super.hitEntity(b, entity, health);
+                            }
+                        };
+                        shoot.firstShotDelay = chargeTime;
+                    }}
+            );
+
+            //alwaysUnlocked = true;
+
+            parts.add(
+                    new BowHalo(){{
+                        x = y = 0;
+                        radius = 25 * 8;
+                        w1 = 18;
+                        h1 = 20;
+                        w2 = 0;
+                        h2 = 0;
+                        color = eccb;
+                        progress = PartProgress.constant(1);
+                        rotAb = sinWave = false;
+                    }
+
+                        @Override
+                        public void draw(PartParams params) {
+                            super.draw(params);
+                            float rot = params.rotation - 90;
+                            float bx = params.x, by = params.y;
+                            Draw.z(layer);
+                            Draw.color(color);
+
+                            for(int k = 0; k < 6; k++){
+                                Tmp.v1.set(x, y + (2 - k)).rotate(rot);
+                                float px = bx + Tmp.v1.x, py = by + Tmp.v1.y;
+                                float sin = Mathf.absin(Time.time + 60/2f * k, 15, 48);
+                                for(int i = 0; i < 2; i++){
+                                    float angle = i* 360f / 2;
+                                    Drawf.tri(px + Angles.trnsx(angle, radius), py + Angles.trnsy(angle, radius), 18, (sin) * 8, angle);
+                                }
+                            }
+                        }
+                    },
+                    new DrawPart(){
+                        @Override
+                        public void draw(PartParams params) {
+                            Draw.z(Layer.effect);
+                            Draw.color(eccl);
+                            for(int i = 0; i < 4; i++){
+                                float r = i * 90 + Time.time * 2;
+                                float dx = EUGet.dx(params.x, 25 * 8, r), dy = EUGet.dy(params.y, 25 * 8, r);
+                                Drawf.tri(dx, dy, 20, 18, r + 180);
+                            }
+                            for(int i = 0; i < 4; i++){
+                                float r = i * 90 - Time.time * 2;
+                                float dx = EUGet.dx(params.x, 60 * 8, r), dy = EUGet.dy(params.y, 60 * 8, r);
+                                Drawf.tri(dx, dy, 26, 20, r + 180);
+                            }
+                        }
+
+                        @Override
+                        public void load(String s) {
+
+                        }
+                    }
+            );
+        }};
+    }
+
     public static void load(){
+
         miner = new ErekirUnitType("miner"){{
             defaultCommand = UnitCommand.mineCommand;
             controller = u -> new MinerPointAI();
@@ -192,7 +971,6 @@ public class EUUnitTypes {
             ammoType = new ItemAmmoType(Items.thorium);
 
             immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped);
-            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> !immunities.contains(s) && s.reloadMultiplier >= 1));
 
             abilities.add(new TerritoryFieldAbility(20 * 8, 90, 210){{
                 open = true;
@@ -775,8 +1553,6 @@ public class EUUnitTypes {
             payloadCapacity = Mathf.sqr(7.5f) * Vars.tilePayload;
             ammoType = new PowerAmmoType(2500);
 
-            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
-
             abilities.add(
                     new DeathBullet(new diffBullet(360, 1){{
                         damage = splashDamage = 2500;
@@ -911,8 +1687,6 @@ public class EUUnitTypes {
             health = 63000;
             itemCapacity = 350;
             ammoType = new ItemAmmoType(Items.surgeAlloy);
-
-            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s.reloadMultiplier >= 1));
 
             BulletType air = new PointBulletType(){{
                 trailEffect = Fx.railTrail;
@@ -1108,9 +1882,7 @@ public class EUUnitTypes {
             itemCapacity = 800;
             ammoType = new PowerAmmoType(1800);
 
-            buildSpeed = 10;
-
-            immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+            buildSpeed = 12;
 
             abilities.add(new UnitSpawnAbility(UnitTypes.mega, 32 * 60, 0, 27));
             abilities.add(new BatteryAbility(80000, 120, 120, 0, -15));
@@ -2315,39 +3087,7 @@ public class EUUnitTypes {
                                 }}
                         );
                         parts.add(
-                                new DrawPart() {
-                                    final PartProgress r = PartProgress.reload;
-                                    //final PartProgress w = PartProgress.warmup;
-                                    final float rad = 7;
-                                    @Override
-                                    public void draw(PartParams params) {
-                                        float z = Draw.z();
-                                        float reload = 1 - r.getClamp(params);
-                                        Tmp.v1.set(0, 13).rotate(params.rotation - 90);
-                                        float px = params.x + Tmp.v1.x, py = params.y + Tmp.v1.y;
-
-                                        Draw.z(Layer.bullet);
-                                        Draw.color(Pal.techBlue);
-                                        Fill.circle(px, py, rad * reload);
-
-                                        for(int i = 0; i < 3; i++){
-                                            float sin = Mathf.absin(Time.time + 120 * i, 15, 6 * reload);
-                                            float sin_m = Mathf.absin(Time.time + 120 * i, 30, 6 * reload);
-                                            float r = 360/3f * i + Time.time;
-                                            float r2 = r + 190;
-                                            Drawf.tri(px + Angles.trnsx(r, (rad - 1) * reload), py + Angles.trnsy(r, (rad - 1) * reload), 6 * reload, sin, r);
-                                            Drawf.tri(px + Angles.trnsx(r2, (rad - 1) * reload), py + Angles.trnsy(r2, (rad - 1) * reload), 6 * reload, sin_m, r2);
-                                        }
-
-                                        Draw.reset();
-                                        Draw.z(z);
-                                    }
-
-                                    @Override
-                                    public void load(String name) {
-
-                                    }
-                                }
+                                new arcanaPart()
                         );
                     }}
             );

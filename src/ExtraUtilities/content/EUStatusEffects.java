@@ -74,4 +74,14 @@ public class EUStatusEffects {
         healthMultiplier = 1.3f;
         effect = Fx.none;
     }};
+
+    public static StatusEffect EUUnmoving = new StatusEffect("unmoving"){{
+        color = Pal.gray;
+        speedMultiplier = 0f;
+    }};
+
+    public static StatusEffect EUDisarmed = new StatusEffect("disarmed"){{
+        color = Color.valueOf("e9ead3");
+        disarm = true;
+    }};
 }

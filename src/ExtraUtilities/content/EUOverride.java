@@ -1,6 +1,8 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.entity.bullet.ChainLightningFade;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
+import ExtraUtilities.worlds.entity.bullet.liLaserBullet;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
@@ -8,19 +10,18 @@ import arc.math.Interp;
 import arc.math.Mathf;
 import arc.struct.Seq;
 import mindustry.Vars;
-import mindustry.content.Blocks;
-import mindustry.content.Fx;
-import mindustry.content.Items;
-import mindustry.content.UnitTypes;
+import mindustry.content.*;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.MissileBulletType;
+import mindustry.entities.bullet.ShrapnelBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.effect.WaveEffect;
 import mindustry.entities.effect.WrapEffect;
 import mindustry.entities.part.FlarePart;
 import mindustry.entities.part.ShapePart;
+import mindustry.gen.Bullet;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
@@ -33,11 +34,10 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadConveyor;
 import mindustry.world.blocks.payloads.PayloadRouter;
-import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
 
-import static ExtraUtilities.ExtraUtilitiesMod.EU;
+import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
@@ -337,5 +337,75 @@ public class EUOverride {
 
         miniSw.limitRange(5f);
         T2Sw.limitRange(5f);
+
+        ShrapnelBulletType sp = new ShrapnelBulletType(){{
+            length = 100;
+            damage = 76 - (hardMod ? 10 : 0);
+            width = 17f;
+            reloadMultiplier = 1.2f;
+            ammoMultiplier = 8;
+            toColor = EUItems.lightninAlloy.color.cpy().mul(Pal.surge);
+            fragBullet = new liLaserBullet(damage/2){{
+                length = 100;
+                lifetime = 15;
+                width = 18;
+                colors = new Color[]{EUItems.lightninAlloy.color.cpy().a(0.5f), EUItems.lightninAlloy.color, Color.white};
+                spacing = 4;
+                status = StatusEffects.shocked;
+                color = EUItems.lightninAlloy.color;
+                lAmount = 1;
+                chain = new ChainLightningFade(lifetime, -1, 2.5f, color, 20, hitEffect);
+            }};
+
+            fragAngle = 3;
+            fragBullets = 2;
+            fragSpread = 6;
+            fragRandomSpread = 0;
+        }
+
+            @Override
+            public void init(Bullet b) {
+                super.init(b);
+                createFrags(b, b.x, b.y);
+            }
+        };
+        ((ItemTurret)Blocks.fuse).ammoTypes.put(EUItems.crispSteel, new ShrapnelBulletType(){{
+            length = 100;
+            damage = 66;
+            width = 17f;
+            reloadMultiplier = 2f;
+            ammoMultiplier = 6;
+            toColor = Color.blue.cpy().mul(EUItems.crispSteel.color);
+        }});
+        ((ItemTurret)Blocks.fuse).ammoTypes.put(EUItems.lightninAlloy, sp);
+        ItemTurret T2fuse = (ItemTurret) Vars.content.block(name("T2-fuse"));
+        ItemTurret T3fuse = (ItemTurret) Vars.content.block(name("T3-fuse"));
+        var ammo2 = ((ItemTurret)Blocks.fuse).ammoTypes;
+        var is2 = ammo2.keys().toSeq();
+
+        for(Item i : is2){
+            BulletType bsp = ammo2.get(i);
+            BulletType bt = bsp.copy();
+            bt.damage += 3;
+            ShrapnelBulletType b1 = (ShrapnelBulletType) bt;
+            b1.length = T2fuse.range + bt.rangeChange + 12;
+            if(bsp == sp){
+                bt.fragBullet = sp.fragBullet.copy();
+                bt.fragBullet.damage += 1;
+                ((liLaserBullet)bt.fragBullet).length = T2fuse.range + bt.rangeChange + 12;
+            }
+            T2fuse.ammoTypes.put(i, bt);
+
+            BulletType bt2 = bsp.copy();
+            bt2.damage += 6;
+            ShrapnelBulletType b2 = (ShrapnelBulletType) bt2;
+            b2.length = T3fuse.range + bt2.rangeChange + 16;
+            if(bsp == sp){
+                bt2.fragBullet = sp.fragBullet.copy();
+                bt2.fragBullet.damage += 3;
+                ((liLaserBullet)bt2.fragBullet).length = T3fuse.range + bt2.rangeChange + 16;
+            }
+            T3fuse.ammoTypes.put(i, bt2);
+        }
     }
 }

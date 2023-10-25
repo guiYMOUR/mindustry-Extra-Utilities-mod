@@ -4,6 +4,7 @@ import ExtraUtilities.content.*;
 import ExtraUtilities.net.EUCall;
 import arc.*;
 import arc.Graphics;
+import arc.graphics.Color;
 import arc.graphics.Pixmap;
 import arc.graphics.Pixmaps;
 import arc.math.Mathf;
@@ -15,6 +16,7 @@ import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.content.StatusEffects;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.type.UnitType;
@@ -24,7 +26,7 @@ import mindustry.ui.dialogs.*;
 import mindustry.world.Block;
 
 import static arc.Core.settings;
-import static mindustry.Vars.ui;
+import static mindustry.Vars.*;
 
 public class ExtraUtilitiesMod extends Mod{
     public static String ModName = "extra-utilities";
@@ -47,10 +49,27 @@ public class ExtraUtilitiesMod extends Mod{
 
     public static boolean hardMod = Core.settings.getBool("eu-hard-mode");
     public static boolean onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
+    public static boolean overrideUnitArm = Core.settings.getBool("eu-override-unit");
 
     private static boolean show = false;
 
     public static Mods.LoadedMod EU;
+
+    public static void setColorName(){
+        Mods.LoadedMod mod = mods.locateMod(ModName);
+        String st = Core.bundle.get("mod.extra-utilities.displayName");
+        StringBuilder fin = new StringBuilder();
+
+        for(int i = 0; i < st.length(); i++){
+            String s = String.valueOf(st.charAt(i));
+            Color c = Color.valueOf("39c5bb").shiftHue(i * (int)(80f/st.length()));
+            int ci = c.rgb888();
+            String ct = Integer.toHexString(ci);
+            String fct = "[" + "#" + ct + "]";
+            fin.append(fct).append(s);
+        }
+        mod.meta.displayName = fin.toString();
+    }
 
     public static void toShow(){
         BaseDialog dialog = new BaseDialog("ExtraUtilities"){
@@ -142,10 +161,17 @@ public class ExtraUtilitiesMod extends Mod{
         dialog.show();
     }
 
+    public static void afterEnterLoad(){
+        EUUnitTypes.suzerain.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> !EUUnitTypes.suzerain.immunities.contains(s) && s.reloadMultiplier >= 1));
+        EUUnitTypes.Tera.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+        EUUnitTypes.nihilo.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s.reloadMultiplier >= 1));
+        EUUnitTypes.narwhal.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+        EUUnitTypes.regency.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s == EUStatusEffects.EUUnmoving || s == EUStatusEffects.EUDisarmed || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+    }
+
     public ExtraUtilitiesMod() {
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
-        //Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log2));
     }
 
     public Graphics.Cursor newCursor(String filename){
@@ -173,12 +199,19 @@ public class ExtraUtilitiesMod extends Mod{
 
     @Override
     public void init() {
+        //settings.remove("eu-override-unit");
+        settings.defaults("eu-override-unit", false);
+
         if(!onlyPlugIn) {
             EUCall.registerPackets();
             EUOverride.overrideBuilder();
-            EUOverride.overrideAmr();
+            if(overrideUnitArm) EUOverride.overrideAmr();
+            EUOverride.overrideJs();
+            afterEnterLoad();
             //EUOverride.ap4sOverride();
         }
+
+        setColorName();
 
         settings.defaults("eu-plug-in-mode", false);
         settings.defaults("eu-hard-mode", false);
@@ -315,6 +348,9 @@ public class ExtraUtilitiesMod extends Mod{
                                 table.row();
                             }
                         });
+
+                        settingsTable.checkPref("eu-override-unit", false);
+
                         settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null) {
                             @Override
                             public void add(SettingsMenuDialog.SettingsTable table) {
@@ -344,11 +380,10 @@ public class ExtraUtilitiesMod extends Mod{
     public void loadContent(){
         if(onlyPlugIn) return;
 
-        EUOverride.overrideJs();
-
         EUAttribute.load();
         EUOverride.overrideUnit1();
         EUUnitTypes.load();
+        EUUnitTypes.loadBoss();
         EUOverride.overrideBlock1();
         EUBlocks.load();
 

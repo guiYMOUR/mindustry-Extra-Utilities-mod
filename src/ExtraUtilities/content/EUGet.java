@@ -4,15 +4,24 @@ import arc.Core;
 import arc.graphics.g2d.TextureAtlas;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.geom.Position;
+import arc.math.geom.Vec2;
 import arc.scene.style.TextureRegionDrawable;
 import arc.struct.Seq;
+import arc.util.Time;
+import arc.util.pooling.Pool;
+import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Fx;
+import mindustry.entities.Mover;
 import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.PointBulletType;
 import mindustry.entities.pattern.ShootSpread;
+import mindustry.game.Team;
+import mindustry.gen.Bullet;
+import mindustry.gen.Entityc;
 import mindustry.gen.Icon;
+import mindustry.gen.Velc;
 import mindustry.type.Item;
 import mindustry.ui.Fonts;
 import mindustry.world.Block;
@@ -29,7 +38,28 @@ import static mindustry.Vars.*;
 /**unfinished*/
 
 public class EUGet {
+    //use for pool
+    public static class EPos implements Position{
+        public float x, y;
 
+        public EPos set(float x, float y){
+            this.x = x;
+            this.y = y;
+            return this;
+        }
+
+        @Override
+        public float getX() {
+            return x;
+        }
+
+        @Override
+        public float getY() {
+            return y;
+        }
+    }
+
+    //only for once usage
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull Position pos(float x, float y){
         return new Position() {
@@ -106,5 +136,41 @@ public class EUGet {
             }
         }
         return bullets;
+    }
+
+    public static Bullet anyOtherCreate(Bullet bullet, BulletType bt, Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY){
+        bullet.type = bt;
+        bullet.owner = owner;
+        bullet.team = team;
+        bullet.time = 0f;
+        bullet.originX = x;
+        bullet.originY = y;
+        if(!(aimX == -1f && aimY == -1f)){
+            bullet.aimTile = world.tileWorld(aimX, aimY);
+        }
+        bullet.aimX = aimX;
+        bullet.aimY = aimY;
+
+        bullet.initVel(angle, bt.speed * velocityScl);
+        if(bt.backMove){
+            bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
+        }else{
+            bullet.set(x, y);
+        }
+        bullet.lifetime = bt.lifetime * lifetimeScl;
+        bullet.data = data;
+        bullet.drag = bt.drag;
+        bullet.hitSize = bt.hitSize;
+        bullet.mover = mover;
+        bullet.damage = (damage < 0 ? bt.damage : damage) * bullet.damageMultiplier();
+        //reset trail
+        if(bullet.trail != null){
+            bullet.trail.clear();
+        }
+        bullet.add();
+
+        if(bt.keepVelocity && owner instanceof Velc) bullet.vel.add(((Velc)owner).vel());
+
+        return bullet;
     }
 }
