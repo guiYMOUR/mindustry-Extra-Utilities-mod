@@ -5,7 +5,8 @@
 ![mk2](https://user-images.githubusercontent.com/77377005/230294594-2f4aec93-a2ba-4857-ab90-26fc20e8420b.gif)
 ![sakana](https://user-images.githubusercontent.com/77377005/232401751-ea636aab-0129-44fa-a467-447fa2a74003.gif)
 
-<img width="802" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/fd5195fe-1734-4f81-8efa-eff5ff2d3a8b">
+<img width="698" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/7e6ecd31-89d9-4dc0-b477-11b52a1a5b46">
+
 
 - English | [中文](README_cn.md)
 
