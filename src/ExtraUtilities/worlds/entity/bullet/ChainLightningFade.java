@@ -119,38 +119,7 @@ public class ChainLightningFade extends BulletType {
     @Override
     public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
         Bullet bullet = chain.create();
-        bullet.type = this;
-        bullet.owner = owner;
-        bullet.team = team;
-        bullet.time = 0f;
-        bullet.originX = x;
-        bullet.originY = y;
-        if(!(aimX == -1f && aimY == -1f)){
-            bullet.aimTile = world.tileWorld(aimX, aimY);
-        }
-        bullet.aimX = aimX;
-        bullet.aimY = aimY;
-
-        bullet.initVel(angle, speed * velocityScl);
-        if(backMove){
-            bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
-        }else{
-            bullet.set(x, y);
-        }
-        bullet.lifetime = lifetime * lifetimeScl;
-        bullet.data = data;
-        bullet.drag = drag;
-        bullet.hitSize = hitSize;
-        bullet.mover = mover;
-        bullet.damage = (damage < 0 ? this.damage : damage) * bullet.damageMultiplier();
-        //reset trail
-        if(bullet.trail != null){
-            bullet.trail.clear();
-        }
-        bullet.add();
-
-        if(keepVelocity && owner instanceof Velc) bullet.vel.add(((Velc)owner).vel());
-        return bullet;
+        return EUGet.anyOtherCreate(bullet, this, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
     }
 
     public static class chain extends Bullet{

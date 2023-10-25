@@ -58,9 +58,7 @@ public class Prism extends PowerTurret {
     public void init() {
         super.init();
         if (this.coolant == null) {
-            this.coolant = (ConsumeLiquidBase)this.findConsumer((c) -> {
-                return c instanceof ConsumeLiquidBase;
-            });
+            this.coolant = this.findConsumer((c) -> c instanceof ConsumeLiquidBase);
         }
     }
 
@@ -96,11 +94,19 @@ public class Prism extends PowerTurret {
             return bulletLife>0 || this.isActive() || this.isShooting();
         }
 
+        public boolean checkBullet(Bullet[] bs){
+            if(bs.length == 0) return false;
+            for (Bullet b : bs) {
+                if (b == null) return false;
+            }
+            return true;
+        }
+
         @Override
         public void updateTile() {
             super.updateTile();
             float used;
-            if(bulletLife > 0 && bullets[0] != null){
+            if(bulletLife > 0 && checkBullet(bullets)){
                 wasShooting = true;
                 faded = Math.min(faded + fade * Time.delta, 1f);
                 for(int n = 0; n < bullets.length; n++){

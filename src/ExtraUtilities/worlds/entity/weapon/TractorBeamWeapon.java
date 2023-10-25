@@ -6,6 +6,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.math.Angles;
 import arc.math.Mathf;
+import arc.math.geom.Position;
 import arc.scene.ui.layout.Table;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -73,7 +74,7 @@ public class TractorBeamWeapon extends Weapon {
 
     @Override
     protected boolean checkTarget(Unit unit, Teamc target, float x, float y, float range){
-        return !(target instanceof Unit && ((Unit) target).type != null && target.within(EUGet.pos(x, y), range + ((Unit) target).hitSize / 2f) && target.team() != unit.team && !((Unit) target).dead);
+        return !(target instanceof Unit && ((Unit) target).type != null && target.within(x, y, range + ((Unit) target).hitSize / 2f) && target.team() != unit.team && !((Unit) target).dead);
     }
 
     @Override
@@ -89,6 +90,8 @@ public class TractorBeamWeapon extends Weapon {
                 mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
 
         TractorBeamWeaponMount mount = (TractorBeamWeaponMount) m;
+        mount.mx = mountX;
+        mount.my = mountY;
 
         if(mount.target != null) {
             mount.reRotate = reRotateTime;
@@ -107,7 +110,7 @@ public class TractorBeamWeapon extends Weapon {
 
         if(mount.shoot && mount.target != null){
             if(!headless){
-                control.sound.loop(shootSound, EUGet.pos(mountX, mountY), shootSoundVolume);
+                control.sound.loop(shootSound, mount, shootSoundVolume);
             }
             Unit target = (Unit) mount.target;
             mount.lastX = target.x;
@@ -124,7 +127,7 @@ public class TractorBeamWeapon extends Weapon {
             }
 
             mount.any = true;
-            target.impulseNet(Tmp.v1.set(EUGet.pos(mountX, mountY)).sub(target).limit((force + (1f - target.dst(EUGet.pos(mountX, mountY)) / bullet.range) * scaledForce)));
+            target.impulseNet(Tmp.v1.set(mount).sub(target).limit((force + (1f - target.dst(mount) / bullet.range) * scaledForce)));
         }else{
             mount.strength = Mathf.lerpDelta(mount.strength, 0, 0.1f);
         }
@@ -135,18 +138,17 @@ public class TractorBeamWeapon extends Weapon {
     public void draw(Unit unit, WeaponMount m) {
         super.draw(unit, m);
         TractorBeamWeaponMount mount = (TractorBeamWeaponMount) m;
-        float  mountX = unit.x + Angles.trnsx(unit.rotation - 90, x, y),
-                mountY = unit.y + Angles.trnsy(unit.rotation - 90, x, y);
+
         float z = Draw.z();
         if(mount.any){
             Draw.z(Layer.bullet);
-            float ang = EUGet.pos(mountX, mountY).angleTo(mount.lastX, mount.lastY);
+            float ang = mount.angleTo(mount.lastX, mount.lastY);
 
             Draw.mixcol(color, Mathf.absin(4f, 0.6f));
 
             TractorBeamTurret t = ((TractorBeamTurret) Blocks.parallax);
             Drawf.laser(t.laser, t.laserStart, t.laserEnd,
-                    mountX + Angles.trnsx(ang, shootY), mountY + Angles.trnsy(ang, shootY),
+                    mount.mx + Angles.trnsx(ang, shootY), mount.my + Angles.trnsy(ang, shootY),
                     mount.lastX, mount.lastY, mount.strength * laserWidth);
 
             Draw.mixcol();
@@ -155,12 +157,23 @@ public class TractorBeamWeapon extends Weapon {
         Draw.reset();
     }
 
-    public static class TractorBeamWeaponMount extends reRotMount {
+    public static class TractorBeamWeaponMount extends reRotMount implements Position{
         public boolean any;
         public float lastX, lastY, strength;
+        public float mx, my;
 
         public TractorBeamWeaponMount(Weapon weapon) {
             super(weapon);
+        }
+
+        @Override
+        public float getX() {
+            return mx;
+        }
+
+        @Override
+        public float getY() {
+            return my;
         }
     }
 }

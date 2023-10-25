@@ -94,10 +94,12 @@ public class SCSBullet extends BasicBulletType {
     @Override
     public void hit(Bullet b) {
         Units.nearbyEnemies(b.team, b.x, b.y, splashDamageRadius, unit -> {
-            unit.damage(splashDamage);
-            unit.apply(status, statusDuration);
-            Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, unit);
-            Fx.hitLaserBlast.at(unit.x, unit.y, b.angleTo(unit), Pal.sapBulletBack);
+            if(unit.targetable(b.team)){
+                unit.damage(splashDamage);
+                unit.apply(status, statusDuration);
+                Fx.chainLightning.at(b.x, b.y, 0, Pal.sapBulletBack, unit);
+                Fx.hitLaserBlast.at(unit.x, unit.y, b.angleTo(unit), Pal.sapBulletBack);
+            }
         });
         //优先强行断开节点
         Vars.indexer.allBuildings(b.x, b.y, splashDamageRadius, building -> {

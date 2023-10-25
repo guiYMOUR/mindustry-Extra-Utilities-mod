@@ -21,7 +21,9 @@ import mindustry.world.meta.Stat;
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 
 public class dissipation extends PointDefenseTurret {
-    public float maxShot = 60 * 80;
+    public float maxShot = 60 * 50;
+    public float baseReload = 4;
+    public float overReload = 3;
 
     public dissipation(String name) {
         super(name);
@@ -64,7 +66,7 @@ public class dissipation extends PointDefenseTurret {
                 float maxUsed = coolant.amount;
                 Liquid liquid = liquids.current();
                 float used = Math.min(liquids.get(liquid), maxUsed * Time.delta) * e * timeScale;
-                shot = liquids.get(liquid) > 1 ? Math.min(maxShot, shot + 4 * (1 + (liquid.heatCapacity - 0.4f) * 0.9f) * coolantMultiplier * e * 0.28f * timeScale * Time.delta) : Math.min(maxShot, shot + 4 * e * timeScale * Time.delta);
+                shot = liquids.get(liquid) > 1 ? Math.min(maxShot, shot + overReload * (1 + (liquid.heatCapacity - 0.4f) * 0.9f) * coolantMultiplier * e * 0.28f * timeScale * Time.delta) : Math.min(maxShot, shot + overReload * e * timeScale * Time.delta);
                 liquids.remove(liquid, used);
                 if(Mathf.chance(0.06 * used)){
                     coolEffect.at(x + Mathf.range(block.size * Vars.tilesize / 2), y + Mathf.range(block.size * Vars.tilesize / 2));
@@ -74,7 +76,7 @@ public class dissipation extends PointDefenseTurret {
                 float maxUsed = coolant.amount;
                 Liquid liquid = liquids.current();
                 float used = Math.min(liquids.get(liquid), maxUsed * Time.delta) * e * timeScale;
-                shot = liquids.get(liquid) > 1 ? Math.min(maxShot, shot + 8 * (1 + (liquid.heatCapacity - 0.4f) * 0.9f) * coolantMultiplier * 0.28f * timeScale * Time.delta * e) : Math.min(maxShot, shot + 8 * timeScale * Time.delta * e);
+                shot = liquids.get(liquid) > 1 ? Math.min(maxShot, shot + baseReload * (1 + (liquid.heatCapacity - 0.4f) * 0.9f) * coolantMultiplier * 0.28f * timeScale * Time.delta * e) : Math.min(maxShot, shot + baseReload * timeScale * Time.delta * e);
                 target = Groups.bullet.intersect(x - range, y - range, range*2, range*2).min(b -> b.team != this.team && b.type.hittable, b -> b.dst2(this));
                 if(target != null && !target.isAdded()){
                     target = null;

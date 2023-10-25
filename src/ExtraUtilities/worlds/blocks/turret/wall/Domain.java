@@ -112,7 +112,7 @@ public class Domain extends Block {
         }
     };
     protected static final Cons<Unit> unitShield = unit -> {
-        if(player == null || unit != player.unit()) {
+        if(db != null && unit.targetable(db.team)) {
             float overlapDst = (unit.hitSize / 2f + db.range()) - unit.dst(db);
             if (overlapDst > 0) {
                 db.buildup += (unit.hitSize * ud);
@@ -121,7 +121,7 @@ public class Domain extends Block {
         }
     };
     protected static final Cons<Unit> unitConsumer = unit -> {
-        if(player == null || unit != player.unit()) {
+        if(db != null && unit.targetable(db.team)) {
             float overlapDst = (unit.hitSize / 2f + db.range()) - unit.dst(db);
 
             if (overlapDst > 0) {
@@ -295,7 +295,7 @@ public class Domain extends Block {
                 Units.nearby(team, x, y, realRange, unit -> {
                     if(unit != null && !unit.dead && unit.damaged()) {
                         float am = healByPercent ? unit.maxHealth * healPercentUnit : healAmountUnit;
-                        unit.heal(am * efficiency);
+                        unit.heal(am * efficiency * Time.delta);
                     }
                 });
             }

@@ -17,6 +17,11 @@ public class liLaserBullet extends LaserBulletType {
     @Nullable public ChainLightningFade chain = null;
     public int spacing = 5;
 
+    public liLaserBullet(float damage) {
+        super(damage);
+    }
+    public liLaserBullet(){ }
+
     @Override
     public void init(Bullet b) {
         super.init(b);

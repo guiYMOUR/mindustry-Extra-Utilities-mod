@@ -11,13 +11,14 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
-import arc.math.geom.Position;
 import arc.scene.style.TextureRegionDrawable;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import arc.util.pooling.Pool;
+import arc.util.pooling.Pools;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Units;
@@ -139,7 +140,9 @@ public class UnitBoost extends Block {
         private float rotation, ps, lp1 = 0, lp2 = 1;
         private final Seq<Float[]> pos = new Seq<>();
 
-        //this::canShow, for drawer
+        private final Pool<EUGet.EPos> posPool = Pools.get(EUGet.EPos.class, EUGet.EPos::new);
+
+        // for drawer
         public boolean canShow(){
             return show;
         }
@@ -161,13 +164,13 @@ public class UnitBoost extends Block {
                     if(phase && boostStatus.length > 0) {
                         for (StatusEffect s : boostStatus) {
                             if (s == StatusEffects.none) continue;
-                            u.apply(s, Time.delta * 6);
+                            u.apply(s, 10);
                         }
                     }
                     if(!boostReplace || !phase) {
                         for (StatusEffect s : status) {
                             if (s == StatusEffects.none) continue;
-                            u.apply(s, Time.delta * 6);
+                            u.apply(s, 10);
                         }
                     }
                     can = true;
@@ -222,13 +225,16 @@ public class UnitBoost extends Block {
                 Float[] p = {ex, ey};
                 pos.add(p);
             }
+
             for(int i = 0; i < pos.size; i++){
                 float ox = pos.get(i)[0], oy = pos.get(i)[1];
                 float ex = pos.get((i + 2) % pos.size)[0], ey = pos.get((i + 2) % pos.size)[1];
-                Position og = EUGet.pos(ox, oy);
+
+                EUGet.EPos og = posPool.obtain().set(ox, oy);
                 float dst = og.dst(ex, ey);
                 float angle = og.angleTo(ex, ey);
                 Lines.lineAngle(ox, oy, angle, dst * phaseHeat * ps);
+                posPool.free(og);
             }
             Draw.z(dz);
             Draw.reset();
@@ -257,10 +263,12 @@ public class UnitBoost extends Block {
                 Float[] p = {lx, ly};
                 pos.add(p);
             }
+
             for(int i = 0; i < pos.size; i++){
                 float ox = pos.get(i)[0], oy = pos.get(i)[1];
                 float ex = pos.get((i + 1) % pos.size)[0], ey = pos.get((i + 1) % pos.size)[1];
-                Position og = EUGet.pos(ox, oy);
+
+                EUGet.EPos og = posPool.obtain().set(ox, oy);
                 float dst = og.dst(ex, ey);
                 float angle = og.angleTo(ex, ey);
                 if(!change1_2) {
@@ -268,6 +276,7 @@ public class UnitBoost extends Block {
                 } else {
                     Lines.lineAngle(ex, ey, angle - 180, dst * lp2);
                 }
+                posPool.free(og);
             }
         }
 

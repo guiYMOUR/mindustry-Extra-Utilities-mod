@@ -26,7 +26,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         this.width = width;
         this.length = length;
         this.hitEffect = EUFx.prismHit;
-        lifetime = 30;
+        lifetime = 24;
         frontLength = 28f;
     }
 
@@ -85,15 +85,36 @@ public class PrismLaser extends ContinuousLaserBulletType {
         Draw.blend();
     }
 
+    public void drawPlanC(Bullet b){
+        if(!(b.owner instanceof PrismCtr.ctr c)) return;
+        float fout = Mathf.clamp(b.time > b.lifetime - this.fadeTime ? 1 - (b.time - (this.lifetime - this.fadeTime)) / this.fadeTime : 1);
+        float realLength = Damage.findLaserLength(b, this.length);
+        float baseLen = realLength * fout;
+        float wide = Mathf.clamp(c.fin() + 0.03f);
+        Draw.z(Layer.bullet - 1);
+        //Draw.color(Color.valueOf("ff0000").shiftHue((int)b.data));
+        Draw.color((Tmp.c1.set(Color.valueOf("ff0000")).mul(1.0f + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
+        Draw.alpha(0.04f);
+        Draw.blend(Blending.additive);
+        for(int s = 0; s < 4; s++){
+            for(int i = 0; i < tscales.length; i++){
+                Tmp.v1.trns(b.rotation() + 180, (lenscales[i] - 1) * frontLength);
+                Lines.stroke((width + Mathf.absin(Time.time, oscScl, oscMag)) * fout * wide * strokes[s] * tscales[i]);
+                Lines.lineAngle(b.x + Tmp.v1.x, b.y + Tmp.v1.y, b.rotation(), baseLen * lenscales[i], false);
+            }
+        }
+        Tmp.v1.trns(b.rotation(), baseLen * 1.1f);
+        Drawf.light(b.x, b.y, b.x + Tmp.v1.x, b.y + Tmp.v1.y, lightStroke, lightColor, 0.7f);
+        Draw.reset();
+        Draw.blend();
+    }
+
     @Override
     public void draw(Bullet b) {
-        switch (plan){
-            case 1:
-                drawPlanA(b);
-                break;
-            case 2:
-                drawPlanB(b);
-                break;
+        switch (plan) {
+            case 1 -> drawPlanA(b);
+            case 2 -> drawPlanB(b);
+            case 3 -> drawPlanC(b);
         }
     }
 }

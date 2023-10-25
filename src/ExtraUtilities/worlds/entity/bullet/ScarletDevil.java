@@ -37,7 +37,7 @@ public class ScarletDevil extends BulletType {
             homingPower = Float.MAX_VALUE;
             homingRange = 40 * 8;
             healPercent = 2f;
-            damage = 80;
+            damage = 70;
             collidesTeam = true;
             reflectable = false;
             healColor = color;
@@ -171,8 +171,7 @@ public class ScarletDevil extends BulletType {
 
         @Override
         public void hitEntity(Bullet b, Hitboxc entity, float health) {
-            if(entity instanceof Unit && ((Unit)entity).type != null) {
-                Unit u = (Unit) entity;
+            if(entity instanceof Unit u && u.type != null) {
                 if(u.type.armor > 80){
                     u.health -= u.health;
                     u.kill();

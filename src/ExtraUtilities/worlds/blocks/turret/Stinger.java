@@ -50,7 +50,7 @@ public class Stinger extends PowerTurret {
             super.updateTile();
 
             for(Unit unit : unitMap.keys()) {
-                if (unit.dead || unit.type == null || !unit.type.isEnemy || !unit.type.killable) {
+                if (unit == null || unit.dead || unit.type == null || !unit.type.isEnemy || !unit.type.killable) {
                     unitMap.remove(unit);
                 }
             }

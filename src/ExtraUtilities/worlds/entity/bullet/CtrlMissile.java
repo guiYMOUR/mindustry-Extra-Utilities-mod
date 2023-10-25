@@ -26,13 +26,10 @@ import mindustry.world.blocks.ControlBlock;
 public class CtrlMissile extends BulletType {
     public String sprite;
     public float width, height;
-    //public float x, y;
     public boolean autoHoming = false;
     public boolean low = false;
-    //public boolean flipSprite = false;
     public Sound loopSound = Sounds.missileTrail;
     public float loopSoundVolume = 0.1f;
-    //public Seq<DrawPart> parts = new Seq<>(DrawPart.class);
 
     public CtrlMissile(String sprite, float width, float height) {
         this.sprite = sprite;
@@ -55,8 +52,8 @@ public class CtrlMissile extends BulletType {
         b.rotation(Angles.moveToward(b.rotation(), angle, homingPower * Time.delta));
     }
 
-    public void lookAt(Position pos, Bullet b) {
-        lookAt(b.angleTo(pos), b);
+    public void lookAt(float x, float y, Bullet b) {
+        lookAt(b.angleTo(x, y), b);
     }
 
     @Override
@@ -98,12 +95,12 @@ public class CtrlMissile extends BulletType {
                 if(b.owner instanceof ControlBlock) shooter = ((ControlBlock)b.owner).unit();
                 if (shooter != null) {
                     //if(!Vars.net.client() || shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
-                    if(shooter.isPlayer()) lookAt(EUGet.pos(shooter.aimX, shooter.aimY), b);
+                    if(shooter.isPlayer()) lookAt(shooter.aimX, shooter.aimY, b);
                     else {
-                        if (b.data instanceof Position)
-                            lookAt((Position) b.data, b);
+                        if (b.data instanceof Position p)
+                            lookAt(p.getX(), p.getY(), b);
                         else
-                            lookAt(EUGet.pos(realAimX, realAimY), b);
+                            lookAt(realAimX, realAimY, b);
                     }
                 }
             }
@@ -116,18 +113,6 @@ public class CtrlMissile extends BulletType {
         Draw.z(low ? Layer.flyingUnitLow : Layer.flyingUnit);
         if (width > 0 && height > 0) Draw.rect(Core.atlas.find(sprite), b.x, b.y, width, height, b.rotation() - 90);
         else Draw.rect(Core.atlas.find(sprite), b.x, b.y, b.rotation() - 90);
-
-        //555,明明我先来的（
-//        if(parts.size > 0){
-//            for(int i = 0; i < parts.size; i++){
-//                DrawPart part = parts.get(i);
-//                DrawPart.params.set(0f, 0f, 0f, 0f, 0f, 0f, b.x, b.y, b.rotation());
-//
-//                DrawPart.params.life = b.fin();
-//
-//                part.draw(DrawPart.params);
-//            }
-//        }
         Draw.reset();
     }
 }
