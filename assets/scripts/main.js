@@ -16,13 +16,13 @@ if(!onlyPlugIn) {
 // require("block/turret/sunburst");
     require("block/turret/T2lancer");
     require("block/turret/stinger");
-// require("block/turret/miniswarmer");
-// require("block/turret/T2swarmer");
+    require("block/turret/miniswarmer");
+    require("block/turret/T2swarmer");
     require("block/turret/T2ripple");
     require("block/turret/T3ripple");
     require("block/turret/T2fuse");
     require("block/turret/T3fuse");
-// require("block/turret/minisp");
+    require("block/turret/minisp");
 // require("block/turret/antiaircraft");
 // require("block/turret/sam");
     require("block/turret/prism");

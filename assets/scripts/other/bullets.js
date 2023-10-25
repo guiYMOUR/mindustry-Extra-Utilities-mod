@@ -5,7 +5,7 @@
 
 const items = require("game/items");
 
-exports.artillerySurge = new ArtilleryBulletType(2.8, 20, "shell");
+exports.artillerySurge = new ArtilleryBulletType(2.8, 35, "shell");
 Object.assign(exports.artillerySurge, {
     hitEffect : Fx.blastExplosion,
     knockback : 0.8,
@@ -15,9 +15,9 @@ Object.assign(exports.artillerySurge, {
     collidesTiles : false,
     ammoMultiplier : 3,
     splashDamageRadius : 30 * 0.75,
-    splashDamage : 38,
+    splashDamage : 55,
     frontColor : Pal.surge,
-    lightningDamage : 12,
+    lightningDamage : 15,
     lightning : 2,
     lightningLength : 8,
 });

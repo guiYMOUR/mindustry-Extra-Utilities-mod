@@ -1,23 +1,6 @@
 //
 const lib = require("blib");
 const hardMod = Core.settings.getBool("eu-hard-mode");
-//钛
-const fuse1 = extend(ShrapnelBulletType, {});
-fuse1.length = 128;
-fuse1.damage = 70;
-fuse1.width = 17;
-fuse1.reloadMultiplier = 1.3;
-fuse1.ammoMultiplier = 2;
-fuse1.shootEffect = Fx.lightningShoot;
-fuse1.smokeEffect = Fx.lightningShoot;
-//钍
-const fuse2 = extend(ShrapnelBulletType, {});
-fuse2.length = 128;
-fuse2.damage = 111;
-fuse2.toColor = Pal.thoriumPink;
-fuse2.ammoMultiplier = 3;
-fuse2.shootEffect = Fx.thoriumShoot;
-fuse2.smokeEffect = Fx.thoriumShoot;
 
 const T3fuse = extend(ItemTurret, "T3-fuse", {});
 T3fuse.reload = 35;
@@ -31,10 +14,6 @@ T3fuse.shoot = ShootSpread(9, 9);
 lib.Coolant(T3fuse, 0.6);
 T3fuse.coolantMultiplier = 2;
 T3fuse.shootSound = Sounds.shotgun;
-T3fuse.ammo(
-    Items.titanium, fuse1,
-    Items.thorium, fuse2
-);
 T3fuse.requirements = ItemStack.with(
     Items.copper, 550,
     Items.graphite, 320,

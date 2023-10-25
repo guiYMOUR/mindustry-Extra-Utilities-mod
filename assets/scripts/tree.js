@@ -17,13 +17,13 @@ const { ms } = require('block/turret/ms');
 // const { sunburst } =require('block/turret/sunburst');
 const { T2lan } = require('block/turret/T2lancer');
 const { stinger } = require('block/turret/stinger');
-// const { swT2 } = require('block/turret/T2swarmer');
-// const { swMin } = require('block/turret/miniswarmer');
+const { swT2 } = require('block/turret/T2swarmer');
+const { swMin } = require('block/turret/miniswarmer');
 const { T2rip } = require('block/turret/T2ripple');
 const { T3rip } = require('block/turret/T3ripple');
 const { T2fuse } = require('block/turret/T2fuse');
 const { T3fuse } = require('block/turret/T3fuse');
-// const { minisp } = require('block/turret/minisp');
+const { minisp } = require('block/turret/minisp');
 // const { antiaircraft } = require('block/turret/antiaircraft');
 // const { sam } = require('block/turret/sam');
 const { RG } = require('block/turret/RG');
@@ -106,14 +106,14 @@ lib.addToResearch(ms, { parent: hurricane.name, });
 // lib.addToResearch(sunburst, { parent: hurricane.name, });
 lib.addToResearch(T2lan, { parent: 'lancer', });
 lib.addToResearch(stinger, { parent: T2lan.name, });
-// lib.addToResearch(swT2, { parent: 'swarmer', });
-// lib.addToResearch(swMin, { parent: 'swarmer', });
+lib.addToResearch(swT2, { parent: 'swarmer', });
+lib.addToResearch(swMin, { parent: 'duo', });
 lib.addToResearch(T2rip, { parent: 'ripple', });
 lib.addToResearch(T3rip, { parent: T2rip.name, });
 lib.addToResearch(T2fuse, { parent: 'fuse', });
 lib.addToResearch(T3fuse, { parent: T2fuse.name, });
-/*lib.addToResearch(minisp, { parent: 'swarmer', });
-lib.addToResearch(antiaircraft, { parent: 'scatter',
+lib.addToResearch(minisp, { parent: 'swarmer', });
+/*lib.addToResearch(antiaircraft, { parent: 'scatter',
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.overgrowth),
     )
