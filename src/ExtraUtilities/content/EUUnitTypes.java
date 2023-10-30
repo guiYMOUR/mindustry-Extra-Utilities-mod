@@ -359,7 +359,7 @@ public class EUUnitTypes {
 
                                 @Override
                                 public void hitEntity(Bullet b, Hitboxc entity, float health) {
-                                    if(entity instanceof Unit u){
+                                    if(entity instanceof Unit u && !(entity instanceof bossEntity)){
                                         u.health -= damage * 3;
                                     }
                                     super.hitEntity(b, entity, health);
@@ -509,7 +509,7 @@ public class EUUnitTypes {
 
                             @Override
                             public void hitEntity(Bullet b, Hitboxc entity, float health) {
-                                if(entity instanceof Unit u){
+                                if(entity instanceof Unit u && !(entity instanceof bossEntity)){
                                     u.health -= damage * 1.5f;
                                 }
                                 super.hitEntity(b, entity, health);
@@ -641,7 +641,7 @@ public class EUUnitTypes {
 
                     @Override
                     public void hitEntity(Bullet b, Hitboxc entity, float health) {
-                        if(entity instanceof Unit u && u.type != null){
+                        if(entity instanceof Unit u && !(entity instanceof bossEntity) && u.type != null){
                             u.health -= (damage * (u.type.hitSize/10f + 1) * ((u.type.armor)/10f + 1) + u.maxHealth * 0.2f);
                         }
                         super.hitEntity(b, entity, health);
@@ -725,7 +725,7 @@ public class EUUnitTypes {
                         shootSound = Sounds.missileLaunch;
                         float chargeTime = 80;
                         bullet = new BulletType(){{
-                            damage = splashDamage = 500;
+                            damage = splashDamage = 600;
                             splashDamageRadius = 24 * 8;
                             pierce = true;
                             pierceArmor = true;
@@ -800,7 +800,7 @@ public class EUUnitTypes {
 
                             @Override
                             public void hitEntity(Bullet b, Hitboxc entity, float health) {
-                                if(entity instanceof Unit u) u.health -= damage * 1.5f;
+                                if(entity instanceof Unit u && !(entity instanceof bossEntity)) u.health -= damage * 1.5f;
                                 super.hitEntity(b, entity, health);
                             }
                         };

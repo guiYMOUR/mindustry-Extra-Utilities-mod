@@ -7,12 +7,18 @@ import arc.Graphics;
 import arc.graphics.Color;
 import arc.graphics.Pixmap;
 import arc.graphics.Pixmaps;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
+import arc.math.Mat;
 import arc.math.Mathf;
+import arc.math.geom.Vec2;
 import arc.scene.Element;
+import arc.scene.Group;
 import arc.scene.event.Touchable;
 import arc.scene.ui.CheckBox;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
+import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
@@ -23,6 +29,7 @@ import mindustry.type.UnitType;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
+import mindustry.ui.fragments.MenuFragment;
 import mindustry.world.Block;
 
 import static arc.Core.settings;
@@ -50,8 +57,13 @@ public class ExtraUtilitiesMod extends Mod{
     public static boolean hardMod = Core.settings.getBool("eu-hard-mode");
     public static boolean onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
     public static boolean overrideUnitArm = Core.settings.getBool("eu-override-unit");
+    public static String massageRand;
 
     private static boolean show = false;
+
+    private static final Mat setMat = new Mat();
+    private static final Mat reMat = new Mat();
+    private static final Vec2 vec2 = new Vec2();
 
     public static Mods.LoadedMod EU;
 
@@ -68,7 +80,8 @@ public class ExtraUtilitiesMod extends Mod{
             String fct = "[" + "#" + ct + "]";
             fin.append(fct).append(s);
         }
-        mod.meta.displayName = fin.toString();
+        mod.meta.displayName = fin + ("[gray] - " + massageRand);
+        rebuildRandSubTitle(massageRand);
     }
 
     public static void toShow(){
@@ -378,6 +391,10 @@ public class ExtraUtilitiesMod extends Mod{
 
     @Override
     public void loadContent(){
+        String ms = Core.bundle.get("mod.random-massage");
+        String[] me = ms.split(",");
+        int len = me.length;
+        massageRand = me[Mathf.random(len - 1)];
         if(onlyPlugIn) return;
 
         EUAttribute.load();
@@ -391,5 +408,51 @@ public class ExtraUtilitiesMod extends Mod{
         TDSectorPresets.load();
 
         EUTechTree.load();
+    }
+
+    public static void rebuildRandSubTitle(String title){
+        ui.menufrag = new EUMenuFragment(title);
+        ui.menufrag.build(ui.menuGroup);
+    }
+
+    private static class EUMenuFragment extends MenuFragment{
+        private final String title;
+
+        public EUMenuFragment(String title){
+            this.title = title;
+        }
+        @Override
+        public void build(Group parent) {
+            super.build(parent);
+            parent.fill((x, y, w, h) -> {
+                TextureRegion logo = Core.atlas.find("logo");
+                float width = Core.graphics.getWidth(), height = Core.graphics.getHeight() - Core.scene.marginTop;
+                float logoscl = Scl.scl(1) * logo.scale;
+                float logow = Math.min(logo.width * logoscl, Core.graphics.getWidth() - Scl.scl(20));
+                float logoh = logow * (float)logo.height / logo.width;
+
+                float fx = (int)(width / 2f);
+                float fy = (int)(height - 6 - logoh) + logoh / 2 - (Core.graphics.isPortrait() ? Scl.scl(30f) : 0f);
+                if(Core.settings.getBool("macnotch") ){
+                    fy -= Scl.scl(macNotchHeight);
+                }
+
+                float ex = fx + logow/3 - Scl.scl(1f), ey = fy - logoh/3f - Scl.scl(2f);
+                float ang = 12 + Mathf.sin(Time.time, 8, 2f);
+
+                float dst = Mathf.dst(ex, ey, 0, 0);
+                vec2.set(0, 0);
+                float dx = EUGet.dx(0, dst, vec2.angleTo(ex, ey) + ang);
+                float dy = EUGet.dy(0, dst, vec2.angleTo(ex, ey) + ang);
+
+                reMat.set(Draw.trans());
+
+                Draw.trans(setMat.setToTranslation(ex - dx, ey - dy).rotate(ang));
+                Fonts.outline.draw(title, ex, ey, Color.yellow, Math.min(30f/title.length(), 1.5f) + Mathf.sin(Time.time, 8, 0.2f), false, Align.center);
+
+                Draw.trans(reMat);
+
+            }).touchable = Touchable.disabled;
+        }
     }
 }

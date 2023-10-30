@@ -17,7 +17,7 @@ import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
 import ExtraUtilities.worlds.blocks.unit.UnitBoost;
-import ExtraUtilities.worlds.consumers.ConsumeLiquidDynamic;
+import ExtraUtilities.worlds.consumers.BetterConsumeLiquidsDynamic;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.*;
 import arc.Core;
@@ -41,8 +41,6 @@ import arc.util.Scaling;
 import arc.util.Strings;
 import arc.util.Time;
 import arc.util.Tmp;
-import arc.util.pooling.Pool;
-import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -995,7 +993,7 @@ public class EUBlocks {
             drawer = new DrawTurret("reinforced-");
         }};
 
-        guiY = new guiY("guiY"){{
+        guiY = new ItemTurret("guiY"){{
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
             ammo(
@@ -2196,7 +2194,7 @@ public class EUBlocks {
             requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 3000, Items.thorium, 1800, Items.phaseFabric, 1200));
             size = 5;
             consumePower(30);
-            consume(new ConsumeLiquidDynamic((e) -> ((UnitFactoryBuild)e).currentPlan != -1 ? ((LiquidUnitPlan)plans.get(Math.min(((UnitFactoryBuild)e).currentPlan, plans.size - 1))).liquid : LiquidStack.empty, new Liquid[]{Liquids.cryofluid, Liquids.slag, Liquids.water, Liquids.cyanogen}));
+            consume(new BetterConsumeLiquidsDynamic((e) -> ((UnitFactoryBuild)e).currentPlan != -1 ? ((LiquidUnitPlan)plans.get(Math.min(((UnitFactoryBuild)e).currentPlan, plans.size - 1))).liquid : LiquidStack.empty, new Liquid[]{Liquids.cryofluid, Liquids.slag, Liquids.water, Liquids.cyanogen}));
             alwaysUnlocked = true;
             config(Integer.class, (UnitFactoryBuild tile, Integer i) -> {
                 tile.currentPlan = i < 0 || i >= plans.size ? -1 : i;
@@ -2381,6 +2379,12 @@ public class EUBlocks {
                     }
                 });
             }
+
+            @Override
+            public void setBars() {
+                super.setBars();
+                removeBar("liquid");
+            }
         };
 
         coreKeeper = new CoreKeeper("core-keeper"){{
@@ -2452,6 +2456,7 @@ public class EUBlocks {
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.sandboxOnly;
         }};
+
         allNode = new PhaseNode("a-n"){{
             requirements(Category.effect, with(Items.silicon, 1));
             range = 35;

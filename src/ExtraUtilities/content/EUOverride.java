@@ -323,8 +323,10 @@ public class EUOverride {
             splashDamage = 20;
             hitEffect = despawnEffect = Fx.blastExplosion;
 
-            backRegion = Core.atlas.find("missile-back");
-            frontRegion = Core.atlas.find("missile");
+            if(Core.atlas != null) {
+                backRegion = Core.atlas.find("missile-back");
+                frontRegion = Core.atlas.find("missile");
+            }
         }});
         ((ItemTurret)Blocks.swarmer).limitRange(5f);
 
