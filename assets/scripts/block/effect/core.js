@@ -38,6 +38,8 @@
 // core.category = Category.effect;
 // exports.core = core;
 
+const items = require("game/items");
+
 const chest = extend(StorageBlock, "chest", {});
 chest.size= 1;
 chest.hasItems = true;
@@ -60,9 +62,9 @@ cargo.health = 3100;
 cargo.itemCapacity = 5000;
 cargo.buildCostMultiplier = 0.8;
 cargo.requirements = ItemStack.with(
-    Items.titanium, 285,
     Items.thorium, 150,
     Items.plastanium, 90,
+    items.crispSteel, 200
 );
 cargo.buildVisibility = BuildVisibility.shown;
 cargo.category = Category.effect;
