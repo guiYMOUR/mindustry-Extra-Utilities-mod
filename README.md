@@ -3,7 +3,7 @@
 ![logo](https://user-images.githubusercontent.com/77377005/230295079-496e1c3b-052c-4320-b1f4-3de6d7c4692c.png)
 ![work](https://user-images.githubusercontent.com/77377005/231817466-63545b19-6286-4ab4-b151-8bc95ce501f0.gif)
 ![mk2](https://user-images.githubusercontent.com/77377005/230294594-2f4aec93-a2ba-4857-ab90-26fc20e8420b.gif)
-![sakana](https://user-images.githubusercontent.com/77377005/232401751-ea636aab-0129-44fa-a467-447fa2a74003.gif)
+<img width="340" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/0fe411f3-9879-4485-b48f-023292c8c434">
 
 <img width="698" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/7e6ecd31-89d9-4dc0-b477-11b52a1a5b46">
 
