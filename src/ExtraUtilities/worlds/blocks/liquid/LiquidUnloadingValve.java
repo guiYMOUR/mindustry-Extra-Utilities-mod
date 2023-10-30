@@ -28,7 +28,7 @@ public class LiquidUnloadingValve extends Block {
         super(name);
 
         update = true;
-        solid = true;
+        solid = false;
         configurable = true;
         outputsLiquid = true;
         saveConfig = true;
