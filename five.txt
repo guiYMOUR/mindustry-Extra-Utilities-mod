@@ -1,0 +1,76 @@
+DerivativeUnitFactory.java
+            TextureRegion arm = Core.atlas.find(name + "-arm");
+            TextureRegion hand = Core.atlas.find(name + "-hand");
+
+            if(arm.found()) {
+                float ag = 90 * rotation - 90;
+                float angle =  ag + baseAng;
+                float armAng = angle + shiftAng;
+                float ax = x + Angles.trnsx(ag, startX, startY), ay = y + Angles.trnsy(ag, startX, startY);
+                float armLen = (float) arm.height / tilesize;
+                Draw.rect(arm, ax, ay, armAng);
+                ax = EUGet.dx(ax, armLen, armAng + 90);
+                ay = EUGet.dy(ay, armLen, armAng + 90);
+                v1.set(ax, ay);
+                Vec2 v = getUnitSpawn();
+                float handAng = v1.angleTo(v.x, v.y);
+                Draw.rect(hand, v1, handAng - 90);
+                float z = Draw.z();
+                if(currentPlan != -1) {
+                    UnitPlan plan = plans.get(currentPlan);
+                    Draw.draw(Layer.blockOver, () -> Drawf.construct(v.x, v.y, plan.unit.fullIcon, rotdeg() - 90f, progress / plan.time, speedScl, time));
+                    Draw.color(Pal.accent);
+                    Draw.z(Layer.buildBeam);
+                    float
+                            px = ax + Angles.trnsx(handAng, hand.height / 8f),
+                            py = ay + Angles.trnsy(handAng, hand.height / 8f);
+                    if(efficiency > 0.01f) {
+                        Fill.circle(x, y, 3 * efficiency * speedScl);
+                        Drawf.buildBeam(x, y, v.x, v.y, plan.unit.hitSize / 2f * efficiency * speedScl);
+                    }
+                }
+                Draw.z(z);
+            }
+
+next
+
+CopyMemoryBuild.java
+
+    public class CopyMemoryBuild extends MemoryBlock.MemoryBuild {
+        MemoryBlock mb;
+        public Object[] objects;
+
+        public CopyMemoryBuild(MemoryBlock mb) {
+            mb.super();
+            this.mb = mb;
+            objects = new Object[mb.memoryCapacity];
+        }
+
+        public void updateMemory() {
+            for (int i = 0; i < memory.length; i++) {
+                objects[i] = memory[i];
+            }
+        }
+
+        @Override
+        public Object[] config() {
+            updateMemory();
+            return objects;
+        }
+    }
+
+override
+        if(Vars.content.blocks().size > 0){
+            for(Block b : Vars.content.blocks()){
+                if(b instanceof MemoryBlock mb && mb.buildType.get().getClass() == MemoryBlock.MemoryBuild.class){
+                    mb.buildType = () -> new CopyMemoryBuild((mb));
+                    mb.config(Object[].class, (CopyMemoryBuild e, Object[] ds) -> {
+                        for(int i = 0; i < ds.length; i++){
+                            if(ds[i] instanceof Double d)
+                                e.memory[i] = d;
+                        }
+                    });
+                    mb.description += Core.bundle.get("override.memory-block");
+                }
+            }
+        }
