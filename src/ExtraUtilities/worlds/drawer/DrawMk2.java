@@ -25,7 +25,7 @@ public class DrawMk2 extends DrawBlock {
             Draw.rect(or, build.x + build.recoilOffset.x, build.y + build.recoilOffset.y, build.drawrot());
             float x = build.x + Angles.trnsx(build.rotation - 90, 0, ((Turret)build.block).shootY);
             float y = build.y + Angles.trnsy(build.rotation - 90, 0, ((Turret)build.block).shootY);
-            EUFx.Mk2Shoot(50).at(x, y, build.rotation);
+            EUFx.Mk2Shoot.at(x, y, build.rotation, 50f);
         }
         Draw.reset();
     }

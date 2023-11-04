@@ -23,7 +23,9 @@ public class DrawTrail extends DrawBlock {
     public Color color;
     public int id = 0;
 
-    public BulletType ball = null;
+    public Vec2 endVec = new Vec2(), offsetVec = new Vec2();
+
+    public BulletType ball;
 
     public DrawTrail(float size, Color color, int length){
         this.size = size;
@@ -41,7 +43,7 @@ public class DrawTrail extends DrawBlock {
             float
                     rx = build.x + Tmp.v1.x,
                     ry = build.y + Tmp.v1.y;
-            drawBall(build, rx, ry, 0, build.warmup(), new Vec2(), new Vec2(), color);
+            drawBall(build, rx, ry, 0, build.warmup(), endVec, offsetVec, color);
         }
     }
 

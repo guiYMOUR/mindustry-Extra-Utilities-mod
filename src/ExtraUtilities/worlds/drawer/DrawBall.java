@@ -28,6 +28,7 @@ public class DrawBall extends DrawPart {
     public float rotate = 0;
     public float layer = -1f, layerOffset = 0f;
     public PartProgress progress = PartProgress.warmup;
+    public Vec2 offsetVec, endVec;
 
     public boolean line = false;
 
@@ -58,7 +59,7 @@ public class DrawBall extends DrawPart {
                     ry = params.y + Tmp.v1.y;
 
             //offset.setZero();
-            drawBall(rx, ry, rotate, trailLen, p, new Vec2(), new Vec2(), bColor);
+            drawBall(rx, ry, rotate, trailLen, p, offsetVec, endVec, bColor);
         }
     }
 
@@ -82,11 +83,5 @@ public class DrawBall extends DrawPart {
             Lines.stroke(trailWid / 2f + sin);
             Lines.circle(lastEnd.x, lastEnd.y, trailWid + sin);
         } else Fill.circle(lastEnd.x, lastEnd.y, trailWid + sin);
-//        if(trail == null){
-//            trail = new Trail(trailLen);
-//        }
-//        trail.length = trailLen;
-//        trail.draw(color, 1);
-//        trail.update(lastEnd.x, lastEnd.y, 1);
     }
 }
