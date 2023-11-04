@@ -16,6 +16,7 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import arc.util.Time;
 import mindustry.Vars;
+import mindustry.entities.Effect;
 import mindustry.entities.Units;
 import mindustry.entities.abilities.Ability;
 import mindustry.gen.Building;
@@ -60,6 +61,9 @@ public class bossUnitAbi extends Ability{
     public void setS1(boolean s1) {
         this.s1 = s1;
     }
+
+    private final Effect espEffect = EUFx.edessp(20);
+    private final Object[] objects = new Object[4];
 
     @Override
     public void update(Unit unit) {
@@ -174,8 +178,12 @@ public class bossUnitAbi extends Ability{
         if(d1 && !s1){
             float fin = unit.health/(unit.maxHealth/2);
             float fout = 1 - fin;
-            if(bt.timer.get(10 + 30 * fout) && unit.health < (unit.maxHealth/2 - 800)){
-                EUFx.edessp(Core.atlas.find(unit.type.name), 20, pickRange/1.5f, unit.rotation - 90, 270).at(unit.x, unit.y, Mathf.random(360));
+            if(unit.type != null && bt.timer.get(10 + 30 * fout) && unit.health < (unit.maxHealth/2 - 800)){
+                objects[0] = Core.atlas.find(unit.type.name);
+                objects[1] = pickRange/1.5f;
+                objects[2] = unit.rotation - 90f;
+                objects[3] = 270f;
+                espEffect.at(unit.x, unit.y, Mathf.random(360), objects);
             }
 
             float lfin = Mathf.curve(fin, 0, 0.1f);
