@@ -7,7 +7,7 @@ public class TDSectorPresets {
             //by carrot
             pd, TD1, TD2,
             //by guiY
-            guiYTD1, guiYCL1;
+            guiYTD1, guiYCL1, BossTD;
     public static void load(){
         pd = new SectorPreset("preparation", TDPlanet.TD, 12){{
             alwaysUnlocked = true;
@@ -30,6 +30,11 @@ public class TDSectorPresets {
         guiYCL1 = new SectorPreset("guiYCL1", TDPlanet.TD, 22){{
            difficulty = 4;
            captureWave = 25;
+        }};
+
+        BossTD = new SectorPreset("TD-boss", TDPlanet.TD, 24){{
+            difficulty = 8;
+            captureWave = 121;
         }};
     }
 }

@@ -8,6 +8,7 @@ import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
+import ExtraUtilities.worlds.blocks.logic.CopyMemoryBlock;
 import ExtraUtilities.worlds.blocks.power.LightenGenerator;
 import ExtraUtilities.worlds.blocks.power.SpaceGenerator;
 import ExtraUtilities.worlds.blocks.power.ThermalReactor;
@@ -16,6 +17,7 @@ import ExtraUtilities.worlds.blocks.turret.*;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
+import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
 import ExtraUtilities.worlds.blocks.unit.UnitBoost;
 import ExtraUtilities.worlds.consumers.BetterConsumeLiquidsDynamic;
 import ExtraUtilities.worlds.drawer.*;
@@ -49,6 +51,7 @@ import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -58,12 +61,14 @@ import mindustry.type.*;
 import mindustry.ui.ItemDisplay;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.distribution.DirectionLiquidBridge;
 import mindustry.world.blocks.distribution.DuctBridge;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.ArmoredConduit;
+import mindustry.world.blocks.logic.MemoryBlock;
 import mindustry.world.blocks.power.ConsumeGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
@@ -90,7 +95,7 @@ public class EUBlocks {
         //transport
             stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
-            T2blast, T2sporePress, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
+            siliconFurnace, T2blast, T2sporePress, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
@@ -102,6 +107,7 @@ public class EUBlocks {
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
+            buffrerdMemoryBank,
             turretSpeeder, coreKeeper, quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
@@ -130,29 +136,7 @@ public class EUBlocks {
             liquidCapacity = 120;
             size = 3;
         }};
-//        nitrogenWell = new ThermalGenerator("nitrogen-well"){{
-//            requirements(Category.production, with(Items.graphite, 100, Items.silicon, 120, Items.tungsten, 80, Items.oxide, 100));
-//            attribute = Attribute.steam;
-//            group = BlockGroup.liquids;
-//            displayEfficiencyScale = 1f / 9f;
-//            minEfficiency = 9f - 0.0001f;
-//            powerProduction = 90f/60f/9f;
-//            displayEfficiency = false;
-//            generateEffect = Fx.turbinegenerate;
-//            effectChance = 0.04f;
-//            size = 3;
-//            ambientSound = Sounds.hum;
-//            ambientSoundVolume = 0.06f;
-//
-//            drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin("-rotator", 0.5f * 9f){{
-//                blurThresh = 0.01f;
-//            }});
-//
-//            hasLiquids = true;
-//            outputLiquid = new LiquidStack(Liquids.nitrogen, (8f - (hardMod ? 2 : 0)) / 60f/ 9);
-//            liquidCapacity = 20f;
-//            fogRadius = 3;
-//        }};
+
         nitrogenWell = new AttributeCrafter("nitrogen-well"){{
             requirements(Category.production, with(Items.graphite, 100, Items.silicon, 120, Items.tungsten, 80, Items.oxide, 100));
             attribute = Attribute.steam;
@@ -365,8 +349,86 @@ public class EUBlocks {
         }};
 
 
+        siliconFurnace = new GenericCrafter("silicon-furnace"){{
+            requirements(Category.crafting, with(Items.silicon, 130, EUItems.crispSteel, 100, Items.lead, 160, Items.thorium, 80));
+            size = 4;
+            itemCapacity = 35;
+            consumePower(6);
+            consumeItem(Items.metaglass, 3);
+            consumeLiquid(Liquids.water, 12/60f);
+            liquidCapacity = 36;
+            outputItem = new ItemStack(Items.silicon, 7);
+            outputsLiquid = true;
+            Liquid out = Liquids.ozone;
+            outputLiquid = new LiquidStack(out, 6/60f);
+            ignoreLiquidFullness = true;
+            craftTime = 60;
+            craftEffect = Fx.smeltsmoke;
+            Effect cfe = new Effect(160f, e -> {
+                color(Liquids.ozone.color);
+                alpha(0.6f);
+
+                rand.setSeed(e.id);
+                for(int i = 0; i < 3; i++){
+                    float len = rand.random(6f), rot = rand.range(40f) + e.rotation;
+
+                    e.scaled(e.lifetime * rand.random(0.3f, 1f), b -> {
+                        v.trns(rot, len * b.finpow());
+                        Fill.circle(e.x + v.x, e.y + v.y, 2f * b.fslope() + 0.2f);
+                    });
+                }
+            });
+            Effect cf = new RadialEffect(cfe, 4, 90f, 11f){
+                @Override
+                public void create(float x, float y, float rotation, Color color, Object data) {
+                    if(!shouldCreate()) return;
+
+                    rotation += rotationOffset;
+
+                    for(int i = 0; i < amount; i++){
+                        effect.create(x + Angles.trnsx(rotation + 45, lengthOffset), y + Angles.trnsy(rotation + 45, lengthOffset), rotation + 45, color, data);
+                        rotation += rotationSpacing;
+                    }
+                }
+            };
+            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(Color.valueOf("ffef99")),
+                    new DrawBlock() {
+                        @Override
+                        public void draw(Building build) {
+                            if(build.liquids.get(out)/build.block.liquidCapacity > 0.99f && build.efficiency > 0.01f){
+                                if(Mathf.chance(0.05f * build.efficiency)) cf.at(build);
+
+                                float z = Draw.z();
+                                Draw.z(Layer.effect);
+                                Draw.color(Pal.thoriumPink);
+                                for(int i = 0; i < 4; i++){
+                                    float rot = 45 + 90 * i;
+                                    float ax = build.x + Angles.trnsx(rot, -40);
+                                    float ay = build.y + Angles.trnsy(rot, -40);
+                                    for(int a = 0; a < 3; a++){
+                                        float sin = Math.max(0, Mathf.sin(Time.time + a * 30f, 20f, 1f));
+                                        Draw.rect(
+                                                Core.atlas.find(name("aim-shoot")),
+                                                ax + Angles.trnsx(rot + 180, -4) * (tilesize / 2f + a * 1.5f),
+                                                ay + Angles.trnsy(rot + 180, -4) * (tilesize / 2f + a * 1.5f),
+                                                25f * sin,
+                                                25f * sin,
+                                                rot + 90
+                                        );
+                                    }
+                                }
+                                Draw.reset();
+                                Draw.z(z);
+                            }
+                        }
+                    }
+            );
+            ambientSound = Sounds.smelter;
+            ambientSoundVolume = 0.07f;
+        }};
+
         T2blast = new GenericCrafter("T2-blast"){{
-            requirements(Category.crafting, with(Items.lead, 120, EUItems.crispSteel, 100, Items.silicon, 160, Items.thorium, 90));
+            requirements(Category.crafting, with(Items.lead, 200, EUItems.crispSteel, 150, Items.silicon, 160, Items.thorium, 90));
             hasItems = true;
             hasLiquids = true;
             itemCapacity = 12;
@@ -1223,11 +1285,11 @@ public class EUBlocks {
         }};
 
         antiaircraft = new ItemTurret("antiaircraft"){{
-            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 300, Items.surgeAlloy, 120, Items.thorium, 200));
+            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 500, Items.surgeAlloy, 180, Items.thorium, 220));
             size = 3;
             range = 45 * 8;
 
-            health = 1600;
+            health = 2000;
             reload = 60 / .8f;
             recoil = 4;
             recoilTime = recoil * reload - 30;
@@ -1349,7 +1411,7 @@ public class EUBlocks {
 
         // 梦幻联动
         onyxBlaster = new MultiBulletTurret("onyx-blaster"){{
-            requirements(Category.turret, with(Items.graphite, 200, Items.silicon, 220, Items.thorium, 250, Items.surgeAlloy, 150));
+            requirements(Category.turret, with(Items.graphite, 400, Items.silicon, 450, Items.thorium, 300, Items.surgeAlloy, 200));
             size = 4;
             health = 3200;
             int blockId = id;
@@ -1366,13 +1428,15 @@ public class EUBlocks {
                             mirror = false;
                             under = true;
                             moveY = -0.8f;
-                        }},
-                        new DrawBall(){{
-                            y = 5;
-                            bColor = Pal.sapBullet;
-                            id = blockId;
-                            layer = Layer.effect;
                         }}
+//                        new DrawBall(){{
+//                            y = 5;
+//                            bColor = Pal.sapBullet;
+//                            id = blockId;
+//                            layer = Layer.effect;
+//                            endVec = new Vec2();
+//                            offsetVec = new Vec2();
+//                        }}
                 );
             }};
             minWarmup = 0.9f;
@@ -1542,7 +1606,7 @@ public class EUBlocks {
             ammo(Items.thorium, bullets1, Items.carbide, bullets2, Items.surgeAlloy, bullets3, EUItems.lightninAlloy, bullets4);
         }};
         celebration = new MultiBulletTurret("celebration"){{
-            requirements(Category.turret, with(Items.silicon, 120, Items.titanium, 125, Items.thorium, 70, EUItems.crispSteel, 60));
+            requirements(Category.turret, with(Items.silicon, 160, Items.titanium, 140, Items.thorium, 80, EUItems.crispSteel, 70));
             drawer = new DrawTurret("reinforced-");
             shoot = new ShootSpread(2, 4);
             inaccuracy = 3;
@@ -1593,7 +1657,7 @@ public class EUBlocks {
         celebrationMk2 = new MultiBulletTurret("celebration-mk2"){{
             size = 5;
             drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawMk2());
-            requirements(Category.turret, with(Items.silicon, 410, Items.graphite, 520, Items.thorium, 380, EUItems.lightninAlloy, 280));
+            requirements(Category.turret, with(Items.silicon, 666, Items.graphite, 521, Items.thorium, 520, EUItems.lightninAlloy, 288 + (hardMod ? 40 : 0)));
             inaccuracy = 3;
             shootEffect = EUFx.Mk2Shoot(90);
             smokeEffect = Fx.none;
@@ -1828,7 +1892,8 @@ public class EUBlocks {
         }};
 
         sancta = new ItemTurret("sancta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 1500, Items.phaseFabric, 1600, Items.surgeAlloy, 1800));
+            int amount = 2000 + (hardMod ? 500 : 0);
+            requirements(Category.turret, with(EUItems.lightninAlloy, amount, Items.phaseFabric, amount, Items.surgeAlloy, amount));
             size = 7;
             ammo(
                     EUItems.lightninAlloy,
@@ -1908,11 +1973,12 @@ public class EUBlocks {
                                     progress = PartProgress.warmup.delay(0.8f);
                                 }}
                         );
-            }}, new RunningLight(6),
+            }}, new RunningLight(6)
 //                    new DrawBow(){{
 //                        arrowSp = name("sancta-bt");
 //                    }},
-                    new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8));
+                    //new DrawTrail(2.5f, EUItems.lightninAlloy.color, 8)
+            );
             scaledHealth = 180;
 
             range = 80 * 8;
@@ -1934,7 +2000,7 @@ public class EUBlocks {
         }};
 
         fiammetta = new Fiammetta("fiammetta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 400, Items.carbide, 240, Items.silicon, 500, Items.surgeAlloy, 300));
+            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 500, Items.carbide, 280, Items.silicon, 600, Items.surgeAlloy, 300));
             size = 5;
             shake = 10;
             reload = 3 * 60;
@@ -2127,9 +2193,11 @@ public class EUBlocks {
             moveWhileCharging = false;
             accurateDelay = false;
 
-            drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawTrail(2f, EUItems.lightninAlloy.color, 16){{
-                y = - 10;
-            }});
+            drawer = new DrawMulti(new DrawTurret("reinforced-")
+//                    new DrawTrail(2f, EUItems.lightninAlloy.color, 16){{
+//                y = - 10;
+//            }}
+            );
         }};
 
         turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
@@ -2189,9 +2257,8 @@ public class EUBlocks {
             tier = 2;
         }};
         
-        finalF = new UnitFactory("finalF"){{
-            //TODO Production methods and details Fx?
-            requirements(Category.units, with(EUItems.lightninAlloy, 1000, Items.silicon, 3000, Items.thorium, 1800, Items.phaseFabric, 1200));
+        finalF = new DerivativeUnitFactory("finalF"){{
+            requirements(Category.units, with(EUItems.lightninAlloy, 4000, Items.silicon, 6000, Items.thorium, 4000, Items.phaseFabric, 3000, Items.surgeAlloy, 3000));
             size = 5;
             consumePower(30);
             consume(new BetterConsumeLiquidsDynamic((e) -> ((UnitFactoryBuild)e).currentPlan != -1 ? ((LiquidUnitPlan)plans.get(Math.min(((UnitFactoryBuild)e).currentPlan, plans.size - 1))).liquid : LiquidStack.empty, new Liquid[]{Liquids.cryofluid, Liquids.slag, Liquids.water, Liquids.cyanogen}));
@@ -2261,7 +2328,7 @@ public class EUBlocks {
                     }
                 }
                 LiquidStack[][] ls = new LiquidStack[][]{
-                        LiquidStack.with(Liquids.water, 0.2f),
+                        LiquidStack.with(Liquids.water, 0.25f),
                         LiquidStack.with(Liquids.cryofluid, 1), 
                         LiquidStack.with(Liquids.cryofluid, 2, Liquids.slag, 0.2f),
                         LiquidStack.with(Liquids.cryofluid, 3f, Liquids.slag, 0.5f),
@@ -2385,6 +2452,11 @@ public class EUBlocks {
                 super.setBars();
                 removeBar("liquid");
             }
+
+            @Override
+            public boolean canPlaceOn(Tile tile, Team team, int rotation) {
+                return super.canPlaceOn(tile, team, rotation) && (!hardMod || state == null || state.rules.infiniteResources);
+            }
         };
 
         coreKeeper = new CoreKeeper("core-keeper"){{
@@ -2433,7 +2505,7 @@ public class EUBlocks {
         }};
 
         quantumDomain = new Domain("quantum-domain"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 200, Items.silicon, 500, Items.surgeAlloy, 350, Items.phaseFabric, 300));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 250, Items.silicon, 800, Items.surgeAlloy, 400, Items.phaseFabric, 350));
             size = 5;
             health = 5000;
             hasPower = true;
@@ -2443,11 +2515,17 @@ public class EUBlocks {
         }};
 
         breaker = new Breaker("breaker"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 5));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 10 + (hardMod ? 5 : 0)));
             placeableLiquid = true;
             floating = true;
 
             alwaysUnlocked = true;
+        }};
+
+        buffrerdMemoryBank = new CopyMemoryBlock("buffrerd-memory-bank"){{
+            requirements(Category.logic, with(Items.graphite, 90, Items.silicon, 90, Items.phaseFabric, 30, Items.titanium, 40));
+            memoryCapacity = 512;
+            size = 2;
         }};
 
 

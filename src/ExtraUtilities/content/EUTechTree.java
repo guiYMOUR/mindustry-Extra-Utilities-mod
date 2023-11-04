@@ -41,6 +41,7 @@ public class EUTechTree {
                 node(LG);
             });
         });
+        addToNode(siliconSmelter, () -> node(siliconFurnace));
         addToNode(pyrolysisGenerator, () -> {
             node(liquidConsumeGenerator);
         });
@@ -76,6 +77,10 @@ public class EUTechTree {
         });
         addToNode(foreshadow, () -> {
             node(sancta);
+        });
+
+        addToNode(memoryCell, () -> {
+            node(buffrerdMemoryBank);
         });
         //E
         addToNode(turbineCondenser, () -> {
@@ -157,7 +162,11 @@ public class EUTechTree {
         TDPlanet.TD.techTree = nodeRoot("TD", TD1, () -> {
             addToNode(TD1, () -> {
                 node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
-                node(guiYTD1, () -> {});
+                node(guiYTD1, () -> {
+                    node(BossTD, Seq.with(new SectorComplete(TD1)), () -> {
+                        node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {});
+                    });
+                });
                 node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
                 node(EUItems.stone, () -> {
                     node(stoneExtractor, () -> {
@@ -167,7 +176,6 @@ public class EUTechTree {
                 });
                 node(breaker);
                 node(coreKeeper);
-                node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {});
             });
         });
     }

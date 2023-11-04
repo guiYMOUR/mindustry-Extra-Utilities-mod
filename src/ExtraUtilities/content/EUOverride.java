@@ -21,6 +21,7 @@ import mindustry.entities.effect.WaveEffect;
 import mindustry.entities.effect.WrapEffect;
 import mindustry.entities.part.FlarePart;
 import mindustry.entities.part.ShapePart;
+import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -41,6 +42,7 @@ import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
+import static mindustry.content.Items.*;
 import static mindustry.type.ItemStack.with;
 
 public class EUOverride {
@@ -109,7 +111,6 @@ public class EUOverride {
             ((UnitAssembler) Blocks.mechAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.arcana, 240 * 60f, PayloadStack.list(UnitTypes.anthicus, 8, rwl, 20)));
         }
     }
-
 
     public static void overrideUnit1(){
         UnitTypes.corvus.mineTier = 2;
@@ -412,5 +413,10 @@ public class EUOverride {
             }
             T3fuse.ammoTypes.put(i, bt2);
         }
+    }
+
+    public static void overrideItem(){
+        serpuloItems.addAll(EUItems.crispSteel, EUItems.lightninAlloy);
+        erekirItems.add(EUItems.lightninAlloy);
     }
 }

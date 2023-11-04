@@ -23,6 +23,7 @@ import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.StatusEffects;
+import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.type.UnitType;
@@ -40,16 +41,12 @@ public class ExtraUtilitiesMod extends Mod{
     public static String name(String add){
         return ModName + "-" + add;
     }
-    public static void addToTable(Block block, Table t){
-        t.image(block.uiIcon).pad(3f).row();
-        t.add(Core.bundle.format("block."+block.name + ".name")).row();
-        t.add(Core.bundle.format("block."+block.name + ".description")).row();
+    public static void addToTable(UnlockableContent c, Table t){
+        t.image(c.uiIcon).pad(3f).row();
+        t.add(c.localizedName).row();
+        t.add(c.description).row();
     }
-    public static void addToTable(UnitType unitType, Table t){
-        t.image(unitType.uiIcon).pad(3f).row();
-        t.add(Core.bundle.format("unit."+unitType.name + ".name")).row();
-        t.add(Core.bundle.format("unit."+unitType.name + ".description")).row();
-    }
+
     public static String toText(String str){
         return Core.bundle.format(str);
     }
@@ -81,7 +78,7 @@ public class ExtraUtilitiesMod extends Mod{
             fin.append(fct).append(s);
         }
         mod.meta.displayName = fin + ("[gray] - " + massageRand);
-        rebuildRandSubTitle(massageRand);
+        if(ui != null) rebuildRandSubTitle(massageRand);
     }
 
     public static void toShow(){
@@ -107,14 +104,12 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.buffrerdMemoryBank, t);
+                    addToTable(EUBlocks.siliconFurnace, t);
                     addToTable(EUBlocks.anti_Missile, t);
                     addToTable(EUBlocks.unitBooster, t);
                     addToTable(EUBlocks.turretSpeeder, t);
-                    addToTable(EUUnitTypes.arcana, t);
-                    addToTable(EUUnitTypes.napoleon, t);
-                    addToTable(EUUnitTypes.havoc, t);
                     addToTable(EUBlocks.advAssemblerModule, t);
-                    addToTable(EUBlocks.ventHeater, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);
@@ -223,8 +218,6 @@ public class ExtraUtilitiesMod extends Mod{
             afterEnterLoad();
             //EUOverride.ap4sOverride();
         }
-
-        setColorName();
 
         settings.defaults("eu-plug-in-mode", false);
         settings.defaults("eu-hard-mode", false);
@@ -387,6 +380,7 @@ public class ExtraUtilitiesMod extends Mod{
                 });
             }
         }
+        setColorName();
     }
 
     @Override
@@ -396,6 +390,8 @@ public class ExtraUtilitiesMod extends Mod{
         int len = me.length;
         massageRand = me[Mathf.random(len - 1)];
         if(onlyPlugIn) return;
+
+        EUOverride.overrideItem();
 
         EUAttribute.load();
         EUOverride.overrideUnit1();

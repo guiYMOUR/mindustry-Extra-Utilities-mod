@@ -21,6 +21,7 @@ import mindustry.content.Items;
 import mindustry.entities.Effect;
 import mindustry.gen.Building;
 import mindustry.gen.Healthc;
+import mindustry.gen.Tex;
 import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -264,13 +265,21 @@ public class EUFx {
         Fill.circle(Tmp.v1.x + baseX, Tmp.v1.y + baseY, rad);
     }
 
-    public static Effect Mk2Shoot(float rotation){
-        return new Effect(30, e ->{
+    public static Effect Mk2Shoot = new Effect(30, e ->{
+        if(!(e.data instanceof Float rotation)) return;
+        Draw.z(Layer.effect - 0.1f);
+        Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
+        Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + rotation, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
+        Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation - rotation, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
+        Draw.blend();
+        Draw.reset();
+    });
+    public static Effect Mk2Shoot(float r){
+        return new Effect(30, e -> {
             Draw.z(Layer.effect - 0.1f);
             Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
-            for(float r : new float[]{-rotation, rotation}) {
-                Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + r, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
-            }
+            Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + r, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
+            Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation - r, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
             Draw.blend();
             Draw.reset();
         });
@@ -526,8 +535,13 @@ public class EUFx {
         }
     });
 
-    public static Effect edessp(TextureRegion region, float lifetime, float range, float rot, float rRot){
+    public static Effect edessp(float lifetime){
         return new Effect(lifetime, e -> {
+            if(!(e.data instanceof Object[] objects) || objects.length < 4) return;
+            if(!(objects[0] instanceof TextureRegion region)) return;
+            if(!(objects[1] instanceof Float range)) return;
+            if(!(objects[2] instanceof Float rot)) return;
+            if(!(objects[3] instanceof Float rRot)) return;
 
             float ex = e.x + Angles.trnsx(e.rotation + rRot * e.fin(), range * e.fout()),
                     ey = e.y + Angles.trnsy(e.rotation + rRot * e.fin(), range * e.fout());

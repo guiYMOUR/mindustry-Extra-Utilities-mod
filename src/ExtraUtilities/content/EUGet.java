@@ -31,6 +31,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static mindustry.Vars.*;
@@ -75,12 +78,12 @@ public class EUGet {
         };
     }
 
-    public static float dx(float px, float r, float angel){
-        return px + r * (float) Math.cos(angel * Math.PI/180);
+    public static float dx(float px, float r, float angle){
+        return px + r * (float) Math.cos(angle * Math.PI/180);
     }
 
-    public static float dy(float py, float r, float angel){
-        return py + r * (float) Math.sin(angel * Math.PI/180);
+    public static float dy(float py, float r, float angle){
+        return py + r * (float) Math.sin(angle * Math.PI/180);
     }
 
     public static float posx(float x, float length, float angle){
@@ -92,6 +95,33 @@ public class EUGet {
         float a = (float) ((Math.PI * angle)/180);
         float sin = (float) Math.sin(a);
         return y + length * sin;
+    }
+
+    public static boolean isInstanceButNotSubclass(Object obj, Class<?> clazz) {
+        if (clazz.isInstance(obj)) {
+            try {
+                if (getClassSubclassHierarchy(obj.getClass()).contains(clazz)) {
+                    return false;
+                }
+            } catch (ClassCastException e) {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Seq<Class<?>> getClassSubclassHierarchy(Class<?> clazz) {
+        Class<?> c = clazz.getSuperclass();
+        Seq<Class<?>> hierarchy = new Seq<>();
+        while (c != null) {
+            hierarchy.add(c);
+            Class<?>[] interfaces = c.getInterfaces();
+            hierarchy.addAll(Arrays.asList(interfaces));
+            c = c.getSuperclass();
+        }
+        return hierarchy;
     }
 
     public static Seq<Turret> turrets(){

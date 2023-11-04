@@ -340,14 +340,14 @@ public class EUUnitTypes {
                                 homingPower = 0.4f;
                                 damage = 70;
                                 hitEffect = despawnEffect = new Effect(24, e -> {
-                                    Draw.color(Pal.techBlue);
+                                    Draw.color(eccl);
                                     Angles.randLenVectors(e.id, 4, 13 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 8 * e.foutpow()));
                                 });
                                 speed = 10;
                                 lifetime = 82;
                                 trailLength = 15;
                                 trailWidth = 2;
-                                trailColor = Pal.techBlue;
+                                trailColor = eccl;
                                 pierceArmor = true;
                                 hitShake = despawnShake = 4;
                                 hitSound = despawnSound = Sounds.shootAlt;
@@ -412,7 +412,7 @@ public class EUUnitTypes {
                                 @Override
                                 public void draw(Bullet b) {
                                     super.draw(b);
-                                    Draw.color(Pal.techBlue.cpy().mul(miku));
+                                    Draw.color(eccb);
                                     Drawf.tri(b.x, b.y, 6, 9, b.rotation());
                                 }
                             };
@@ -448,8 +448,8 @@ public class EUUnitTypes {
                                 for(int i : Mathf.zeroOne){
                                     Drawf.tri(b.x, b.y, 8 * finOver, 20, (b.rotation() - 90 + i * 180) * finOver);
                                 }
-                                Draw.z(Layer.flyingUnit - 0.1f);
-                                Draw.color(Color.black);
+
+                                Draw.color(eccl);
                                 Fill.circle(b.x, b.y, 9 * finOver);
                             }
                         };
@@ -2918,7 +2918,7 @@ public class EUUnitTypes {
                                     float yy = b.y + Mathf.random(-12, 12);
                                     crack.create(b, xx, yy, b.rotation() + 90 + r);
                                     crack.create(b, xx, yy, b.rotation() - 90 + r);
-                                    Sounds.laserblast.at(xx, yy);
+                                    Sounds.laserblast.at(xx, yy, 0.5f, 0.5f);
                                     Effect.shake(5, 5, xx, yy);
                                 }
                             }
