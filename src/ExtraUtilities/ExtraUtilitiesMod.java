@@ -26,12 +26,10 @@ import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
-import mindustry.type.UnitType;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.ui.fragments.MenuFragment;
-import mindustry.world.Block;
 
 import static arc.Core.settings;
 import static mindustry.Vars.*;
@@ -180,6 +178,10 @@ public class ExtraUtilitiesMod extends Mod{
     public ExtraUtilitiesMod() {
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
+
+        //WTMF - What This May From
+        Log.info("Extra Utilities: Load WTMF");
+        Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, EUFrom::load));
     }
 
     public Graphics.Cursor newCursor(String filename){
