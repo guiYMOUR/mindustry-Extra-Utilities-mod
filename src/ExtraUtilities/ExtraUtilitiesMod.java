@@ -225,6 +225,7 @@ public class ExtraUtilitiesMod extends Mod{
         settings.defaults("eu-hard-mode", false);
         settings.defaults("use-eu-cursor", true);
         settings.defaults("eu-show-version", true);
+        //settings.remove("eu-WTMF-open");
 
         Vars.mods.locateMod(ModName).meta.hidden = onlyPlugIn;
         if(onlyPlugIn){
@@ -328,6 +329,7 @@ public class ExtraUtilitiesMod extends Mod{
 
                     settingsTable.checkPref("use-eu-cursor", true);
                     settingsTable.checkPref("eu-show-version", true);
+                    settingsTable.checkPref("eu-WTMF-open", true);
 
                     settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-plug-in-mode", false, null) {
                         @Override
