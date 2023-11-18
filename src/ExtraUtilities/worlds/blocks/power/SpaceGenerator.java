@@ -50,7 +50,7 @@ public class SpaceGenerator extends PowerGenerator {
         flags = EnumSet.of();
         envEnabled = Env.any;
 
-        powerProduction = 10/60f;//基础一格的输出
+        powerProduction = 5f/60f;//基础一格的输出
     }
 
     @Override
