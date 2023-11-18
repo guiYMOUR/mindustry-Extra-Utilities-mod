@@ -3,20 +3,27 @@ package ExtraUtilities.content;
 import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
 import arc.Core;
 import arc.graphics.Color;
+import arc.scene.event.Touchable;
 import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
+import arc.scene.ui.Image;
 import arc.scene.ui.layout.Collapser;
+import arc.scene.ui.layout.Stack;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.util.Scaling;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.content.Items;
+import mindustry.core.UI;
 import mindustry.ctype.UnlockableContent;
 import mindustry.gen.Icon;
 import mindustry.gen.Iconc;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
+import mindustry.ui.Fonts;
+import mindustry.ui.ItemImage;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ContinuousLiquidTurret;
@@ -37,7 +44,6 @@ import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatCat;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
-//import static ExtraUtilities.ExtraUtilitiesMod.useWTMF;
 import static arc.Core.settings;
 import static mindustry.Vars.*;
 
@@ -45,12 +51,15 @@ public class EUFrom {
     public static final StatCat WTMF = new StatCat("eu-wtmf");
     public static final Stat fromStat = new Stat("eu-from", WTMF);
     public static final Stat toStat = new Stat("eu-to", WTMF);
+    public static final Stat reqStat = new Stat("eu-req", WTMF);
 
     private static final ObjectMap<UnlockableContent, ObjectMap<Block, Table>> fromBlock = new ObjectMap<>();
     public static final ObjectMap<UnlockableContent, Table> fromTables = new ObjectMap<>();
 
     private static final ObjectMap<UnlockableContent, ObjectMap<Block, Table>> toBlock = new ObjectMap<>();
     public static final ObjectMap<UnlockableContent, Table> toTables = new ObjectMap<>();
+
+    public static final ObjectMap<UnlockableContent, Table> requireTables = new ObjectMap<>();
 
     public static final ObjectMap<UnlockableContent, ObjectMap<Block, ObjectMap<UnlockableContent, Float>>> repMap_to = new ObjectMap<>();
     public static final ObjectMap<UnlockableContent, ObjectMap<Block, ObjectMap<Drawable, Float>>> repMap_need = new ObjectMap<>();
@@ -79,6 +88,7 @@ public class EUFrom {
 
             showTable(fromTables, fromStat);
             showTable(toTables, toStat);
+            showTable(requireTables, reqStat);
         }
     }
 
@@ -309,9 +319,67 @@ public class EUFrom {
         }
     }
 
+    private static Stack ItemButtonImg(ItemStack subIs){
+        Stack sc = new Stack();
+        sc.add(new Table(c -> {
+            c.left();
+            c.button(new TextureRegionDrawable(subIs.item.uiIcon), Styles.emptyi, 28, () -> ui.content.show(subIs.item)).scaling(Scaling.fit);
+        }));
+        if (subIs.amount != 0) {
+            sc.add(new Table(c -> {
+                c.left().bottom();
+                c.add(subIs.amount >= 1000 ? UI.formatAmount(subIs.amount) : subIs.amount + "").style(Styles.outlineLabel).touchable(Touchable.disabled);
+                c.pack();
+            }));
+        }
+        return sc;
+    }
+
+    private static void setRequire(Block b){
+        var iss = b.requirements;
+        if(iss.length > 0) {
+            for(var is : iss){
+                Table tb = new Table();
+
+                tb.row();
+                tb.table(Styles.grayPanel, t -> {
+                    t.table(c -> {
+                        c.button(new TextureRegionDrawable(b.uiIcon), Styles.emptyi, 28, () -> ui.content.show(b)).pad(2).left();
+                        c.add(b.localizedName).left();
+                    }).left();
+
+                    t.table(c -> {
+                        c.right();
+                        c.add(new Image(Icon.starSmall));
+                        c.add(new ItemImage(is)).pad(2).right();
+                        c.row();
+                        if(iss.length > 1) {
+                            c.table(icon -> icon.add(new Image(Icon.treeSmall)));
+                            c.table(re -> {
+                                for (int i = 0; i < iss.length; i++) {
+                                    var subIs = iss[i];
+                                    if (subIs == is) continue;
+                                    re.add(ItemButtonImg(subIs)).left().pad(2);
+                                    if ((i + 1) % 5 == 0) re.row();
+                                }
+                            });
+                        }
+                    }).right().grow().pad(5);
+                }).growX().pad(5);
+                tb.row();
+
+                setToTableSimple(requireTables, is.item, tb, true);
+            }
+        }
+    }
+
     private static void getConsume(){
         for(Block b : content.blocks()){
-            if(b != null && b.consumers != null && b.consumers.length > 0) {
+            if(b == null) continue;
+
+            setRequire(b);
+
+            if(b.consumers != null && b.consumers.length > 0) {
                 for (Consume c : b.consumers) {
                     boolean has = false;
                     if (c instanceof ConsumeItems ci) {
@@ -366,13 +434,18 @@ public class EUFrom {
         }
     }
 
-    public static void setToTableSimple(ObjectMap<UnlockableContent, Table> table, UnlockableContent content, Table add){
+    public static void setToTableSimple(ObjectMap<UnlockableContent, Table> table, UnlockableContent content, Table add, boolean override){
         if(!table.containsKey(content)){
             table.put(content, new Table());
         }
         Table t = table.get(content);
         t.row();
+        if(override) t.defaults().growX();
         t.add(add).left();
+    }
+
+    public static void setToTableSimple(ObjectMap<UnlockableContent, Table> table, UnlockableContent content, Table add){
+        setToTableSimple(table, content, add, false);
     }
 
     public static void setToTableSimple(ObjectMap<UnlockableContent, Table> table, UnlockableContent content, Block b, String add){

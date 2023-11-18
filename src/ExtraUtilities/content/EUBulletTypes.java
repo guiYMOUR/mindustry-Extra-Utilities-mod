@@ -1,10 +1,13 @@
 package ExtraUtilities.content;
 
 import ExtraUtilities.worlds.entity.bullet.mixBoom;
+import arc.graphics.Color;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
+import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.effect.ExplosionEffect;
+import mindustry.gen.Bullet;
 import mindustry.graphics.Pal;
 
 public class EUBulletTypes {
@@ -164,5 +167,53 @@ public class EUBulletTypes {
         lightningColor = EUItems.lightninAlloy.color;
         lightningDamage = 30;
         lightningLength = 7;
+    }};
+    
+    public static Color c1 = Pal.thoriumPink;
+    public static BulletType rankB = new BasicBulletType(){{
+        speed = 2;
+        lifetime = 216;
+        damage = 38;
+        buildingDamageMultiplier = 0.5f;
+        width = 10;
+        height = 7;
+        shrinkY = 0;
+        despawnEffect = EUFx.gone(c1);
+        backColor = c1;
+        frontColor = c1;
+    }
+        @Override
+        public void update(Bullet b){
+            b.vel.trns(b.rotation(), this.speed * Math.max(0, b.fout() - 0.5f));
+        }
+    };
+
+    public static BulletType suk = new BasicBulletType(){{
+        speed = 2;
+        lifetime = 120;
+        damage = 61;
+        buildingDamageMultiplier = 0.5f;
+        width = 32;
+        height = 18;
+        shrinkY = 0;
+        pierce = true;
+        pierceBuilding = true;
+        backColor = c1;
+        frontColor = c1;
+        fragBullets = 5;
+        fragRandomSpread = 0;
+        fragVelocityMin = 1;
+        fragSpread = 360f/fragBullets;
+
+        intervalBullets = fragBullets;
+        intervalRandomSpread = fragRandomSpread;
+        intervalSpread = fragSpread;
+        bulletInterval = lifetime/4;
+
+        intervalBullet = fragBullet = rankB;
+
+        hitEffect = despawnEffect = EUFx.gone(c1);
+
+        fragOnHit = false;
     }};
 }

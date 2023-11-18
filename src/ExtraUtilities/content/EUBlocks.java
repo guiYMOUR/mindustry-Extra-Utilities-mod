@@ -777,7 +777,7 @@ public class EUBlocks {
             haveBasicPowerOutput = false;
             attribute = Attribute.heat;
             blockedOnlySolid = true;
-            powerProduction = 36/60f;
+            powerProduction = 32/60f;
             outEffect = new RadialEffect(EUFx.absorbEffect2, 4, 90f, 7f);
             outTimer = EUFx.absorbEffect2.lifetime;
             drawer = new DrawMulti(new DrawDefault(), new DrawBlock() {
@@ -793,7 +793,7 @@ public class EUBlocks {
             requirements(Category.power, with(Items.graphite, 300, Items.silicon, 200, Items.titanium, 100, EUItems.crispSteel, 80, Items.plastanium, 55));
             space = 2;
             size = 3;
-            if(hardMod) powerProduction = 7/60f;
+            if(hardMod) powerProduction = 4.5f/60f;
 
             drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin("-rot", 4));
             tileEffect = new Effect(220, (e) -> {
@@ -819,8 +819,8 @@ public class EUBlocks {
             attribute = Attribute.water;
             attributeColor = Color.blue;
             negativeAttributeColor = Color.white;
-            if(hardMod) powerProduction = 6/60f;
-            else powerProduction = 8.5f/60f;
+            if(hardMod) powerProduction = 5/60f;
+            else powerProduction = 6f/60f;
 
             drawer = new DrawMulti(new DrawDefault(), new DrawBlurSpin("-rot", 4));
 
@@ -1285,7 +1285,7 @@ public class EUBlocks {
         }};
 
         antiaircraft = new ItemTurret("antiaircraft"){{
-            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 500, Items.surgeAlloy, 180, Items.thorium, 220));
+            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 500, Items.surgeAlloy, 180, Items.thorium, 280));
             size = 3;
             range = 45 * 8;
 
@@ -2000,7 +2000,7 @@ public class EUBlocks {
         }};
 
         fiammetta = new Fiammetta("fiammetta"){{
-            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 500, Items.carbide, 280, Items.silicon, 600, Items.surgeAlloy, 300));
+            requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 500, Items.carbide, 300, Items.silicon, 600, Items.surgeAlloy, 300));
             size = 5;
             shake = 10;
             reload = 3 * 60;
@@ -2260,7 +2260,7 @@ public class EUBlocks {
         finalF = new DerivativeUnitFactory("finalF"){{
             requirements(Category.units, with(EUItems.lightninAlloy, 4000, Items.silicon, 6000, Items.thorium, 4000, Items.phaseFabric, 3000, Items.surgeAlloy, 3000));
             size = 5;
-            consumePower(30);
+            consumePower(40);
             consume(new BetterConsumeLiquidsDynamic((e) -> ((UnitFactoryBuild)e).currentPlan != -1 ? ((LiquidUnitPlan)plans.get(Math.min(((UnitFactoryBuild)e).currentPlan, plans.size - 1))).liquid : LiquidStack.empty, new Liquid[]{Liquids.cryofluid, Liquids.slag, Liquids.water, Liquids.cyanogen}));
             alwaysUnlocked = true;
             config(Integer.class, (UnitFactoryBuild tile, Integer i) -> {
