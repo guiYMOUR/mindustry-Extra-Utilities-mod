@@ -25,7 +25,7 @@ swT2.requirements = ItemStack.with(
     Items.titanium, 180,
     Items.plastanium, 80,
     Items.silicon, 120,
-    Items.surgeAlloy, 60
+    Items.surgeAlloy, 80
 );
 swT2.buildVisibility = BuildVisibility.shown;
 swT2.category = Category.turret;

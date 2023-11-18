@@ -21,9 +21,9 @@ swMin.consumeAmmoOnce = false;
 
 lib.Coolant(swMin, 0.2, false);
 swMin.requirements = ItemStack.with(
-    Items.graphite, 45,
-    Items.titanium, 40,
-    Items.silicon, 30
+    Items.graphite, 60,
+    Items.titanium, 55,
+    Items.silicon, 55
 );
 swMin.buildVisibility = BuildVisibility.shown;
 swMin.category = Category.turret;

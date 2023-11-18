@@ -79,11 +79,11 @@ prism.health = 220 * 5 * 5;
 prism.coolant = prism.consumeCoolant(1);
 prism.coolantMultiplier = 1;
 prism.requirements = ItemStack.with(
-    Items.lead, 600,
+    Items.lead, 800,
     Items.silicon, 650,
-    Items.metaglass, 550,
-    Items.thorium, 400,
-    items.lightninAlloy, 300
+    Items.metaglass, 650,
+    Items.thorium, 500,
+    items.lightninAlloy, 350
 );
 prism.buildVisibility = BuildVisibility.shown;
 prism.category = Category.turret;

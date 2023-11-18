@@ -114,21 +114,23 @@ storm.drawer = (() => {
             })()
         );
     }
-    for(var i = 0; i < 2; i++){
-        d.parts.add(
-            (() => {
-                const p = new DrawBall();
-                p.progress = DrawPart.PartProgress.warmup.delay(i/4);
-                p.id = i;
-                p.bColor = liC;
-                p.mirror = false;
-                p.y = 19;
-                p.rotate = (360 / 2) * i;
-                p.layer = Layer.effect;
-                return p;
-            })()
-        )
-    }
+    // for(var i = 0; i < 2; i++){
+    //     d.parts.add(
+    //         (() => {
+    //             const p = new DrawBall();
+    //             p.progress = DrawPart.PartProgress.warmup.delay(i/4);
+    //             p.id = i;
+    //             p.bColor = liC;
+    //             p.mirror = false;
+    //             p.y = 19;
+    //             p.rotate = (360 / 2) * i;
+    //             p.layer = Layer.effect;
+    //             p.endVec = new Vec2();
+    //             p.offsetVec = new Vec2();
+    //             return p;
+    //         })()
+    //     )
+    // }
     d.parts.add(
         (() => {
             const p = new DrawArrow();
@@ -180,7 +182,7 @@ storm.requirements = ItemStack.with(
     Items.graphite, 780,
     Items.silicon, 600,
     Items.thorium, 350,
-    Items.surgeAlloy, 220 + (hardMod ? 30 : 0),
+    Items.surgeAlloy, 220 + (hardMod ? 80 : 0),
     items.lightninAlloy, 300
 );
 storm.buildVisibility = BuildVisibility.shown;

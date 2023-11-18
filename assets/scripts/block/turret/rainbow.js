@@ -10,7 +10,7 @@ const hardMod = Core.settings.getBool("eu-hard-mode");
 
 const r1 = extend(BasicBulletType,{});
 r1.sprite = bSp;
-r1.speed = 7;
+r1.speed = 5.8;
 r1.damage = 60;
 r1.width = 15;
 r1.height = 24;
@@ -20,7 +20,7 @@ r1.frontColor = Color.valueOf("ffe800");
 r1.backColor = Color.valueOf("ffe800");
 const r2 = extend(BasicBulletType,{});
 r2.sprite = bSp;
-r2.speed = 7;
+r2.speed = 5.8;
 r2.damage = 70;
 r2.width = 15;
 r2.height = 24;
@@ -32,7 +32,7 @@ r2.backColor = Color.valueOf("ff5252");
 r2.status = StatusEffects.melting;
 const r3 = extend(BasicBulletType,{});
 r3.sprite = bSp;
-r3.speed = 7;
+r3.speed = 5.8;
 r3.damage = 50;
 r3.width = 15;
 r3.height = 24;
@@ -44,7 +44,7 @@ r3.status = StatusEffects.unmoving;
 r3.statusDuration = 20;
 const r4 = extend(BasicBulletType,{});
 r4.sprite = bSp;
-r4.speed = 7;
+r4.speed = 5.8;
 r4.damage = 50;
 r4.width = 15;
 r4.height = 24;
@@ -56,7 +56,7 @@ r4.status = StatusEffects.freezing;
 r4.statusDuration = 20;
 const r5 = extend(BasicBulletType,{});
 r5.sprite = bSp;
-r5.speed = 7;
+r5.speed = 5.8;
 r5.damage = 20;
 r5.width = 15;
 r5.height = 24;
@@ -108,7 +108,7 @@ rainbow.consumePower(18);
 rainbow.spread = 5;
 rainbow.recoil = 4;
 rainbow.size = 3;
-rainbow.range = 28 * 8;
+rainbow.range = 30 * 8;
 rainbow.reload = 72;
 rainbow.shots = 5;
 rainbow.shootSound = Sounds.shootBig;
@@ -116,12 +116,12 @@ rainbow.health = 200 * 3 * 3;
 rainbow.shootType = r1;
 lib.Coolant(rainbow, 0.25);
 rainbow.requirements = ItemStack.with(
-    Items.lead, 240,
-    Items.silicon, 200,
-    Items.metaglass, 150,
-    Items.thorium, 110,
-    Items.surgeAlloy, 30,
-    items.crispSteel, 75 + (hardMod ? 35 : 0)
+    Items.lead, 340,
+    Items.silicon, 300,
+    Items.metaglass, 200,
+    Items.thorium, 170,
+    Items.surgeAlloy, 80 + (hardMod ? 40 : 0),
+    items.crispSteel, 85 + (hardMod ? 35 : 0)
 );
 rainbow.buildVisibility = BuildVisibility.shown;
 rainbow.category = Category.turret;
