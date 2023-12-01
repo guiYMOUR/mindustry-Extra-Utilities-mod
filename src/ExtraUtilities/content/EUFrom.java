@@ -44,6 +44,7 @@ import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatCat;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
+import static ExtraUtilities.ExtraUtilitiesMod.onlyPlugIn;
 import static arc.Core.settings;
 import static mindustry.Vars.*;
 
@@ -222,6 +223,7 @@ public class EUFrom {
             }
         }
 
+        if(onlyPlugIn) return;
         var GC = content.block(name("GC"));
         if(GC != null){
             setToTable(fromBlock, Items.pyratite, GC);
