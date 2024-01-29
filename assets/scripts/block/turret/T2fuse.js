@@ -1,5 +1,6 @@
 //
 const lib = require("blib");
+const hardMod = Core.settings.getBool("eu-hard-mode");
 const items = require("game/items");
 
 const T2fuse = extend(ItemTurret, "T2-fuse", {});
@@ -18,9 +19,9 @@ lib.Coolant(T2fuse, 0.4);
 T2fuse.coolantMultiplier = 3;
 T2fuse.requirements = ItemStack.with(
     Items.copper, 280,
-    Items.graphite, 240,
     items.crispSteel, 175,
-    Items.thorium, 150
+    Items.thorium, 150,
+    Items.surgeAlloy, 60 + (hardMod ? 40 : 0),
 );
 T2fuse.buildVisibility = BuildVisibility.shown;
 T2fuse.category = Category.turret;

@@ -3,7 +3,7 @@ const lib = require("blib");
 const mh = extend(BasicBulletType,{});
 mh.lifetime = 33;
 mh.speed = 5;
-mh.damage = 21;
+mh.damage = 26;
 mh.width = 10;
 mh.height = 16;
 mh.shrinkY = 0;
@@ -48,7 +48,7 @@ mp.status = StatusEffects.burning;
 
 const shotgun = extend(ItemTurret, "shotgun", {});
 shotgun.reload = 72;
-shotgun.shoot.shots = 8;
+shotgun.shoot.shots = 7;
 //shotgun.burstSpacing = 4;
 shotgun.inaccuracy = 11;
 shotgun.range = 190;
@@ -56,20 +56,21 @@ shotgun.range = 190;
 shotgun.size = 2;
 shotgun.shootSound = Sounds.shootBig;
 shotgun.health = 200 * 2 * 2;
-shotgun.ammoPerShot = 2;
+shotgun.ammoPerShot = 4;
 lib.Coolant(shotgun, 0.2);
 // shotgun.limitRange();
 shotgun.ammo(
     Items.copper, mc,
     Items.graphite, mg,
-    Items.silicon, mh,
+    Items.phaseFabric, mh,
     Items.pyratite, mp,
     Items.thorium, mt
 );
 shotgun.requirements = ItemStack.with(
     Items.copper, 60,
     Items.lead, 65,
-    Items.graphite, 50
+    Items.graphite, 50,
+    Items.titanium, 40,
 );
 shotgun.buildVisibility = BuildVisibility.shown;
 shotgun.category = Category.turret;

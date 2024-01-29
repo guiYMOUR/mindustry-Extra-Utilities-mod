@@ -30,6 +30,7 @@ breaker.drawArrow = false;
 breaker.update = //设置了自爆，update是必要的，基本update设置true就行了
     breaker.solid = //设置固态，其实没必要
         breaker.destructible = true;
+breaker.rebuildable = false;//设置不可重建，建议false
 breaker.buildType = prov(() => {
     var timer = 0;
 
@@ -43,7 +44,7 @@ breaker.buildType = prov(() => {
             if(tile != null && tile.block() != null && tile.build == null && tile.block().solid && !tile.block().breakable && tile.block().size <= maxsize){
                 timer += Time.delta;
                 if(timer >= timerBreak){
-                    Vars.world.tile(tile.x, tile.y).setAir();
+                    Call.removeTile(tile);
                     this.kill();
                 }
             }

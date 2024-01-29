@@ -5,12 +5,12 @@ th2.size = 4;
 th2.itemCapacity = 40;
 th2.health = 2400;
 th2.itemDuration = 300;
-th2.powerProduction = 2400/60;
+th2.powerProduction = 1800/60;
 th2.consumeItem(Items.thorium);
 th2.heating = 0.024;
 th2.explosionRadius = 50;
 th2.explosionDamage = 2400;
-th2.consumeLiquid(Liquids.cryofluid, 0.024 / 0.5).update = false;//js的在consume里面update等的7.0写法为赋值
+th2.consumeLiquid(Liquids.cryofluid, 3/60).update = false;//js的在consume里面update等的7.0写法为赋值
 th2.requirements = ItemStack.with(
     Items.lead, 400,
     Items.silicon, 300,

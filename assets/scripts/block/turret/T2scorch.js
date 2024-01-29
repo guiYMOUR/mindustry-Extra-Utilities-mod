@@ -39,7 +39,8 @@ T2scorch.coolant = T2scorch.consumeCoolant(0.2);
 T2scorch.requirements = ItemStack.with(
     Items.copper, 60,
     Items.graphite, 40,
-    items.crispSteel, 20
+    items.crispSteel, 20,
+    Items.titanium, 30
 );
 T2scorch.buildVisibility = BuildVisibility.shown;
 T2scorch.category = Category.turret;

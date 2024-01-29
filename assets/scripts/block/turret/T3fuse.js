@@ -1,6 +1,7 @@
 //
 const lib = require("blib");
 const hardMod = Core.settings.getBool("eu-hard-mode");
+const items = require("game/items");
 
 const T3fuse = extend(ItemTurret, "T3-fuse", {});
 T3fuse.reload = 35;
@@ -20,7 +21,7 @@ T3fuse.requirements = ItemStack.with(
     Items.titanium, 270,
     Items.thorium, 150,
     Items.silicon, 150 + (hardMod ? 30 : 0),
-    Items.surgeAlloy, 140 + (hardMod ? 10 : 0)
+    items.lightninAlloy, 100 + (hardMod ? 20 : 0)
 );
 T3fuse.buildVisibility = BuildVisibility.shown;
 T3fuse.category = Category.turret;
