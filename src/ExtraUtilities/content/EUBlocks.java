@@ -589,12 +589,12 @@ public class EUBlocks {
             hasLiquids = true;
             hasItems = true;
             itemCapacity = 12;
-            consumePower(7);
-            outputItem = new ItemStack(EUItems.lightninAlloy, 2);
-            craftTime = 3 * 60f;
+            consumePower(7.5f);
+            outputItem = new ItemStack(EUItems.lightninAlloy, 5);
+            craftTime = 3.5f * 60f;
             size = 4;
-            consumeItems(with(Items.surgeAlloy, 3, Items.phaseFabric, 2, Items.blastCompound, 3));
-            consumeLiquid(Liquids.cryofluid, 0.1f);
+            consumeItems(with(Items.surgeAlloy, 6, Items.phaseFabric, 4, Items.blastCompound, 6));
+            consumeLiquid(Liquids.cryofluid, 0.2f);
             craftEffect = EUFx.diffuse(size, EUItems.lightninAlloy.color, 60);
             ambientSound = Sounds.techloop;
             ambientSoundVolume = 0.03f;
@@ -761,6 +761,7 @@ public class EUBlocks {
             effectChance = 0.2f;
         }};
         thermalReactor = new ThermalReactor("T2ther"){{
+            health = 320;
             requirements(Category.power, with(Items.silicon, 95, Items.titanium, 70, Items.thorium, 55, Items.metaglass, 65, Items.plastanium, 60, Items.surgeAlloy, 30));
             size = 3;
             if(!hardMod) powerProduction = 276/60f;
@@ -777,7 +778,7 @@ public class EUBlocks {
             haveBasicPowerOutput = false;
             attribute = Attribute.heat;
             blockedOnlySolid = true;
-            powerProduction = 32/60f;
+            powerProduction = 22/60f;
             outEffect = new RadialEffect(EUFx.absorbEffect2, 4, 90f, 7f);
             outTimer = EUFx.absorbEffect2.lifetime;
             drawer = new DrawMulti(new DrawDefault(), new DrawBlock() {
@@ -788,6 +789,7 @@ public class EUBlocks {
                     Draw.rect(Core.atlas.find(name + "-heat"), build.x, build.y);
                 }
             });
+            canOverdrive = false;
         }};
         windPower = new SpaceGenerator("windPower"){{
             requirements(Category.power, with(Items.graphite, 300, Items.silicon, 200, Items.titanium, 100, EUItems.crispSteel, 80, Items.plastanium, 55));
@@ -832,7 +834,7 @@ public class EUBlocks {
                     v.trns(rand.random(360), rand.random(length));
                     float sizer = rand.random(1f, 2f);
                     e.scaled(e.lifetime * rand.random(0.5f, 1), (b) -> {
-                        Draw.color(Color.valueOf("39c5bb"), b.fslope() * 0.93f);
+                        Draw.color(EUGet.MIKU, b.fslope() * 0.93f);
                         Fill.circle(e.x + v.x, e.y + v.y, sizer + b.fslope());
                     });
                 }
@@ -851,10 +853,12 @@ public class EUBlocks {
             heating = 0.04f;
             health = 6000;
             itemDuration = 180;
-            powerProduction = 17280/60f;
+            powerProduction = 33600/60f;
             explosionRadius = 30 * 8;
             explosionDamage = 12000;
             coolantPower = 0.1f;
+
+            explosionProof = false;
 
             BulletType bi = new BulletType(){{
                 damage = 0;
@@ -1008,7 +1012,7 @@ public class EUBlocks {
                 @Override
                 public void despawned(Bullet b) {
                     despawnEffect.at(b);
-                    if(state.rules.reactorExplosions) fbd.create(b, b.team, b.x, b.y, 0);
+                    if(!explosionProof || state.rules.reactorExplosions) fbd.create(b, b.team, b.x, b.y, 0);
                 }
             };
 
@@ -1304,7 +1308,7 @@ public class EUBlocks {
                 ammoMultiplier = 1;
                 speed = 24;
                 lifetime = 45 * 8 / speed;
-                damage = splashDamage = 500;
+                damage = splashDamage = 400;
                 splashDamageRadius = 10 * 8;
                 absorbable = hittable = collides = collidesTiles = collidesGround = false;
                 despawnHit = false;
@@ -1403,15 +1407,15 @@ public class EUBlocks {
 
             ammoPerShot = 10;
             maxAmmo = ammoPerShot * 4;
-            coolantMultiplier = 2f;
+            coolantMultiplier = 1.8f;
 
-            coolant = consumeCoolant(0.5f);
+            coolant = consumeCoolant(0.6f);
             consumePower(5);
         }};
 
         // 梦幻联动
         onyxBlaster = new MultiBulletTurret("onyx-blaster"){{
-            requirements(Category.turret, with(Items.graphite, 400, Items.silicon, 450, Items.thorium, 300, Items.surgeAlloy, 200));
+            requirements(Category.turret, with(Items.graphite, 400, Items.silicon, 450, Items.thorium, 300, Items.surgeAlloy, 220));
             size = 4;
             health = 3200;
             int blockId = id;
@@ -1668,15 +1672,15 @@ public class EUBlocks {
             reload = 10;
             shootY = 20;
             rotateSpeed = 2.6f;
-            coolant = consumeCoolant(0.8f);
-            coolantMultiplier = 1.5f;
+            coolant = consume(new ConsumeLiquid(Liquids.water, 1));
+            coolantMultiplier = 0.85f;
             shootSound = Sounds.missile;
             shootCone = 16;
             canOverdrive = false;
             maxAmmo = 10;
 
             //红
-            BulletType f1 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FF1A44"), 6 * 8){{
+            BulletType f1 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FF8097"), 6 * 8){{
                 outline = true;
                 trailInterval = 20;
                 trailEffect = new ExplosionEffect(){{
@@ -1707,7 +1711,7 @@ public class EUBlocks {
                 num = 15;
             }};
             //橙
-            BulletType ff2 = new FireWorkBullet(150, 6.7f, name("mb-mk2"), Color.valueOf("FFB22C"), 12 * 8){{
+            BulletType ff2 = new FireWorkBullet(150, 6.7f, name("mb-mk2"), Color.valueOf("FFD080"), 12 * 8){{
                 outline = true;
                 trailWidth = 3.5f;
                 trailLength = 10;
@@ -1752,7 +1756,7 @@ public class EUBlocks {
                 }
             };
             //黄
-            BulletType f3 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FFF52B"), 6 * 8){{
+            BulletType f3 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("FFF980"), 6 * 8){{
                 outline = true;
                 trailInterval = 0;
                 trailWidth = 2f;
@@ -1770,7 +1774,7 @@ public class EUBlocks {
                 num = 18;
             }};
             //绿
-            BulletType f4 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("2BFF5C"), 6 * 8){{
+            BulletType f4 = new FireWorkBullet(120, 5, name("mb-mk2"), Color.valueOf("80FF9D"), 6 * 8){{
                 outline = true;
                 trailInterval = 0;
                 trailWidth = 2.4f;
@@ -1788,7 +1792,7 @@ public class EUBlocks {
                 num = 10;
             }};
             //蓝
-            BulletType ff5 = new FireWorkBullet(110, 6, name("mb-mk2"), Color.valueOf("006AFF"), 8 * 8){{
+            BulletType ff5 = new FireWorkBullet(110, 6, name("mb-mk2"), Color.valueOf("80B5FF"), 8 * 8){{
                 outline = true;
                 trailInterval = 0;
                 trailWidth = 3f;
@@ -1832,7 +1836,7 @@ public class EUBlocks {
                 }
             };
             //紫
-            BulletType ff6 = new FireWorkBullet(100, 5, name("mb-mk2"), Color.valueOf("B72BFF"), 4 * 8){{
+            BulletType ff6 = new FireWorkBullet(100, 5, name("mb-mk2"), Color.valueOf("D580FF"), 4 * 8){{
                 outline = true;
                 trailInterval = 0;
                 trailWidth = 2f;
@@ -1903,13 +1907,13 @@ public class EUBlocks {
                                 trailColor = EUItems.lightninAlloy.color;
                                 trailLength = 11;
                                 trailWidth = 6;
-                                splashDamage = damage = 1200 - (hardMod ? 300 : 0);
+                                splashDamage = damage = 1500 - (hardMod ? 300 : 0);
                                 ammoMultiplier = 1;
                                 hitSound = despawnSound = Sounds.explosionbig;
                                 healColor = EUItems.lightninAlloy.color;
                                 buildingDamageMultiplier = 0.7f;
 
-                                fb.splashDamage = 70;
+                                fb.splashDamage = 50;
                                 fb.splashDamageRadius = 3 * 8f;
 
                                 if(hardMod) {
@@ -1993,8 +1997,8 @@ public class EUBlocks {
             shootWarmupSpeed = 0.04f;
             shootSound = Sounds.largeCannon;
 
-            coolant = consumeCoolant(2);
-            coolantMultiplier = 0.5f;
+            coolant = consume(new ConsumeLiquid(Liquids.water, 120f / 60f));
+            coolantMultiplier = 0.3f;
             coolEffect = Fx.none;
             canOverdrive = false;
         }};
@@ -2011,6 +2015,7 @@ public class EUBlocks {
             shootSound = Sounds.laserbig;
             recoil = 5;
             health = 6000;
+            canOverdrive = false;
 
             BulletType fall = new BulletType(){{
                 speed = 0;

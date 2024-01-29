@@ -122,7 +122,7 @@ public class EUFx {
 
     public static Effect rainbowShoot = new Effect(16, e -> {
         Draw.blend(Blending.additive);
-        Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
+        Draw.color(EC6.set(rainBowRed).shiftHue(Time.time * 2.0f));
         Lines.stroke(e.fout() * 1.5f);
         Angles.randLenVectors(e.id, 1, e.finpow() * 70f, e.rotation, 80f, (x, y) -> {
             float ang = Mathf.angle(x, y);
@@ -141,7 +141,7 @@ public class EUFx {
 
     public static Effect chargeBeginEffect(float chargeTime, Color color){
         return new Effect(chargeTime * 1.5f, e -> {
-            color(Color.valueOf("ffffff"), color, e.fin());
+            color(Color.white, color, e.fin());
             Fill.circle(e.x, e.y, e.fin() * 8);
             color();
             Fill.circle(e.x, e.y, e.fin() * 5);
@@ -165,7 +165,7 @@ public class EUFx {
 
     public static Effect prismHit = new Effect(16, e -> {
         Draw.blend(Blending.additive);
-        Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2f));
+        Draw.color(EC7.set(rainBowRed).shiftHue(Time.time * 2f));
         Lines.stroke(e.fout() * 1.5f);
         randLenVectors(e.id, 1, e.finpow() * 70f, e.rotation, 80f, (x, y) -> {
             float ang = Mathf.angle(x, y);
@@ -268,7 +268,7 @@ public class EUFx {
     public static Effect Mk2Shoot = new Effect(30, e ->{
         if(!(e.data instanceof Float rotation)) return;
         Draw.z(Layer.effect - 0.1f);
-        Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
+        Draw.color(EUGet.EC8.set(rainBowRed).shiftHue(Time.time * 2.0f));
         Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + rotation, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
         Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation - rotation, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
         Draw.blend();
@@ -277,7 +277,7 @@ public class EUFx {
     public static Effect Mk2Shoot(float r){
         return new Effect(30, e -> {
             Draw.z(Layer.effect - 0.1f);
-            Draw.color(Color.valueOf("ff0000ff").shiftHue(Time.time * 2.0f));
+            Draw.color(EUGet.EC9.set(rainBowRed).shiftHue(Time.time * 2.0f));
             Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation + r, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
             Angles.randLenVectors(e.id, 1, e.fin() * 20f, e.rotation - r, 0, (x, y) -> Fill.circle(e.x + x, e.y + y, 2 * e.fout()));
             Draw.blend();

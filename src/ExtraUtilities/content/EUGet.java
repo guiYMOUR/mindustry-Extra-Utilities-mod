@@ -1,16 +1,9 @@
 package ExtraUtilities.content;
 
-import arc.Core;
-import arc.graphics.g2d.TextureAtlas;
-import arc.graphics.g2d.TextureRegion;
+import arc.graphics.Color;
 import arc.math.geom.Position;
-import arc.math.geom.Vec2;
-import arc.scene.style.TextureRegionDrawable;
 import arc.struct.Seq;
 import arc.util.Time;
-import arc.util.pooling.Pool;
-import arc.util.pooling.Pools;
-import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.ArtilleryBulletType;
@@ -20,27 +13,45 @@ import mindustry.entities.pattern.ShootSpread;
 import mindustry.game.Team;
 import mindustry.gen.Bullet;
 import mindustry.gen.Entityc;
-import mindustry.gen.Icon;
 import mindustry.gen.Velc;
 import mindustry.type.Item;
-import mindustry.ui.Fonts;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
-import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static mindustry.Vars.*;
 
 /**unfinished*/
 
 public class EUGet {
+    public static Color rainBowRed = Color.valueOf("ff8787");
+    public static Color MIKU = Color.valueOf("39c5bb");
+
+    public static Color EC1 = new Color();
+    public static Color EC2 = new Color();
+    public static Color EC3 = new Color();
+    public static Color EC4 = new Color();
+    public static Color EC5 = new Color();
+    public static Color EC6 = new Color();
+    public static Color EC7 = new Color();
+    public static Color EC8 = new Color();
+    public static Color EC9 = new Color();
+    public static Color EC10 = new Color();
+    public static Color EC11 = new Color();
+    public static Color EC12 = new Color();
+    public static Color EC13 = new Color();
+    public static Color EC14 = new Color();
+    public static Color EC15 = new Color();
+    public static Color EC16 = new Color();
+    public static Color EC17 = new Color();
+    public static Color EC18 = new Color();
+    public static Color EC19 = new Color();
+    public static Color EC20 = new Color();
+
     //use for pool
     public static class EPos implements Position{
         public float x, y;

@@ -18,8 +18,7 @@ public class MinerPointAI extends AIController {
         if(unit.stack.amount > 0 && !checkDrop(ore)){
             mining = false;
         }
-        if(unit instanceof BuildingTetherc){
-            BuildingTetherc tether = (BuildingTetherc) unit;
+        if(unit instanceof BuildingTetherc tether){
             if(tether.building() == null) return;
 
             if(unit.mineTile != null && !unit.mineTile.within(unit, unit.type.mineRange)){

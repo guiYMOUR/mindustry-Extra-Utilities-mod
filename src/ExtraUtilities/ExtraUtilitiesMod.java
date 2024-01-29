@@ -69,7 +69,7 @@ public class ExtraUtilitiesMod extends Mod{
 
         for(int i = 0; i < st.length(); i++){
             String s = String.valueOf(st.charAt(i));
-            Color c = Color.valueOf("39c5bb").shiftHue(i * (int)(80f/st.length()));
+            Color c = Tmp.c1.set(EUGet.MIKU).shiftHue(i * (int)(80f/st.length()));
             int ci = c.rgb888();
             String ct = Integer.toHexString(ci);
             String fct = "[" + "#" + ct + "]";
