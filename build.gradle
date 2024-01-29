@@ -24,7 +24,7 @@ sourceCompatibility = 17
 ext{
     //the build number that this mod is made for
     mindustryVersion = 'v146'
-    jabelVersion = "0.8.0"
+    jabelVersion = "0.9.0"
     //sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
 }
@@ -37,7 +37,7 @@ allprojects{
 }
 
 dependencies{
-    implementation 'org.jetbrains:annotations:24.0.1'
+    //implementation 'org.jetbrains:annotations:24.0.1'
 
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
