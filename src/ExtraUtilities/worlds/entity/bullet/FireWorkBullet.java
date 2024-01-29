@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.entity.bullet;
 
+import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -87,7 +88,7 @@ public class FireWorkBullet extends BulletType {
         if(trailLength > 0 && b.trail != null){
             float z = Draw.z();
             Draw.z(z - 0.0001f);
-            b.trail.draw(colorful ? Color.valueOf("ff0000aa").shiftHue(b.time * 2) : color, trailWidth);
+            b.trail.draw(colorful ? EUGet.EC1.set(EUGet.rainBowRed).a(0.7f).shiftHue(b.time * 2) : color, trailWidth);
             Draw.z(z);
         }
     }
@@ -96,12 +97,12 @@ public class FireWorkBullet extends BulletType {
     public void draw(Bullet b) {
         super.draw(b);
         if(outline){
-            Draw.color(colorful ? Color.valueOf("ff0000").shiftHue(b.time * 2) : color);
+            Draw.color(colorful ? EUGet.EC2.set(EUGet.rainBowRed).shiftHue(b.time * 2) : color);
             Draw.rect(Core.atlas.find(sprite), b.x, b.y, width * 1.1f, height * 1.1f, b.rotation() - 90);
             Draw.color(Color.darkGray);
             Draw.rect(Core.atlas.find(sprite), b.x, b.y, width * 0.8f, height * 0.8f, b.rotation() - 90);
         } else {
-            Draw.color(colorful ? Color.valueOf("ff0000").shiftHue(b.time * 2) : color);
+            Draw.color(colorful ? EUGet.EC2.set(EUGet.rainBowRed).shiftHue(b.time * 2) : color);
             Draw.rect(Core.atlas.find(sprite), b.x, b.y, width, height, b.rotation() - 90);
         }
         Draw.reset();
@@ -174,7 +175,7 @@ public class FireWorkBullet extends BulletType {
         public void draw(Bullet b) {
             super.draw(b);
             if(!(b.data instanceof Color)) return;
-            Draw.color(b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data);
+            Draw.color(b.data == Color.white ? EUGet.EC18.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
             Draw.z(Layer.bullet);
             for(int i = 0; i < 4; i++) {
                 Drawf.tri(b.x, b.y, 1.6f, 2.2f, b.rotation() + 90 * i);
@@ -188,7 +189,7 @@ public class FireWorkBullet extends BulletType {
             if(trailLength > 0 && b.trail != null){
                 float z = Draw.z();
                 Draw.z(z - 0.0001f);
-                b.trail.draw(b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data, trailWidth);
+                b.trail.draw(b.data == Color.white ? EUGet.EC19.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data, trailWidth);
                 Draw.z(z);
             }
         }
@@ -219,7 +220,7 @@ public class FireWorkBullet extends BulletType {
             super.draw(b);
             if(!(b.data instanceof Color)) return;
             Draw.z(Layer.bullet);
-            Draw.color(b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data);
+            Draw.color(b.data == Color.white ? EUGet.EC20.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
             Draw.rect(Core.atlas.find(sprite), b.x, b.y,  width * b.fout(), height * b.fout(), 0);
         }
     }

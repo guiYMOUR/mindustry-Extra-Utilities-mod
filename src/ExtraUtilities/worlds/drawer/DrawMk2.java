@@ -1,6 +1,7 @@
 package ExtraUtilities.worlds.drawer;
 
 import ExtraUtilities.content.EUFx;
+import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -20,7 +21,7 @@ public class DrawMk2 extends DrawBlock {
         if(build instanceof TurretBuild) drawOut((TurretBuild) build);
     }
     public void drawOut(TurretBuild build){
-        Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * 2)));
+        Draw.color(EUGet.EC4.set(EUGet.rainBowRed).shiftHue((Time.time * 2)));
         if(build.wasShooting){
             Draw.rect(or, build.x + build.recoilOffset.x, build.y + build.recoilOffset.y, build.drawrot());
             float x = build.x + Angles.trnsx(build.rotation - 90, 0, ((Turret)build.block).shootY);

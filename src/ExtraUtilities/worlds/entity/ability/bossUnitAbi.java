@@ -39,6 +39,9 @@ public class bossUnitAbi extends Ability{
     private boolean d1 = false, s1 = false;
     private float time = 0, uee = 0;
     private boolean outq = false;
+    private float lastHealth = 0;
+    private float healTimer = 0;
+    public float maxPerSec = 800;
 
     public bossUnitAbi(){ }
 
@@ -74,7 +77,23 @@ public class bossUnitAbi extends Ability{
             outq = true;
         }
 
-        if(!Vars.state.isPaused()) time += Time.delta;
+        if(!Vars.state.isPaused()) {
+            time += Time.delta;
+            healTimer -= Time.delta;
+        }
+
+        if(unit.health < lastHealth - maxPerSec){
+            unit.health = lastHealth - maxPerSec;
+        }
+        if(healTimer <= 0){
+            lastHealth = unit.health;
+            healTimer = 60;
+        }
+        if(unit.health < lastHealth - unit.maxHealth/2){
+            unit.health = lastHealth;
+            unit.dead = false;
+            d1 = s1 = false;
+        }
 
         if(unit.health < unit.maxHealth/1.5f && !c1){
             Units.nearbyBuildings(unit.x, unit.y, pickRange, b -> {

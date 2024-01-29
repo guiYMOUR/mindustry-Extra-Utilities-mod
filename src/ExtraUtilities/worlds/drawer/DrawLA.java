@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.drawer;
 
+import ExtraUtilities.content.EUGet;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -152,7 +153,7 @@ public class DrawLA extends DrawBlock {
             if(trailLength > 0 && b.trail != null){
                 float z = Draw.z();
                 Draw.z(z - 0.0001f);
-                b.trail.draw(Color.valueOf("ff0000ff").shiftHue(30 + b.time/4), trailWidth);
+                b.trail.draw(EUGet.EC17.set(EUGet.rainBowRed).shiftHue(30 + b.time/4), trailWidth);
                 //b.trail.draw(trailColor, trailWidth);
                 Draw.z(z);
             }

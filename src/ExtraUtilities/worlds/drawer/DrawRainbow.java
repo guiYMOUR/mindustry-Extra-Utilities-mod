@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.drawer;
 
+import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.graphics.*;
 import arc.graphics.g2d.Draw;
@@ -31,7 +32,7 @@ public class DrawRainbow extends DrawBlock {
     public void drawRainbow(TurretBuild build){
         Draw.blend(Blending.additive);
         for(int h = 0; h < size; h++){
-            Draw.color(Color.valueOf("ff0000").shiftHue((Time.time * shiftSpeed) + (h * (360f / size))));
+            Draw.color(EUGet.EC5.set(EUGet.rainBowRed).shiftHue((Time.time * shiftSpeed) + (h * (360f / size))));
             Draw.rect(rainbowRegions[h], build.x + build.recoilOffset.x, build.y + build.recoilOffset.y, build.rotation - 90);
         }
         Draw.blend();

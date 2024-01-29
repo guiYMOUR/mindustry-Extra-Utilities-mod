@@ -25,6 +25,9 @@ public class PrismCtr extends BulletType {
     public int las = 6;
     public float checkRange = 39 * 8;
     public boolean tgAuto = true;
+
+    public Color dc1 = Color.valueOf("87CEEB");
+
     //public BulletType laser = new PrismLaser(40, 12, checkRange);
     public BulletType laser = new liContinuousLaserBullet(){{
         damage = 40;
@@ -103,7 +106,7 @@ public class PrismCtr extends BulletType {
     @Override
     public void draw(Bullet b) {
         super.draw(b);
-        Draw.color(Color.valueOf("87CEEB"));
+        Draw.color(dc1);
         Fill.circle(b.x, b.y, 12);
         for(int i : Mathf.zeroOne){
             Drawf.tri(b.x, b.y, 12, 30, b.rotation() - 90 + 180 * i);

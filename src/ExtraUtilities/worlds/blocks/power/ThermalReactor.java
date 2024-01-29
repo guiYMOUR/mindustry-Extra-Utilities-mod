@@ -12,6 +12,7 @@ import mindustry.world.draw.*;
 public class ThermalReactor extends ThermalGenerator {
     public float addSpeed = 0.0003f;
     private final String[] load = new String[]{"loading", "loading .", "loading ..", "loading ..."};
+    public float workdamage = 6;
 
     public ThermalReactor(String name) {
         super(name);
@@ -36,6 +37,14 @@ public class ThermalReactor extends ThermalGenerator {
         @Override
         public float warmup() {
             return getPowerProduction() / (powerProduction * productionEfficiency);
+        }
+
+        @Override
+        public void updateTile() {
+            super.updateTile();
+            if(st > 0.001f){
+                damage(workdamage/60f * Time.delta);
+            }
         }
 
         @Override

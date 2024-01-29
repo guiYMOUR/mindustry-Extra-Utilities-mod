@@ -88,6 +88,18 @@ public class bossEntity extends UnitEntity{
         }
     }
 
+//    @Override
+//    public void remove() {
+//        if(!(type instanceof bossType) || abilities.length == 0) return;
+//        for(Ability ab : abilities){
+//            if(ab instanceof bossUnitAbi ba) {
+//                if (ba.isS1()) {
+//                    super.remove();
+//                }
+//            }
+//        }
+//    }
+
     @Override
     public void writeSync(Writes write) {
         super.writeSync(write);

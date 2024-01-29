@@ -37,7 +37,7 @@ public class ScarletDevil extends BulletType {
             homingPower = Float.MAX_VALUE;
             homingRange = 40 * 8;
             healPercent = 2f;
-            damage = 70;
+            damage = 50;
             collidesTeam = true;
             reflectable = false;
             healColor = color;

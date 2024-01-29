@@ -44,6 +44,8 @@ public class LightenGenerator extends NuclearReactor {
     public BulletType effectBullet;
     public BulletType effectBullet2;
 
+    public boolean explosionProof = true;
+
     public @Nullable BulletType deathBullet;
 
     public LightenGenerator(String name) {

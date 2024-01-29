@@ -25,6 +25,8 @@ public class DrawHeatDriver extends DrawBlock {
     //public float x = 0f, y = 0f, rotation = 90f, progress = 0f, resProgress = 0f;
     public float arrowSpacing = 4f, arrowOffset = 2f, arrowPeriod = 0.4f, arrowTimeScl = 6.2f;
 
+    public Color dc1 = Color.valueOf("ea8878");
+
     @Override
     public void draw(Building build) {
         HeatDriver block = (HeatDriver) build.block;
@@ -85,7 +87,7 @@ public class DrawHeatDriver extends DrawBlock {
                 rotation - 90f
         );
         float p = Math.min((build.heat/block.visualMaxHeat) * build.power.status, 1);
-        Draw.color(Color.valueOf("ea8878"));
+        Draw.color(dc1);
         Draw.alpha(p);
         Draw.z(Layer.effect);
         if(progress > 0.01f){

@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.blocks;
 
+import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -53,16 +54,10 @@ public class fireWork extends Block {
             }
             if(Mathf.chance(0.8)){
                 int r = Mathf.random(1,4);
-                switch (r){
-                    case 1 :
-                        gui.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
-                        break;
-                    case 2:
-                        car.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
-                        break;
-                    default:
-                        EU.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
-                        break;
+                switch (r) {
+                    case 1 -> gui.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
+                    case 2 -> car.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
+                    default -> EU.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
                 }
             }
         }
@@ -71,7 +66,7 @@ public class fireWork extends Block {
             if(trailLength > 0 && b.trail != null){
                 float z = Draw.z();
                 Draw.z(z - 0.0001f);
-                b.trail.draw(Color.valueOf("ff0000aa").shiftHue(b.time * 2), trailWidth);
+                b.trail.draw(EUGet.EC10.set(EUGet.rainBowRed).a(0.7f).shiftHue(b.time * 2), trailWidth);
                 //b.trail.draw(trailColor, trailWidth);
                 Draw.z(z);
             }
@@ -80,7 +75,7 @@ public class fireWork extends Block {
         @Override
         public void draw(Bullet b) {
             super.draw(b);
-            Draw.color(Color.valueOf("ff0000").shiftHue(b.time * 2));
+            Draw.color(EUGet.EC11.set(EUGet.rainBowRed).shiftHue(b.time * 2));
             Lines.stroke(1);
             Lines.square(b.x, b.y, 5, b.rotation() + Time.time);
             Lines.square(b.x, b.y, 5, b.rotation() - Time.time);
@@ -111,7 +106,7 @@ public class fireWork extends Block {
         public void draw(Bullet b) {
             if(!(b.data instanceof Color)) return;
             super.draw(b);
-            Draw.color((Color)b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data);
+            Draw.color((Color)b.data == Color.white ? EUGet.EC12.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
             Draw.z(Layer.bullet);
             for(int i = 0; i < 4; i++) {
                 Drawf.tri(b.x, b.y, 2, 3, b.rotation() + 90 * i);
@@ -125,7 +120,7 @@ public class fireWork extends Block {
             if(trailLength > 0 && b.trail != null){
                 float z = Draw.z();
                 Draw.z(z - 0.0001f);
-                b.trail.draw((Color)b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data, trailWidth);
+                b.trail.draw((Color)b.data == Color.white ? EUGet.EC13.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data, trailWidth);
                 Draw.z(z);
             }
         }
@@ -147,7 +142,7 @@ public class fireWork extends Block {
             super.draw(b);
             if(!(b.data instanceof Color)) return;
             Draw.z(Layer.bullet);
-            Draw.color((Color)b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data);
+            Draw.color((Color)b.data == Color.white ? EUGet.EC14.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
             Draw.rect(Core.atlas.find(name("fire-EU")), b.x, b.y,  96 * b.fout(), 96 * b.fout(), 0);
         }
     };
@@ -168,7 +163,7 @@ public class fireWork extends Block {
             super.draw(b);
             if(!(b.data instanceof Color)) return;
             Draw.z(Layer.bullet);
-            Draw.color((Color)b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data);
+            Draw.color((Color)b.data == Color.white ? EUGet.EC15.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
             Draw.rect(Core.atlas.find(name("fire-guiY")), b.x, b.y,  96 * b.fout(), 96 * b.fout(), 0);
         }
     };
@@ -189,7 +184,7 @@ public class fireWork extends Block {
             super.draw(b);
             if(!(b.data instanceof Color)) return;
             Draw.z(Layer.bullet);
-            Draw.color((Color)b.data == Color.white ? Color.valueOf("ff0000").shiftHue(b.time * 2) : (Color)b.data);
+            Draw.color((Color)b.data == Color.white ? EUGet.EC16.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
             Draw.rect(Core.atlas.find(name("fire-Carrot")), b.x, b.y,  96 * b.fout(), 96 * b.fout(), 0);
         }
     };

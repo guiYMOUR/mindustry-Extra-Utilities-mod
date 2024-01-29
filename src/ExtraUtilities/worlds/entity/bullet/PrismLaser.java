@@ -1,6 +1,7 @@
 package ExtraUtilities.worlds.entity.bullet;
 
 import ExtraUtilities.content.EUFx;
+import ExtraUtilities.content.EUGet;
 import ExtraUtilities.worlds.blocks.turret.Prism;
 import arc.graphics.Blending;
 import arc.graphics.Color;
@@ -41,7 +42,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         float rot = b.rotation();
         Draw.blend(Blending.additive);
         //Draw.alpha(realWidth/width);
-        Draw.color(Color.valueOf("ff0000").shiftHue((int)b.data));
+        Draw.color(EUGet.EC3.set(EUGet.rainBowRed).shiftHue((int)b.data));
         for(int i = 0; i <4; i++) {
             //Draw.color(Tmp.c1.set(cs[i]).mul(1.0F + Mathf.absin(Time.time, 1.0F, 0.1F)));
             float colorFin = (float) i / (float) (this.colors.length - 1);
@@ -69,7 +70,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         float wide = Mathf.clamp(bulletHeat * bulletHeat + 0.03f);
         Draw.z(Layer.bullet - 1);
         //Draw.color(Color.valueOf("ff0000").shiftHue((int)b.data));
-        Draw.color((Tmp.c1.set(Color.valueOf("ff0000")).mul(1.0F + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
+        Draw.color((Tmp.c1.set(EUGet.rainBowRed).mul(1.0F + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
         Draw.alpha(0.04f);
         Draw.blend(Blending.additive);
         for(int s = 0; s < 4; s++){
@@ -93,7 +94,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         float wide = Mathf.clamp(c.fin() + 0.03f);
         Draw.z(Layer.bullet - 1);
         //Draw.color(Color.valueOf("ff0000").shiftHue((int)b.data));
-        Draw.color((Tmp.c1.set(Color.valueOf("ff0000")).mul(1.0f + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
+        Draw.color((Tmp.c1.set(EUGet.rainBowRed).mul(1.0f + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
         Draw.alpha(0.04f);
         Draw.blend(Blending.additive);
         for(int s = 0; s < 4; s++){

@@ -73,8 +73,8 @@ public class Domain extends Block {
         Lines.circle(e.x, e.y, e.rotation + e.fin());
     });
     //speeder
-    public float upSpeed = 2f;
-    public float upSpeedAfter = 3f;//盾破了后的加速
+    public float upSpeed = 1.5f;
+    public float upSpeedAfter = 2.5f;//盾破了后的加速
     public float reloadS = 60;
     //healer-block
     public float reloadH = 240f;
@@ -88,7 +88,7 @@ public class Domain extends Block {
     public float reloadHUAfter = 120;//还是破盾后的
     //群内投票结果，选择用量治疗而不是百分百
 
-    public float unitDamage = 8;
+    public float unitDamage = 12;
 
     protected static DomainBuild db;
     protected static Effect e, ef;
