@@ -23,8 +23,8 @@ sourceCompatibility = 17
 
 ext{
     //the build number that this mod is made for
-    //mindustryVersion = 'v146'
-    //jabelVersion = "0.9.0"
+    mindustryVersion = 'v146'
+    jabelVersion = "0.9.0"
     //sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
 }
@@ -39,9 +39,9 @@ allprojects{
 dependencies{
     implementation 'org.jetbrains:annotations:24.0.1'
 
-    compileOnly "com.github.Anuken.Arc:arc-core:v146"
-    compileOnly "com.github.Anuken.Mindustry:core:v146"
-    annotationProcessor "com.github.Anuken:jabel:0.9.0"
+    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
 
 task jarAndroid{
