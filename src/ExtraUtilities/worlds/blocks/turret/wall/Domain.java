@@ -153,6 +153,12 @@ public class Domain extends Block {
     }
 
     @Override
+    public void init(){
+        updateClipRadius(range + 4);
+        super.init();
+    }
+
+    @Override
     public void setStats() {
         super.setStats();
         stats.add(Stat.repairTime, (int) (100f / healPercent * reloadH / 60f), StatUnit.seconds);
