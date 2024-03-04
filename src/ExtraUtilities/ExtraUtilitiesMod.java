@@ -31,6 +31,7 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.ui.fragments.MenuFragment;
 
+import static arc.Core.app;
 import static arc.Core.settings;
 import static mindustry.Vars.*;
 
