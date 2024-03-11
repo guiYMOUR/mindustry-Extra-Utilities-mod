@@ -588,7 +588,7 @@ public class EUBlocks {
             hasPower = true;
             hasLiquids = true;
             hasItems = true;
-            itemCapacity = 12;
+            itemCapacity = 24;
             consumePower(7.5f);
             outputItem = new ItemStack(EUItems.lightninAlloy, 5);
             craftTime = 3.5f * 60f;
@@ -928,12 +928,12 @@ public class EUBlocks {
                 @Override
                 public void draw(Bullet b) {
                     float r = splashDamageRadius * (1 - b.foutpow());
-                    Lines.stroke(3 + 32 * (1 - b.finpow()), EUItems.lightninAlloy.color);
+                    Lines.stroke(32 * (1 - b.finpow()), EUItems.lightninAlloy.color);
                     Lines.circle(b.x, b.y, splashDamageRadius * (1 - b.foutpow()));
                     for(float i = 0; i < r/2; i += 0.2f){
                         float a = i/r;
                         float rr = r * a + r/2;
-                        Draw.alpha(a);
+                        Draw.alpha(a * b.foutpow() * 2);
                         Lines.stroke(0.2f);
                         Lines.circle(b.x, b.y, rr);
                     }
