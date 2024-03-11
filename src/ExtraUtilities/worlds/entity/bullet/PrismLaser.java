@@ -27,8 +27,10 @@ public class PrismLaser extends ContinuousLaserBulletType {
         this.width = width;
         this.length = length;
         this.hitEffect = EUFx.prismHit;
-        lifetime = 24;
+        lifetime = 30;
         frontLength = 28f;
+        incendChance = -1;
+        incendAmount = -1;
     }
 
     //plan 1
@@ -36,7 +38,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         if(!(b.owner instanceof Prism.PrismBuild)) return;
         float realLength = Damage.findLaserLength(b, this.length);
         float bulletHeat = 1 - ((Prism.PrismBuild)b.owner).bulletHeat + 0.03f;
-        float realWidth = width * bulletHeat;
+        float realWidth = width * bulletHeat * b.fout();
         float fout = Mathf.clamp(b.time > b.lifetime - this.fadeTime ? 1.0F - (b.time - (this.lifetime - this.fadeTime)) / this.fadeTime : 1.0F);
         float baseLen = realLength * fout;
         float rot = b.rotation();
@@ -67,7 +69,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         float realLength = Damage.findLaserLength(b, this.length);
         float baseLen = realLength * fout;
         float bulletHeat = 1 - ((Prism.PrismBuild)b.owner).bulletHeat;
-        float wide = Mathf.clamp(bulletHeat * bulletHeat + 0.03f);
+        float wide = Mathf.clamp(bulletHeat * bulletHeat + 0.03f) * b.fout();
         Draw.z(Layer.bullet - 1);
         //Draw.color(Color.valueOf("ff0000").shiftHue((int)b.data));
         Draw.color((Tmp.c1.set(EUGet.rainBowRed).mul(1.0F + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
@@ -91,7 +93,7 @@ public class PrismLaser extends ContinuousLaserBulletType {
         float fout = Mathf.clamp(b.time > b.lifetime - this.fadeTime ? 1 - (b.time - (this.lifetime - this.fadeTime)) / this.fadeTime : 1);
         float realLength = Damage.findLaserLength(b, this.length);
         float baseLen = realLength * fout;
-        float wide = Mathf.clamp(c.fin() + 0.03f);
+        float wide = Mathf.clamp(c.fin() + 0.03f) * b.fout();
         Draw.z(Layer.bullet - 1);
         //Draw.color(Color.valueOf("ff0000").shiftHue((int)b.data));
         Draw.color((Tmp.c1.set(EUGet.rainBowRed).mul(1.0f + Mathf.absin(Time.time, 1f, 0.1f))).shiftHue((int)b.data));
