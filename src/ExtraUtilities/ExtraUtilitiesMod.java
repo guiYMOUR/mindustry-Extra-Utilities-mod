@@ -31,6 +31,11 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.ui.fragments.MenuFragment;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 import static arc.Core.app;
 import static arc.Core.settings;
 import static mindustry.Vars.*;
@@ -65,7 +70,7 @@ public class ExtraUtilitiesMod extends Mod{
 
     public static void setColorName(){
         Mods.LoadedMod mod = mods.locateMod(ModName);
-        String st = Core.bundle.get("mod.extra-utilities.displayName");
+        String st = isAps() ? Core.bundle.get("mod.extra-utilities.displayNameAp") : Core.bundle.get("mod.extra-utilities.displayName");
         StringBuilder fin = new StringBuilder();
 
         for(int i = 0; i < st.length(); i++){
@@ -144,9 +149,9 @@ public class ExtraUtilitiesMod extends Mod{
             private int con = 0;
             private float bx, by;
             {
-            cont.add("发现大量简介改动\n为了防止Mindustry崩溃，模组已被[red]全部禁用[]\n点击确定以继续");
+            cont.add(Core.bundle.get("eu.ap.main"));
             buttons.button("", this::hide).update(b ->{
-                b.setText(con > 0 ? con == 5 ? "[red]愚人节快乐[]" : "再点我一下?" : "确定");
+                b.setText(con > 0 ? con == 5 ? Core.bundle.get("eu.ap.happy") : Core.bundle.get("eu.ap.click") : Core.bundle.get("eu.ap.ok"));
                 if(con > 0) {
                     b.x = bx;
                     b.y = by;
@@ -199,7 +204,6 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     private void overrideUI(){
-        EU = Vars.mods.getMod(ExtraUtilitiesMod.class);
         Graphics.Cursor.SystemCursor.arrow.set(newCursor("cursor.png", Fonts.cursorScale()));
         Graphics.Cursor.SystemCursor.hand.set(newCursor("hand.png", Fonts.cursorScale()));
         Graphics.Cursor.SystemCursor.ibeam.set(newCursor("ibeam.png", Fonts.cursorScale()));
@@ -208,8 +212,18 @@ public class ExtraUtilitiesMod extends Mod{
         ui.targetCursor = newCursor("target.png", Fonts.cursorScale());
     }
 
+    private static boolean isAps(){
+        var date = LocalDate.now();
+        var sdf = DateTimeFormatter.ofPattern("MMdd");
+        var fd = sdf.format(date);
+        return fd.equals("0401");
+    }
+
     @Override
     public void init() {
+        boolean aps = isAps();
+        if(aps) EU.meta.version = "2.4.8p4";
+
         //settings.remove("eu-override-unit");
         settings.defaults("eu-override-unit", false);
 
@@ -219,7 +233,9 @@ public class ExtraUtilitiesMod extends Mod{
             if(overrideUnitArm) EUOverride.overrideAmr();
             EUOverride.overrideJs();
             afterEnterLoad();
-            //EUOverride.ap4sOverride();
+
+            if(aps) EUOverride.ap4sOverride();
+            if(ui != null) if(aps) Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log2));
         }
 
         settings.defaults("eu-plug-in-mode", false);
@@ -390,7 +406,9 @@ public class ExtraUtilitiesMod extends Mod{
 
     @Override
     public void loadContent(){
-        String ms = Core.bundle.get("mod.random-massage");
+        EU = Vars.mods.getMod(ExtraUtilitiesMod.class);
+
+        String ms = isAps() ? Core.bundle.get("mod.random-massageAp") : Core.bundle.get("mod.random-massage");
         String[] me = ms.split(",");
         int len = me.length;
         massageRand = me[Mathf.random(len - 1)];

@@ -260,14 +260,17 @@ public class EUOverride {
         for(int i = 0; i < Vars.content.blocks().size; i++){
             Block b = Vars.content.block(i);
             if(b != null){
+                String l = b.localizedName;
                 String n = b.description;
                 if(n == null) continue;
                 int d = Mathf.random(Vars.content.blocks().size - 1);
                 if(d == i) continue;
                 Block b1 = Vars.content.block(d);
                 if(b1 != null){
-                    if(b1.description == null) continue;
+                    if(b1.localizedName == null || b1.description == null) continue;
+                    b.localizedName = b1.localizedName;
                     b.description = b1.description;
+                    b1.localizedName = l;
                     b1.description = n;
                 }
             }
@@ -275,14 +278,17 @@ public class EUOverride {
         for(int i = 0; i < Vars.content.items().size; i++){
             Item b = Vars.content.item(i);
             if(b != null){
+                String l = b.localizedName;
                 String n = b.description;
                 if(n == null) continue;
                 int d = Mathf.random(Vars.content.items().size - 1);
                 if(d == i) continue;
                 Item b1 = Vars.content.item(d);
                 if(b1 != null){
-                    if(b1.description == null) continue;
+                    if(b1.localizedName == null || b1.description == null) continue;
+                    b.localizedName = b1.localizedName;
                     b.description = b1.description;
+                    b1.localizedName = l;
                     b1.description = n;
                 }
             }
@@ -290,14 +296,17 @@ public class EUOverride {
         for(int i = 0; i < Vars.content.units().size; i++){
             UnitType b = Vars.content.unit(i);
             if(b != null){
+                String l = b.localizedName;
                 String n = b.description;
                 if(n == null) continue;
                 int d = Mathf.random(Vars.content.units().size - 1);
                 if(d == i) continue;
                 UnitType b1 = Vars.content.unit(d);
                 if(b1 != null){
-                    if(b1.description == null) continue;
+                    if(b1.localizedName == null || b1.description == null) continue;
+                    b.localizedName = b1.localizedName;
                     b.description = b1.description;
+                    b1.localizedName = l;
                     b1.description = n;
                 }
             }
