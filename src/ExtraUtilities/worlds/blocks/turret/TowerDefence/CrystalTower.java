@@ -188,14 +188,17 @@ public class CrystalTower extends Block {
         public void write(Writes write){
             super.write(write);
             write.i(conf[0]);
-            write.i(conf[1]);
+            StatusEffect s = Vars.content.statusEffects().get(conf[1]);
+            String name = s == null ? null : s.name;
+            write.str(name);
         }
 
         @Override
         public void read(Reads read, byte revision){
             super.read(read, revision);
             conf[0] = read.i();
-            conf[1] = read.i();
+            String s = read.str();
+            conf[1] = s == null || Vars.content.statusEffect(s) == null ? StatusEffects.none.id : Vars.content.statusEffect(s).id;
         }
     }
 }
