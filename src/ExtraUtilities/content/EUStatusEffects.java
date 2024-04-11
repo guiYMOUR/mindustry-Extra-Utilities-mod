@@ -84,4 +84,20 @@ public class EUStatusEffects {
         color = Color.valueOf("e9ead3");
         disarm = true;
     }};
+
+    public static StatusEffect awsl = new StatusEffect("awsl"){{
+        disarm = true;
+        speedMultiplier = 0;
+        applyEffect = new Effect(60, e -> {
+            for(int i = 0; i < 10; i++){
+                float dx = EUGet.dx(e.x, 6, e.time * 12 + i * 8),
+                        dy = EUGet.dy(e.y, 6, e.time * 12 + i * 8);
+                int finalI = i;
+                e.scaled(60, b -> {
+                    Draw.color(Pal.accent);
+                    Fill.circle(dx, dy, 2f * finalI /10f + 0.2f);
+                });
+            }
+        });
+    }};
 }

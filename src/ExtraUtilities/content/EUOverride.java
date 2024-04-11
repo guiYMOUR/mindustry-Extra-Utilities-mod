@@ -35,6 +35,7 @@ import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadConveyor;
 import mindustry.world.blocks.payloads.PayloadRouter;
+import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
 
@@ -427,5 +428,13 @@ public class EUOverride {
     public static void overrideItem(){
         serpuloItems.addAll(EUItems.crispSteel, EUItems.lightninAlloy);
         erekirItems.add(EUItems.lightninAlloy);
+    }
+
+    public static void overrideHard(){
+        for(var u : Vars.content.units()){
+            if(u != null) {
+                u.health = (float) Math.ceil(u.health * 1.3f);
+            }
+        }
     }
 }

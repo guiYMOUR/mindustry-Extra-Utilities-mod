@@ -108,16 +108,17 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.add(Core.bundle.format("tips.name")).row();
                 cont.add(Core.bundle.format("tips.description")).row();
                 cont.pane(t -> {
+                    addToTable(EUBlocks.mineCellT1, t);
+                    addToTable(EUBlocks.mineCellT2, t);
                     addToTable(EUBlocks.buffrerdMemoryBank, t);
                     addToTable(EUBlocks.siliconFurnace, t);
                     addToTable(EUBlocks.anti_Missile, t);
                     addToTable(EUBlocks.unitBooster, t);
                     addToTable(EUBlocks.turretSpeeder, t);
-                    addToTable(EUBlocks.advAssemblerModule, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);
-                }).grow().center().maxWidth(960f);
+                }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f);
                 buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
                     Core.settings.put("eu-first-load", !b);
                 }).center();
@@ -253,6 +254,7 @@ public class ExtraUtilitiesMod extends Mod{
 
         if(hardMod){
             EUOverride.overrideBlockAll();
+            EUOverride.overrideHard();
             Mods.LoadedMod mod = Vars.mods.locateMod(ModName);
             mod.meta.displayName = mod.meta.displayName + " Hard!";
             mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-hard";

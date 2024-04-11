@@ -176,6 +176,7 @@ public class EUTechTree {
                 });
                 node(breaker);
                 node(coreKeeper);
+                node(mineCellT1, () -> node(mineCellT2));
             });
         });
     }
