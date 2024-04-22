@@ -231,6 +231,7 @@ public class EUBlocks {
             pumpAmount = 240f / 60f / 9f;
             liquidCapacity = 240f;
             size = 3;
+            squareSprite = false;
         }};
         liquidSorter = new SortLiquidRouter("liquid-sorter"){{
             requirements(Category.liquid, with(Items.silicon, 8, Items.beryllium, 4));
@@ -1058,6 +1059,8 @@ public class EUBlocks {
 
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
             drawer = new DrawTurret("reinforced-");
+
+            squareSprite = false;
         }};
 
         guiY = new ItemTurret("guiY"){{
@@ -1113,6 +1116,8 @@ public class EUBlocks {
             minWarmup = 0.85f;
             shootWarmupSpeed = 0.07f;
             shootSound = Sounds.missile;
+
+            squareSprite = false;
 
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
         }};
@@ -1419,7 +1424,9 @@ public class EUBlocks {
             requirements(Category.turret, with(Items.graphite, 400, Items.silicon, 450, Items.thorium, 300, Items.surgeAlloy, 220));
             size = 4;
             health = 3200;
+
             int blockId = id;
+            squareSprite = false;
             drawer = new DrawTurret("reinforced-"){{
                 parts.add(new RegionPart(){{
                               progress = PartProgress.warmup;
@@ -1657,6 +1664,8 @@ public class EUBlocks {
             BulletType[] bullets1 = new BulletType[]{f1, f2, f3};
             BulletType[] bullets2 = new BulletType[]{fp1, fp2, fp3};
             ammo(Items.blastCompound, bullets1, Items.plastanium, bullets2, EUItems.lightninAlloy);
+
+            squareSprite = false;
         }};
 
         celebrationMk2 = new MultiBulletTurret("celebration-mk2"){{
@@ -1894,6 +1903,8 @@ public class EUBlocks {
 
             BulletType[] bullets = new BulletType[]{f1, f2, f3, f4, f5, f6, f7};
             ammo(Items.thorium, bullets);
+
+            squareSprite = false;
         }};
 
         sancta = new ItemTurret("sancta"){{
@@ -2002,6 +2013,7 @@ public class EUBlocks {
             coolantMultiplier = 0.3f;
             coolEffect = Fx.none;
             canOverdrive = false;
+            squareSprite = false;
         }};
 
         fiammetta = new Fiammetta("fiammetta"){{
@@ -2017,6 +2029,7 @@ public class EUBlocks {
             recoil = 5;
             health = 6000;
             canOverdrive = false;
+            squareSprite = false;
 
             BulletType fall = new BulletType(){{
                 speed = 0;

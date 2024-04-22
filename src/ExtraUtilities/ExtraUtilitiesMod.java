@@ -15,6 +15,7 @@ import arc.math.geom.Vec2;
 import arc.scene.Element;
 import arc.scene.Group;
 import arc.scene.event.Touchable;
+import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.CheckBox;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
@@ -25,6 +26,7 @@ import mindustry.Vars;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.*;
+import mindustry.gen.Icon;
 import mindustry.mod.*;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
@@ -403,6 +405,7 @@ public class ExtraUtilitiesMod extends Mod{
                 });
             }
         }
+
         setColorName();
     }
 
@@ -414,6 +417,7 @@ public class ExtraUtilitiesMod extends Mod{
         String[] me = ms.split(",");
         int len = me.length;
         massageRand = me[Mathf.random(len - 1)];
+
         if(onlyPlugIn) return;
 
         EUOverride.overrideItem();

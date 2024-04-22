@@ -39,7 +39,7 @@ import static mindustry.Vars.*;
 public class EUFx {
 
     public static Effect StormExp(Color cor, Color liC) {
-        return new Effect(60f, e -> {
+        return new Effect(72, e -> {
             Draw.color(liC, cor, e.fin());
             Fill.circle(e.x, e.y, e.fout() * 40);
             Lines.stroke(e.fout() * 4.5f);

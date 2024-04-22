@@ -14,6 +14,8 @@ public class EUItems {
         explosiveness = 0.8f;
         charge = 1.3f;
         cost = 1.3f;
+        frames = 14;
+        frameTime = 8;
     }};
     public static Item stone = new Item("stone", Pal.gray){{
         alwaysUnlocked = true;

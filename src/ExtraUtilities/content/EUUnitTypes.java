@@ -151,7 +151,6 @@ public class EUUnitTypes {
 
             Color eccl = Color.valueOf("87CEEB");
             Color eccb = Color.valueOf("6D90BC");
-            Color miku = Color.valueOf("39c5bb");
 
             BulletType efb = new BulletType(){{
                 damage = speed = 0;
@@ -348,6 +347,17 @@ public class EUUnitTypes {
                                 trailLength = 15;
                                 trailWidth = 2;
                                 trailColor = eccl;
+                                trailEffect = new Effect(24, e -> {
+                                    Draw.color(e.color);
+                                    Drawf.tri(
+                                            e.x + Mathf.randomSeed(e.id, -3, 3),
+                                            e.y + Mathf.randomSeed(e.id, -3, 3),
+                                            5.8f * e.fout(),
+                                            5.8f/2 * Mathf.sqrt3 * e.fout(),
+                                            Mathf.randomSeed(e.id, 360) * e.fin()
+                                    );
+                                });
+                                trailInterval = 1;
                                 pierceArmor = true;
                                 hitShake = despawnShake = 4;
                                 hitSound = despawnSound = Sounds.shootAlt;
@@ -360,7 +370,7 @@ public class EUUnitTypes {
                                 @Override
                                 public void hitEntity(Bullet b, Hitboxc entity, float health) {
                                     if(entity instanceof Unit u && !(entity instanceof bossEntity)){
-                                        u.health -= damage * 3;
+                                        u.health -= damage * Math.max(3, u.armor);
                                     }
                                     super.hitEntity(b, entity, health);
                                 }
@@ -510,7 +520,7 @@ public class EUUnitTypes {
                             @Override
                             public void hitEntity(Bullet b, Hitboxc entity, float health) {
                                 if(entity instanceof Unit u && !(entity instanceof bossEntity)){
-                                    u.health -= damage * 1.5f;
+                                    u.health -= damage * Math.max(2, u.armor);
                                 }
                                 super.hitEntity(b, entity, health);
                             }
@@ -734,9 +744,12 @@ public class EUUnitTypes {
                             speed = 80;
                             lifetime = 5f * 8;
                             rangeOverride = 120 * 8;
-                            trailLength = 18;
+                            trailLength = 9;
                             trailWidth = 16;
                             trailColor = eccl;
+                            trailEffect = EUFx.ellipse(64, 5, 24, 24, eccl);
+                            trailInterval = 6;
+                            trailRotation = true;
                             chargeEffect = new Effect(chargeTime, 100f, e -> {
                                 color(eccl);
                                 stroke(e.fin() * 4f);
@@ -766,13 +779,58 @@ public class EUUnitTypes {
                                         waveLife = 20f;
                                         sparkColor = eccb;
                                         smokes = 8;
-                                        sparks = 0;
+                                        smokeSize = 10;
+                                        smokeRad = splashDamageRadius;
+                                        sparks = 8;
                                         sparkRad = splashDamageRadius;
                                         sparkLen = 12f;
-                                        sparkStroke = 5f;
+                                        sparkStroke = 3f;
                                     }},
-                                    EUFx.diffEffect(100, 6, splashDamageRadius, 10, 140, 40, 40, eccl, -1)
+                                    new Effect(100, e -> {
+                                        float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
+                                        for(int a : Mathf.signs) {
+                                            for (int i = 0; i < 36; i++) {
+                                                int finalI = i;
+                                                e.scaled(100, b -> {
+                                                    float dx = EUGet.dx(e.x, splashDamageRadius * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10)),
+                                                            dy = EUGet.dy(e.y, splashDamageRadius * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10));
+                                                    Draw.color(eccb);
+                                                    Fill.circle(dx, dy, (5f * finalI / 36f + 0.2f) * fee);
+                                                });
+                                            }
+                                        }
+                                    }),
+                                    new Effect(100, e -> {
+                                        float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
+                                        for(int a : Mathf.signs) {
+                                            for (int i = 0; i < 36; i++) {
+                                                int finalI = i;
+                                                e.scaled(100, b -> {
+                                                    float dx = EUGet.dx(e.x, (splashDamageRadius - 24) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 120),
+                                                            dy = EUGet.dy(e.y, (splashDamageRadius - 24) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 120);
+                                                    Draw.color(eccb);
+                                                    Fill.circle(dx, dy, (5f * finalI / 36f + 0.2f) * fee);
+                                                });
+                                            }
+                                        }
+                                    }),
+                                    new Effect(100, e -> {
+                                        float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
+                                        for(int a : Mathf.signs) {
+                                            for (int i = 0; i < 36; i++) {
+                                                int finalI = i;
+                                                e.scaled(100, b -> {
+                                                    float dx = EUGet.dx(e.x, (splashDamageRadius - 48) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 240),
+                                                            dy = EUGet.dy(e.y, (splashDamageRadius - 48) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 240);
+                                                    Draw.color(eccb);
+                                                    Fill.circle(dx, dy, (5f * finalI / 36f + 0.2f) * fee);
+                                                });
+                                            }
+                                        }
+                                    }),
+                                    EUFx.diffEffect(100, 6, splashDamageRadius * 0.8f, 10, 140, 40, 40, eccl, -1)
                             );
+
                             hitShake = despawnShake = 14;
                             hitSound = despawnSound = Sounds.explosionbig;
                         }
@@ -799,8 +857,14 @@ public class EUUnitTypes {
                             }
 
                             @Override
+                            public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) {
+                                despawnEffect.at(b);
+                                super.hitTile(b, build, x, y, initialHealth, direct);
+                            }
+
+                            @Override
                             public void hitEntity(Bullet b, Hitboxc entity, float health) {
-                                if(entity instanceof Unit u && !(entity instanceof bossEntity)) u.health -= damage * 1.5f;
+                                if(entity instanceof Unit u && !(entity instanceof bossEntity)) u.health -= damage * Math.max(2f, u.armor);
                                 super.hitEntity(b, entity, health);
                             }
                         };
