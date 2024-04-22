@@ -308,13 +308,14 @@ exports.clWallL = clWallL;
 // exports.rwl = rwl;
 const rws = new ReleaseShieldWall("rws");
 rws.size = 1;
-rws.health = 1300;
+rws.health = 1100;
 rws.lightningChance = 0.06;
 rws.chanceDeflect = 10;
 rws.flashHit = true;
 rws.absorbLasers = true;
 rws.insulated = true;
 rws.placeableLiquid = true;
+rws.armor = 10;
 rws.requirements = ItemStack.with(
     items.lightninAlloy, 6
 );
@@ -324,13 +325,14 @@ exports.rws = rws;
 const rwl = new ReleaseShieldWall("rwl");
 rwl.size = 2;
 rwl.maxHandle = 180 * 4;
-rwl.health = 1300*4;
+rwl.health = 1100 * 4;
 rwl.lightningChance = 0.06;
 rwl.chanceDeflect = 10;
 rwl.flashHit = true;
 rwl.absorbLasers = true;
 rwl.insulated = true;
 rwl.placeableLiquid = true;
+rwl.armor = 12;
 rwl.requirements = ItemStack.with(
     items.lightninAlloy, 24
 );
