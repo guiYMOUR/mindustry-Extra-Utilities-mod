@@ -15,7 +15,7 @@ const MS = new MagneticStormBulletType(cor, liC);
 MS.homingRange = 100;
 MS.homingPower = 0.4;
 MS.speed = 1.5;
-MS.damage = 0;
+MS.damage = 200;
 MS.knockback = 0.2;
 MS.splashDamageRadius = 12.5 * 8;
 MS.splashDamage = 200;
@@ -27,7 +27,7 @@ MS.pierce = true;
 MS.hitSize = 0;
 MS.collides = false;
 MS.collidesAir = true;
-MS.lifetime = 300;
+MS.lifetime = 220;
 
 //Anuke: for visual stats only.
 MS.buildingDamageMultiplier = 0.25;
