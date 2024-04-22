@@ -1,5 +1,6 @@
 //Will be added in version 1.4 or 1.3.30 onwards
 const lib = require("blib");
+const status = require("other/status");
 //const ability = require("other/ability");
 const healthDisplay = lib.getClass("ExtraUtilities.worlds.entity.ability.healthDisplay");
 //const planet = require("game/challengeMap/cmain");
@@ -174,6 +175,7 @@ boss1.abilities.add(new UnitSpawnAbility(enemy1, 60 *6, -9.5, -11.5), new UnitSp
 boss1.abilities.add(new RepairFieldAbility(60, 60 * 3, 80));
 boss1.abilities.add(new healthDisplay(18, 30, 4));
 boss1.abilities.add(new ForceFieldAbility(80, 2.2, 600, 60 * 15));
+boss1.immunities.add(status.awsl);
 boss1.alwaysUnlocked = true;
 
 const boss2 = new UnitType("boss2");
@@ -198,6 +200,7 @@ boss2.weapons.add(
 );
 boss2.armor = 12;
 boss2.abilities.add(new healthDisplay(20, 36, 5));
+boss2.immunities.add(status.awsl);
 boss2.alwaysUnlocked = true;
 
 const AI = require("other/unitAI");
@@ -253,7 +256,8 @@ navalEnemy1.weapons.add(
 );
 navalEnemy1.armor = 10;
 navalEnemy1.abilities.add(new healthDisplay(30, 30, 4));
-flyEnemy1.alwaysUnlocked = true;
+navalEnemy1.immunities.add(status.awsl)
+navalEnemy1.alwaysUnlocked = true;
 
 const slime = new UnitType("slime");
 slime.constructor = prov(() => extend(UnitTypes.crawler.constructor.get().class, {}));
@@ -278,6 +282,7 @@ slime.weapons.add(
 slime.armor = 9;
 slime.abilities.add(new healthDisplay(20, 36, 5));
 slime.abilities.add(new SpawnDeathAbility(enemy1, 4, 2), new SpawnDeathAbility(enemy2, 4, 2));
+slime.immunities.add(status.awsl);
 slime.alwaysUnlocked = true;
 
 /*const TD = new JavaAdapter(Planet, {

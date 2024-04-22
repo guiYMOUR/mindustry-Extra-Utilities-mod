@@ -131,6 +131,7 @@ RG.health = 180 * 5 * 5;
 RG.shootEffect = Fx.none;
 RG.smokeEffect = Fx.none;
 RG.drawer = new DrawTurret("reinforced-");
+RG.squareSprite = false;
 RG.ammo(
     Items.titanium, RGT,
     Items.surgeAlloy, RGS

@@ -17,7 +17,7 @@ MS.homingPower = 0.4;
 MS.speed = 1.5;
 MS.damage = 0;
 MS.knockback = 0.2;
-MS.splashDamageRadius = 64;
+MS.splashDamageRadius = 12.5 * 8;
 MS.splashDamage = 200;
 MS.width = 40;
 MS.height = 40;
@@ -178,6 +178,7 @@ storm.drawer = (() => {
     return d;
 })();
 
+storm.squareSprite = false;
 storm.requirements = ItemStack.with(
     Items.graphite, 780,
     Items.silicon, 600,
