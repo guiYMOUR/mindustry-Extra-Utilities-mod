@@ -58,7 +58,6 @@ public class MagneticStormBulletType extends BasicBulletType {
         cor = c1;
         liC = c2;
         absorbable = false;
-        hittable = false;
 
         Effect expEffSmall = new ExplosionEffect() {{
             lifetime = 20;
@@ -88,6 +87,7 @@ public class MagneticStormBulletType extends BasicBulletType {
             splashDamageRadius = 15;
             hitEffect = expEffSmall;
             despawnEffect = Fx.none;
+            buildingDamageMultiplier = 0.5f;
         }
 
             @Override
@@ -179,7 +179,7 @@ public class MagneticStormBulletType extends BasicBulletType {
         bulletInterval = 30;
 
         lightning = new ChainLightningFade(12, 12f, 2.5f, cor, 20, Fx.hitLancer){{
-            buildingDamageMultiplier = 0.5f;
+            buildingDamageMultiplier = 0.15f - (hardMod ? 0.1f : 0);
         }};
 
         despawnEffect = new MultiEffect(
@@ -196,7 +196,8 @@ public class MagneticStormBulletType extends BasicBulletType {
                         despawnEffect = expEffSmall;
                         splashDamage = 30;
                         splashDamageRadius = 15;
-                        buildingDamageMultiplier = 0.5f;
+                        buildingDamageMultiplier = 0.15f - (hardMod ? 0.1f : 0);
+                        collidesTiles = false;
                         back = true;
                     }};
                     bulletInterval = 7.2f;
