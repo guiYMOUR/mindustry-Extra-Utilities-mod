@@ -131,7 +131,7 @@ public class MineCell extends Block {
             TextureRegion r = Core.atlas.find(name),
                     bt = Core.atlas.find(name + "-bottom");
             Draw.rect(bt, x, y);
-            TextureRegion f = Core.atlas.find(name + "-f" + (int)(fm * fms));
+            TextureRegion f = Core.atlas.find(name + "-f" + (int)Math.min(fm * fms, fms - 1));
             Draw.rect(f, x, y);
             Draw.rect(r, x, y);
         }

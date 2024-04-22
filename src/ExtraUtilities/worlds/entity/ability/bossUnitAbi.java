@@ -192,7 +192,7 @@ public class bossUnitAbi extends Ability{
         Lines.stroke(3, Color.valueOf("87CEEB"));
         Lines.circle(unit.x, unit.y, pickRange);
         Lines.stroke(2, Color.valueOf("6D90BC"));
-        Lines.circle(unit.x, unit.y, pickRange/2);
+        Lines.arc(unit.x, unit.y, pickRange/2, unit.health/unit.maxHealth);
 
         if(d1 && !s1){
             float fin = unit.health/(unit.maxHealth/2);

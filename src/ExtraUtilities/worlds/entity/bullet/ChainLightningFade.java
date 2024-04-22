@@ -29,6 +29,7 @@ public class ChainLightningFade extends BulletType {
     public float linkSpace;
     public float stroke;
     public boolean large = false;
+    public boolean back = false;
 
     public ChainLightningFade(float lifetime, float linkSpace, float stroke, Color color, float damage, Effect hitEffect){
         absorbable = hittable = collides = collidesTiles = keepVelocity = false;
@@ -92,22 +93,45 @@ public class ChainLightningFade extends BulletType {
             Lines.stroke(stroke * Mathf.curve(b.fout(), 0, 0.7f));
             Draw.color(Color.white, color, b.fin());
 
-            Fill.circle(b.x, b.y, Lines.getStroke() / 2);
-
+            //Fill.circle(b.x, b.y, Lines.getStroke() / 2);
 
             b.random.setSeed(b.id);
             float fin = Mathf.curve(b.fin(), 0, 0.5f);
             int i;
 
             for (i = 0; i < (b.resetPos.length - 1) * fin; i++) {
-                float ox = b.resetPos[i][0], oy = b.resetPos[i][1];
-                float nx = b.resetPos[i + 1][0], ny = b.resetPos[i + 1][1];
+                float ox, nx, oy, ny;
+                if(!back) {
+                    ox = b.resetPos[i][0];
+                    oy = b.resetPos[i][1];
+                    nx = b.resetPos[i + 1][0];
+                    ny = b.resetPos[i + 1][1];
+                } else {
+                    int fi = b.resetPos.length - 1 - i;
+                    ox = b.resetPos[fi][0];
+                    oy = b.resetPos[fi][1];
+                    nx = b.resetPos[fi - 1][0];
+                    ny = b.resetPos[fi - 1][1];
+                }
 
                 Lines.line(ox, oy, nx, ny);
             }
 
             Draw.reset();
         }
+    }
+
+    @Override
+    public void despawned(Bullet b) {
+        if(!(b.data instanceof Position p)) return;
+        if(back) createSplashDamage(b, b.x, b.y);
+        else createSplashDamage(b, p.getX(), p.getY());
+        if(despawnEffect != Fx.none) {
+            if(!back) despawnEffect.at(p.getX(), p.getY(), b.rotation(), this.hitColor);
+            else despawnEffect.at(b.x, b.y, b.rotation(), this.hitColor);
+        }
+        if(despawnSound != Sounds.none) despawnSound.at(b);
+        Effect.shake(despawnShake, despawnShake, b);
     }
 
     @Override
