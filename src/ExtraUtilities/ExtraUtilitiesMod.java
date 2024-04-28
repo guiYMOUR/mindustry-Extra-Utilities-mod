@@ -1,6 +1,7 @@
 package ExtraUtilities;
 
 import ExtraUtilities.content.*;
+import ExtraUtilities.graphics.MainRenderer;
 import ExtraUtilities.net.EUCall;
 import arc.*;
 import arc.Graphics;
@@ -231,6 +232,7 @@ public class ExtraUtilitiesMod extends Mod{
         settings.defaults("eu-override-unit", false);
 
         if(!onlyPlugIn) {
+            MainRenderer.init();
             EUCall.registerPackets();
             EUOverride.overrideBuilder();
             if(overrideUnitArm) EUOverride.overrideAmr();
@@ -371,6 +373,8 @@ public class ExtraUtilitiesMod extends Mod{
                     });
 
                     if(!onlyPlugIn) {
+                        settingsTable.checkPref("eu-show-miner-point", true);
+
                         settingsTable.checkPref("eu-first-load", true);
                         settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {
                             @Override
