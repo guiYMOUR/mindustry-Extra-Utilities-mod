@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.blocks.production;
 
+import ExtraUtilities.ExtraUtilitiesMod;
 import ExtraUtilities.ai.MinerPointAI;
 import ExtraUtilities.content.EUUnitTypes;
 import ExtraUtilities.net.EUCall;
@@ -8,6 +9,7 @@ import arc.func.*;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
 import arc.math.Mathf;
+import arc.math.geom.Point2;
 import arc.math.geom.Rect;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.*;
@@ -39,7 +41,8 @@ import static mindustry.Vars.*;
 
 public class MinerPoint extends Block {
     //猫在钻头里面定义了这个为不可挖的矿，虽然只能写一个。。。但是应该不错了
-    public @Nullable Item blockedItem;
+    public @Nullable
+    Item blockedItem;
 
     public int range = 12;
     public int tier = 2;
@@ -70,14 +73,13 @@ public class MinerPoint extends Block {
         buildCostMultiplier = 0;
         flags = EnumSet.of(BlockFlag.factory);
 
-        config(Tile.class, (MinerPointBuild tile, Tile t) -> tile.sortTile = t);
-        configClear((MinerPointBuild tile) -> tile.sortTile = null);
+        config(Integer.class , (MinerPointBuild tile, Integer i) -> tile.sort = i);
     }
 
     @Override
     public void drawPlace(int x, int y, int rotation, boolean valid) {
         super.drawPlace(x, y, rotation, valid);
-        if(world.tile(x, y) != null) {
+        if (world.tile(x, y) != null) {
             if (!canPlaceOn(world.tile(x, y), player.team(), rotation)) {
                 drawPlaceText(Core.bundle.get(
                         (player.team().core() != null && player.team().core().items.has(requirements, state.rules.buildCostMultiplier)) || state.rules.infiniteResources ?
@@ -92,20 +94,21 @@ public class MinerPoint extends Block {
         Drawf.dashSquare(Pal.accent, x, y, range * tilesize * 2);
     }
 
-    public Rect getRect(Rect rect, float x, float y, float range){
+    public Rect getRect(Rect rect, float x, float y, float range) {
         rect.setCentered(x, y, range * 2 * tilesize);
 
         return rect;
     }
 
     @Override
-    public boolean canPlaceOn(Tile tile, Team team, int rotation){
+    public boolean canPlaceOn(Tile tile, Team team, int rotation) {
         CoreBuild core = team.core();
-        if(core == null || (!state.rules.infiniteResources && !core.items.has(requirements, state.rules.buildCostMultiplier))) return false;
-        if(!limitSize) return true;
+        if (core == null || (!state.rules.infiniteResources && !core.items.has(requirements, state.rules.buildCostMultiplier)))
+            return false;
+        if (!limitSize) return true;
         Rect rect = getRect(Tmp.r1, tile.worldx() + offset, tile.worldy() + offset, range).grow(0.1f);
         return !indexer.getFlagged(team, BlockFlag.factory).contains(b -> {
-            if(b instanceof MinerPointBuild build) {
+            if (b instanceof MinerPointBuild build) {
                 MinerPoint block = (MinerPoint) b.block;
                 return getRect(Tmp.r2, build.x, build.y, block.range).overlaps(rect);
             }
@@ -117,9 +120,9 @@ public class MinerPoint extends Block {
     public void setStats() {
         super.setStats();
         stats.add(Stat.drillTier, StatValues.blocks(b -> {
-            if(b instanceof Floor f){
+            if (b instanceof Floor f) {
                 return (f.wallOre && f.itemDrop != null && f.itemDrop != blockedItem && f.itemDrop.hardness <= tier) || (!f.wallOre && f.itemDrop != null && f.itemDrop.hardness <= tier && f.itemDrop != blockedItem && (indexer.isBlockPresent(f) || state.isMenu()));
-            } else if(b instanceof StaticWall w){
+            } else if (b instanceof StaticWall w) {
                 return w.itemDrop != null && w.itemDrop != blockedItem && w.itemDrop.hardness <= tier;
             } else {
                 return false;
@@ -141,7 +144,7 @@ public class MinerPoint extends Block {
                                         dronesCreated
                                 ),
                         () -> Pal.power,
-                        () -> (float)e.units.size / dronesCreated
+                        () -> (float) e.units.size / dronesCreated
                 ));
     }
 
@@ -150,13 +153,17 @@ public class MinerPoint extends Block {
         return true;
     }
 
-    public static void minerPointDroneSpawned(Tile tile, int id){
-        if(tile == null || !(tile.build instanceof MinerPointBuild)) return;
-        ((MinerPointBuild)tile.build).spawned(id);
+    public static void minerPointDroneSpawned(Tile tile, int id) {
+        if (tile == null || !(tile.build instanceof MinerPointBuild)) return;
+        ((MinerPointBuild) tile.build).spawned(id);
     }
 
     public class MinerPointBuild extends Building {
-        public @Nullable Tile sortTile = null;
+        public @Nullable
+        Tile sortTile = null;
+
+        public int sort = -1;
+        public int lastSort = -1;
         public Seq<Tile> tiles = new Seq<>();
         protected IntSeq readUnits = new IntSeq();
         protected IntSeq whenSyncedUnits = new IntSeq();
@@ -166,16 +173,30 @@ public class MinerPoint extends Block {
         public float warmup, readyness;
         public float droneProgress, totalDroneProgress;
 
+        public boolean placeInAir = false;
+
         @Override
         public void updateTile() {
+            if(sort != -1 && lastSort != sort) {
+                lastSort = sort;
+                sortTile = world.tile(sort);
+            }
+            if(sort == -1 && lastSort != sort){
+                lastSort = sort;
+                sortTile = null;
+            }
+            if(sortTile != null && (!checkOre(sortTile) || !validOre(sortTile))) {
+                sortTile = null;
+                sort = -1;
+            }
 
             dumpAccumulate();
 
-            if(!readUnits.isEmpty()){
+            if (!readUnits.isEmpty()) {
                 units.clear();
                 readUnits.each(i -> {
                     Unit unit = Groups.unit.getByID(i);
-                    if(unit != null){
+                    if (unit != null) {
                         units.add(unit);
                     }
                 });
@@ -184,10 +205,10 @@ public class MinerPoint extends Block {
 
             //read newly synced drones on client end
             //same as UnitAssembler
-            if(units.size < dronesCreated && whenSyncedUnits.size > 0){
+            if (units.size < dronesCreated && whenSyncedUnits.size > 0) {
                 whenSyncedUnits.each(id -> {
                     Unit unit = Groups.unit.getByID(id);
-                    if(unit != null){
+                    if (unit != null) {
                         units.addUnique(unit);
                     }
                 });
@@ -195,7 +216,7 @@ public class MinerPoint extends Block {
 
             units.removeAll(u -> !u.isAdded() || u.dead || !(u.controller() instanceof MinerPointAI));
 
-            if(!allowUpdate()){
+            if (!allowUpdate()) {
                 droneProgress = 0f;
                 units.each(Unit::kill);
                 units.clear();
@@ -208,10 +229,10 @@ public class MinerPoint extends Block {
             warmup = Mathf.approachDelta(warmup, efficiency, 1f / 60f);
             readyness = Mathf.approachDelta(readyness, units.size == dronesCreated ? 1f : 0f, 1f / 60f);
 
-            if(units.size < dronesCreated && (droneProgress += edelta() * state.rules.unitBuildSpeed(team) * powerStatus / droneConstructTime) >= 1f){
-                if(!net.client()){
+            if (units.size < dronesCreated && (droneProgress += edelta() * state.rules.unitBuildSpeed(team) * powerStatus / droneConstructTime) >= 1f) {
+                if (!net.client()) {
                     Unit unit = MinerUnit.create(team);
-                    if(unit instanceof BuildingTetherc){
+                    if (unit instanceof BuildingTetherc) {
                         ((BuildingTetherc) unit).building(this);
                     }
                     unit.set(x, y);
@@ -222,12 +243,12 @@ public class MinerPoint extends Block {
                 }
             }
 
-            if(units.size >= dronesCreated){
+            if (units.size >= dronesCreated) {
                 droneProgress = 0f;
             }
-            for(int i = 0; i < units.size; i++){
+            for (int i = 0; i < units.size; i++) {
                 Unit unit = units.get(i);
-                MinerPointAI ai = (MinerPointAI)unit.controller();
+                MinerPointAI ai = (MinerPointAI) unit.controller();
                 ai.ore = alwaysCons ? efficiency > 0.4 ? sortTile : null : sortTile;
             }
         }
@@ -239,18 +260,21 @@ public class MinerPoint extends Block {
 
         @Override
         public void pickedUp() {
-            if(canPickUp) configure(null);
+            if (canPickUp) {
+                configure(-1);
+                sortTile = null;
+            }
         }
 
         @Override
         public void draw() {
             //same as UnitCargoLoader
             Draw.rect(block.region, x, y);
-            if(units.size < dronesCreated){
+            if (units.size < dronesCreated) {
                 Draw.draw(Layer.blockOver, () -> {
                     Drawf.construct(this, MinerUnit.fullIcon, 0f, droneProgress, warmup, totalDroneProgress);
                 });
-            }else{
+            } else {
                 Draw.z(Layer.bullet - 0.01f);
                 Draw.color(polyColor);
                 Lines.stroke(polyStroke * readyness);
@@ -266,10 +290,34 @@ public class MinerPoint extends Block {
 
             Drawf.dashSquare(Pal.accent, x, y, range * tilesize * 2);
 
-            if(sortTile == null) return;
+            if(Core.settings.getBool("eu-show-miner-point")) {
+                if (tiles.size == 0 && !placeInAir) {
+                    findOre();
+                    if (tiles.size == 0) {
+                        placeInAir = true;
+                        return;
+                    }
+                }
+
+                if (tiles.size > 0) {
+                    float z = Draw.z();
+                    Draw.z(Layer.blockUnder - 2.5f);
+                    float sin = Mathf.absin(Time.time, 6, 0.8f);
+                    for (Tile t : tiles) {
+                        Item i = oreDrop(t);
+                        if (i == null || !validOre(t)) continue;
+                        Draw.color(Tmp.c1.set(i.color).a(sin));
+                        Fill.square(t.worldx(), t.worldy(), tilesize / 2f);
+                    }
+                    Draw.reset();
+                    Draw.z(z);
+                }
+            }
+
+            if (sortTile == null) return;
             Tmp.v1.set(sortTile.getX(), sortTile.getY()).sub(x, y).limit((size / 2f + 1) * tilesize + 0.5f);
             float xx = x + Tmp.v1.x, yy = y + Tmp.v1.y;
-            int segs = (int)(dst(sortTile.getX(), sortTile.getY()) / tilesize);
+            int segs = (int) (dst(sortTile.getX(), sortTile.getY()) / tilesize);
             Lines.stroke(4f, Pal.gray);
             Lines.dashLine(xx, yy, sortTile.getX(), sortTile.getY(), segs);
             Lines.stroke(2f, Pal.accent);
@@ -277,84 +325,91 @@ public class MinerPoint extends Block {
             Drawf.square(sortTile.getX(), sortTile.getY(), 5, Pal.accent);
         }
 
-        public void spawned(int id){
+        public void spawned(int id) {
             Fx.spawn.at(x, y);
             droneProgress = 0f;
-            if(net.client()){
+            if (net.client()) {
                 whenSyncedUnits.add(id);
             }
         }
 
-        public boolean checkOre(Tile t){
+        public boolean checkOre(Tile t) {
             return Mathf.equal(tile.x, t.x, range) && Mathf.equal(tile.y, t.y, range);
         }
 
-        private boolean validOre(Tile tile, Item item){
-            return (tile.solid() && tile.wallDrop() != null && tile.wallDrop() == item) || (tile.block() == Blocks.air && tile.drop() != null && tile.drop() == item);
+        private boolean validOre(Tile t) {
+            return (t.solid() && t.wallDrop() != null && t.wallDrop() != blockedItem && t.wallDrop().hardness <= tier) ||
+                    (t.block() == Blocks.air && t.drop() != null && t.drop() != blockedItem && t.drop().hardness <= tier);
         }
-        private Tile findOre(Item item){
-            int tx = World.toTile(x), ty = World.toTile(y);
-            Tile result = null;
+
+        private Item oreDrop(Tile t){
+            if(t.solid() && t.wallDrop() != null) return t.wallDrop();
+            if(t.block() == Blocks.air && t.drop() != null) return t.drop();
+
+            return null;
+        }
+
+        private void findOre() {
+            tiles.clear();
+
+            int tx = tile.x, ty = tile.y;
             int tr = range;
-            for(int x = -tr; x <= tr; x++){
-                for(int y = -tr; y <= tr; y++){
-                    if(result != null) break;
+            for (int x = -tr; x <= tr; x++) {
+                for (int y = -tr; y <= tr; y++) {
                     Tile other = world.tile(x + tx, y + ty);
-                    if(other != null && checkOre(other) && validOre(other, item)){
-                        result = other;
+                    if (other != null && checkOre(other)) {
+                        tiles.add(other);
                     }
                 }
             }
-            return result;
         }
 
         @Override
-        public int acceptStack(Item item, int amount, Teamc source){
+        public int acceptStack(Item item, int amount, Teamc source) {
             return Math.min(itemCapacity - items.get(item), amount);
         }
 
         @Override
-        public void buildConfiguration(Table table) {
-            tiles.clear();//直接清除，因为在下面直接显示了不会无效直到关闭
-            int size = content.items().size;
-            for(int i = 0; i < size; i++){
-                Item item = content.item(i);
-                if(item != null){
-                    //Tile t = indexer.findClosestOre(x, y, item);
-                    if(item == blockedItem) continue;
-                    Tile t = findOre(item);
-                    if(t != null && item.hardness <= tier && checkOre(t)) tiles.add(t);
+        public boolean onConfigureTapped(float x, float y) {
+            Tile t = world.tileWorld(x, y);
+            if(t != null && checkOre(t) && validOre(t)){
+                if(sort == t.pos()){
+                    configure(-1);
+                } else {
+                    configure(t.pos());
                 }
+                return true;
             }
-            buildTable(MinerPoint.this, table, tiles, () -> sortTile, this::configure, true);
-        }
-
-        public void configure(Tile value) {
-            EUCall.minerPointConfig(player, self(), value);
+            return false;
         }
 
         @Override
-        public boolean shouldConsume(){
+        public Integer config(){
+            return sort;
+        }
+
+        @Override
+        public boolean shouldConsume() {
             return alwaysCons || units.size < dronesCreated;
         }
 
         @Override
-        public float totalProgress(){
+        public float totalProgress() {
             return totalDroneProgress;
         }
 
         @Override
-        public float progress(){
+        public float progress() {
             return droneProgress;
         }
 
         @Override
-        public void write(Writes write){
+        public void write(Writes write) {
             super.write(write);
             write.f(droneWarmup);
             write.f(droneProgress);
             write.b(units.size);
-            for(Unit unit : units){
+            for (Unit unit : units) {
                 write.i(unit.id);
             }
 
@@ -362,65 +417,19 @@ public class MinerPoint extends Block {
         }
 
         @Override
-        public void read(Reads read, byte revision){
+        public void read(Reads read, byte revision) {
             super.read(read, revision);
             droneWarmup = read.f();
             droneProgress = read.f();
             int count = read.b();
             readUnits.clear();
-            for(int i = 0; i < count; i++){
+            for (int i = 0; i < count; i++) {
                 readUnits.add(read.i());
             }
             whenSyncedUnits.clear();
 
-            sortTile = world.tile(read.i());
+            sort = read.i();
         }
 
-        public <T extends Tile> void buildTable(@Nullable Block block, Table table, Seq<T> tiles, Prov<T> holder, Cons<T> consumer, boolean closeSelect){
-
-            ButtonGroup<ImageButton> group = new ButtonGroup<>();
-            group.setMinCheckCount(0);
-            Table cont = new Table();
-            cont.defaults().size(40);
-
-            int i = 0;
-
-            for(T tile : tiles){
-                ImageButton button = cont.button(Tex.whiteui, Styles.clearTogglei, 24, () -> {
-                    if(closeSelect) control.input.config.hideConfig();
-                }).group(group).tooltip(tile.solid() ? tile.wallDrop().localizedName : tile.drop().localizedName).get();
-                button.changed(() -> consumer.get(button.isChecked() ? tile : null));
-                //button.getStyle().imageUp = new TextureRegionDrawable(tile.solid() ? tile.overlay().uiIcon.found() ? tile.overlay().uiIcon : tile.block().uiIcon : tile.overlay().uiIcon.found() ? tile.overlay().uiIcon : tile.floor().uiIcon);
-                button.getStyle().imageUp = new TextureRegionDrawable(tile.overlay().uiIcon.found() ? tile.overlay().uiIcon : tile.solid() ? tile.block().uiIcon : tile.floor().uiIcon);
-                //button.getStyle().imageUp = new TextureRegionDrawable(tile.block().uiIcon);
-                button.update(() -> button.setChecked(holder.get() == tile));
-
-                if(i++ % 4 == 3){
-                    cont.row();
-                }
-            }
-
-            //add extra blank spaces so it looks nice
-            if(i % 4 != 0){
-                int remaining = 4 - (i % 4);
-                for(int j = 0; j < remaining; j++){
-                    cont.image(Styles.black6);
-                }
-            }
-
-            ScrollPane pane = new ScrollPane(cont, Styles.smallPane);
-            pane.setScrollingDisabled(true, false);
-
-            if(block != null){
-                pane.setScrollYForce(block.selectScroll);
-                pane.update(() -> {
-                    block.selectScroll = pane.getScrollY();
-                });
-            }
-
-            pane.setOverscroll(false, false);
-            table.add(pane).maxHeight(Scl.scl(40 * 5));
-        }
     }
 }
-
