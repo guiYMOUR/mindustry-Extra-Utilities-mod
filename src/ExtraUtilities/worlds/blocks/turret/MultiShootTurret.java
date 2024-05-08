@@ -3,6 +3,7 @@ package ExtraUtilities.worlds.blocks.turret;
 import arc.Core;
 import arc.graphics.Blending;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.*;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.BulletType;
@@ -14,6 +15,7 @@ public class MultiShootTurret extends ItemTurret {
     /** 事实上这个是增加的子弹数 */
     public int perShoot = 3;
     public int shots = 1;
+    public TextureRegion[] heats;
 
     public MultiShootTurret(String name) {
         super(name);
@@ -69,6 +71,7 @@ public class MultiShootTurret extends ItemTurret {
                 if (perHeat[c] <= 0.00001) continue;
                 Draw.color(heatColor, perHeat[c]);
                 Draw.blend(Blending.additive);
+                //TODO use heats[c]
                 Draw.rect(Core.atlas.find(name + "-heat-" + c), x + recoilOffset.x, y + recoilOffset.y, rotation - 90);
             }
             Draw.blend();

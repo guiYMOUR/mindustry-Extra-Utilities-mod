@@ -290,7 +290,7 @@ public class MinerPoint extends Block {
 
             Drawf.dashSquare(Pal.accent, x, y, range * tilesize * 2);
 
-            if(Core.settings.getBool("eu-show-miner-point")) {
+            if(Core.settings != null && Core.settings.getBool("eu-show-miner-point")) {
                 if (tiles.size == 0 && !placeInAir) {
                     findOre();
                     if (tiles.size == 0) {
