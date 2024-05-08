@@ -374,6 +374,7 @@ public class ExtraUtilitiesMod extends Mod{
 
                     if(!onlyPlugIn) {
                         settingsTable.checkPref("eu-show-miner-point", true);
+                        settingsTable.checkPref("eu-show-hole-acc-disk", true);
 
                         settingsTable.checkPref("eu-first-load", true);
                         settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {

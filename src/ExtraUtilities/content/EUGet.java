@@ -4,6 +4,7 @@ import arc.graphics.Color;
 import arc.math.geom.Position;
 import arc.struct.Seq;
 import arc.util.Time;
+import arc.util.noise.Noise;
 import mindustry.content.Fx;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.ArtilleryBulletType;
@@ -179,6 +180,7 @@ public class EUGet {
         return bullets;
     }
 
+    //use for cst bullet
     public static Bullet anyOtherCreate(Bullet bullet, BulletType bt, Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY){
         bullet.type = bt;
         bullet.owner = owner;

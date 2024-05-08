@@ -16,19 +16,18 @@ import arc.struct.Seq;
 import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
+import arc.util.pooling.Pool;
 import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
-import mindustry.gen.Building;
-import mindustry.gen.Healthc;
-import mindustry.gen.Tex;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.graphics.Trail;
 import mindustry.type.UnitType;
 
-import static ExtraUtilities.ExtraUtilitiesMod.name;
+import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static ExtraUtilities.content.EUGet.*;
 import static arc.graphics.g2d.Draw.*;
 import static arc.graphics.g2d.Lines.lineAngle;
@@ -37,7 +36,6 @@ import static mindustry.content.Fx.*;
 import static mindustry.Vars.*;
 
 public class EUFx {
-
     public static Effect StormExp(Color cor, Color liC) {
         return new Effect(72, e -> {
             Draw.color(liC, cor, e.fin());
@@ -310,13 +308,14 @@ public class EUFx {
     }
 
     public static Effect aimEffect(float lifetime, Color color, float width, float length, float spacing){
-        return new Effect(lifetime, e -> {
+        return new Effect(lifetime, length, e -> {
             Draw.color(color);
+            TextureRegion region = Core.atlas.find(name("aim-shoot"));
             float track = Mathf.curve(e.fin(Interp.pow2Out), 0, 0.25f) * Mathf.curve(e.fout(Interp.pow4Out), 0, 0.3f) * e.fin();
             for(int i = 0; i <= length / spacing; i++){
                 Tmp.v1.trns(e.rotation, i * spacing);
                 float f = Interp.pow3Out.apply(Mathf.clamp((e.fin() * length - i * spacing) / spacing)) * (0.6f + track * 0.4f);
-                Draw.rect(Core.atlas.find(name("aim-shoot")), e.x + Tmp.v1.x, e.y + Tmp.v1.y, 144 * Draw.scl * f, 144 * Draw.scl * f, e.rotation - 90);
+                Draw.rect(region, e.x + Tmp.v1.x, e.y + Tmp.v1.y, 155 * Draw.scl * f, 155 * Draw.scl * f, e.rotation - 90);
             }
             Tmp.v1.trns(e.rotation, 0, (2 - track) * Vars.tilesize * width);
             Lines.stroke(track * 2);
@@ -607,5 +606,59 @@ public class EUFx {
 
             if(!Vars.state.isPaused() && shake > 0) Effect.shake(shake, shake, e.x, e.y);
         });
+    }
+
+    public static Effect AccretionDiskEffect = new Effect(60, e -> {
+        if(headless || !(e.data instanceof ateData data) || data.owner == null) return;
+
+        float fin = data.out ? e.finpow() : e.foutpow();
+        float fout = data.out ? e.foutpow() : e.finpow();
+        //float fout = 1 - fin;
+
+        float start = Mathf.randomSeed(e.id, 360f);
+        var b = data.owner;
+
+        float ioRad = data.outRad - (data.outRad - data.inRad) * fin;
+        float rad = data.speed * e.time * 6;
+        float dx = dx(b.x, ioRad, start - rad),
+                dy = dy(b.y, ioRad, start - rad);
+
+        if(data.trail == null) data.trail = new Trail(data.length);
+        float dzin = data.out && e.time > e.lifetime - 10 ? Interp.pow2Out.apply((e.lifetime - e.time)/10) : fin;
+        data.trail.length = data.length;
+        //data.trail.length = (int) (data.length * dzin);
+
+        if(!state.isPaused()) data.trail.update(dx, dy, 1);
+
+        float z = Draw.z();
+        Draw.z(Layer.effect - 19 * fout);
+        //Draw.z(Layer.max - 1);
+        data.trail.draw(Tmp.c3.set(e.color).shiftValue(-e.color.value() * fout), data.width * dzin);
+        //data.trail.draw(e.color, data.width);
+        Draw.z(z);
+    });
+
+    public static class ateData implements Pool.Poolable {
+        public float width;
+        public int length;
+        public float inRad, outRad, speed;
+
+        public transient Trail trail;
+
+        public Bullet owner;
+
+        public boolean out = false;
+
+        @Override
+        public void reset() {
+            width = 0;
+            length = 0;
+            inRad = outRad = speed = 0;
+
+            trail = null;
+            owner = null;
+
+            out = false;
+        }
     }
 }

@@ -23,65 +23,35 @@ public class EUTechTree {
         addToNode(plastaniumConveyor, () -> node(stackHelper));
         addToNode(phaseConveyor, () -> node(itemNode));
         addToNode(phaseConduit, () -> node(liquidNode));
-        addToNode(thermalGenerator, () -> {
-            node(heatPower, () -> {
-                node(windPower, () -> {
-                    node(waterPower);
-                });
-            });
-        });
-        addToNode(sporePress, () -> {
-            node(T2sporePress);
-        });
-        addToNode(blastMixer, () -> {
-            node(T2blast);
-        });
-        addToNode(surgeSmelter, ()->{
-            node(LA, () ->{
-                node(LG);
-            });
-        });
+        addToNode(thermalGenerator, () -> node(heatPower, () -> node(windPower, () -> node(waterPower))));
+        addToNode(sporePress, () -> node(T2sporePress));
+        addToNode(blastMixer, () -> node(T2blast));
+        addToNode(surgeSmelter, ()-> node(LA, () -> node(LG)));
         addToNode(siliconSmelter, () -> node(siliconFurnace));
-        addToNode(pyrolysisGenerator, () -> {
-            node(liquidConsumeGenerator);
-        });
-        addToNode(thermalGenerator, () -> {
-            node(thermalReactor);
-        });
-        addToNode(tetrativeReconstructor, () -> {
-            node(imaginaryReconstructor, () -> {
-                node(suzerain);
-                node(nebula);
-                node(asphyxia);
-                node(Tera);
-                node(apocalypse);
-                node(nihilo);
-                node(narwhal);
-            });
-        });
-        addToNode(airFactory, () -> {
-            node(winglet);
-        });
-        addToNode(segment, () -> {
-            node(dissipation);
-        });
-        addToNode(Vars.content.block(name("shotgun")), () -> {
-            node(onyxBlaster);
-        });
+        addToNode(pyrolysisGenerator, () -> node(liquidConsumeGenerator));
+        addToNode(thermalGenerator, () -> node(thermalReactor));
+        addToNode(tetrativeReconstructor, () -> node(imaginaryReconstructor, () -> {
+            node(suzerain);
+            node(nebula);
+            node(asphyxia);
+            node(Tera);
+            node(apocalypse);
+            node(nihilo);
+            node(narwhal);
+        }));
+        addToNode(airFactory, () -> node(winglet));
+        addToNode(segment, () -> node(dissipation));
+        if(Vars.content.block(name("shotgun")) != null)
+            addToNode(Vars.content.block(name("shotgun")), () -> node(onyxBlaster));
         addToNode(cyclone, () -> {
             node(turretResupplyPoint);
-            node(celebration, () -> {
-                node(celebrationMk2);
-            });
+            node(celebration, () -> node(celebrationMk2));
             node(antiaircraft);
         });
-        addToNode(foreshadow, () -> {
-            node(sancta);
-        });
+        addToNode(swarmer, () -> node(blackhole));
+        addToNode(foreshadow, () -> node(sancta));
 
-        addToNode(memoryCell, () -> {
-            node(buffrerdMemoryBank);
-        });
+        addToNode(memoryCell, () -> node(buffrerdMemoryBank));
         //E
         addToNode(turbineCondenser, () -> {
             node(nitrogenWell);
@@ -91,57 +61,27 @@ public class EUTechTree {
             node(reinforcedDuctBridge);
             node(ekMessDriver);
         });
-        addToNode(reinforcedBridgeConduit, () -> {
-            node(phaseReinforcedBridgeConduit);
-        });
-        addToNode(reinforcedPump, () -> {
-            node(ekPump);
-        });
-        addToNode(electricHeater, () -> {
-            node(largeElectricHeater);
-        });
-        addToNode(heatRedirector, () -> {
-            node(heatTransfer, () -> {
-                node(heatDriver);
-            });
-        });
-        addToNode(heatRouter, () -> {
-            node(heatDistributor);
-        });
-        addToNode(slagHeater, () -> {
-            node(slagReheater);
-        });
-        addToNode(electricHeater, () -> {
-            node(thermalHeater, () -> {});
-        });
-        addToNode(oxidationChamber, () -> {
-            node(T2oxide, () -> {});
-        });
-        addToNode(plasmaBore, () -> {
-            node(minerPoint, () ->{
-                node(minerCenter);
-            });
-        });
-        addToNode(reinforcedPump, () -> {
-            node(arkyciteExtractor, () ->{
-                node(cyanogenPyrolysis);
-            });
-        });
+        addToNode(reinforcedBridgeConduit, () -> node(phaseReinforcedBridgeConduit));
+        addToNode(reinforcedPump, () -> node(ekPump));
+        addToNode(electricHeater, () -> node(largeElectricHeater));
+        addToNode(heatRedirector, () -> node(heatTransfer, () -> node(heatDriver)));
+        addToNode(heatRouter, () -> node(heatDistributor));
+        addToNode(slagHeater, () -> node(slagReheater));
+        addToNode(electricHeater, () -> node(thermalHeater));
+        addToNode(oxidationChamber, () -> node(T2oxide));
+        addToNode(plasmaBore, () -> node(minerPoint, () -> node(minerCenter)));
+        addToNode(reinforcedPump, () -> node(arkyciteExtractor, () -> node(cyanogenPyrolysis)));
         addToNode(reinforcedLiquidRouter, () -> {
-            node(liquidSorter, () ->{});
-            node(liquidValve, () -> {
-                node(communicatingValve);
-            });
+            node(liquidSorter);
+            node(liquidValve, () -> node(communicatingValve));
         });
 
         addToNode(unitRepairTower, () -> node(unitBooster));
-        addToNode(basicAssemblerModule, () -> {
-            node(advAssemblerModule, () -> {
-                node(napoleon);
-                node(havoc);
-                node(arcana);
-            });
-        });
+        addToNode(basicAssemblerModule, () -> node(advAssemblerModule, () -> {
+            node(napoleon);
+            node(havoc);
+            node(arcana);
+        }));
 
         addToNode(breach, () -> {
             node(guiY, () -> {
@@ -151,34 +91,22 @@ public class EUTechTree {
             });
             node(javelin);
         });
-        addToNode(surgeCrucible, () -> {
-            node(ELA);
-        });
-        addToNode(slagIncinerator, () ->{
-            node(liquidIncinerator);
-        });
+        addToNode(surgeCrucible, () -> node(ELA));
+        addToNode(slagIncinerator, () -> node(liquidIncinerator));
 
         //TD
-        TDPlanet.TD.techTree = nodeRoot("TD", TD1, () -> {
-            addToNode(TD1, () -> {
-                node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
-                node(guiYTD1, () -> {
-                    node(BossTD, Seq.with(new SectorComplete(TD1)), () -> {
-                        node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {});
-                    });
-                });
-                node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
-                node(EUItems.stone, () -> {
-                    node(stoneExtractor, () -> {
-                        node(stoneCrusher);
-                        node(stoneMelting);
-                    });
-                });
-                node(breaker);
-                node(coreKeeper);
-                node(mineCellT1, () -> node(mineCellT2));
-            });
-        });
+        TDPlanet.TD.techTree = nodeRoot("TD", TD1, () -> addToNode(TD1, () -> {
+            node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
+            node(guiYTD1, () -> node(BossTD, Seq.with(new SectorComplete(TD1)), () -> node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {})));
+            node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
+            node(EUItems.stone, () -> node(stoneExtractor, () -> {
+                node(stoneCrusher);
+                node(stoneMelting);
+            }));
+            node(breaker);
+            node(coreKeeper);
+            node(mineCellT1, () -> node(mineCellT2));
+        }));
     }
 
     public static void addToNode(UnlockableContent p, Runnable c) {
@@ -222,8 +150,4 @@ public class EUTechTree {
     public static void nodeProduce(UnlockableContent content, Runnable children){
         nodeProduce(content, new Seq<>(), children);
     }
-
-//    public static @Nullable TechNode context(){
-//        return context;
-//    }
 }

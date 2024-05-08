@@ -1,5 +1,6 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.graphics.MainRenderer;
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.distribution.StackHelper;
 import ExtraUtilities.worlds.blocks.effect.Breaker;
@@ -30,6 +31,7 @@ import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
+import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Position;
@@ -52,7 +54,6 @@ import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
-import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -62,14 +63,12 @@ import mindustry.type.*;
 import mindustry.ui.ItemDisplay;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
-import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.blocks.distribution.DirectionLiquidBridge;
 import mindustry.world.blocks.distribution.DuctBridge;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.ArmoredConduit;
-import mindustry.world.blocks.logic.MemoryBlock;
 import mindustry.world.blocks.power.ConsumeGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
@@ -109,8 +108,8 @@ public class EUBlocks {
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
             buffrerdMemoryBank,
-            turretSpeeder, coreKeeper, quantumDomain, breaker,
-            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
+            turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker,
+            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower, blackhole;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
         public LiquidStack[] liquid;
 
@@ -730,9 +729,9 @@ public class EUBlocks {
 
 
         liquidConsumeGenerator = new ConsumeGenerator("liquid-generator"){{
-            requirements(Category.power, with(Items.graphite, 120, Items.silicon, 115, Items.thorium, 65, Items.phaseFabric, 20));
+            requirements(Category.power, with(Items.graphite, 120, Items.silicon, 115, Items.thorium, 65, Items.surgeAlloy, 15));
             size = 3;
-            powerProduction = 660/60f;
+            powerProduction = 630/60f;
             drawer = new DrawMulti(
                     new DrawDefault(),
                     new DrawWarmupRegion(){{
@@ -741,7 +740,7 @@ public class EUBlocks {
                     }},
                     new DrawLiquidRegion()
             );
-            consume(new ConsumeLiquidFlammable(0.4f, 0.2f));
+            consume(new ConsumeLiquidFlammable(0.4f, 0.1f));
             hasLiquids = true;
             generateEffect = new RadialEffect(new Effect(160f, e -> {
                 color(Color.valueOf("6E685A"));
@@ -766,7 +765,7 @@ public class EUBlocks {
             health = 320;
             requirements(Category.power, with(Items.silicon, 95, Items.titanium, 70, Items.thorium, 55, Items.metaglass, 65, Items.plastanium, 60, Items.surgeAlloy, 30));
             size = 3;
-            if(!hardMod) powerProduction = 276/60f;
+            if(!hardMod) powerProduction = 258/60f;
             else powerProduction = 220/60f;
             generateEffect = Fx.none;
             floating = true;
@@ -780,7 +779,7 @@ public class EUBlocks {
             haveBasicPowerOutput = false;
             attribute = Attribute.heat;
             blockedOnlySolid = true;
-            powerProduction = 22/60f;
+            powerProduction = 20/60f;
             outEffect = new RadialEffect(EUFx.absorbEffect2, 4, 90f, 7f);
             outTimer = EUFx.absorbEffect2.lifetime;
             drawer = new DrawMulti(new DrawDefault(), new DrawBlock() {
@@ -2016,6 +2015,162 @@ public class EUBlocks {
             squareSprite = false;
         }};
 
+        blackhole = new aimBulletTurret("blackhole"){{
+            requirements(Category.turret, with(Items.silicon, 600, EUItems.lightninAlloy, 400, Items.phaseFabric, 300));
+            coolant = consume(new ConsumeLiquid(Liquids.water, 1));
+            coolantMultiplier = 0.5f;
+            BulletType bt = new BlackHoleBullet(){{
+                inRad =  8 * 1.8f;
+                outRad = drawSize = 8f * 8;
+                lifetime = 180;
+            }};
+            aimBullet = new fBullet(new fBullet(bt, 30), 0){{
+                despawnEffect = new Effect(30, e -> {
+                    MainRenderer.addBlackHole(e.x, e.y, 0, 20 * 8f * e.foutpow());
+                    Draw.color(Color.white);
+                    for(int i = 0; i < 4; i++){
+                        float a = 90 * i;
+                        float l = i % 2 == 0 ? 60 : 25;
+                        Drawf.tri(e.x, e.y, 8 * e.foutpow(), l * e.fin(Interp.pow2Out), a);
+                    }
+                });
+            }};
+            ammo(Items.blastCompound, new BasicBulletType(){{
+                ammoMultiplier = 1;
+                sprite = "extra-utilities-blackhole-missile";
+                shootEffect = Fx.none;
+                smokeEffect = Fx.none;
+                width = 25;
+                height = 35;
+                shrinkY = 0;
+                damage = 1000;
+                splashDamage = 1000;
+                splashDamageRadius = 12 * 8f;
+                buildingDamageMultiplier = 0.5f;
+                pierceArmor = true;
+
+                homingPower = 1;
+                homingRange = 80;
+                lifetime = 20;
+                speed = 16;
+                trailWidth = 3;
+                trailLength = 9;
+                trailChance = 1;
+                trailColor = Color.valueOf("6f6f6f");
+                hitSound = Sounds.laser;
+                despawnSound = Sounds.laser;
+                hitShake = 3;
+                trailEffect = new Effect(50, e -> {
+                    Draw.color(e.color);
+                    Fill.circle(e.x + Mathf.randomSeed(e.id, -5, 5), e.y + Mathf.randomSeed(e.id, -5, 5), e.rotation * 2 * e.fout());
+                }).layer(Layer.bullet - 1e-2f);
+                fragBullets = 9;
+                fragRandomSpread = 0;
+                fragSpread = 360/9f;
+                fragLifeMin = 0.1f;
+                Color c1 = Color.valueOf("be92f9");
+                fragBullet = new ArtilleryBulletType(6f, 120){{
+                    buildingDamageMultiplier = 0.3f;
+                    drag = 0.02f;
+                    hitEffect = despawnEffect = new MultiEffect(
+                            Fx.scatheSlash,
+                            Fx.massiveExplosion,
+                            new ExplosionEffect(){{
+                                waveLife = 12;
+                                waveRad = 48;
+                                sparks = 8;
+                                smokes = 8;
+                                lifetime = 30;
+                                sparkColor = c1;
+                                sparkLen = 10;
+                                sparkStroke = 2;
+                                sparkRad = 48;
+                                smokeSize = 4;
+                                smokeRad = 48;
+                            }}
+                    );
+                    knockback = 0.8f;
+                    lifetime = 18;
+                    width = height = 18f;
+                    collidesTiles = false;
+                    splashDamageRadius = 48f;
+                    splashDamage = 180f;
+                    backColor = trailColor = hitColor = Color.valueOf("be92f9");
+                    frontColor = Color.white;
+                    despawnShake = 7f;
+                    lightRadius = 30f;
+                    lightColor = Color.valueOf("be92f9");
+                    lightOpacity = 0.5f;
+
+                    trailLength = 20;
+                    trailWidth = 3.5f;
+                    trailEffect = Fx.none;
+                }};
+
+                chargeEffect = new MultiEffect(
+                        EUFx.aimEffect(180, c1, 1f, 45 * 8f, 16),
+                        new Effect(180, e -> {
+                            Draw.color(c1);
+                            Fill.circle(e.x, e.y, 8.5f * e.finpow());
+                            float z = Draw.z();
+                            Draw.z(Layer.max - 10);
+                            Draw.color(Color.black);
+                            Fill.circle(e.x, e.y, 7f * e.finpow());
+                            Draw.z(z);
+                            Angles.randLenVectors(e.id, 8, 36 * e.foutpow(), Mathf.randomSeed(e.id, 360), 360, (x, y) -> {
+                                Draw.color(c1);
+                                Fill.circle(e.x + x, e.y + y, 5f * e.foutpow());
+                                float zs = Draw.z();
+                                Draw.z(Layer.max - 10);
+                                Draw.color(Color.black);
+                                Fill.circle(e.x + x, e.y + y, 4f * e.foutpow());
+                                Draw.z(zs);
+                            });
+                        })
+                );
+                chargeSound = Sounds.lasercharge;
+
+                despawnEffect = hitEffect = new MultiEffect(
+                        new Effect(60, 100, e -> {
+                            float rad = splashDamageRadius;
+
+                            Lines.stroke(e.foutpow() * 3, c1);
+                            Lines.circle(e.x, e.y, rad * e.finpow());
+                        }),
+                        new ExplosionEffect(){{
+                            waveLife = 0;
+                            waveRad = 0;
+                            sparks = 8;
+                            smokes = 8;
+                            lifetime = 50;
+                            sparkColor = c1;
+                            sparkLen = 10;
+                            sparkStroke = 4;
+                            sparkRad = splashDamageRadius;
+                            smokeSize = 9;
+                            smokeRad = splashDamageRadius;
+                        }}
+                );
+            }});
+            recoil = 4f;
+            rotateSpeed = 2f;
+            shootCone = 4f;
+            predictTarget = false;
+            moveWhileCharging = false;
+            ammoPerShot = 6;
+            maxAmmo = ammoPerShot * 5;
+            shoot.firstShotDelay = 180;
+            size = 5;
+            health = 1000;
+            consumePower(10);
+            range = 40 * 8;
+            reload = 180 + 90;
+            shootSound = Sounds.missileLarge;
+            canOverdrive = false;
+
+            drawer = new DrawTurret("reinforced-");
+        }};
+
         fiammetta = new Fiammetta("fiammetta"){{
             requirements(Category.turret, with(EUItems.lightninAlloy, 280, Items.oxide, 500, Items.carbide, 300, Items.silicon, 600, Items.surgeAlloy, 300));
             size = 5;
@@ -2611,13 +2766,24 @@ public class EUBlocks {
                 super.setBars();
                 removeBar("liquid");
             }
-
-//            @Override
-//            public boolean canPlaceOn(Tile tile, Team team, int rotation) {
-//                return super.canPlaceOn(tile, team, rotation) && (!hardMod || state == null || state.rules.infiniteResources);
-//            }
         };
 
+        mendTurret = new MendTurret("heal"){{
+            requirements(Category.effect, with(EUItems.lightninAlloy, 80, Items.silicon, 300, Items.graphite, 280, Items.thorium, 180));
+            size = 3;
+            range = 22 * 8;
+            shootType = new HealCone(30, range - 8, false){{
+                healAmount = 300;
+                lifetime = 30;
+                optimalLifeFract = 0.5f;
+            }};
+
+            angleBoost = 0.5f;
+            shootSound = Sounds.none;
+            loopSound = Sounds.spellLoop;
+            consumePower(8);
+            consumeItem(Items.phaseFabric).boost();
+        }};
         coreKeeper = new CoreKeeper("core-keeper"){{
             requirements(Category.effect, with(EUItems.lightninAlloy, 50, Items.silicon, 400, Items.thorium, 200));
             size = 3;

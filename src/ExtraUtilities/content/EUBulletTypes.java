@@ -173,7 +173,7 @@ public class EUBulletTypes {
     public static BulletType rankB = new BasicBulletType(){{
         speed = 2;
         lifetime = 216;
-        damage = 38;
+        damage = 31;
         buildingDamageMultiplier = 0.5f;
         width = 10;
         height = 7;
@@ -190,8 +190,8 @@ public class EUBulletTypes {
 
     public static BulletType suk = new BasicBulletType(){{
         speed = 2;
-        lifetime = 120;
-        damage = 61;
+        lifetime = 115;
+        damage = 52;
         buildingDamageMultiplier = 0.5f;
         width = 32;
         height = 18;
