@@ -44,6 +44,7 @@ exports.toBullet = function(block, item){
     return key.get(item);
 }
 
+//炮塔冷却系数，如果第调用时三个参数存在且不为零，就可以设置炮塔的coolantMultiplier
 exports.Coolant = function(block, v, coolantMultiplier){
     block.coolant = block.consumeCoolant(v);
     if(coolantMultiplier) block.coolantMultiplier = coolantMultiplier;

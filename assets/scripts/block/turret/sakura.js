@@ -15,7 +15,7 @@ sakura.range = 240;
 sakura.shootSound = Sounds.shootBig;
 sakura.shootEffect = Fx.thoriumShoot;
 sakura.smokeEffect = Fx.thoriumShoot;
-lib.Coolant(sakura, 0.3);
+lib.Coolant(sakura, 0.4, 2.5);
 sakura.requirements = ItemStack.with(
     Items.lead, 180,
     Items.silicon, 120,

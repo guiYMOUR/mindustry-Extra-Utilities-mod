@@ -5,7 +5,7 @@ th2.size = 4;
 th2.itemCapacity = 40;
 th2.health = 2400;
 th2.itemDuration = 300;
-th2.powerProduction = 1800/60;
+th2.powerProduction = 1680/60;
 th2.consumeItem(Items.thorium);
 th2.heating = 0.024;
 th2.explosionRadius = 50;

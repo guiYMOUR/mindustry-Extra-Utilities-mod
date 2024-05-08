@@ -1,5 +1,5 @@
 const T2ST = extend(ConsumeGenerator, "T2-steam-generator", {});
-T2ST.powerProduction = 13;
+T2ST.powerProduction = 690/60;
 T2ST.itemDuration = 60;
 T2ST.consumeLiquid(Liquids.water, 0.15);
 T2ST.hasLiquids = true;
