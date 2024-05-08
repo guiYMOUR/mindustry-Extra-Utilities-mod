@@ -51,6 +51,8 @@ public class EUTechTree {
         addToNode(swarmer, () -> node(blackhole));
         addToNode(foreshadow, () -> node(sancta));
 
+        addToNode(mendProjector, () -> node(mendTurret));
+
         addToNode(memoryCell, () -> node(buffrerdMemoryBank));
         //E
         addToNode(turbineCondenser, () -> {
