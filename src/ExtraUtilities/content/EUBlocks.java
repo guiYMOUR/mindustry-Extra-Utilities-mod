@@ -2043,8 +2043,8 @@ public class EUBlocks {
                 width = 25;
                 height = 35;
                 shrinkY = 0;
-                damage = 1000;
-                splashDamage = 1000;
+                damage = 1500;
+                splashDamage = 1500;
                 splashDamageRadius = 12 * 8f;
                 buildingDamageMultiplier = 0.5f;
                 pierceArmor = true;
@@ -2113,9 +2113,9 @@ public class EUBlocks {
                             Draw.color(c1);
                             Fill.circle(e.x, e.y, 8.5f * e.finpow());
                             float z = Draw.z();
-                            Draw.z(Layer.max - 10);
+                            Draw.z(Layer.max - 8);
                             Draw.color(Color.black);
-                            Fill.circle(e.x, e.y, 7f * e.finpow());
+                            Fill.circle(e.x, e.y, 7.8f * e.finpow());
                             Draw.z(z);
                             Angles.randLenVectors(e.id, 8, 36 * e.foutpow(), Mathf.randomSeed(e.id, 360), 360, (x, y) -> {
                                 Draw.color(c1);
@@ -2123,7 +2123,7 @@ public class EUBlocks {
                                 float zs = Draw.z();
                                 Draw.z(Layer.max - 10);
                                 Draw.color(Color.black);
-                                Fill.circle(e.x + x, e.y + y, 4f * e.foutpow());
+                                Fill.circle(e.x + x, e.y + y, 5f * e.foutpow());
                                 Draw.z(zs);
                             });
                         })
@@ -2164,7 +2164,7 @@ public class EUBlocks {
             health = 1000;
             consumePower(10);
             range = 40 * 8;
-            reload = 180 + 90;
+            reload = 360;
             shootSound = Sounds.missileLarge;
             canOverdrive = false;
 
@@ -2773,7 +2773,7 @@ public class EUBlocks {
             size = 3;
             range = 22 * 8;
             shootType = new HealCone(30, range - 8, false){{
-                healAmount = 300;
+                healAmount = 600;
                 lifetime = 30;
                 optimalLifeFract = 0.5f;
             }};
@@ -2781,7 +2781,7 @@ public class EUBlocks {
             angleBoost = 0.5f;
             shootSound = Sounds.none;
             loopSound = Sounds.spellLoop;
-            consumePower(8);
+            consumePower(6);
             consumeItem(Items.phaseFabric).boost();
         }};
         coreKeeper = new CoreKeeper("core-keeper"){{

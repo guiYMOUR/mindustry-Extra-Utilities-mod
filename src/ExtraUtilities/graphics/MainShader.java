@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.gl.Shader;
 
 import static arc.Core.files;
+import static mindustry.Vars.headless;
 import static mindustry.Vars.tree;
 
 public class MainShader {

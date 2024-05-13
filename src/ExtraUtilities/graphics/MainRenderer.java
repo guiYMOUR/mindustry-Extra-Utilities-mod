@@ -6,8 +6,8 @@ import arc.graphics.g2d.*;
 import arc.graphics.gl.*;
 import arc.struct.*;
 import arc.util.Tmp;
-import arc.util.pooling.Pool;
 import arc.util.pooling.Pools;
+import mindustry.Vars;
 import mindustry.game.EventType.*;
 import mindustry.graphics.*;
 
@@ -17,16 +17,18 @@ public class MainRenderer{
     private final Seq<BlackHole> holes = new Seq<>();
     private static MainRenderer renderer;
 
-    private final FrameBuffer buffer;
+    private FrameBuffer buffer;
 
     private static final float[][] initFloat = new float[510][];
-    private static final Pool<BlackHole> holePool = Pools.get(BlackHole.class, BlackHole::new);
+    //private static final Pool<BlackHole> holePool = Pools.get(BlackHole.class, BlackHole::new);
 
     protected MainRenderer(){
-        MainShader.createShader();
+        if(!Vars.headless) {
+            MainShader.createShader();
 
-        buffer = new FrameBuffer();
-        Events.run(Trigger.draw, this::advancedDraw);
+            buffer = new FrameBuffer();
+            Events.run(Trigger.draw, this::advancedDraw);
+        }
     }
 
     public static void init(){
@@ -37,10 +39,10 @@ public class MainRenderer{
     }
 
     public static void addBlackHole(float x, float y, float inRadius, float outRadius, float alpha){
-        renderer.addHole(x, y, inRadius, outRadius, alpha);
+        if(!Vars.headless) renderer.addHole(x, y, inRadius, outRadius, alpha);
     }
     public static void addBlackHole(float x, float y, float inRadius, float outRadius){
-        renderer.addHole(x, y, inRadius, outRadius, 1);
+        if(!Vars.headless) renderer.addHole(x, y, inRadius, outRadius, 1);
     }
 
     private void advancedDraw(){
