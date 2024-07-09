@@ -786,48 +786,7 @@ public class EUUnitTypes {
                                         sparkLen = 12f;
                                         sparkStroke = 3f;
                                     }},
-                                    new Effect(100, e -> {
-                                        float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
-                                        for(int a : Mathf.signs) {
-                                            for (int i = 0; i < 36; i++) {
-                                                int finalI = i;
-                                                e.scaled(100, b -> {
-                                                    float dx = EUGet.dx(e.x, splashDamageRadius * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10)),
-                                                            dy = EUGet.dy(e.y, splashDamageRadius * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10));
-                                                    Draw.color(eccb);
-                                                    Fill.circle(dx, dy, (5f * finalI / 36f + 0.2f) * fee);
-                                                });
-                                            }
-                                        }
-                                    }),
-                                    new Effect(100, e -> {
-                                        float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
-                                        for(int a : Mathf.signs) {
-                                            for (int i = 0; i < 36; i++) {
-                                                int finalI = i;
-                                                e.scaled(100, b -> {
-                                                    float dx = EUGet.dx(e.x, (splashDamageRadius - 24) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 120),
-                                                            dy = EUGet.dy(e.y, (splashDamageRadius - 24) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 120);
-                                                    Draw.color(eccb);
-                                                    Fill.circle(dx, dy, (5f * finalI / 36f + 0.2f) * fee);
-                                                });
-                                            }
-                                        }
-                                    }),
-                                    new Effect(100, e -> {
-                                        float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
-                                        for(int a : Mathf.signs) {
-                                            for (int i = 0; i < 36; i++) {
-                                                int finalI = i;
-                                                e.scaled(100, b -> {
-                                                    float dx = EUGet.dx(e.x, (splashDamageRadius - 48) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 240),
-                                                            dy = EUGet.dy(e.y, (splashDamageRadius - 48) * e.fin(), (e.time * 8 + finalI) * a + Mathf.randomSeed(e.id, -10, 10) + 240);
-                                                    Draw.color(eccb);
-                                                    Fill.circle(dx, dy, (5f * finalI / 36f + 0.2f) * fee);
-                                                });
-                                            }
-                                        }
-                                    }),
+                                    EUFx.airAsh(100, splashDamageRadius, 24, eccb, 5, 36),
                                     EUFx.diffEffect(100, 6, splashDamageRadius * 0.8f, 10, 140, 40, 40, eccl, -1)
                             );
 
@@ -1034,7 +993,7 @@ public class EUUnitTypes {
             itemCapacity = 240;
             ammoType = new ItemAmmoType(Items.thorium);
 
-            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped);
+            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, EUStatusEffects.awsl);
 
             abilities.add(new TerritoryFieldAbility(20 * 8, 90, 210){{
                 open = true;
@@ -1184,7 +1143,7 @@ public class EUUnitTypes {
             groundLayer = Layer.legUnit;
             ammoType = new PowerAmmoType(3800);
 
-            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet, StatusEffects.electrified);
+            immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet, StatusEffects.electrified, EUStatusEffects.awsl);
 
             abilities.add(new EnergyFieldAbility(60f, 90f, 200f){{
                 maxTargets = 25;
@@ -1302,7 +1261,7 @@ public class EUUnitTypes {
             legSplashDamage = 100;
             legSplashRange = 64;
 
-            immunities = ObjectSet.with(StatusEffects.wet, StatusEffects.sapped);
+            immunities = ObjectSet.with(StatusEffects.wet, StatusEffects.sapped, EUStatusEffects.awsl);
             
             BulletType sapper = new SapBulletType(){{
                 sapStrength = 1.5f;
@@ -1472,7 +1431,7 @@ public class EUUnitTypes {
             engineOffset = 41;
             engineSize = 11;
             targetFlags = UnitTypes.eclipse.targetFlags;
-            immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting, StatusEffects.wet);
+            immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting, StatusEffects.wet, EUStatusEffects.awsl);
             ammoType = new ItemAmmoType(Items.pyratite);
 
             abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
@@ -2021,7 +1980,7 @@ public class EUUnitTypes {
                     new Rect(-113, -133, 70, 90)
             };
 
-            immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped);
+            immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped, EUStatusEffects.awsl);
             ammoType = new ItemAmmoType(Items.blastCompound);
 
             abilities.add(new PcShieldArcAbility(){{
@@ -2035,6 +1994,8 @@ public class EUUnitTypes {
             }});
 
             Color esc = Color.valueOf("feb380");
+            Color escAlpha = esc.cpy().a(0.8f);
+            Color escDark = esc.cpy().mul(Pal.lightishGray);
             Mover mover = bullet -> {
                 if(bullet.type == null) return;
                 float fout = Math.max((60 - bullet.time)/60, 0);
@@ -2054,7 +2015,7 @@ public class EUUnitTypes {
                         shootY = -5;
                         reload = 60;
                         bullet = new CtrlMissile("", -1, -1){{
-                            damage = 110;
+                            damage = 100;
                             speed = 15;
                             lifetime = 24;
                             homingRange = speed * lifetime;
@@ -2063,9 +2024,26 @@ public class EUUnitTypes {
                             trailLength = 5;
                             trailWidth = 4;
                             trailColor = esc;
-                            trailEffect = Fx.missileTrail;
-                            trailInterval = 1;
-                            despawnEffect = hitEffect = EUFx.gone(esc);
+                            trailRotation = true;
+                            trailEffect =  new Effect(24, e -> {
+                                Draw.color(escAlpha);
+                                Angles.randLenVectors(e.id, 1, 6f * e.foutpow(), e.rotation, 180, (x, y) -> {
+                                    Drawf.tri(e.x + x, e.y + y, 4.5f * e.foutpow(), 16, e.rotation);
+                                    Drawf.tri(e.x + x, e.y + y, 4.5f * e.foutpow(), 40 * e.foutpow(), e.rotation + 180);
+                                });
+                            });
+                            trailInterval = 1f;
+                            despawnEffect = new Effect(30, e -> {
+                                Draw.color(escAlpha);
+                                Angles.randLenVectors(e.id, 5, 20 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 10 * e.foutpow()));
+                            });
+                            hitEffect = new Effect(72, e -> {
+                                Draw.color(esc);
+                                rand.setSeed(e.id);
+                                for(int i = 0; i < 5; i++){
+                                    Drawf.tri(e.x, e.y, 12, 72 * e.foutpow(), e.rotation + rand.random(-45, 45));
+                                }
+                            });
                             despawnSound = hitSound = Sounds.artillery;
                         }
 
@@ -2104,10 +2082,9 @@ public class EUUnitTypes {
 
                         bullet = new ScarletDevil(esc){{
                             hitSound = despawnSound = Sounds.explosionbig;
-                            damage = 410;
+                            damage = 310;
                             splashDamage = 390;
-                            splashDamageRadius = 12 * 8f;
-                            buildingDamageMultiplier = 0.8f;
+                            splashDamageRadius = 13 * 8f;
                             hitEffect = despawnEffect = new ExplosionEffect(){{
                                 lifetime = 30f;
                                 waveStroke = 5f;
@@ -2252,6 +2229,9 @@ public class EUUnitTypes {
                             speed = 4.1f;
                             lifetime = 30;
                             collides = collidesGround = collidesAir = collidesTiles = absorbable = hittable = false;
+//                            trailColor = escDark;
+//                            trailLength = 8;
+//                            trailWidth = 12;
                         }
 
                             @Override
@@ -2281,6 +2261,11 @@ public class EUUnitTypes {
                                     Drawf.tri(b.x, b.y, 10 * fout, 21 * fout, b.rotation() - 90);
                                     Drawf.tri(b.x, b.y, 10 * fout, 21 * fout, b.rotation() + 90);
                                 }
+                            }
+
+                            @Override
+                            public void removed(Bullet b) {
+
                             }
                         };
 
@@ -2319,8 +2304,8 @@ public class EUUnitTypes {
                             fragBullets = 4;
 
                             fragBullet = new BulletType(){{
-                                damage = splashDamage = 140;
-                                splashDamageRadius = 8 * 8;
+                                damage = splashDamage = 130;
+                                splashDamageRadius = 9f * 8;
                                 keepVelocity = false;
                                 homingRange = 45 * 8;
                                 homingPower = 0.3f;
@@ -2328,8 +2313,8 @@ public class EUUnitTypes {
                                 speed = 8;
                                 lifetime = 48;
                                 trailColor = Color.valueOf("feb380");
-                                trailWidth = 7;
-                                trailLength = 7;
+                                trailWidth = 5f;
+                                trailLength = 9;
                                 hitEffect = despawnEffect = new MultiEffect(new Effect(30, e -> {
                                     Lines.stroke(10 * e.foutpow(), esc);
                                     Lines.circle(e.x, e.y, splashDamageRadius * e.finpow());
@@ -2346,8 +2331,8 @@ public class EUUnitTypes {
                                     sparkRad = splashDamageRadius;
                                     sparkLen = 6f;
                                     sparkStroke = 2f;
-                                }});
-                                hitSound = despawnSound = Sounds.explosion;
+                                }}, EUFx.airAsh(72, splashDamageRadius, splashDamageRadius/5, escDark, 2, 30));
+                                        hitSound = despawnSound = Sounds.explosion;
                             }
 
                                 @Override
@@ -2361,9 +2346,10 @@ public class EUUnitTypes {
                                 public void createFrags(Bullet b, float x, float y) {
                                     super.createFrags(b, x, y);
                                     float a = Mathf.random(360);
-                                    for(int i = 0; i < 4; i++){
-                                        eb.create(b, b.team, x, y, a + i * (360/8f), -1, 1,  1, i * 3f);
-                                        eb.create(b, b.team, x, y, a + i * (360/8f) + 180, -1, 1,  1, i * 5f);
+                                    for(int i = 0; i < 3; i++){
+                                        eb.create(b, b.team, x, y, a + i * (360/9f), -1, 1,  1, i * 5f);
+                                        eb.create(b, b.team, x, y, a + i * (360/9f) + 120, -1, 1,  1, i * 5f);
+                                        eb.create(b, b.team, x, y, a + i * (360/9f) + 240, -1, 1,  1, i * 5f);
                                     }
                                 }
                             };
@@ -2448,7 +2434,7 @@ public class EUUnitTypes {
             engineSize = 6;
             engineOffset = 22.3f;
 
-            immunities.addAll(StatusEffects.wet, StatusEffects.freezing, StatusEffects.sapped, StatusEffects.disarmed, StatusEffects.electrified, EUStatusEffects.speedDown);
+            immunities.addAll(StatusEffects.wet, StatusEffects.freezing, StatusEffects.sapped, StatusEffects.disarmed, StatusEffects.electrified, EUStatusEffects.speedDown, EUStatusEffects.awsl);
             
             abilities.add(
                     new SuppressionFieldAbility() {{
@@ -2498,16 +2484,27 @@ public class EUUnitTypes {
                             sparkStroke = 2f;
                         }};
                         BulletType ms = new CtrlMissile(name("havoc-missile"), 14, 20){{
-                            damage = splashDamage = 160;
+                            damage = splashDamage = 130;
                             splashDamageRadius = spr;
                             despawnEffect = hitEffect = de;
                             speed = 6;
                             lifetime = 90;
                             homingPower = 8;
-                            trailEffect = Fx.artilleryTrail;
-                            trailInterval = 1;
+                            trailEffect = new Effect(18, e -> {
+                                if(!(e.data instanceof Float time)) return;
+                                Draw.color(Pal.suppress);
+                                float sin = Mathf.sin(time, 5, 5.5f);
+                                float ex = EUGet.dx(e.x, sin, e.rotation + 90),
+                                        ey = EUGet.dy(e.y, sin, e.rotation + 90);
+                                Fill.circle(ex, ey, 3.4f * e.foutpow());
+                                ex = EUGet.dx(e.x, sin, e.rotation - 90);
+                                ey = EUGet.dy(e.y, sin, e.rotation - 90);
+                                Fill.circle(ex, ey, 3.4f * e.foutpow());
+                            }).layer(Layer.bullet - 0.0001f);
+                            trailRotation = true;
+                            trailInterval = 0.1f;
                             trailWidth = 4;
-                            trailLength = 8;
+                            trailLength = 13;
                             trailColor = Pal.suppress;
 
                             autoHoming = true;
@@ -2520,9 +2517,16 @@ public class EUUnitTypes {
                                 super.update(b);
                                 b.initVel(b.rotation(), speed * Math.min(b.finpow() * 2, 1));
                             }
+
+                            @Override
+                            public void updateTrailEffects(Bullet b) {
+                                if(b.timer(0, trailInterval)){
+                                    trailEffect.at(b.x, b.y, trailRotation ? b.rotation() : trailParam, trailColor, b.time);
+                                }
+                            }
                         };
                         bullet = new BulletType(){{
-                            damage = splashDamage = 160;
+                            damage = splashDamage = 130;
                             splashDamageRadius = spr;
                             hitEffect = despawnEffect = Fx.casing4;
                             speed = 10;
@@ -2581,7 +2585,7 @@ public class EUUnitTypes {
                         layerOffset = -0.1f;
                         shootY = 10;
                         bullet = new BulletType(){{
-                            damage = 120;
+                            damage = 100;
                             speed = 10;
                             lifetime = 55 * 8f / 10f;
                             homingPower = 0.3f;
@@ -2629,8 +2633,8 @@ public class EUUnitTypes {
                         y = 0;
                         shootCone = 360;
                         BulletType cdd = new diffBullet(360, 3){{
-                            damage = splashDamage = 500;
-                            splashDamageRadius = 10f * 8;
+                            damage = splashDamage = 450;
+                            splashDamageRadius = 11f * 8;
                             lifetime = 90;
                             color = Pal.suppress;
                             pfin = false;
@@ -2765,8 +2769,8 @@ public class EUUnitTypes {
                         shootSound = Sounds.laser;
                         bullet = new mixBoom(Pal.suppress){{
                             damage = 0;
-                            splashDamage = 180;
-                            splashDamageRadius = 8 * 8;
+                            splashDamage = 150;
+                            splashDamageRadius = 9 * 8;
                             lifetime = 25;
                             speed = 16;
                             trailInterval = 0;
@@ -2790,8 +2794,8 @@ public class EUUnitTypes {
                                 speed = 3f;
                                 trailColor = color = Pal.suppress;
                                 damage = 0;
-                                splashDamage = 32;
-                                splashDamageRadius = 5.4f * 8;
+                                splashDamage = 30;
+                                splashDamageRadius = 5.5f * 8;
                                 trailWidth = 4;
                                 trailLength = 8;
                                 hitEffect = despawnEffect = new ExplosionEffect(){{
@@ -2935,7 +2939,7 @@ public class EUUnitTypes {
             alwaysShootWhenMoving = true;
             maxRange = 50 * 8f;
 
-            immunities.addAll(StatusEffects.wet, StatusEffects.unmoving, StatusEffects.disarmed, StatusEffects.slow);
+            immunities.addAll(StatusEffects.wet, StatusEffects.unmoving, StatusEffects.disarmed, StatusEffects.slow, EUStatusEffects.awsl);
 
             weapons.add(
                     new Weapon(name("arcana-wm")){{
@@ -2950,10 +2954,11 @@ public class EUUnitTypes {
                         shootY = 10;
 
                         BulletType crack = new LaserBulletType(){{
-                            damage= 130;
-                            length = 90;
+                            damage = 90;
+                            length = 100;
                             lifetime = 20;
                             laserAbsorb = false;
+                            pierceArmor = true;
                         }
 
                             @Override
@@ -2982,7 +2987,7 @@ public class EUUnitTypes {
                                     float yy = b.y + Mathf.random(-12, 12);
                                     crack.create(b, xx, yy, b.rotation() + 90 + r);
                                     crack.create(b, xx, yy, b.rotation() - 90 + r);
-                                    Sounds.laserblast.at(xx, yy, 0.5f, 0.5f);
+                                    Sounds.laserblast.at(xx, yy, 0.5f, 0.25f);
                                     Effect.shake(5, 5, xx, yy);
                                 }
                             }
@@ -2992,8 +2997,8 @@ public class EUUnitTypes {
                         bullet = new BulletType(){{
                             lifetime = 22;
                             speed = 20;
-                            splashDamage = 315;
-                            splashDamageRadius = 8 * 8;
+                            splashDamage = 250;
+                            splashDamageRadius = 8.5f * 8;
                             trailLength = 9;
                             trailWidth = 5;
                             trailColor = Pal.techBlue;
@@ -3108,7 +3113,7 @@ public class EUUnitTypes {
                         continuous = true;
                         cooldownTime = 150;
                         bullet = new liContinuousLaserBullet(){{
-                            damage = 1100/12f;
+                            damage = 900/12f;
                             lifetime = 150;
                             colors = new Color[]{Pal.techBlue, Pal.lancerLaser, Color.white};
                             incendAmount = 0;
@@ -3117,6 +3122,7 @@ public class EUUnitTypes {
                             width = 6;
                             length = 30 * 8;
                             pierceCap = 4;
+                            pierceArmor = true;
                             hitEffect = new Effect(18, e -> {
                                 Draw.color(Pal.techBlue);
                                 Angles.randLenVectors(e.id, 3, 16 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 9 * e.foutpow()));
@@ -3176,7 +3182,7 @@ public class EUUnitTypes {
                         targetInterval = targetSwitchInterval = 12;
                         mountType = reRotMount::new;
 
-                        bullet = new BasicBulletType(6, 55){{
+                        bullet = new BasicBulletType(6, 50){{
                             width = 10;
                             height = 15;
                             shootEffect = Fx.lancerLaserShoot;

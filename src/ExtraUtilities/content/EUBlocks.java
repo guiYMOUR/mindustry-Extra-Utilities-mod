@@ -9,6 +9,7 @@ import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
+import ExtraUtilities.worlds.blocks.logic.Clock;
 import ExtraUtilities.worlds.blocks.logic.CopyMemoryBlock;
 import ExtraUtilities.worlds.blocks.power.LightenGenerator;
 import ExtraUtilities.worlds.blocks.power.SpaceGenerator;
@@ -17,6 +18,7 @@ import ExtraUtilities.worlds.blocks.production.*;
 import ExtraUtilities.worlds.blocks.turret.*;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.CrystalTower;
 import ExtraUtilities.worlds.blocks.turret.TowerDefence.MineCell;
+import ExtraUtilities.worlds.blocks.turret.wall.Aparajito;
 import ExtraUtilities.worlds.blocks.turret.wall.Domain;
 import ExtraUtilities.worlds.blocks.unit.ADCPayloadSource;
 import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
@@ -42,10 +44,7 @@ import arc.scene.ui.layout.Stack;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import arc.util.Scaling;
-import arc.util.Strings;
-import arc.util.Time;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
@@ -54,6 +53,7 @@ import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
+import mindustry.entities.units.BuildPlan;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -107,7 +107,8 @@ public class EUBlocks {
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
-            buffrerdMemoryBank,
+            aparajito, aparajitoLarge,
+            buffrerdMemoryBank, clock, tableClock,
             turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower, blackhole;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
@@ -1924,8 +1925,8 @@ public class EUBlocks {
                                 healColor = EUItems.lightninAlloy.color;
                                 buildingDamageMultiplier = 0.7f;
 
-                                fb.splashDamage = 50;
-                                fb.splashDamageRadius = 3 * 8f;
+                                fb.splashDamage = 60;
+                                fb.splashDamageRadius = 3.3f * 8f;
 
                                 if(hardMod) {
                                     fb.damage -= 10;
@@ -2035,6 +2036,7 @@ public class EUBlocks {
                     }
                 });
             }};
+
             ammo(Items.blastCompound, new BasicBulletType(){{
                 ammoMultiplier = 1;
                 sprite = "extra-utilities-blackhole-missile";
@@ -2768,6 +2770,27 @@ public class EUBlocks {
             }
         };
 
+        aparajito = new Aparajito("aparajito"){{
+            requirements(Category.defense, with(Items.surgeAlloy, 4, Items.phaseFabric, 3, Items.carbide, 4));
+            size = 1;
+            health = 4200/4;
+            armor = 10;
+            healColor = Items.carbide.color;
+
+            lightningChance = 0.1f;
+            lightningDamage = 30;
+        }};
+        aparajitoLarge = new Aparajito("aparajito-large"){{
+            requirements(Category.defense, with(Items.surgeAlloy, 16, Items.phaseFabric, 12, Items.carbide, 16));
+            size = 2;
+            health = 4200;
+            armor = 10;
+            healColor = Items.carbide.color;
+
+            lightningChance = 0.1f;
+            lightningDamage = 30;
+        }};
+
         mendTurret = new MendTurret("heal"){{
             requirements(Category.effect, with(EUItems.lightninAlloy, 80, Items.silicon, 300, Items.graphite, 280, Items.thorium, 180));
             size = 3;
@@ -2852,7 +2875,35 @@ public class EUBlocks {
             memoryCapacity = 512;
             size = 2;
         }};
+        //WIP...
+        clock = new Clock("clock"){{
+            requirements(Category.logic, with(Items.silicon, 10));
+            health = 80;
+            size = 1;
+        }};
+        tableClock = new GenericCrafter("clockBack"){{
+            size = 4;
+            health = 3000;
+            requirements(Category.defense, with(Items.silicon, 100, Items.graphite, 100));
+            drawer = new DrawBlock() {
+                @Override
+                public void draw(Building build) {
+                    DrawFunc.drawClockTable(-12, build, 0, size * 8, 0, 0, Pal.lightishGray,
+                            Core.atlas.find(name("clockBack")),
+                            Core.atlas.find(name("clockSt1")),
+                            Core.atlas.find(name("clockMt1")),
+                            Core.atlas.find(name("clockHt1"))
+                    );
+                }
 
+                @Override
+                public void drawPlan(Block block, BuildPlan plan, Eachable<BuildPlan> list) {
+                    Fill.rect(plan.drawx(), plan.drawy(), block.size * tilesize, block.size * tilesize);
+                    Draw.rect(block.uiIcon, plan.drawx(), plan.drawy());
+                }
+            };
+            buildVisibility = BuildVisibility.editorOnly;
+        }};
 
         randomer = new Randomer("randomer"){{
             requirements(Category.distribution, with(Items.silicon, 1));

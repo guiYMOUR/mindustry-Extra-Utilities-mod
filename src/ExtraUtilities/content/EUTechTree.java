@@ -54,6 +54,7 @@ public class EUTechTree {
         addToNode(mendProjector, () -> node(mendTurret));
 
         addToNode(memoryCell, () -> node(buffrerdMemoryBank));
+        addToNode(message, () -> node(clock));
         //E
         addToNode(turbineCondenser, () -> {
             node(nitrogenWell);
@@ -93,6 +94,11 @@ public class EUTechTree {
             });
             node(javelin);
         });
+        addToNode(reinforcedSurgeWall,
+                () -> node(aparajito,
+                        () -> node(aparajitoLarge)
+                )
+        );
         addToNode(surgeCrucible, () -> node(ELA));
         addToNode(slagIncinerator, () -> node(liquidIncinerator));
 

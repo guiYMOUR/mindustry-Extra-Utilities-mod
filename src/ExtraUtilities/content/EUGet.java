@@ -1,11 +1,27 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.ExtraUtilitiesMod;
+import arc.Core;
+import arc.func.Cons;
+import arc.func.Cons2;
 import arc.graphics.Color;
+import arc.graphics.Pixmap;
+import arc.graphics.Pixmaps;
+import arc.graphics.Texture;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.PixmapRegion;
+import arc.graphics.g2d.TextureAtlas;
+import arc.graphics.g2d.TextureRegion;
+import arc.graphics.gl.PixmapTextureData;
 import arc.math.geom.Position;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.noise.Noise;
+import mindustry.Vars;
 import mindustry.content.Fx;
+import mindustry.content.Items;
+import mindustry.content.Liquids;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BulletType;
@@ -14,8 +30,11 @@ import mindustry.entities.pattern.ShootSpread;
 import mindustry.game.Team;
 import mindustry.gen.Bullet;
 import mindustry.gen.Entityc;
+import mindustry.gen.Iconc;
 import mindustry.gen.Velc;
 import mindustry.type.Item;
+import mindustry.type.Liquid;
+import mindustry.ui.Fonts;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -24,7 +43,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static mindustry.Vars.*;
+import static mindustry.content.Liquids.*;
+import static mindustry.content.Items.*;
 
 /**unfinished*/
 
@@ -215,5 +237,115 @@ public class EUGet {
         if(bt.keepVelocity && owner instanceof Velc) bullet.vel.add(((Velc)owner).vel());
 
         return bullet;
+    }
+
+    public static void liquid(ObjectMap<Integer, Cons<Liquid>> cons, String name, Color color, float exp, float fla, float htc, float vis, float temp) {
+        for (int i = 1 ; i < 10 ; i++){
+            int index = i;
+            var l = new Liquid(name + index, color){{
+                explosiveness = exp * index;//爆炸性
+                flammability = fla * index;//燃烧性
+                heatCapacity = htc * index;//比热容
+                viscosity = vis * index;//粘度
+                temperature = temp / index;//温度
+            }};
+            if(cons != null && cons.size > 0 && cons.containsKey(i)){
+                cons.get(i).get(l);
+            }
+        }
+    }
+    public static void liquid(String name, Color color, float exp, float fla, float htc, float vis, float temp) {
+        liquid(null, name, color, exp, fla, htc, vis, temp);
+    }
+
+    public static void item(ObjectMap<Integer, Cons<Item>> cons, String name, Color color, float exp, float fla, float cos, float radio, float chg, float health) {
+        for (int i = 1 ; i < 10 ; i++){
+            int index = i;
+            var item = new Item(name + index, color){{
+                explosiveness = exp * index;//爆炸性
+                flammability = fla * index;//燃烧性
+                cost = cos * index;
+                radioactivity = radio * index;
+                charge = chg * index;
+                healthScaling = health * index;
+            }};
+            if(cons != null && cons.size > 0 && cons.containsKey(i)){
+                cons.get(i).get(item);
+            }
+        }
+    }
+
+    /**
+     * @author guiY
+     * 1. 不能使用{@link Vars#content}
+     * 2. 不能再init用（
+    * */
+    public static void test(){
+        //其实有cons完全可以不用后面的哪些定义
+//        //自定义
+//        ObjectMap<Integer, Cons<Liquid>> cons = new ObjectMap<>();
+//        //将id为1的液体颜色改为白色
+//        cons.put(1, l -> l.color = Color.white);
+//        //将id为2的液体燃烧性和爆炸性改为0， 温度改为0.1；
+//        cons.put(2, l -> {
+//            l.explosiveness = l.flammability = 0;
+//            l.temperature = 0.1f;
+//        });
+//        liquid(cons,"t1", "111111", 1, 1, 1, 1, 1);
+//
+//        //默认定义
+//        liquid("t2", "222222", 1, 1, 1, 1, 1);
+        //数字大小
+        int size = 40;
+        for(var l : new Liquid[]{water, slag, oil, cryofluid,
+                arkycite, gallium, neoplasm,
+                ozone, hydrogen, nitrogen, cyanogen}){
+            if(l.hidden) continue;
+            ObjectMap<Integer, Cons<Liquid>> cons = new ObjectMap<>();
+            for(int i = 1; i < 10; i++){
+                int finalI = i;
+                cons.put(i, ld -> {
+                    PixmapRegion base = Core.atlas.getPixmap(l.uiIcon);
+                    var mix = base.crop();
+                    var number = Core.atlas.find(name("number-" + finalI));
+                    if(number.found()) {
+                        PixmapRegion region = TextureAtlas.blankAtlas().getPixmap(number);
+
+                        mix.draw(region.pixmap, region.x, region.y, region.width, region.height, 0, base.height - size, size, size, false, true);
+                    }
+
+                    ld.uiIcon = ld.fullIcon = new TextureRegion(new Texture(mix));
+                });
+            }
+            liquid(cons, l.name, l.color, l.explosiveness, l.flammability, l.heatCapacity, l.viscosity, l.temperature);
+        }
+
+        for(var item : new Item[]{scrap, copper, lead, graphite, coal, titanium, thorium, silicon, plastanium,
+                phaseFabric, surgeAlloy, sporePod, sand, blastCompound, pyratite, metaglass,
+                beryllium, tungsten, oxide, carbide, fissileMatter, dormantCyst}){
+            if(item.hidden) continue;
+            ObjectMap<Integer, Cons<Item>> cons = new ObjectMap<>();
+            for(int i = 1; i < 10; i++){
+                int finalI = i;
+                cons.put(i, it -> {
+                    PixmapRegion base = Core.atlas.getPixmap(item.uiIcon);
+                    var mix = base.crop();
+                    var number = Core.atlas.find(name("number-" + finalI));
+                    if(number.found()) {
+                        PixmapRegion region = TextureAtlas.blankAtlas().getPixmap(number);
+
+                        mix.draw(region.pixmap, region.x, region.y, region.width, region.height, 0, base.height - size, size, size, false, true);
+                    }
+
+                    it.uiIcon = it.fullIcon = new TextureRegion(new Texture(mix));
+
+                    it.buildable = item.buildable;
+                    it.hardness = item.hardness + finalI;
+                    it.lowPriority = item.lowPriority;
+                });
+            }
+            item(cons, item.name, item.color, item.explosiveness, item.flammability, item.cost, item.radioactivity, item.charge, item.healthScaling);
+        }
+        Draw.color();
     }
 }

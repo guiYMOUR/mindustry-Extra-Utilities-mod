@@ -3,6 +3,8 @@ package ExtraUtilities.content;
 import ExtraUtilities.worlds.drawer.DrawFunc;
 import ExtraUtilities.worlds.entity.ability.PcShieldArcAbility;
 import arc.Core;
+import arc.func.Cons;
+import arc.func.Prov;
 import arc.graphics.Blending;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
@@ -17,9 +19,11 @@ import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.pooling.Pool;
+import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
+import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -564,17 +568,20 @@ public class EUFx {
             if(sp == 0) return;
             float fin = Mathf.curve(e.fin(), 0, over);
             float fout = Mathf.curve(e.fout(), 0, 1 - over);
-            Seq<Float> angles = new Seq<>();
+            //Seq<Float> angles = new Seq<>();
+            Float[] angles = Pools.obtain(Float[].class, () -> new Float[sp]);
             rand.setSeed(e.id);
             for(int i = 0; i < sp; i++){
-                angles.add(rand.random(45f, 135f));
+                //angles.add(rand.random(45f, 135f));
+                angles[i] = rand.random(45f, 135f);
             }
             float nx = e.x, ny = e.y;
             for(int i = 0; i < sp * fin; i++){
                 float it = i * (e.lifetime/sp);
                 float ef = Math.min(1, ((e.time - it) / (e.lifetime - it)) * (1 / over));
 
-                float angle = e.rotation + angles.get(i) - 90;
+                //float angle = e.rotation + angles.get(i) - 90;
+                float angle = e.rotation + angles[i] - 90;
                 Lines.stroke(e.fin() < over ? st * ef : st * fout, color);
                 if(cr > 0) Fill.circle(nx, ny, cr * (e.fin() < over ? ef : fout));
                 if(i == sp - 1) break;
@@ -660,5 +667,43 @@ public class EUFx {
 
             out = false;
         }
+    }
+
+    public static Effect airAsh(float lifetime, float range, float pin, Color color, float width, int amount) {
+        return new MultiEffect(
+                new Effect(lifetime, e -> {
+                    float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
+                    for(int a : Mathf.signs) {
+                        for (int i = 0; i < amount; i++) {
+                            float dx = EUGet.dx(e.x, range * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10)),
+                                    dy = EUGet.dy(e.y, range * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10));
+                            Draw.color(color);
+                            Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
+                        }
+                    }
+                }),
+                new Effect(lifetime, e -> {
+                    float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
+                    for(int a : Mathf.signs) {
+                        for (int i = 0; i < amount; i++) {
+                            float dx = EUGet.dx(e.x, (range - pin) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120),
+                                    dy = EUGet.dy(e.y, (range - pin) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120);
+                            Draw.color(color);
+                            Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
+                        }
+                    }
+                }),
+                new Effect(lifetime, e -> {
+                    float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
+                    for(int a : Mathf.signs) {
+                        for (int i = 0; i < amount; i++) {
+                            float dx = EUGet.dx(e.x, (range - pin * 2) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240),
+                                    dy = EUGet.dy(e.y, (range - pin * 2) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240);
+                            Draw.color(color);
+                            Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
+                        }
+                    }
+                })
+        );
     }
 }

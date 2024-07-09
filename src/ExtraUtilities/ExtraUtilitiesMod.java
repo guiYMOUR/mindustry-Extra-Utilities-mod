@@ -9,6 +9,7 @@ import arc.graphics.Color;
 import arc.graphics.Pixmap;
 import arc.graphics.Pixmaps;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Font;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mat;
 import arc.math.Mathf;
@@ -19,20 +20,28 @@ import arc.scene.event.Touchable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.CheckBox;
 import arc.scene.ui.Label;
+import arc.scene.ui.ScrollPane;
 import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
+import arc.struct.Seq;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.*;
 import mindustry.gen.Icon;
+import mindustry.gen.Tex;
+import mindustry.graphics.Pal;
 import mindustry.mod.*;
+import mindustry.type.Liquid;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.ui.fragments.MenuFragment;
+import mindustry.world.blocks.defense.turrets.LaserTurret;
+import universecore.ui.elements.markdown.Markdown;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -49,9 +58,18 @@ public class ExtraUtilitiesMod extends Mod{
         return ModName + "-" + add;
     }
     public static void addToTable(UnlockableContent c, Table t){
-        t.image(c.uiIcon).pad(3f).row();
-        t.add(c.localizedName).row();
-        t.add(c.description).row();
+        t.table(Styles.grayPanel, img -> {
+            img.button(bt -> bt.image(c.uiIcon).size(64).pad(5), Styles.cleari, () -> ui.content.show(c)).left().tooltip("click to show");
+        }).pad(10).margin(10).left();
+        t.image(Tex.whiteui, Pal.accent).growY().width(3).pad(4).margin(5).left();
+        t.table(info -> {
+            var n = info.add(c.localizedName).wrap().fillX().left().maxWidth(Core.graphics.getWidth()/2f).get();
+            info.row();
+            info.image(Tex.whiteui, Pal.accent).left().width(n.getWidth() * 1.3f).height(3f).row();
+            info.add(c.description).wrap().fillX().left().width(Core.graphics.getWidth()/2f).padTop(10).row();
+            info.image(Tex.whiteui, Pal.accent).left().width(Core.graphics.getWidth()/2f).height(3f).row();
+        }).left().pad(6);
+        t.row();
     }
 
     public static String toText(String str){
@@ -99,29 +117,33 @@ public class ExtraUtilitiesMod extends Mod{
                         canClose = true;
                     }
                 });
-                cont.add("ExtraUtilities").row();
-                cont.add(toText("eu-log-attention")).row();
-                cont.add(toText("eu-log-open")).row();
-                cont.add("朋友朋友，[red]看这里[]").row();
-                cont.add("Extra Utilities，更多实用设备，作者：guiY，[red]中国人[]我的朋友").row();
-                cont.add("bilibili找guiY归某人，QQ群：613420467").row();
-                cont.add("[blue]第一次模组英文？看下面操作").row();
-                cont.add("[green]打开设置>找到语言>设置成English>退出重进>打开Settings>设置成简体中文>退出重进").row();
-                cont.image(Core.atlas.find(name("LOGO"))).pad(3f).height(150).width(400).row();
-                cont.add(Core.bundle.format("tips.name")).row();
-                cont.add(Core.bundle.format("tips.description")).row();
-                cont.pane(t -> {
+                cont.table(top -> {
+                    top.add("ExtraUtilities").row();
+                    top.add(toText("eu-log-attention")).row();
+                    top.add(toText("eu-log-open")).row();
+                    top.add("朋友朋友，[red]看这里[]").row();
+                    top.add("Extra Utilities，更多实用设备，作者：guiY，[red]中国人[]我的朋友").row();
+                    top.add("bilibili找guiY归某人，QQ群：613420467").row();
+                    top.add("[blue]第一次模组英文？看下面操作").row();
+                    top.add("[green]打开设置>找到语言>设置成English>退出重进>打开Settings>设置成简体中文>退出重进[]").row();
+                    top.image(Core.atlas.find(name("LOGO"))).pad(3f).height(70).width(460).row();
+                    //top.add(Core.bundle.format("tips.name")).row();
+                    //top.add(Core.bundle.format("tips.description")).row();
+                });
+                cont.row();
+                ScrollPane p = cont.pane(t -> {
+                    //t.left().defaults().left();
+                    addToTable(EUBlocks.aparajito, t);
+                    addToTable(EUBlocks.aparajitoLarge, t);
                     addToTable(EUBlocks.mineCellT1, t);
                     addToTable(EUBlocks.mineCellT2, t);
                     addToTable(EUBlocks.buffrerdMemoryBank, t);
-                    addToTable(EUBlocks.siliconFurnace, t);
                     addToTable(EUBlocks.anti_Missile, t);
                     addToTable(EUBlocks.unitBooster, t);
-                    addToTable(EUBlocks.turretSpeeder, t);
                     addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
                     addToTable(EUBlocks.guiYsDomain, t);
-                }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f);
+                }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f).get();
                 buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
                     Core.settings.put("eu-first-load", !b);
                 }).center();
@@ -178,10 +200,10 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     public static void afterEnterLoad(){
-        EUUnitTypes.suzerain.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> !EUUnitTypes.suzerain.immunities.contains(s) && s.reloadMultiplier >= 1));
-        EUUnitTypes.Tera.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
-        EUUnitTypes.nihilo.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s.reloadMultiplier >= 1));
-        EUUnitTypes.narwhal.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+        EUUnitTypes.suzerain.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> !EUUnitTypes.suzerain.immunities.contains(s) && (s.reloadMultiplier >= 1 && !s.disarm)));
+        EUUnitTypes.Tera.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> (s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1) && !s.disarm));
+        EUUnitTypes.nihilo.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s.reloadMultiplier >= 1 && !s.disarm));
+        EUUnitTypes.narwhal.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> (s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1) && !s.disarm));
         EUUnitTypes.regency.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s == EUStatusEffects.EUUnmoving || s == EUStatusEffects.EUDisarmed || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
     }
 
@@ -436,6 +458,7 @@ public class ExtraUtilitiesMod extends Mod{
 
         TDPlanet.load();
         TDSectorPresets.load();
+
 
         EUTechTree.load();
     }
