@@ -102,7 +102,7 @@ public class MendTurret extends ContinuousTurret {
         protected void findTarget() {
             float range = range();
 
-            target = Units.findAllyTile(team, x, y, range, b -> b.damaged() && b != this);
+            target = Units.findAllyTile(team, x, y, range, b -> b.health < b.maxHealth - 0.001f && b != this);
             if(target != null) return;
             target = Units.closest(team, x, y, range, Healthc::damaged);
         }

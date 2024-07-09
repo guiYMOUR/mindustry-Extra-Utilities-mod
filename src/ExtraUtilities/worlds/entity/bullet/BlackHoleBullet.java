@@ -4,6 +4,8 @@ import ExtraUtilities.content.EUFx;
 import ExtraUtilities.graphics.MainRenderer;
 import arc.Core;
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
@@ -12,6 +14,7 @@ import arc.util.Tmp;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Fx;
+import mindustry.core.Version;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
@@ -47,6 +50,11 @@ public class BlackHoleBullet extends BulletType {
                 (b.lifetime - b.time)/72f;
         in = Interp.fastSlow.apply(in);
 
+//        if(Version.build != 146) {
+//            Draw.color(Tmp.c2.set(Color.black).a(Math.min(1, in + 0.1f)));
+//            Fill.circle(b.x, b.y, inRad * in * 1.5f);
+//            Draw.color();
+//        } else 
         MainRenderer.addBlackHole(b.x, b.y, inRad * in, outRad * in, Math.min(1, in + 0.1f));
 
         super.draw(b);

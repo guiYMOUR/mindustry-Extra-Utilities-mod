@@ -170,7 +170,7 @@ public class bossUnitAbi extends Ability{
             unit.apply(EUStatusEffects.defenseUp, 10);
             unit.apply(EUStatusEffects.fireDamageUp, 10);
             unit.apply(EUStatusEffects.fireSpeedUp, 10);
-            unit.heal((150/60f) * Time.delta);
+            unit.heal((200/60f) * Time.delta);
         }
     }
 

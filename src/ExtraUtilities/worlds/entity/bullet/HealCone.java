@@ -75,7 +75,7 @@ public class HealCone extends BulletType {
             }
         });
         Vars.indexer.eachBlock(b, findRange * in,
-                other -> other.damaged() && Angles.within(b.rotation(), b.angleTo(other), (findAngle * angleMt)/2),
+                other -> other.health < other.maxHealth - 0.001f && Angles.within(b.rotation(), b.angleTo(other), (findAngle * angleMt)/2),
                 other -> {
                     if(percentHeal) other.heal((healPercent/ratio) * other.maxHealth * Time.delta);
                     else other.heal((healAmount * amountMt)/60 * Time.delta);
@@ -83,7 +83,7 @@ public class HealCone extends BulletType {
         //maybe can Mmm...Combine these two code and heal every second
         if(b.timer.get(30)){
             Vars.indexer.eachBlock(b, findRange * in,
-                    other -> other.damaged() && Angles.within(b.rotation(), b.angleTo(other), (findAngle * angleMt)/2),
+                    other -> other.health < other.maxHealth - 0.001f && Angles.within(b.rotation(), b.angleTo(other), (findAngle * angleMt)/2),
                     other -> {
                         if(other.block != null) Fx.healBlockFull.at(other.x, other.y, 0, Pal.heal, other.block);
                     });

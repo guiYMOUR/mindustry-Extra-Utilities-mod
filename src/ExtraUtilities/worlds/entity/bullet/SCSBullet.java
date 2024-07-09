@@ -105,11 +105,10 @@ public class SCSBullet extends BasicBulletType {
         Vars.indexer.allBuildings(b.x, b.y, splashDamageRadius, building -> {
             if(building.block != null && building.team != b.team) {
                 if (building.block instanceof PowerNode && building.power.links.size > 0) {
-                    building.onConfigureBuildTapped(building);
+                    building.configureAny(null);
                 }
             }
         });
-        //其实instanceof已经代表!=null了
 //        Vars.indexer.allBuildings(b.x, b.y, splashDamageRadius, building -> {
 //            if(building.block != null && building.team != b.team){
 //                if(building.block instanceof PowerBlock || building.block instanceof BaseTurret || building.block instanceof CoreBlock){
