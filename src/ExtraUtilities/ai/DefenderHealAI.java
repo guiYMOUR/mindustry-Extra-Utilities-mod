@@ -29,7 +29,7 @@ public class DefenderHealAI extends DefenderAI {
     public void updateMovement() {
         if(target != null){
             boolean shoot = false;
-            if(target.within(unit, unit.type.range) && (target instanceof Healthc && ((Healthc)target).damaged()) && target.team() == unit.team && ((targetUnit && target instanceof Unit) || (targetBuilding && target instanceof Building))){
+            if(target.within(unit, unit.type.range) && (target instanceof Healthc hc && hc.health() < hc.maxHealth() - 0.001f) && target.team() == unit.team && ((targetUnit && target instanceof Unit) || (targetBuilding && target instanceof Building))){
                 unit.aim(target);
                 shoot = true;
             }
