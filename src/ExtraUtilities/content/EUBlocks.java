@@ -2771,24 +2771,30 @@ public class EUBlocks {
         };
 
         aparajito = new Aparajito("aparajito"){{
-            requirements(Category.defense, with(Items.surgeAlloy, 4, Items.phaseFabric, 3, Items.carbide, 4));
+            requirements(Category.defense, with(Items.surgeAlloy, 5, Items.phaseFabric, 4, Items.carbide, 4));
             size = 1;
             health = 4200/4;
-            armor = 10;
+            armor = 25;
             healColor = Items.carbide.color;
 
             lightningChance = 0.1f;
             lightningDamage = 30;
+
+            floating = true;
+            placeableLiquid = true;
         }};
         aparajitoLarge = new Aparajito("aparajito-large"){{
-            requirements(Category.defense, with(Items.surgeAlloy, 16, Items.phaseFabric, 12, Items.carbide, 16));
+            requirements(Category.defense, with(Items.surgeAlloy, 20, Items.phaseFabric, 16, Items.carbide, 16));
             size = 2;
             health = 4200;
-            armor = 10;
+            armor = 25;
             healColor = Items.carbide.color;
 
             lightningChance = 0.1f;
             lightningDamage = 30;
+
+            floating = true;
+            placeableLiquid = true;
         }};
 
         mendTurret = new MendTurret("heal"){{

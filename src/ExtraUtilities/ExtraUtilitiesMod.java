@@ -3,6 +3,7 @@ package ExtraUtilities;
 import ExtraUtilities.content.*;
 import ExtraUtilities.graphics.MainRenderer;
 import ExtraUtilities.net.EUCall;
+import ExtraUtilities.ui.EUI;
 import arc.*;
 import arc.Graphics;
 import arc.graphics.Color;
@@ -34,6 +35,8 @@ import mindustry.game.EventType.*;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
+import mindustry.maps.Map;
+import mindustry.maps.Maps;
 import mindustry.mod.*;
 import mindustry.type.Liquid;
 import mindustry.ui.Fonts;
@@ -88,6 +91,8 @@ public class ExtraUtilitiesMod extends Mod{
     private static final Vec2 vec2 = new Vec2();
 
     public static Mods.LoadedMod EU;
+
+    public static EUI eui = new EUI();
 
     public static void setColorName(){
         Mods.LoadedMod mod = mods.locateMod(ModName);
@@ -205,6 +210,10 @@ public class ExtraUtilitiesMod extends Mod{
         EUUnitTypes.nihilo.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s.reloadMultiplier >= 1 && !s.disarm));
         EUUnitTypes.narwhal.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> (s == StatusEffects.none || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1) && !s.disarm));
         EUUnitTypes.regency.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s == EUStatusEffects.EUUnmoving || s == EUStatusEffects.EUDisarmed || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
+
+        if(ui != null){
+            ui.menufrag.addButton(toText("eu-rogue-like-start"), Icon.defense, () -> eui.roguelike.toShow());
+        }
     }
 
     public ExtraUtilitiesMod() {
@@ -214,6 +223,8 @@ public class ExtraUtilitiesMod extends Mod{
         //WTMF - What This May From
         Log.info("Extra Utilities: Load WTMF");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, EUFrom::load));
+        //
+        Log.info("Extra Utilities: building rand subtitle...");
     }
 
     public Graphics.Cursor newCursor(String filename){
@@ -256,6 +267,7 @@ public class ExtraUtilitiesMod extends Mod{
         if(!onlyPlugIn) {
             MainRenderer.init();
             EUCall.registerPackets();
+            eui.init();
             EUOverride.overrideBuilder();
             if(overrideUnitArm) EUOverride.overrideAmr();
             EUOverride.overrideJs();
@@ -464,19 +476,19 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     public static void rebuildRandSubTitle(String title){
-        ui.menufrag = new EUMenuFragment(title);
-        ui.menufrag.build(ui.menuGroup);
+        var subTitle = new EUMenuFragment(title);
+        subTitle.build(ui.menuGroup);
     }
 
-    private static class EUMenuFragment extends MenuFragment{
+    private static class EUMenuFragment {
         private final String title;
 
         public EUMenuFragment(String title){
             this.title = title;
         }
-        @Override
+        //@Override
         public void build(Group parent) {
-            super.build(parent);
+            //super.build(parent);
             parent.fill((x, y, w, h) -> {
                 TextureRegion logo = Core.atlas.find("logo");
                 float width = Core.graphics.getWidth(), height = Core.graphics.getHeight() - Core.scene.marginTop;

@@ -234,6 +234,8 @@ public class EUOverride {
         UnitTypes.tecta.weapons.get(0).bullet.damage = 0;
         UnitTypes.tecta.weapons.get(0).bullet.splashDamage = 95;
         UnitTypes.tecta.health = 9000;
+
+        UnitTypes.obviate.hitSize = 2.5f * 8;
     }
 
     public static void overrideBuilder(){
