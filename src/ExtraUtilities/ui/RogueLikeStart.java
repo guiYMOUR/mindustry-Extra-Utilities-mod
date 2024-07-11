@@ -76,27 +76,17 @@ public class RogueLikeStart extends BaseDialog {
         cont.row();
         cont.image(Tex.whiteui, Pal.accent).left().width(500f).height(3f).pad(4f).row();
         cont.pane(ds -> {
-            ds.table(dt -> {
-                dt.add(difficult.description()).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
-                selmode.changed(() -> {
-                    dt.clear();
-                    dt.add(difficult.description()).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
-                });
-            });
-            ds.row();
-            ds.table(dw -> {
-                if(weaves == Weaves.limit){
-                    dw.add(Core.bundle.format("eu-rogue.endWeave", difficult.end)).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
-                }
-                selweave.changed(() -> {
-                    dw.clear();
-                    if(weaves == Weaves.limit){
-                        dw.add(Core.bundle.format("eu-rogue.endWeave", difficult.end)).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
-                    }
-                });
-            });
+            Table dt = new Table();
+            dt.add(difficult.description()).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
+            Table dw = new Table();
+            if(weaves == Weaves.limit){
+                dw.add(Core.bundle.format("eu-rogue.endWeave", difficult.end)).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
+            }
+            selmode.changed(() -> rebuildShow(dt, dw));
+            selweave.changed(() -> rebuildShow(dt, dw));
+            ds.add(dt).row();
+            ds.add(dw).row();
 
-            ds.row();
             ds.add(Core.bundle.get("eu-rogue-like-tip")).wrap().fillX().padLeft(10).width(500f).padTop(10);
         });
 
@@ -113,6 +103,15 @@ public class RogueLikeStart extends BaseDialog {
         }).size(210f, 64f);
 
         show();
+    }
+
+    private void rebuildShow(Table dt, Table dw){
+        dt.clear();
+        dt.add(difficult.description()).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
+        dw.clear();
+        if(weaves == Weaves.limit){
+            dw.add(Core.bundle.format("eu-rogue.endWeave", difficult.end)).wrap().fillX().padLeft(10).width(500f).padTop(10).left();
+        }
     }
 
     public enum Difficult{

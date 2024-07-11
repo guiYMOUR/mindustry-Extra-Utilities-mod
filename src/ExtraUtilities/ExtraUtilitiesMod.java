@@ -92,7 +92,7 @@ public class ExtraUtilitiesMod extends Mod{
 
     public static Mods.LoadedMod EU;
 
-    public static EUI eui = new EUI();
+    public static EUI eui;
 
     public static void setColorName(){
         Mods.LoadedMod mod = mods.locateMod(ModName);
@@ -212,6 +212,8 @@ public class ExtraUtilitiesMod extends Mod{
         EUUnitTypes.regency.immunities.addAll(Vars.content.statusEffects().copy().removeAll(s -> s == StatusEffects.none || s == EUStatusEffects.EUUnmoving || s == EUStatusEffects.EUDisarmed || s.healthMultiplier > 1 || s.damage < 0 || s.reloadMultiplier > 1 || s.damageMultiplier > 1 || s.speedMultiplier > 1));
 
         if(ui != null){
+            eui = new EUI();
+            eui.init();
             ui.menufrag.addButton(toText("eu-rogue-like-start"), Icon.defense, () -> eui.roguelike.toShow());
         }
     }
@@ -267,7 +269,6 @@ public class ExtraUtilitiesMod extends Mod{
         if(!onlyPlugIn) {
             MainRenderer.init();
             EUCall.registerPackets();
-            eui.init();
             EUOverride.overrideBuilder();
             if(overrideUnitArm) EUOverride.overrideAmr();
             EUOverride.overrideJs();
