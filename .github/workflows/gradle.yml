@@ -33,10 +33,10 @@ jobs:
       run: chmod +x gradlew
     
     - name: Build with Gradle
-      run: ./gradlew clean
+      run: ./gradlew deploy
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
         name: ExtraUtilities
-        path: build/libs
+        path: build/libs/ExtraUtilities.jar
