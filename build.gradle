@@ -10,6 +10,9 @@ sourceSets.main.java.srcDirs = ["src"]
 
 repositories {
     mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
+    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
     maven { url 'https://www.jitpack.io' }
 }
 
@@ -32,6 +35,7 @@ allprojects {
 dependencies {
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    compileOnly "org.jetbrains:annotations:24.0.0"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
 
