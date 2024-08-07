@@ -315,7 +315,7 @@ rws.flashHit = true;
 rws.absorbLasers = true;
 rws.insulated = true;
 rws.placeableLiquid = true;
-rws.armor = 10;
+rws.armor = 18;
 rws.requirements = ItemStack.with(
     items.lightninAlloy, 6
 );
@@ -332,7 +332,7 @@ rwl.flashHit = true;
 rwl.absorbLasers = true;
 rwl.insulated = true;
 rwl.placeableLiquid = true;
-rwl.armor = 12;
+rwl.armor = 18;
 rwl.requirements = ItemStack.with(
     items.lightninAlloy, 24
 );
