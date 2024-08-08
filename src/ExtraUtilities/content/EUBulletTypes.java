@@ -1,14 +1,21 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.entity.bullet.FlameBulletType;
 import ExtraUtilities.worlds.entity.bullet.mixBoom;
 import arc.graphics.Color;
+import arc.math.Angles;
+import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
+import mindustry.entities.Damage;
+import mindustry.entities.Units;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.gen.Bullet;
 import mindustry.graphics.Pal;
+
+import static mindustry.Vars.indexer;
 
 public class EUBulletTypes {
     public static BulletType b1 = new mixBoom(Pal.bulletYellowBack){{
@@ -216,4 +223,42 @@ public class EUBulletTypes {
 
         fragOnHit = false;
     }};
+
+    public static BulletType expFlame(float range, float slpRange){
+        return new FlameBulletType(Items.blastCompound.color.cpy().mul(Pal.lightFlame), Items.blastCompound.color.cpy(), Pal.lightishGray, range + 8, 22, 66, 30){{
+            damage = 77;
+            status = EUStatusEffects.flamePoint;
+            statusDuration = 8 * 60f;
+            reloadMultiplier = 0.5f;
+            //ammoMultiplier = 1;
+        }
+            @Override
+            public void hit(Bullet b) {
+                if(absorbable && b.absorbed) return;
+                //unit▼
+                Units.nearbyEnemies(b.team, b.x, b.y, flameLength, unit -> {
+                    if(Angles.within(b.rotation(), b.angleTo(unit), flameCone) && unit.checkTarget(collidesAir, collidesGround)){
+                        Fx.hitFlameSmall.at(unit);
+                        unit.damage(damage);
+                        if(unit.hasEffect(status)){
+                            Damage.damage(b.team, unit.x, unit.y, slpRange, damage, false, true);
+                            Damage.status(b.team, unit.x, unit.y, slpRange, status, statusDuration, false, true);
+                            EUFx.easyExp.at(unit.x, unit.y, slpRange, Items.blastCompound.color);
+                            unit.unapply(status);
+                        } else {
+                            unit.apply(status, statusDuration);
+                        }
+
+                    }
+                });
+                //block▼
+                indexer.allBuildings(b.x, b.y, flameLength, other -> {
+                    if(other.team != b.team && Angles.within(b.rotation(), b.angleTo(other), flameCone)){
+                        Fx.hitFlameSmall.at(other);
+                        other.damage(damage * buildingDamageMultiplier);
+                    }
+                });
+            }
+        };
+    }
 }

@@ -40,6 +40,11 @@ public class RogueLikeStart extends BaseDialog {
 
         cont.clear();
 
+        cont.add("由于地图文件较大，部分机型无法打开为正常情况").center();
+        cont.row();
+        cont.add("some models may not be able to open...").center();
+        cont.row();
+
         Table selweave = new Table();
         selweave.add("weave").colspan(2);
         selweave.row();

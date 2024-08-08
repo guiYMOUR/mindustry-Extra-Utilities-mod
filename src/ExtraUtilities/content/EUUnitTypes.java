@@ -2943,7 +2943,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(name("arcana-wm")){{
-                        shootSound = Sounds.shotgun;
+                        shootSound = Sounds.mediumCannon;
                         reload = 120;
                         recoil = 4;
                         shake = 5;
@@ -2987,7 +2987,7 @@ public class EUUnitTypes {
                                     float yy = b.y + Mathf.random(-12, 12);
                                     crack.create(b, xx, yy, b.rotation() + 90 + r);
                                     crack.create(b, xx, yy, b.rotation() - 90 + r);
-                                    Sounds.laserblast.at(xx, yy, 0.5f, 0.25f);
+                                    Sounds.laserblast.at(xx, yy, 0.5f, 0.15f);
                                     Effect.shake(5, 5, xx, yy);
                                 }
                             }

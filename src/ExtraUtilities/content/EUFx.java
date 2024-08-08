@@ -23,6 +23,7 @@ import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
+import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
@@ -35,6 +36,7 @@ import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static ExtraUtilities.content.EUGet.*;
 import static arc.graphics.g2d.Draw.*;
 import static arc.graphics.g2d.Lines.lineAngle;
+import static arc.graphics.g2d.Lines.stroke;
 import static arc.math.Angles.*;
 import static mindustry.content.Fx.*;
 import static mindustry.Vars.*;
@@ -614,6 +616,27 @@ public class EUFx {
             if(!Vars.state.isPaused() && shake > 0) Effect.shake(shake, shake, e.x, e.y);
         });
     }
+
+    public static Effect easyExp = new Effect(20, e -> {
+        rand.setSeed(e.id);
+        float baseRd = e.rotation;
+        float randRd = baseRd/6f;
+        float pin = (1 - e.foutpow());
+        Lines.stroke(2 * e.foutpow(), e.color);
+        Lines.circle(e.x, e.y, baseRd * pin);
+        for(int i = 0; i < 6; i++){
+            float a = rand.random(180);
+            float lx = EUGet.dx(e.x, baseRd * pin, a);
+            float ly = EUGet.dy(e.y, baseRd * pin, a);
+            Drawf.tri(lx, ly, baseRd/6f * e.foutpow(), (baseRd/2f + rand.random(-randRd, randRd)) * e.foutpow(), a + 180);
+        }
+        for(int i = 0; i < 6; i++){
+            float a = 180 + rand.random(180);
+            float lx = EUGet.dx(e.x, baseRd * pin, a);
+            float ly = EUGet.dy(e.y, baseRd * pin, a);
+            Drawf.tri(lx, ly, baseRd/6 * e.foutpow(), (baseRd/2f + rand.random(-randRd, randRd)) * e.foutpow(), a + 180);
+        }
+    });
 
     public static Effect AccretionDiskEffect = new Effect(60, e -> {
         if(headless || !(e.data instanceof ateData data) || data.owner == null) return;

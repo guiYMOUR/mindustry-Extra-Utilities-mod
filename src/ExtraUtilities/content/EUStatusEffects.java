@@ -3,12 +3,17 @@ package ExtraUtilities.content;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
+import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.struct.ObjectSet;
+import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.content.Fx;
+import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
+import mindustry.gen.Unit;
 import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
 
@@ -100,4 +105,33 @@ public class EUStatusEffects {
             }
         });
     }};
+
+    public static StatusEffect flamePoint = new StatusEffect("flame-point"){{
+        damage = 0.2f;
+        color = Pal.lightFlame;
+        parentizeEffect = true;
+        effect = new Effect(36, e -> {
+            if(!(e.data instanceof Unit unit)) return;
+            Lines.stroke(2 * e.foutpow(), Items.blastCompound.color);
+            for(int i = 0; i < 3; i++){
+                float a = 360/3f * i + e.time * 6;
+                Lines.arc(e.x, e.y, Math.max(10, unit.hitSize/4f) * e.foutpow(), 90/360f, a);
+            }
+        });
+        speedMultiplier = 0.9f;
+    }
+
+        @Override
+        public void update(Unit unit, float time) {
+            if(damage > 0){
+                unit.damageContinuousPierce(damage);
+            }else if(damage < 0){
+                unit.heal(-1f * damage * Time.delta);
+            }
+
+            if(effect != Fx.none && Mathf.chanceDelta(effectChance)){
+                effect.at(unit.x, unit.y, 0, color, parentizeEffect ? unit : null);
+            }
+        }
+    };
 }
