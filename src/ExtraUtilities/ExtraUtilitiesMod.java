@@ -44,7 +44,6 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
 import mindustry.ui.fragments.MenuFragment;
 import mindustry.world.blocks.defense.turrets.LaserTurret;
-import universecore.ui.elements.markdown.Markdown;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
