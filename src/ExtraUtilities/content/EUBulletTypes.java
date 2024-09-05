@@ -226,7 +226,7 @@ public class EUBulletTypes {
 
     public static BulletType expFlame(float range, float slpRange){
         return new FlameBulletType(Items.blastCompound.color.cpy().mul(Pal.lightFlame), Items.blastCompound.color.cpy(), Pal.lightishGray, range + 8, 22, 66, 30){{
-            damage = 77;
+            damage = 90;
             status = EUStatusEffects.flamePoint;
             statusDuration = 8 * 60f;
             reloadMultiplier = 0.5f;
@@ -241,7 +241,7 @@ public class EUBulletTypes {
                         Fx.hitFlameSmall.at(unit);
                         unit.damage(damage);
                         if(unit.hasEffect(status)){
-                            Damage.damage(b.team, unit.x, unit.y, slpRange, damage, false, true);
+                            Damage.damage(b.team, unit.x, unit.y, slpRange, damage/3f, false, true);
                             Damage.status(b.team, unit.x, unit.y, slpRange, status, statusDuration, false, true);
                             EUFx.easyExp.at(unit.x, unit.y, slpRange, Items.blastCompound.color);
                             unit.unapply(status);

@@ -1,5 +1,6 @@
 package ExtraUtilities.graphics;
 
+import ExtraUtilities.content.EUGet;
 import arc.*;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
@@ -10,6 +11,7 @@ import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
 import mindustry.graphics.*;
+import mindustry.input.Binding;
 
 import static arc.Core.*;
 
@@ -103,5 +105,14 @@ public class MainRenderer{
         public BlackHole(){
 
         }
+    }
+
+    private void BreakerDraw(){
+        EUGet.setBreakStart(input.keyDown(Binding.control));
+    }
+
+    public void allDraw(){
+        advancedDraw();
+        BreakerDraw();
     }
 }

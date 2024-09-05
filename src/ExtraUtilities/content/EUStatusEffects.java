@@ -115,7 +115,9 @@ public class EUStatusEffects {
             Lines.stroke(2 * e.foutpow(), Items.blastCompound.color);
             for(int i = 0; i < 3; i++){
                 float a = 360/3f * i + e.time * 6;
-                Lines.arc(e.x, e.y, Math.max(10, unit.hitSize/4f) * e.foutpow(), 90/360f, a);
+                float x = EUGet.dx(e.x, Math.max(6, unit.hitSize/2f), a), y = EUGet.dy(e.y, Math.max(6, unit.hitSize/2f), a);
+                Lines.lineAngle(x, y, a - 120, Math.max(3, unit.hitSize/4f) * e.foutpow());
+                Lines.lineAngle(x, y, a + 120, Math.max(3, unit.hitSize/4f) * e.foutpow());
             }
         });
         speedMultiplier = 0.9f;

@@ -3,7 +3,9 @@ package ExtraUtilities.ui;
 import ExtraUtilities.ExtraUtilitiesMod;
 import arc.Core;
 import arc.func.Cons;
+import arc.graphics.g2d.TextureRegion;
 import arc.scene.ui.layout.Table;
+import arc.struct.ObjectMap;
 import mindustry.content.UnitTypes;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
@@ -21,8 +23,11 @@ import java.io.IOException;
 import static mindustry.Vars.*;
 
 public class RogueLikeStart extends BaseDialog {
-    private Weaves weaves = Weaves.limit;
+    public Map map;
+    public Weaves weaves = Weaves.limit;
     public Difficult difficult = Difficult.normal;
+    public String[] mapNames = {"MitoKenos", "YayaSitken"};
+    public ObjectMap<String, TextureRegion> regionMap = new ObjectMap<>();
 
     private Rules rules;
 
@@ -31,12 +36,23 @@ public class RogueLikeStart extends BaseDialog {
     }
 
     public void toShow(){
-        Map map;// = maps.loadInternalMap("MitoKenos");
-        try {
-            map = MapIO.createMap(ExtraUtilitiesMod.EU.root.child("roguelike").child("MitoKenos.msav"), false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        //Map map;// = maps.loadInternalMap("MitoKenos");
+        Map[] maps = new Map[mapNames.length];
+        for(int i = 0; i < mapNames.length; i++) {
+            try {
+                maps[i] = MapIO.createMap(ExtraUtilitiesMod.EU.root.child("roguelike").child(mapNames[i] + ".msav"), false);
+                TextureRegion region = Core.atlas.find("extra-utilities-" + mapNames[i]);
+                if(region.found()) regionMap.put(maps[i].name(), region);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        map = maps[0];
+//        try {
+//            map = MapIO.createMap(ExtraUtilitiesMod.EU.root.child("roguelike").child("MitoKenos.msav"), false);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         cont.clear();
 
@@ -44,6 +60,27 @@ public class RogueLikeStart extends BaseDialog {
         cont.row();
         cont.add("some models may not be able to open...").center();
         cont.row();
+
+        cont.image(Tex.whiteui, Pal.accent).left().width(500f).height(3f).pad(4f).row();
+
+        Table playMap = new Table();
+        playMap.add("map").colspan(2);
+        playMap.row();
+
+        playMap.table(Tex.button, diff -> {
+            for(int i = 0; i < mapNames.length; i++){
+                int finalI = i;
+                diff.button(mapNames[i], Styles.flatToggleMenut, () -> map = maps[finalI]).update(b -> b.setChecked(map == maps[finalI])).size(140f, mobile ? 44f : 54f);
+                if((i + 1) % 3 == 0) diff.row();
+            }
+        });
+
+        cont.add(playMap).row();
+        cont.table(img -> {
+            img.add(map.name()).row();
+            if(regionMap.containsKey(map.name())) img.image(regionMap.get(map.name())).size(192);
+            playMap.changed(() -> rebuildImg(img));
+        }).row();
 
         Table selweave = new Table();
         selweave.add("weave").colspan(2);
@@ -105,9 +142,23 @@ public class RogueLikeStart extends BaseDialog {
             control.playMap(map, rules, false);
             hide();
             ui.custom.hide();
-        }).size(210f, 64f);
+        }).size(210f, 64f).update(b -> {
+            if(map == null || map == maps[1]) {
+                b.setDisabled(true);
+                b.setText("Coming soon...");
+            } else {
+                b.setDisabled(false);
+                b.setText("@play");
+            }
+        });
 
         show();
+    }
+
+    private void rebuildImg(Table img){
+        img.clear();
+        img.add(map.name()).row();
+        if(regionMap.containsKey(map.name())) img.image(regionMap.get(map.name())).size(192);
     }
 
     private void rebuildShow(Table dt, Table dw){
