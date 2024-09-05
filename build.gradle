@@ -50,64 +50,24 @@ dependencies{
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
 
-// task jarAndroid{
-//     dependsOn "jar"
+task jarAndroid{
+    dependsOn "jar"
 
-//     doLast{
+    doLast{
 
-//         if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.");
+        if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.");
 
-//         def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find{ f -> new File(f, "android.jar").exists()}
+        def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find{ f -> new File(f, "android.jar").exists()}
 
-//         if(!platformRoot) throw new GradleException("No android.jar found. Ensure that you have an Android platform installed.")
+        if(!platformRoot) throw new GradleException("No android.jar found. Ensure that you have an Android platform installed.")
 
-//         //collect dependencies needed for desugaring
-//         def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
+        //collect dependencies needed for desugaring
+        def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
 
-//         //dex and desugar files - this requires d8 in your PATH
-//         "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
-//             .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
-//     }
-// }
-
-task jarAndroid(dependsOn: 'jar') {  
-    doLast {  
-        if (!sdkRoot || !new File(sdkRoot).exists()) {  
-            throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.")  
-        }  
-  
-        // Find the latest build-tools directory  
-        def buildToolsRoot = new File("$sdkRoot/build-tools/").listFiles().sort().reverse().find { f -> new File(f, "d8").executable }  
-        if (!buildToolsRoot) {  
-            throw new GradleException("No build-tools directory with d8 found. Ensure that you have a recent Android build-tools installed.")  
-        }  
-  
-        // Find the android.jar for the latest platform  
-        def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find { f -> new File(f, "android.jar").exists() }  
-        if (!platformRoot) {  
-            throw new GradleException("No android.jar found. Ensure that you have an Android platform installed.")  
-        }  
-  
-        // Collect dependencies  
-        def dependencies = (configurations.compileClasspath.files + configurations.runtimeClasspath.files + [new File(platformRoot, "android.jar")]).join(" ")  
-  
-        // Build the d8 command  
-        def d8Path = new File(buildToolsRoot, "d8").absolutePath  
-        def command = [d8Path, "--classpath", dependencies, "--min-api", "14", "--output", "${buildDir}/libs/${project.archivesBaseName}Android.jar", "${buildDir}/libs/${project.archivesBaseName}Desktop.jar"].toList()  
-  
-        // Execute the command  
-        ProcessBuilder pb = new ProcessBuilder(command)  
-        pb.directory(new File("$buildDir/libs"))  
-        Process process = pb.start()  
-  
-        // Optionally, handle process output and wait for it to finish  
-        process.waitFor()  
-  
-        // Check for errors  
-        if (process.exitValue() != 0) {  
-            throw new GradleException("d8 command failed with exit code ${process.exitValue()}")  
-        }  
-    }  
+        //dex and desugar files - this requires d8 in your PATH
+        "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
+            .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
+    }
 }
 
 jar{
