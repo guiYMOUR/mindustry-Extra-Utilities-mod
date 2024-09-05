@@ -27,8 +27,7 @@ ext{
     mindustryVersion = 'v146'
     jabelVersion = "93fde537c7"
     sdkVersion = '30'
-    sdkRoot = System.getenv("ANDROID_HOME")
-    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 
 //java 8 backwards compatibility flag
@@ -66,8 +65,7 @@ task jarAndroid{
         def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
 
         //dex and desugar files - this requires d8 in your PATH
-        def d8 = isWindows ? "d8.bat" : "d8"
-        "$d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
+        "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
             .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
     }
 }
