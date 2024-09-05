@@ -2,6 +2,7 @@ package ExtraUtilities.worlds.blocks.power;
 
 import ExtraUtilities.content.EUFx;
 import ExtraUtilities.content.EUItems;
+import ExtraUtilities.worlds.entity.unit.bossEntity;
 import arc.Core;
 import arc.Events;
 import arc.graphics.g2d.Draw;
@@ -18,10 +19,7 @@ import mindustry.entities.Effect;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
 import mindustry.game.EventType;
-import mindustry.gen.Bullet;
-import mindustry.gen.Call;
-import mindustry.gen.Sounds;
-import mindustry.gen.Teamc;
+import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
@@ -96,6 +94,8 @@ public class LightenGenerator extends NuclearReactor {
                     Drawf.tri(e.x, e.y, 4 * e.fout(), 15 * Math.min(1, time / 8 * 0.8f + 0.2f), e.rotation - 180);
                 }
             });
+
+            absorbable = hittable = false;
         }
             @Override
             public void update(Bullet b) {
@@ -110,6 +110,14 @@ public class LightenGenerator extends NuclearReactor {
                     }
                 }
                 trailEffect.at(b.x, b.y, b.rotation(), b.time);
+            }
+
+            @Override
+            public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                if(entity instanceof Unit u && !(entity instanceof bossEntity)){
+                    u.health -= damage;
+                }
+                super.hitEntity(b, entity, health);
             }
 
             @Override

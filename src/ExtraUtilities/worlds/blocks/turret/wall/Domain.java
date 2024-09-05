@@ -61,11 +61,11 @@ public class Domain extends Block {
             Lines.circle(e.x, e.y, e.rotation * e.fout());
         }
     }).layer(Layer.shields);
-    public float range = 25 * 8;
+    public float range = 22.5f * 8;
     public int bulletAmount = 50;
     public float coolDown = 8;
     public float coolDownBk = 5;
-    public float shieldHealth = 3600f;
+    public float shieldHealth = 3500f;
     public boolean canBroken = true;
     public Effect shieldBkEffect = new Effect(40, e -> {
         color(e.color);
@@ -73,8 +73,8 @@ public class Domain extends Block {
         Lines.circle(e.x, e.y, e.rotation + e.fin());
     });
     //speeder
-    public float upSpeed = 1.5f;
-    public float upSpeedAfter = 2.5f;//盾破了后的加速
+    public float upSpeed = 1.2f;
+    public float upSpeedAfter = 2f;//盾破了后的加速
     public float reloadS = 60;
     //healer-block
     public float reloadH = 240f;

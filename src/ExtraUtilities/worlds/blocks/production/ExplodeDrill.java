@@ -107,8 +107,8 @@ public class ExplodeDrill extends Drill {
                 ));
         addBar(ExtraUtilitiesMod.name("digspeed"), (ExplodeDrillBuild e) ->
                 new Bar(
-                        () -> Core.bundle.format("bar." + ExtraUtilitiesMod.name("digspeed"), Strings.fixed(digAmount/(reFindTimer/60) * e.timeScale() * e.efficiency, 2)),
-                        () -> Pal.ammo, () -> e.efficiency
+                        () -> Core.bundle.format("bar." + ExtraUtilitiesMod.name("digspeed"), Strings.fixed(digAmount/(reFindTimer/60) * e.timeScale() * e.efficiency * e.reFindT(), 2)),
+                        () -> Pal.ammo, () -> e.efficiency * e.reFindT()
                 ));
     }
 
@@ -148,6 +148,10 @@ public class ExplodeDrill extends Drill {
         public float reFindTime = 0;
 
         public Seq<Tile> tiles = new Seq<>();
+
+        public int reFindT(){
+            return tiles.size > 0 ? 1 : 0;
+        }
 
         private boolean validOre(Tile tile, Item item){
             return (tile.solid() && tile.wallDrop() != null && tile.wallDrop() == item) || (tile.block() == Blocks.air && tile.drop() != null && tile.drop() == item);
