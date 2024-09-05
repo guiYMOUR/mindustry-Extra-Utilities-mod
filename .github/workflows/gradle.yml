@@ -26,6 +26,8 @@ jobs:
       with:
         java-version: 17
 
+    # what the f**k, the issue with the SDK version???
+    # this trap me for an hour...
     - name: Set up Android SDK
       run: echo "${ANDROID_HOME}/build-tools/34.0.0" >> $GITHUB_PATH
 
