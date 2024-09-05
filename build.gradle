@@ -28,6 +28,7 @@ ext{
     jabelVersion = "93fde537c7"
     sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
+    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
 }
 
 //java 8 backwards compatibility flag
