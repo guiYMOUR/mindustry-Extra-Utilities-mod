@@ -15,10 +15,8 @@ sourceSets.main.java.srcDirs = ["src"]
 
 repositories{
     mavenCentral()
-    maven{ url 'https://www.jitpack.io' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
     maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven{ url 'https://www.jitpack.io' }
 }
 
 targetCompatibility = 8
@@ -27,7 +25,7 @@ sourceCompatibility = 17
 ext{
     //the build number that this mod is made for
     mindustryVersion = 'v146'
-    jabelVersion = "0.9.0"
+    jabelVersion = "93fde537c7"
     sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
 }
@@ -35,6 +33,9 @@ ext{
 //java 8 backwards compatibility flag
 allprojects{
     tasks.withType(JavaCompile){
+
+        options.encoding = 'UTF-8'
+        
         options.compilerArgs.addAll(['--release', '8'])
     }
 }
