@@ -64,17 +64,17 @@ task jarAndroid{
         //collect dependencies needed for desugaring
         def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
 
-        def buildToolsDir = new File("$sdkRoot/build-tools/").listFiles().sort().reverse().find { f -> f.isDirectory() && new File(f, "d8").exists() }  
-        if (!buildToolsDir) throw new GradleException("No valid build-tools directory found containing 'd8'.")  
-        def d8Path = new File(buildToolsDir, "d8").absolutePath  
+        // def buildToolsDir = new File("$sdkRoot/build-tools/").listFiles().sort().reverse().find { f -> f.isDirectory() && new File(f, "d8").exists() }  
+        // if (!buildToolsDir) throw new GradleException("No valid build-tools directory found containing 'd8'.")  
+        // def d8Path = new File(buildToolsDir, "d8").absolutePath  
  
-        "$d8Path $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"  
-            .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
+        // "$d8Path $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"  
+        //     .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
 
         
         //dex and desugar files - this requires d8 in your PATH
-        // "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
-        //     .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
+        "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
+            .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
     }
 }
 
