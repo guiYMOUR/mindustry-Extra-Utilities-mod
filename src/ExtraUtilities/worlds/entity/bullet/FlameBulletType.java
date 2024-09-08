@@ -15,8 +15,6 @@ public class FlameBulletType extends BulletType {
     public float flameCone;
     public int particleNumber;
 
-    public float damageBoost = 3f;
-
     public FlameBulletType(Color colorBegin, Color colorTo, Color colorEnd, float length,  float cone, int number, float lifetime){
 
         this.flameLength = length;
@@ -24,7 +22,7 @@ public class FlameBulletType extends BulletType {
         this.particleNumber = number;
         this.lifetime = 0;
 
-        damage = 19;
+        damage = 16f * 3;
         speed = 0;
         hitEffect = Fx.none;
         smokeEffect = Fx.none;
@@ -50,7 +48,7 @@ public class FlameBulletType extends BulletType {
         Units.nearbyEnemies(b.team, b.x, b.y, flameLength, unit -> {
             if(Angles.within(b.rotation(), b.angleTo(unit), flameCone) && unit.checkTarget(collidesAir, collidesGround)){
                 Fx.hitFlameSmall.at(unit);
-                unit.damage(damage * damageBoost);
+                unit.damage(damage);
                 unit.apply(status, statusDuration);
             }
         });
@@ -58,7 +56,7 @@ public class FlameBulletType extends BulletType {
         indexer.allBuildings(b.x, b.y, flameLength, other -> {
             if(other.team != b.team && Angles.within(b.rotation(), b.angleTo(other), flameCone)){
                 Fx.hitFlameSmall.at(other);
-                other.damage(damage * buildingDamageMultiplier * damageBoost);
+                other.damage(damage * buildingDamageMultiplier);
             }
         });
     }

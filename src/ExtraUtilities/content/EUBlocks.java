@@ -2814,10 +2814,10 @@ public class EUBlocks {
             consumeItem(Items.phaseFabric).boost();
         }};
         coreKeeper = new CoreKeeper("core-keeper"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 50, Items.silicon, 400, Items.thorium, 200));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 50 + (hardMod ? 50 : 0), Items.silicon, 400, Items.thorium, 200));
             size = 3;
             health = 1080;
-            range = 30;
+            range = 40 + (hardMod ? 16 : 0);
             consumePower(6);
 
             alwaysUnlocked = true;
@@ -2859,11 +2859,15 @@ public class EUBlocks {
         }};
 
         quantumDomain = new Domain("quantum-domain"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 250, Items.silicon, 800, Items.surgeAlloy, 400, Items.phaseFabric, 350));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 300 + (hardMod ? 50 : 0), Items.silicon, 800, Items.surgeAlloy, 400, Items.phaseFabric, 350));
             size = 5;
             health = 5000;
             hasPower = true;
             hasItems = false;
+            unitDamage = 16 + (hardMod ? 4 : 0);
+            shieldHealth = 3500f - (hardMod ? 500 : 0);
+            canOverdrive = false;
+            placeableLiquid = true;
             consumePower(9);
             alwaysUnlocked = true;
         }};
@@ -2951,6 +2955,7 @@ public class EUBlocks {
             healPercent = healPercentUnit= 25;
             reloadH = reloadHU = 30;
             healByPercent = true;
+            hasPower = false;
         }};
 
         crystalTower = new CrystalTower("crystal-tower"){{

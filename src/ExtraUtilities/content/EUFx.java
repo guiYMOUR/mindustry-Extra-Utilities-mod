@@ -624,17 +624,11 @@ public class EUFx {
         float pin = (1 - e.foutpow());
         Lines.stroke(2 * e.foutpow(), e.color);
         Lines.circle(e.x, e.y, baseRd * pin);
-        for(int i = 0; i < 6; i++){
-            float a = rand.random(180);
+        for(int i = 0; i < 12; i++){
+            float a = rand.random(360);
             float lx = EUGet.dx(e.x, baseRd * pin, a);
             float ly = EUGet.dy(e.y, baseRd * pin, a);
             Drawf.tri(lx, ly, baseRd/6f * e.foutpow(), (baseRd/2f + rand.random(-randRd, randRd)) * e.foutpow(), a + 180);
-        }
-        for(int i = 0; i < 6; i++){
-            float a = 180 + rand.random(180);
-            float lx = EUGet.dx(e.x, baseRd * pin, a);
-            float ly = EUGet.dy(e.y, baseRd * pin, a);
-            Drawf.tri(lx, ly, baseRd/6 * e.foutpow(), (baseRd/2f + rand.random(-randRd, randRd)) * e.foutpow(), a + 180);
         }
     });
 

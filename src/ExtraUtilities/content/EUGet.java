@@ -75,6 +75,12 @@ public class EUGet {
     public static Color EC19 = new Color();
     public static Color EC20 = new Color();
 
+    public static boolean breakStart = false;
+
+    public static void setBreakStart(boolean breakStart) {
+        EUGet.breakStart = breakStart;
+    }
+
     //use for pool
     public static class EPos implements Position{
         public float x, y;
