@@ -12,9 +12,9 @@ public class MainShader {
     public static HoleShader holeShader;
 
     public static void createShader(){
-        if(MaxCont >= 510) return;
+        if(MaxCont >= 512) return;
 
-        MaxCont = Math.min(MaxCont * 2, 510);
+        MaxCont = Math.min(MaxCont * 2, 512);
         if(holeShader != null) holeShader.dispose();
         Shader.prependFragmentCode = "#define MAX_COUNT " + MaxCont + "\n";
         holeShader = new HoleShader();

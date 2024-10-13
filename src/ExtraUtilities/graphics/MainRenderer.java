@@ -21,7 +21,7 @@ public class MainRenderer{
 
     private FrameBuffer buffer;
 
-    private static final float[][] initFloat = new float[510][];
+    private static final float[][] initFloat = new float[512][];
     //private static final Pool<BlackHole> holePool = Pools.get(BlackHole.class, BlackHole::new);
 
     protected MainRenderer(){
@@ -35,7 +35,7 @@ public class MainRenderer{
 
     public static void init(){
         if(renderer == null) renderer = new MainRenderer();
-        for(int i = 0; i < 510; i++){
+        for(int i = 0; i < 512; i++){
             initFloat[i] = new float[i * 4];
         }
     }
@@ -48,6 +48,10 @@ public class MainRenderer{
     }
 
     private void advancedDraw(){
+        if(settings.getBool("pixelate") || holes.size >= 512) {
+            holes.clear();
+            return;
+        }
         Draw.draw(Layer.background - 1, () -> {
             buffer.resize(graphics.getWidth(), graphics.getHeight());
             buffer.begin();
@@ -56,7 +60,11 @@ public class MainRenderer{
         Draw.draw(Layer.max - 1, () -> {
             buffer.end();
 
-            if(holes.size >= 510) return;
+//            if(holes.size >= 512) {
+//                for(int i = 0; i <= holes.size - 512; i++){
+//                    holes.remove(i);
+//                }
+//            }
             if(holes.size >= MainShader.MaxCont) MainShader.createShader();
 
             float[] blackholes = initFloat[holes.size];
