@@ -12,6 +12,9 @@ exports.getClass = function (name){
     return Packages.rhino.NativeJavaClass(Vars.mods.scripts.scope, urlLoader.loadClass(name));
 }
 exports.Fx = exports.getClass("ExtraUtilities.content.EUFx");
+const EU = exports.getClass("ExtraUtilities.ExtraUtilitiesMod");
+const isAps = EU.isAps();
+exports.hardMod = Core.settings.getBool("eu-hard-mode") || isAps;
 //exports.Blocks = exports.getClass("ExtraUtilities.content.EUBlocks");
 
 exports.setPlanet = function(p, s){

@@ -1,6 +1,6 @@
 //
 const lib = require("blib");
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 const items = require("game/items");
 
 const T3fuse = extend(ItemTurret, "T3-fuse", {});

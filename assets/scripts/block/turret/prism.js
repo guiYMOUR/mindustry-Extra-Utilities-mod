@@ -5,7 +5,7 @@ const Prism = lib.getClass("ExtraUtilities.worlds.blocks.turret.Prism");
 const DrawRainbow = lib.getClass("ExtraUtilities.worlds.drawer.DrawRainbow");
 const prism = new Prism("prism");
 
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 prism.shootEffect = Fx.shootBigSmoke2;
 prism.shootCone = 40;
@@ -19,7 +19,7 @@ prism.range = 36 * 8;
 prism.consumePower(40);
 prism.drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawRainbow(2, 8));
 
-prism.rainbowDamage = (300 - (hardMod ? 96 : 0))/12;
+prism.rainbowDamage = (360 - (hardMod ? 60 : 0))/12;
 prism.health = 220 * 5 * 5;
 prism.coolantMultiplier = 1;
 prism.squareSprite = false;

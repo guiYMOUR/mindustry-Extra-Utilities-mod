@@ -3,7 +3,7 @@ const lib = require("blib");
 const bullets = require("other/bullets");
 const MultiShootTurret = lib.getClass("ExtraUtilities.worlds.blocks.turret.MultiShootTurret");
 const shots = 3;
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 const T3rip = new MultiShootTurret("T3-ripple");
 T3rip.reload = 20;

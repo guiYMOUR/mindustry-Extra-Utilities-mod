@@ -4,7 +4,7 @@ const items = require("game/items");
 const liC = Color.valueOf("bf92f9");
 const dec = Color.valueOf("ffffff");
 const dec2 = Color.valueOf("ffffff");
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 const hur = extend(BasicBulletType, {});
 hur.bulletInterval = 6;

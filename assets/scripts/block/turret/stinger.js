@@ -3,7 +3,7 @@ const lib = require('blib');
 const status = require("other/status");
 const Stinger = lib.getClass("ExtraUtilities.worlds.blocks.turret.Stinger");
 const DeathLaser = lib.getClass("ExtraUtilities.worlds.entity.bullet.DeathLaser");
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 const chargeTime = 40;
 const color = Color.valueOf("#C6D676");
@@ -59,6 +59,7 @@ stinger.rotateSpeed = 2;
 stinger.size = 3;
 stinger.targetAir = false;
 stinger.shootSound = Sounds.laser;
+stinger.killTrigger = hardMod ? -1 : 0.25;
 lib.Coolant(stinger, 0.4, 2);
 stinger.drawer = (() => {
     const d = new DrawTurret();

@@ -4,12 +4,14 @@ const liC = Color.valueOf("98cce8");
 const lib = require("blib");
 const items = require("game/items");
 const MagneticStormBulletType = lib.getClass("ExtraUtilities.worlds.entity.bullet.MagneticStormBulletType");
+const rainbowStorm = lib.getClass("ExtraUtilities.worlds.entity.bullet.RainbowStorm");
 const DrawElectric = lib.getClass("ExtraUtilities.worlds.drawer.DrawElectric");
 const DrawBall = lib.getClass("ExtraUtilities.worlds.drawer.DrawBall");
 const DrawArrow = lib.getClass("ExtraUtilities.worlds.drawer.DrawArrow");
 const DrawTri = lib.getClass("ExtraUtilities.worlds.drawer.DrawTri");
+const bullets = lib.getClass("ExtraUtilities.content.EUBulletTypes");
 
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 const MS = new MagneticStormBulletType(cor, liC);
 MS.homingRange = 100;
@@ -34,9 +36,11 @@ MS.buildingDamageMultiplier = 0.25;
 
 MS.status = StatusEffects.shocked;
 
-const storm = extend(PowerTurret, 'magstorm', {});
+const RS = bullets.rainbowStorm;
+
+const storm = extend(PowerTurret, "magstorm", {});
 storm.consumePower(32);
-storm.shootType = MS;
+storm.shootType = hardMod ? MS : RS;
 //storm.shots = 1;
 storm.shootShake = 5;
 storm.reload = 300;

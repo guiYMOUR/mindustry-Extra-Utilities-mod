@@ -1,5 +1,5 @@
 const lib = require("blib");
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 const tiDrill = extend(Drill, "tiDrill", {});
 tiDrill.requirements = ItemStack.with(

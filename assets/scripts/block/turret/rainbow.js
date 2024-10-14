@@ -6,7 +6,7 @@ const DrawRainbow = lib.getClass("ExtraUtilities.worlds.drawer.DrawRainbow");
 
 var gone = lib.Fx.gone;
 const bSp = lib.aModName + "-shotgunShot";
-const hardMod = Core.settings.getBool("eu-hard-mode");
+const hardMod = lib.hardMod;
 
 const r1 = extend(BasicBulletType,{});
 r1.sprite = bSp;
