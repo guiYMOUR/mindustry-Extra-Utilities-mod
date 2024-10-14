@@ -7,13 +7,12 @@ import ExtraUtilities.worlds.blocks.turret.wall.ReleaseShieldWall;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import arc.math.geom.Position;
 import mindustry.Vars;
-import mindustry.gen.Building;
-import mindustry.gen.Bullet;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
+import mindustry.gen.*;
 import mindustry.net.Net;
 import mindustry.net.NetConnection;
+import mindustry.world.Block;
 import mindustry.world.Tile;
+import mindustry.world.blocks.environment.Floor;
 
 public class EUCall {
     public static void minerPointDroneSpawned(Tile tile, int id) {
@@ -78,10 +77,26 @@ public class EUCall {
         }
     }
 
+    public static void setFloor(Tile tile, Block floor) {
+        if(!(floor instanceof Floor asFloor)) return;
+        if (Vars.net.server() || !Vars.net.active()) {
+            tile.setFloor(asFloor);
+        }
+
+        if (Vars.net.server()) {
+            SetFloorOnlyPacket packet = new SetFloorOnlyPacket();
+            packet.tile = tile;
+            packet.floor = floor;
+            Vars.net.send(packet, true);
+        }
+
+    }
+
     public static void registerPackets(){
         Net.registerPacket(MinerPointDroneSpawnedCallPacket::new);
         Net.registerPacket(MinerPointConfigCallPacket::new);
         Net.registerPacket(ReleaseShieldWallBuildSyncPacket::new);
         Net.registerPacket(DomainSyncPacket::new);
+        Net.registerPacket(SetFloorOnlyPacket::new);
     }
 }

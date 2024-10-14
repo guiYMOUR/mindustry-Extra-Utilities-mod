@@ -261,17 +261,19 @@ public class EUOverride {
 
     //special changes on April Fools'Day
     public static void ap4sOverride(){
-        for(int i = 0; i < Vars.content.blocks().size; i++){
-            Block b = Vars.content.block(i);
+        Seq<Block> sc = Vars.content.blocks().copy();
+        sc.removeAll(b -> b.localizedName == null || b.description == null);
+        for(int i = 0; i < sc.size; i++){
+            Block b = sc.get(i);
             if(b != null){
                 String l = b.localizedName;
                 String n = b.description;
-                if(n == null) continue;
-                int d = Mathf.random(Vars.content.blocks().size - 1);
-                if(d == i) continue;
-                Block b1 = Vars.content.block(d);
+                int d = Mathf.random(sc.size - 1);
+                while (d == i){
+                    d = Mathf.random(sc.size - 1);
+                }
+                Block b1 = sc.get(d);
                 if(b1 != null){
-                    if(b1.localizedName == null || b1.description == null) continue;
                     b.localizedName = b1.localizedName;
                     b.description = b1.description;
                     b1.localizedName = l;
@@ -279,17 +281,20 @@ public class EUOverride {
                 }
             }
         }
-        for(int i = 0; i < Vars.content.items().size; i++){
-            Item b = Vars.content.item(i);
-            if(b != null){
+
+        Seq<Item> ic = Vars.content.items().copy();
+        ic.removeAll(it -> it.localizedName == null || it.description == null);
+        for(int i = 0; i < ic.size; i++) {
+            Item b = ic.get(i);
+            if (b != null) {
                 String l = b.localizedName;
                 String n = b.description;
-                if(n == null) continue;
-                int d = Mathf.random(Vars.content.items().size - 1);
-                if(d == i) continue;
-                Item b1 = Vars.content.item(d);
-                if(b1 != null){
-                    if(b1.localizedName == null || b1.description == null) continue;
+                int d = Mathf.random(ic.size - 1);
+                while (d == i) {
+                    d = Mathf.random(ic.size - 1);
+                }
+                Item b1 = ic.get(d);
+                if (b1 != null) {
                     b.localizedName = b1.localizedName;
                     b.description = b1.description;
                     b1.localizedName = l;
@@ -297,17 +302,19 @@ public class EUOverride {
                 }
             }
         }
-        for(int i = 0; i < Vars.content.units().size; i++){
-            UnitType b = Vars.content.unit(i);
-            if(b != null){
+        Seq<UnitType> uc = Vars.content.units().copy();
+        uc.removeAll(u -> u.localizedName == null || u.description == null);
+        for(int i = 0; i < uc.size; i++) {
+            UnitType b = uc.get(i);
+            if (b != null) {
                 String l = b.localizedName;
                 String n = b.description;
-                if(n == null) continue;
-                int d = Mathf.random(Vars.content.units().size - 1);
-                if(d == i) continue;
-                UnitType b1 = Vars.content.unit(d);
-                if(b1 != null){
-                    if(b1.localizedName == null || b1.description == null) continue;
+                int d = Mathf.random(uc.size - 1);
+                while (d == i) {
+                    d = Mathf.random(uc.size - 1);
+                }
+                UnitType b1 = uc.get(d);
+                if (b1 != null) {
                     b.localizedName = b1.localizedName;
                     b.description = b1.description;
                     b1.localizedName = l;
@@ -359,7 +366,7 @@ public class EUOverride {
 
         ShrapnelBulletType sp = new ShrapnelBulletType(){{
             length = 100;
-            damage = 76 - (hardMod ? 10 : 0);
+            damage = 84 - (hardMod ? 10 : 0);
             width = 17f;
             reloadMultiplier = 1.2f;
             ammoMultiplier = 8;
@@ -405,7 +412,7 @@ public class EUOverride {
         for(Item i : is2){
             BulletType bsp = ammo2.get(i);
             BulletType bt = bsp.copy();
-            bt.damage += 3;
+            bt.damage += 1;
             ShrapnelBulletType b1 = (ShrapnelBulletType) bt;
             b1.length = T2fuse.range + bt.rangeChange + 12;
             if(bsp == sp){
@@ -416,12 +423,12 @@ public class EUOverride {
             T2fuse.ammoTypes.put(i, bt);
 
             BulletType bt2 = bsp.copy();
-            bt2.damage += 6;
+            bt2.damage += 3;
             ShrapnelBulletType b2 = (ShrapnelBulletType) bt2;
             b2.length = T3fuse.range + bt2.rangeChange + 16;
             if(bsp == sp){
                 bt2.fragBullet = sp.fragBullet.copy();
-                bt2.fragBullet.damage += 3;
+                bt2.fragBullet.damage += 2;
                 ((liLaserBullet)bt2.fragBullet).length = T3fuse.range + bt2.rangeChange + 16;
             }
             T3fuse.ammoTypes.put(i, bt2);
@@ -439,5 +446,23 @@ public class EUOverride {
                 u.health = (float) Math.ceil(u.health * 1.3f);
             }
         }
+
+        Block T2duo = Vars.content.block(name("T2-duo"));
+        changeInHard(T2duo);
+        Block T3duo = Vars.content.block(name("T3-duo"));
+        changeInHard(T3duo);
+        Block magstorm = Vars.content.block(name("magstorm"));
+        changeInHard(magstorm);
+        Block sancta = Vars.content.block(name("sancta"));
+        changeInHard(sancta);
+    }
+
+    private static void changeInHard(Block block){
+        String nam = Core.bundle.getOrNull("block." + block.name + "-hard.name");
+        String des = Core.bundle.getOrNull("block." + block.name + "-hard.description");
+        String dtl = Core.bundle.getOrNull("block." + block.name + "-hard.details");
+        if(nam != null) block.localizedName = nam;
+        if(des != null) block.description = des;
+        block.details = dtl;
     }
 }

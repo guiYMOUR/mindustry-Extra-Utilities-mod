@@ -143,7 +143,7 @@ public class RogueLikeStart extends BaseDialog {
             hide();
             ui.custom.hide();
         }).size(210f, 64f).update(b -> {
-            if(map == null || map == maps[1]) {
+            if(map == null) {
                 b.setDisabled(true);
                 b.setText("Coming soon...");
             } else {

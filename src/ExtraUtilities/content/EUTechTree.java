@@ -88,6 +88,7 @@ public class EUTechTree {
 
         addToNode(breach, () -> {
             node(guiY, () -> {
+                node(sandGo);
                 node(turretSpeeder);
                 node(fiammetta);
                 node(anti_Missile);
@@ -112,6 +113,7 @@ public class EUTechTree {
                 node(stoneMelting);
             }));
             node(breaker);
+            node(waterBomb);
             node(coreKeeper);
             node(mineCellT1, () -> node(mineCellT2));
         }));

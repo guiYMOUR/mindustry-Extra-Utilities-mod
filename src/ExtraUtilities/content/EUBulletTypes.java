@@ -1,20 +1,40 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.worlds.entity.bullet.ChainLightningFade;
 import ExtraUtilities.worlds.entity.bullet.FlameBulletType;
+import ExtraUtilities.worlds.entity.bullet.RainbowStorm;
 import ExtraUtilities.worlds.entity.bullet.mixBoom;
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
+import arc.graphics.g2d.Lines;
 import arc.math.Angles;
+import arc.math.Mathf;
+import arc.math.geom.Position;
+import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Damage;
+import mindustry.entities.Effect;
+import mindustry.entities.Lightning;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.bullet.LaserBulletType;
 import mindustry.entities.effect.ExplosionEffect;
+import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.Bullet;
+import mindustry.gen.Call;
+import mindustry.gen.Sounds;
+import mindustry.gen.Teamc;
+import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
+import mindustry.type.StatusEffect;
+import mindustry.world.blocks.defense.turrets.Turret;
 
+import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
 import static mindustry.Vars.indexer;
 
 public class EUBulletTypes {
@@ -261,4 +281,204 @@ public class EUBulletTypes {
             }
         };
     }
+
+    public static BulletType[] rainbowLar = new BulletType[120];
+    static {
+        StatusEffect[] rainStatus = {
+                StatusEffects.blasted,
+                StatusEffects.electrified,
+                StatusEffects.wet,
+        };
+        for(int i = 0; i < 120; i++){
+            Color rbc = EUGet.rainBowRed.cpy().shiftHue(i * 3);
+
+            int finalI = i;
+            BulletType ribt = new LaserBulletType(){{
+                laserAbsorb = false;
+                damage = 1;
+                buildingDamageMultiplier = 0.2f;
+                pierceArmor = true;
+                colors = new Color[]{rbc.cpy().a(0.4f), rbc.cpy().a(0.7f), rbc};
+                lifetime = 18;
+                length = 60f;
+                laserEffect = Fx.none;
+                status = rainStatus[finalI % 3];
+                statusDuration = 2 * 60f;
+
+                hitEffect = new Effect(24, e -> {
+                    if(e.color != null) Draw.color(e.color.set(EUGet.rainBowRed).shiftHue(e.time * 20));
+                    Angles.randLenVectors(e.id, 3, 32 * e.finpow(), e.rotation, 90, (x, y) -> Fill.square(e.x + x, e.y + y, 6 * e.foutpow()));
+                });
+                //hitEffect = Fx.none;
+            }
+                @Override
+                public void init(Bullet b){
+                    Damage.collideLaser(b, b.fdata, largeHit, laserAbsorb, pierceCap);
+                }
+
+                @Override
+                public void draw(Bullet b){
+                    float realLength = b.fdata;
+
+                    float f = Mathf.curve(b.fin(), 0f, 0.2f);
+                    float baseLen = realLength * f;
+                    float cwidth = b.fdata > 50 ? 13f : b.fdata/5f;
+
+                    for(Color color : colors){
+                        Draw.color(color);
+                        Lines.stroke((cwidth *= 0.5f) * b.fout());
+                        Lines.lineAngle(b.x, b.y, b.rotation(), baseLen, false);
+                        Tmp.v1.trns(b.rotation(), baseLen);
+                        Drawf.tri(b.x + Tmp.v1.x, b.y + Tmp.v1.y, Lines.getStroke(), cwidth * 2f + b.fdata / 10f, b.rotation());
+                    }
+                    Draw.reset();
+                }
+            };
+
+            rainbowLar[i] = ribt;
+        }
+    }
+
+    private static final BulletType rainbowStormSmall = new RainbowStorm(8, 10){{
+        homingRange = 160;
+        homingPower = 0.5f;
+        lifetime = 90;
+        speed = 4.5f;
+        inAmi = false;
+        homingDelay = 15;
+        sideTrailWidth = 2f;
+        trailLength = 15;
+        laserLength = 13;
+        laserAmount = 15;
+    }};
+    public static BulletType setPos = new BulletType(){{
+        speed = damage = 0;
+        hittable = absorbable = keepVelocity = collides = collidesTiles = collidesAir = collidesGround = false;
+        hitEffect = despawnEffect = Fx.none;
+        hitSize = 0;
+        lifetime = 80;
+    }};
+    public static BulletType rainbowStorm = new RainbowStorm(){{
+        homingRange = 120;
+        homingPower = 0.4f;
+        homingDelay = 30f;
+        lifetime = 180;
+        speed = 3f;
+        trailLength = 18;
+
+        splashDamage = 300;
+        splashDamageRadius = 12 * 8f;
+
+        rotSpeed = -2.8f;
+
+        Color cor = Color.valueOf("FFF8D8");
+        Color liC = Color.valueOf("FFE5C0");
+
+        despawnEffect = new MultiEffect(
+                EUFx.StormExp(liC, cor)
+        );
+
+        Effect tef = new Effect(30, e -> {
+            Draw.color(liC, cor, e.fin());
+            float ex = e.x + Mathf.randomSeed(e.id, -4f, 4),
+                    ey = e.y + Mathf.randomSeed(e.id, -4, 4);
+            Fill.circle(ex, ey, 4.2f * e.fout());
+        });
+        fragBullet = new BulletType() {
+            {
+                speed = 3.2f;
+                lifetime = 72;
+                damage = 20;
+                bulletInterval = 7.2f;
+                hitEffect = Fx.hitLancer;
+                despawnEffect = Fx.none;
+                absorbable = hittable = keepVelocity = false;
+                pierce = true;
+                pierceBuilding = true;
+                trailWidth = 0;
+                trailLength = 25;
+                trailEffect = tef;
+                trailInterval = 1;
+
+                buildingDamageMultiplier = 0.5f;
+            }
+
+            @Override
+            public void update(Bullet b) {
+                super.update(b);
+                b.rotation(b.rotation() - Time.delta * 3.7f);
+            }
+
+            @Override
+            public void updateBulletInterval(Bullet b) {
+                if (b.timer.get(2, bulletInterval)) {
+                    int index = ((int) (b.time/3f) + b.id * 3) % 120;
+                    Bullet rb = rainbowLar[index].create(b, b.team, b.x, b.y, b.rotation() - 90, 45, 1, 1, null);
+                    rb.fdata = 120;
+                }
+            }
+
+            @Override
+            public void drawTrail(Bullet b) {
+                if (trailLength > 0 && b.trail != null) {
+                    float d = b.time < b.lifetime /2 ? b.fin() * 2 : b.fout() * 2;
+                    float z = Draw.z();
+                    Draw.z(z - 1e-4f);
+                    b.trail.draw(Tmp.c4.set(liC).lerp(cor, b.fin()), 3.5f * d + 1);
+                    Draw.z(z);
+                }
+            }
+
+            @Override
+            public void draw(Bullet b) {
+                super.draw(b);
+
+                float d = b.time < b.lifetime /2 ? b.fin() * 2 : b.fout() * 2;
+                Draw.color(liC, cor, b.fin());
+                Fill.circle(b.x, b.y, 2.5f * d + 1);
+            }
+        };
+
+        fragBullets = 6;
+    }
+
+        @Override
+        public void createFrags(Bullet b, float x, float y) {
+            //var psb = setPos.create(b, b.x, b.y, 0);
+            for(int i = 0; i < fragBullets; i++){
+                float a = Mathf.randomSeed(b.id, 360) + 60 * i;
+                fragBullet.create(b, b.team, b.x, b.y, a);
+            }
+        }
+
+        @Override
+        public void updateHoming(Bullet b) {
+            if(homingPower > 0.0001f && b.time >= homingDelay) {
+                float realAimX = b.aimX < 0 ? b.x : b.aimX;
+                float realAimY = b.aimY < 0 ? b.y : b.aimY;
+
+                Teamc target;
+                if (b.aimTile != null && b.aimTile.build != null && b.aimTile.build.team != b.team && collidesGround && !b.hasCollided(b.aimTile.build.id)) {
+                    target = b.aimTile.build;
+                } else {
+                    target = Units.closestTarget(b.team, realAimX, realAimY, homingRange,
+                            e -> e != null && e.checkTarget(collidesAir, collidesGround) && !b.hasCollided(e.id),
+                            t -> t != null && collidesGround && !b.hasCollided(t.id));
+                }
+
+                if (target != null) {
+                    if(b.time < (b.lifetime - outTime) && b.timer.get(1, 21)) rainbowStormSmall.create(b, b.x, b.y, b.rotation() -90 + Mathf.random(120f));
+                    b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), homingPower * Time.delta * 50f));
+                }
+            }
+        }
+
+        @Override
+        public void update(Bullet b) {
+            super.update(b);
+            if(b.owner instanceof Turret.TurretBuild build){
+                if(!b.within(build, build.range())) b.remove();
+            }
+        }
+    };
 }

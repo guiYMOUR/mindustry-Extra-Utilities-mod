@@ -138,10 +138,10 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.row();
                 ScrollPane p = cont.pane(t -> {
                     //t.left().defaults().left();
+                    addToTable(EUBlocks.waterBomb, t);
+                    addToTable(EUBlocks.sandGo, t);
                     addToTable(EUBlocks.aparajito, t);
                     addToTable(EUBlocks.aparajitoLarge, t);
-                    addToTable(EUBlocks.mineCellT1, t);
-                    addToTable(EUBlocks.mineCellT2, t);
                     addToTable(EUBlocks.buffrerdMemoryBank, t);
                     addToTable(EUBlocks.anti_Missile, t);
                     addToTable(EUBlocks.unitBooster, t);
@@ -251,17 +251,19 @@ public class ExtraUtilitiesMod extends Mod{
         ui.targetCursor = newCursor("target.png", Fonts.cursorScale());
     }
 
-    private static boolean isAps(){
+    public static boolean isAps(){
         var date = LocalDate.now();
         var sdf = DateTimeFormatter.ofPattern("MMdd");
         var fd = sdf.format(date);
         return fd.equals("0401");
+        //test
+        //return true;
     }
 
     @Override
     public void init() {
         boolean aps = isAps();
-        if(aps) EU.meta.version = "2.4.8p4";
+        if(aps) EU.meta.version = "2.4.8p5";
 
         //settings.remove("eu-override-unit");
         settings.defaults("eu-override-unit", false);
@@ -412,6 +414,10 @@ public class ExtraUtilitiesMod extends Mod{
                         settingsTable.checkPref("eu-show-hole-acc-disk", true);
 
                         settingsTable.checkPref("eu-first-load", true);
+                        if(!settings.get("eu-version", "").equals(EU.meta.version)){
+                            settings.put("eu-first-load", true);
+                            settings.put("eu-version", EU.meta.version);
+                        }
                         settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-me-now")) {
                             @Override
                             public void add(SettingsMenuDialog.SettingsTable table) {
@@ -459,6 +465,8 @@ public class ExtraUtilitiesMod extends Mod{
         massageRand = me[Mathf.random(len - 1)];
 
         if(onlyPlugIn) return;
+
+        if(isAps()) hardMod = true;
 
         EUOverride.overrideItem();
 

@@ -74,6 +74,7 @@ public class EUGet {
     public static Color EC18 = new Color();
     public static Color EC19 = new Color();
     public static Color EC20 = new Color();
+    public static Color EC21 = new Color();
 
     public static boolean breakStart = false;
 

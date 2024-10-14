@@ -5,6 +5,7 @@ import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.distribution.StackHelper;
 import ExtraUtilities.worlds.blocks.effect.Breaker;
 import ExtraUtilities.worlds.blocks.effect.CoreKeeper;
+import ExtraUtilities.worlds.blocks.effect.WaterBomb;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
@@ -48,6 +49,7 @@ import arc.util.*;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.entities.Effect;
+import mindustry.entities.Mover;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.*;
@@ -103,13 +105,13 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG, heatPower, windPower, waterPower,
         //turret
-            dissipation, anti_Missile, guiY, javelin, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
+            dissipation, anti_Missile, sandGo, guiY, javelin, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
             aparajito, aparajitoLarge,
             buffrerdMemoryBank, clock, tableClock,
-            turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker,
+            turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker, waterBomb,
             randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower, blackhole;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
         public LiquidStack[] liquid;
@@ -1063,6 +1065,70 @@ public class EUBlocks {
             squareSprite = false;
         }};
 
+        sandGo = new ItemTurret("sand-go"){{
+            requirements(Category.turret, with(Items.graphite, 85));
+            health = 270;
+            size = 2;
+            reload = 12f;
+            shoot.shots = 4;
+            ammoPerShot = 4;
+            maxAmmo = ammoPerShot * 4;
+            xRand = 2;
+            inaccuracy = 24;
+            coolant = null;
+            canOverdrive = false;
+            range = 14.5f * 8;
+            drawer = new DrawTurret("reinforced-");
+            shootEffect = smokeEffect = none;
+            //alwaysUnlocked = true;
+            ammo(Items.sand,
+                    new BulletType(){{
+                        shootEffect = smokeEffect = none;
+                        damage = 1;
+                        speed = 3.5f;
+                        lifetime = (14.5f * 8)/speed;
+                        trailEffect = new Effect(36, e ->{
+                            color(e.color);
+                            alpha(e.foutpow() + 0.3f);
+                            Fill.circle(e.x + Mathf.randomSeed(e.id, -2, 2), e.y + Mathf.randomSeed(e.id, -2, 2), e.rotation * e.foutpow());
+                        }).layer(Layer.flyingUnitLow - 1e-3f);
+                        trailInterval = 1;
+                        trailColor = Items.sand.color;
+                        trailParam = 3.1f;
+                        knockback = 1.9f;
+                        status = StatusEffects.slow;
+                        statusDuration = 60f;
+                        hitEffect = despawnEffect = new Effect(24, e -> {
+                            color(trailColor);
+                            alpha(e.foutpow());
+                            randLenVectors(e.id, 5, 11 * e.finpow(), (x, y) -> {
+                                Fill.circle(e.x + x, e.y + y, e.finpow() * 2.9f);
+                            });
+                        }).layer(Layer.flyingUnitLow - 1e-4f);
+                        ammoMultiplier = 1;
+                    }
+
+                        @Override
+                        public void draw(Bullet b) {
+                            super.draw(b);
+                            float z = Draw.z();
+                            Draw.z(Layer.flyingUnitLow);
+                            Draw.rect(Items.sand.fullIcon, b.x, b.y, b.rotation() + b.time * 4);
+                            Draw.z(z);
+                        }
+
+                        @Override
+                        public void updateTrailEffects(Bullet b) {
+                            if(b.timer(0, trailInterval)){
+                                for(int i = 0; i < 3; i++){
+                                    trailEffect.at(b.x, b.y, trailParam, trailColor);
+                                }
+                            }
+                        }
+                    }
+            );
+        }};
+
         guiY = new ItemTurret("guiY"){{
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
@@ -1300,7 +1366,7 @@ public class EUBlocks {
             range = 45 * 8;
 
             health = 2000;
-            reload = 60 / .8f;
+            reload = 60 / .7f;
             recoil = 4;
             recoilTime = recoil * reload - 30;
             shootY = 18;
@@ -1314,7 +1380,7 @@ public class EUBlocks {
                 ammoMultiplier = 1;
                 speed = 24;
                 lifetime = 45 * 8 / speed;
-                damage = splashDamage = 400;
+                damage = splashDamage = 350;
                 splashDamageRadius = 10 * 8;
                 absorbable = hittable = collides = collidesTiles = collidesGround = false;
                 despawnHit = false;
@@ -1476,7 +1542,7 @@ public class EUBlocks {
             BulletType bb1 = new BulletType(){{
                 homingPower = 1;
                 homingRange = 10 * 8;
-                damage = 138;
+                damage = 130;
                 speed = 9;
                 lifetime = 30;
                 trailWidth = 1;
@@ -1484,6 +1550,11 @@ public class EUBlocks {
                 trailLength = 12;
                 absorbable = false;
                 hitEffect = despawnEffect = Fx.none;
+                lightning = 2;
+                lightningColor = Pal.heal;
+                lightningDamage = 16;
+                status = EUStatusEffects.awsl;
+                statusDuration = 18;
             }};
             BulletType b1 = new BulletType(){{
                 ammoMultiplier = 2;
@@ -1584,8 +1655,33 @@ public class EUBlocks {
                 despawnEffect = hitEffect = Fx.none;
             }};
 
+            BulletType bst = new BasicBulletType(9, 120, name("onyx-blaster-bullet")){{
+                splashDamage = 90;
+                splashDamageRadius = 10 * 8;
+                lifetime = 30;
+                width = height = 18;
+                shrinkY = 0;
+
+                hitEffect = despawnEffect = new ExplosionEffect() {{
+                    lifetime = 40f;
+                    waveStroke = 5f;
+                    waveLife = 8f;
+                    waveColor = Pal.sap;
+                    sparkColor = Pal.sapBulletBack;
+                    smokeColor = Pal.sapBullet;
+                    waveRad = 10 * 8;
+                    smokeSize = 4;
+                    smokes = 7;
+                    smokeSizeBase = 0f;
+                    sparks = 5;
+                    sparkRad = 10 * 8;
+                    sparkLen = 5f;
+                    sparkStroke = 2f;
+                }};
+                ammoMultiplier = 1;
+            }};
             BulletType bs = new BasicBulletType(9, 120, name("onyx-blaster-bullet")){{
-                splashDamage = 120;
+                splashDamage = 90;
                 splashDamageRadius = 10 * 8;
                 lifetime = 30;
                 width = height = 18;
@@ -1611,7 +1707,7 @@ public class EUBlocks {
 
                 ammoMultiplier = 1;
             }};
-            BulletType[] bullets1 = new BulletType[]{b3, bs};
+            BulletType[] bullets1 = new BulletType[]{b3, bst};
             BulletType[] bullets2 = new BulletType[]{b2, bs};
             BulletType[] bullets3 = new BulletType[]{b4, bs};
             BulletType[] bullets4 = new BulletType[]{b1, bs};
@@ -1908,58 +2004,172 @@ public class EUBlocks {
         }};
 
         sancta = new ItemTurret("sancta"){{
-            int amount = 2000 + (hardMod ? 500 : 0);
+            //int amount = 2000 + (hardMod ? 500 : 0);
+            int amount = 2000;
             requirements(Category.turret, with(EUItems.lightninAlloy, amount, Items.phaseFabric, amount, Items.surgeAlloy, amount));
             size = 7;
+            BulletType normal = new ScarletDevil(EUItems.lightninAlloy.color){{
+                speed = 20;
+                lifetime = 28;
+                trailColor = EUItems.lightninAlloy.color;
+                trailLength = 11;
+                trailWidth = 6;
+                splashDamage = damage = 1500;
+                ammoMultiplier = 1;
+                hitEffect = despawnEffect = new Effect(90, e -> {
+                    float line = splashDamageRadius;
+                    Draw.color(EUItems.lightninAlloy.color);
+                    for(int i = 0; i < 36; i++){
+                        float dx = EUGet.dx(e.x, line * e.finpow(), i * 10);
+                        float dy = EUGet.dy(e.y, line * e.finpow(), i * 10);
+                        Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
+                    }
+                    for(int j = 0; j < 36; j++) {
+                        float a = j * 10 + 360 * e.finpow();
+                        float d = Mathf.cos((float) (6 * (a / 180 * Math.PI) * e.finpow())) + 1;
+                        float dx = EUGet.dx(e.x, line/1.8f * e.finpow() * d, a);
+                        float dy = EUGet.dy(e.y, line/1.8f * e.finpow() * d, a);
+                        Lines.stroke(3.5f * e.fout() + 0.1f);
+                        Lines.lineAngle(dx, dy, a, 10 * e.fout() + 0.5f);
+                        //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
+                    }
+                });
+                hitSound = despawnSound = Sounds.explosionbig;
+                healColor = EUItems.lightninAlloy.color;
+                buildingDamageMultiplier = 0.7f;
+
+                fb.splashDamage = 60;
+                fb.splashDamageRadius = 3.3f * 8f;
+            }
+
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    Draw.color(trailColor);
+                    Drawf.tri(b.x, b.y, 20, 20, b.rotation());
+                    Drawf.tri(b.x, b.y, 10, 8, b.rotation()-180);
+                    Draw.z(Layer.flyingUnit);
+                    Draw.rect(Core.atlas.find(name("sancta-bt")), b.x, b.y, 32, 50, b.rotation() - 90);
+                }
+
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    Tmp.v1.set(Mathf.sin(b.time, 2.2f, 20), 0).rotate(b.rotation() - 90);
+                    Tmp.v2.set(-Mathf.sin(b.time, 2.2f, 20), 0).rotate(b.rotation() - 90);
+                    float x1 = b.x + Tmp.v1.x;
+                    float y1 = b.y + Tmp.v1.y;
+                    float x2 = b.x + Tmp.v2.x;
+                    float y2 = b.y + Tmp.v2.y;
+                    artilleryTrail.at(x1, y1, 3, trailColor);
+                    artilleryTrail.at(x2, y2, 3, trailColor);
+                    if(b.timer.get(2, lifetime/4)){
+                        EUFx.ellipse(40, 8, 16/2, 40, trailColor).at(b.x, b.y, b.rotation());
+                    }
+                }
+            };
+            Mover mover = bullet -> {
+                if(bullet.type == null) return;
+                float fout = Math.max((60 - bullet.time)/60, 0);
+                if(bullet.time < 70) bullet.initVel(bullet.rotation(), bullet.type.speed * fout);
+            };
+            BulletType hard = new ScarletDevil(EUItems.lightninAlloy.color){{
+                hitSound = despawnSound = Sounds.explosionbig;
+                damage = 800;
+                splashDamage = 800;
+                splashDamageRadius = 13 * 8f;
+                hitEffect = despawnEffect = new Effect(90, e -> {
+                    float line = splashDamageRadius;
+                    Draw.color(EUItems.lightninAlloy.color);
+                    for(int i = 0; i < 36; i++){
+                        float dx = EUGet.dx(e.x, line * e.finpow(), i * 10);
+                        float dy = EUGet.dy(e.y, line * e.finpow(), i * 10);
+                        Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
+                    }
+                    for(int j = 0; j < 36; j++) {
+                        float a = j * 10 + 360 * e.finpow();
+                        float d = Mathf.cos((float) (6 * (a / 180 * Math.PI) * e.finpow())) + 1;
+                        float dx = EUGet.dx(e.x, line/1.8f * e.finpow() * d, a);
+                        float dy = EUGet.dy(e.y, line/1.8f * e.finpow() * d, a);
+                        Lines.stroke(3.5f * e.fout() + 0.1f);
+                        Lines.lineAngle(dx, dy, a, 10 * e.fout() + 0.5f);
+                        //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
+                    }
+                });
+                hitSound = despawnSound = Sounds.explosionbig;
+                healColor = EUItems.lightninAlloy.color;
+                buildingDamageMultiplier = 0.7f;
+
+                pierce = true;
+                pierceCap = 2;
+                pierceBuilding = true;
+
+                speed = 20;
+                lifetime = 30;
+                trailWidth = 7;
+                trailLength = 12;
+                trailColor = EUItems.lightninAlloy.color;
+                fragBullet = null;
+                fragBullets= 0;
+                healPercent = -1;
+                ff.speed = 1.5f;
+                ff.fragBullets = fragBullets;
+                ff.buildingDamageMultiplier = fb.buildingDamageMultiplier = 0.6f;
+                ff.status = fb.status = StatusEffects.freezing;
+                ff.statusDuration = fb.statusDuration = 3 * 60f;
+                fb.healPercent = -1;
+                fb.damage = 65;
+                fb.splashDamage = 80;
+                fb.splashDamageRadius = 3.3f * 8f;
+                intervalBullet = fb;
+                intervalBullets = 4;
+                bulletInterval = 3;
+                intervalDelay = 3;
+                intervalAngle = - 30;
+                intervalSpread = 240;
+            }
+
+                @Override
+                public void updateBulletInterval(Bullet b) {
+                    if (ff != null && b.time >= intervalDelay && b.timer.get(2, bulletInterval)) {
+                        float ang = b.rotation();
+
+                        float[] fs = {-4f, 4f};
+                        for(int i = 0; i < intervalBullets/2; i++) {
+                            for(float as : fs) {
+                                ff.create(b, b.team, b.x, b.y, ang - 90 + as + intervalAngle + i * intervalSpread, 1, 1, mover);
+                            }
+                        }
+                    }
+
+                }
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    Draw.color(trailColor);
+                    Drawf.tri(b.x, b.y, 20, 20, b.rotation());
+                    Drawf.tri(b.x, b.y, 10, 8, b.rotation()-180);
+                    Draw.z(Layer.flyingUnit);
+                    Draw.rect(Core.atlas.find(name("sancta-bt")), b.x, b.y, 32, 50, b.rotation() - 90);
+                }
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    Tmp.v1.set(Mathf.sin(b.time, 2.2f, 20), 0).rotate(b.rotation() - 90);
+                    Tmp.v2.set(-Mathf.sin(b.time, 2.2f, 20), 0).rotate(b.rotation() - 90);
+                    float x1 = b.x + Tmp.v1.x;
+                    float y1 = b.y + Tmp.v1.y;
+                    float x2 = b.x + Tmp.v2.x;
+                    float y2 = b.y + Tmp.v2.y;
+                    artilleryTrail.at(x1, y1, 3, trailColor);
+                    artilleryTrail.at(x2, y2, 3, trailColor);
+                    if(b.timer.get(3, lifetime/4)){
+                        EUFx.ellipse(40, 8, 16/2, 40, trailColor).at(b.x, b.y, b.rotation());
+                    }
+                }
+            };
             ammo(
-                    EUItems.lightninAlloy,
-                            new ScarletDevil(EUItems.lightninAlloy.color){{
-                                speed = 20;
-                                lifetime = 28;
-                                trailColor = EUItems.lightninAlloy.color;
-                                trailLength = 11;
-                                trailWidth = 6;
-                                splashDamage = damage = 1500 - (hardMod ? 300 : 0);
-                                ammoMultiplier = 1;
-                                hitSound = despawnSound = Sounds.explosionbig;
-                                healColor = EUItems.lightninAlloy.color;
-                                buildingDamageMultiplier = 0.7f;
-
-                                fb.splashDamage = 60;
-                                fb.splashDamageRadius = 3.3f * 8f;
-
-                                if(hardMod) {
-                                    fb.damage -= 10;
-                                    fb.splashDamage -= 10;
-                                }
-                            }
-
-                                @Override
-                                public void draw(Bullet b) {
-                                    super.draw(b);
-                                    Draw.color(trailColor);
-                                    Drawf.tri(b.x, b.y, 20, 20, b.rotation());
-                                    Drawf.tri(b.x, b.y, 10, 8, b.rotation()-180);
-                                    Draw.z(Layer.flyingUnit);
-                                    Draw.rect(Core.atlas.find(name("sancta-bt")), b.x, b.y, 32, 50, b.rotation() - 90);
-                                }
-
-                                @Override
-                                public void update(Bullet b) {
-                                    super.update(b);
-                                    Tmp.v1.set(Mathf.sin(b.time, 2.2f, 20), 0).rotate(b.rotation() - 90);
-                                    Tmp.v2.set(-Mathf.sin(b.time, 2.2f, 20), 0).rotate(b.rotation() - 90);
-                                    float x1 = b.x + Tmp.v1.x;
-                                    float y1 = b.y + Tmp.v1.y;
-                                    float x2 = b.x + Tmp.v2.x;
-                                    float y2 = b.y + Tmp.v2.y;
-                                    artilleryTrail.at(x1, y1, 3, trailColor);
-                                    artilleryTrail.at(x2, y2, 3, trailColor);
-                                    if(b.timer.get(2, lifetime/4)){
-                                        EUFx.ellipse(40, 8, 16/2, 40, trailColor).at(b.x, b.y, b.rotation());
-                                    }
-                                }
-                            }
+                    EUItems.lightninAlloy, hardMod ? hard : normal
             );
             drawer = new DrawMulti(
                     new DrawTurret(){{
@@ -1998,11 +2208,11 @@ public class EUBlocks {
             scaledHealth = 180;
 
             range = 80 * 8;
-            ammoPerShot = 10;
+            ammoPerShot = hardMod ? 8 : 15;
             maxAmmo = ammoPerShot * 3;
             shake = 6f;
             recoil = 4f;
-            reload = 360f;
+            reload = hardMod ? 195f : 360f;
             shootY = 0f;
             rotateSpeed = 1.2f;
             minWarmup = 0.95f;
@@ -2878,6 +3088,10 @@ public class EUBlocks {
             floating = true;
 
             alwaysUnlocked = true;
+        }};
+        waterBomb = new WaterBomb("water-bomb"){{
+            requirements(Category.effect, with(EUItems.lightninAlloy, 15, Items.thorium, 30, Items.surgeAlloy, 20));
+            //alwaysUnlocked = true;
         }};
 
         buffrerdMemoryBank = new CopyMemoryBlock("buffrerd-memory-bank"){{
