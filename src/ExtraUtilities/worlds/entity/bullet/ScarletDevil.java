@@ -45,7 +45,7 @@ public class ScarletDevil extends BulletType {
         }};
         ff = new BulletType(){
             {
-                lifetime = 90;
+                lifetime = 63;
                 speed = 3;
                 hitEffect = despawnEffect = Fx.none;
                 trailLength = 15;
@@ -109,12 +109,13 @@ public class ScarletDevil extends BulletType {
     @Override
     public void createFrags(Bullet b, float x, float y) {
         int fs = fragBullets/3;
+        int rdp = Mathf.randomSeed(b.id, 1, 2);
         for (int i = 0; i < fs; i++) {
-            float r = (i + 1) * (360f / fs) - 30;
+            float r = (i + 1) * (360f / (fs * rdp)) - 30;
             ff.create(b, b.team, b.x, b.y, r + 30, -1, 1, 1, mov(r), mover);
         }
         for (int i = 0; i < fs; i++) {
-            float r = (i + 1) * (360f / fs) - 30;
+            float r = (i + 1) * (360f / (fs * rdp)) - 30;
             ff.create(b, b.team, b.x, b.y, r - 150, -1, 1, 1, mov(r), mover);
         }
         for (int i = 0; i < fs; i++) {
@@ -134,7 +135,7 @@ public class ScarletDevil extends BulletType {
             Fill.circle(b.x, b.y, 3);
             Draw.color(Color.white);
             Fill.circle(b.x, b.y, 2);
-            Draw.reset();
+            //Draw.reset();
         }
 
         @Override

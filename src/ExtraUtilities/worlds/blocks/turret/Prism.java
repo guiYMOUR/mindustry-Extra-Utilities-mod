@@ -52,7 +52,7 @@ public class Prism extends Turret {
     public StatusEffect[] statuses = {
             StatusEffects.blasted,
             StatusEffects.shocked,
-            EUStatusEffects.poison,
+            StatusEffects.electrified,
             StatusEffects.freezing,
             StatusEffects.wet,
             StatusEffects.sapped

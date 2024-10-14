@@ -14,6 +14,7 @@ import mindustry.world.blocks.defense.turrets.PowerTurret;
 
 public class Stinger extends PowerTurret {
     public float delay = 60 * 5f;
+    public float killTrigger = 0.25f;
     public float killChance = 0.05f;
     public BulletType rainBullet;
 
@@ -58,7 +59,7 @@ public class Stinger extends PowerTurret {
                 if(unit == null) continue;
                 unitMap.put(unit, unitMap.get(unit) + Time.delta);
                 if(unitMap.get(unit) > delay){
-                    if(unit.health < unit.maxHealth/2 && Mathf.chance(killChance)){
+                    if(killTrigger > 0 && unit.health < unit.maxHealth * killTrigger && Mathf.chance(killChance)){
                         unit.health -= unit.health;
                         unit.kill();
                     } else {

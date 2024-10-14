@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.entity.bullet;
 
+import ExtraUtilities.content.EUBulletTypes;
 import ExtraUtilities.content.EUFx;
 import ExtraUtilities.content.EUGet;
 import arc.Core;
@@ -36,13 +37,6 @@ public class MagneticStormBulletType extends BasicBulletType {
     public float[] damages = {15, 18, 20, 32};
 
     public int msTl = 15;
-    public BulletType setPos = new BulletType(){{
-        speed = damage = 0;
-        hittable = absorbable = keepVelocity = collides = collidesTiles = collidesAir = collidesGround = false;
-        hitEffect = despawnEffect = Fx.none;
-        hitSize = 0;
-        lifetime = 80;
-    }};
 
     public float dsRange = 20 * 8;
     public ChainLightningFade lightning;
@@ -347,7 +341,7 @@ public class MagneticStormBulletType extends BasicBulletType {
 
     @Override
     public void createFrags(Bullet b, float x, float y) {
-        var psb = setPos.create(b, b.x, b.y, 0);
+        var psb = EUBulletTypes.setPos.create(b, b.x, b.y, 0);
         for(int i = 0; i < fragBullets; i++){
             float a = Mathf.randomSeed(b.id, 360) + 60 * i;
             fragBullet.create(b, b.team, b.x, b.y, a, -1, 1, 1, psb);
