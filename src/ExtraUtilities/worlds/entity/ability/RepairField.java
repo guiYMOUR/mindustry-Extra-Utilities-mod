@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.entity.ability;
 
+import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -20,6 +21,7 @@ import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
+import mindustry.ui.Styles;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 
@@ -117,10 +119,12 @@ public class RepairField extends Ability {
         t.row();
         if(status == StatusEffects.none) return;
         t.add("[lightgray]status: ").row();
-        t.button(new TextureRegionDrawable(status.uiIcon), () -> {
-            ui.content.show(status);
-        }).size(50).row();
-        t.add("[white]" + status.localizedName);
+        //t.button(new TextureRegionDrawable(status.uiIcon), () -> ui.content.show(status)).size(50).row();
+        t.table(i -> {
+            i.add(EUGet.selfStyleImageButton(new TextureRegionDrawable(status.uiIcon), Styles.emptyi, () -> ui.content.show(status))).size(24);
+            i.add("[white]" + status.localizedName + "[]").padLeft(5);
+        });
+
         t.row();
     }
 }

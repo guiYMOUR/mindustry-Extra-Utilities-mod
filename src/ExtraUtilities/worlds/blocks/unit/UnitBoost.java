@@ -28,6 +28,7 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
 import mindustry.ui.Bar;
+import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.heat.HeatConsumer;
 import mindustry.world.consumers.ConsumeItems;
@@ -81,14 +82,18 @@ public class UnitBoost extends Block {
         stats.add(new Stat("rangeboost", StatCat.crafting), (int)(maxRangeBoost * 100f), StatUnit.percent);
         if(status.length >0) stats.add(Stat.abilities, t -> {
             t.row();
-            t.add(Core.bundle.get("statValue.showStatus"));
-            for(StatusEffect s : status) {
-                if(s == StatusEffects.none) continue;
-                t.row();
-                t.button(new TextureRegionDrawable(s.uiIcon), () -> ui.content.show(s)).padTop(2f).padBottom(2f).size(50);
-                t.add(s.localizedName);
-            }
+            t.add(Core.bundle.get("statValue.showStatus")).left();
             t.row();
+            t.table(Styles.grayPanel, inner -> {
+                inner.left().defaults().left();
+                for(StatusEffect s : status) {
+                    if(s == StatusEffects.none) continue;
+                    inner.row();
+                    inner.add(EUGet.selfStyleImageButton(new TextureRegionDrawable(s.uiIcon), Styles.emptyi, () -> ui.content.show(s))).padTop(4f).padBottom(6f).size(42);
+                    //inner.button(new TextureRegionDrawable(s.uiIcon), () -> ui.content.show(s)).padTop(4f).padBottom(6f).size(50);
+                    inner.add(s.localizedName).padLeft(5);
+                }
+            }).left().growX().margin(6).pad(5).padBottom(-5).row();
         });
 
         if(findConsumer(c -> c instanceof ConsumeItems) instanceof ConsumeItems cons){

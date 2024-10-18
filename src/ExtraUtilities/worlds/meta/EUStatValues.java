@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.meta;
 
+import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.func.Boolf;
 import arc.graphics.Color;
@@ -220,8 +221,9 @@ public class EUStatValues {
                                 for(StatusEffect s : status){
                                     if(s == StatusEffects.none) continue;
                                     bt.row();
-                                    bt.button(new TextureRegionDrawable(s.uiIcon), () -> ui.content.show(s)).padTop(2f).padBottom(2f).size(50);
-                                    bt.add(s.localizedName);
+                                    bt.add(EUGet.selfStyleImageButton(new TextureRegionDrawable(s.uiIcon), Styles.emptyi, () -> ui.content.show(s))).padTop(2f).padBottom(6f).size(42);
+                                    //bt.button(new TextureRegionDrawable(s.uiIcon), () -> ui.content.show(s)).padTop(2f).padBottom(6f).size(50);
+                                    bt.add(s.localizedName).padLeft(5);
                                 }
                                 if(replace){
                                     bt.row();
