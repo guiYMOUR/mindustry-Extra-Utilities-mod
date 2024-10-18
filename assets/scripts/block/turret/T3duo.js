@@ -31,7 +31,7 @@ T3duo.limitRange();
 T3duo.ammoTypes = Blocks.duo.ammoTypes;
 T3duo.coolant = T3duo.consume(new ConsumeCoolant(0.1));
 T3duo.requirements = ItemStack.with(
-    Items.copper, 85,
+    Items.copper, 70,
     Items.graphite, 35
 );
 T3duo.buildVisibility = BuildVisibility.shown;

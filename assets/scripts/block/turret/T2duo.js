@@ -16,7 +16,7 @@ T2duo.limitRange();
 T2duo.coolant = T2duo.consume(new ConsumeCoolant(0.1));
 T2duo.ammoTypes = Blocks.duo.ammoTypes;
 T2duo.requirements = ItemStack.with(
-    Items.copper, 75
+    Items.copper, 70
 );
 T2duo.buildVisibility = BuildVisibility.shown;
 T2duo.category = Category.turret;
