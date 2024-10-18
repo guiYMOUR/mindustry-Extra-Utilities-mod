@@ -411,10 +411,12 @@ public class EUBulletTypes {
 
             @Override
             public void updateBulletInterval(Bullet b) {
-                if (b.timer.get(2, bulletInterval)) {
-                    int index = ((int) (b.time/3f) + b.id * 3) % 120;
-                    Bullet rb = rainbowLar[index].create(b, b.team, b.x, b.y, b.rotation() - 90, 45, 1, 1, null);
-                    rb.fdata = 120;
+                if(b.data instanceof Integer data) {
+                    if (b.timer.get(2, bulletInterval)) {
+                        int index = ((int) (b.time + data * 3.3f)) % 120;
+                        Bullet rb = rainbowLar[index].create(b, b.team, b.x, b.y, b.rotation() - 90, 45, 1, 1, null);
+                        rb.fdata = 120;
+                    }
                 }
             }
 
@@ -445,9 +447,10 @@ public class EUBulletTypes {
         @Override
         public void createFrags(Bullet b, float x, float y) {
             //var psb = setPos.create(b, b.x, b.y, 0);
+
             for(int i = 0; i < fragBullets; i++){
                 float a = Mathf.randomSeed(b.id, 360) + 60 * i;
-                fragBullet.create(b, b.team, b.x, b.y, a);
+                fragBullet.create(b, b.team, b.x, b.y, a, -1, 1, 1, i);
             }
         }
 

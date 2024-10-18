@@ -39,8 +39,10 @@ import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Position;
 import arc.math.geom.Vec2;
+import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Image;
+import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Stack;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -2917,13 +2919,17 @@ public class EUBlocks {
                 this.stats.add(Stat.output, (table) -> {
                     table.row();
 
+                    table.add("[red]Click on the icon to view").left().row();
                     for (UnitPlan plan : plans) {
+                        if(plan.unit == null) continue;
                         table.table(Styles.grayPanel, (t) -> {
                             if (plan.unit.isBanned()) {
                                 t.image(Icon.cancel).color(Pal.remove).size(40);
                             } else {
                                 if (plan.unit.unlockedNow()) {
-                                    t.button(new TextureRegionDrawable(plan.unit.uiIcon), () -> ui.content.show(plan.unit)).size(70).pad(10).left().scaling(Scaling.fit);
+                                    t.add(EUGet.selfStyleImageButton(new TextureRegionDrawable(plan.unit.uiIcon), Styles.emptyi, () -> ui.content.show(plan.unit))).size(56).pad(10).left().scaling(Scaling.fit).tooltip(plan.unit.localizedName);
+                                    //t.button(new TextureRegionDrawable(plan.unit.uiIcon), () -> ui.content.show(plan.unit)).size(70).pad(10).left().scaling(Scaling.fit);
+
                                     t.table((info) -> {
                                         info.add(plan.unit.localizedName + " " + checkTier(plan.unit)).left();
                                         info.row();
@@ -3090,7 +3096,7 @@ public class EUBlocks {
             alwaysUnlocked = true;
         }};
         waterBomb = new WaterBomb("water-bomb"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 15, Items.thorium, 30, Items.surgeAlloy, 20));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 20, Items.thorium, 30, Items.surgeAlloy, 20));
             //alwaysUnlocked = true;
         }};
 

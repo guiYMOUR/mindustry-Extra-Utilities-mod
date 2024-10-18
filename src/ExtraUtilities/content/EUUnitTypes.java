@@ -55,6 +55,7 @@ import mindustry.type.ammo.ItemAmmoType;
 import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
+import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.MendProjector;
 import mindustry.world.blocks.defense.RegenProjector;
 import mindustry.world.meta.BlockFlag;
@@ -142,9 +143,13 @@ public class EUUnitTypes {
                     }
                     t.add(Core.bundle.get("ability.stat.boss"));
                     t.row();
-                    t.add("SUMMON: ");
-                    t.row();
-                    t.button(new TextureRegionDrawable(havoc.uiIcon), () -> ui.content.show(havoc)).padTop(2f).padBottom(2f).size(50);
+                    t.left().defaults().left();
+                    t.table(i -> {
+                        i.add("SUMMON: ");
+                        i.add(EUGet.selfStyleImageButton(new TextureRegionDrawable(havoc.uiIcon), Styles.emptyi, () -> ui.content.show(havoc))).padTop(2f).padBottom(2f).size(32);
+                        i.add("[white]" + havoc.localizedName + "[]").padLeft(5);
+                    });
+                    //t.button(new TextureRegionDrawable(havoc.uiIcon), () -> ui.content.show(havoc)).padTop(2f).padBottom(2f).size(50);
                     t.row();
                 }
             });

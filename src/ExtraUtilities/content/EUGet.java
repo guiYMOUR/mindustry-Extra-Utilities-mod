@@ -14,6 +14,9 @@ import arc.graphics.g2d.TextureAtlas;
 import arc.graphics.g2d.TextureRegion;
 import arc.graphics.gl.PixmapTextureData;
 import arc.math.geom.Position;
+import arc.scene.style.Drawable;
+import arc.scene.style.TextureRegionDrawable;
+import arc.scene.ui.ImageButton;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Time;
@@ -35,6 +38,7 @@ import mindustry.gen.Velc;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
 import mindustry.ui.Fonts;
+import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -354,5 +358,14 @@ public class EUGet {
             item(cons, item.name, item.color, item.explosiveness, item.flammability, item.cost, item.radioactivity, item.charge, item.healthScaling);
         }
         Draw.color();
+    }
+
+    public static ImageButton selfStyleImageButton(Drawable imageUp, ImageButton.ImageButtonStyle is, Runnable listener){
+        ImageButton ib = new ImageButton(new ImageButton.ImageButtonStyle(null, null, null, imageUp, null, null));
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle(is);
+        style.imageUp = imageUp;
+        ib.setStyle(style);
+        if(listener != null) ib.changed(listener);
+        return  ib;
     }
 }
