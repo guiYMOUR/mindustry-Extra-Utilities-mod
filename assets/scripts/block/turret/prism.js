@@ -19,7 +19,7 @@ prism.range = 36 * 8;
 prism.consumePower(40);
 prism.drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawRainbow(2, 8));
 
-prism.rainbowDamage = (360 - (hardMod ? 60 : 0))/12;
+prism.rainbowDamage = (420 - (hardMod ? 60 : 0))/12;
 prism.health = 220 * 5 * 5;
 prism.coolantMultiplier = 1;
 prism.squareSprite = false;
