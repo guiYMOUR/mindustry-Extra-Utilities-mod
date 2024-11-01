@@ -9,6 +9,7 @@ import arc.struct.ObjectMap;
 import mindustry.content.UnitTypes;
 import mindustry.game.Gamemode;
 import mindustry.game.Rules;
+import mindustry.game.Team;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
@@ -138,6 +139,7 @@ public class RogueLikeStart extends BaseDialog {
         addCloseListener();
         buttons.button("@play", Icon.play, () -> {
             if(rules == null) return;
+
             difficult.apply(rules, weaves == Weaves.endless);
             control.playMap(map, rules, false);
             hide();
@@ -219,6 +221,7 @@ public class RogueLikeStart extends BaseDialog {
             rules.bannedUnits.addAll(content.units());
             rules.bannedUnits.remove(UnitTypes.mono);
             rules.bannedUnits.remove(UnitTypes.poly);
+            rules.teams.get(Team.crux).blockHealthMultiplier = 9999;
         }
     }
 

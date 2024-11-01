@@ -2041,7 +2041,7 @@ public class EUBlocks {
                 buildingDamageMultiplier = 0.7f;
 
                 fb.splashDamage = 60;
-                fb.splashDamageRadius = 3.3f * 8f;
+                fb.splashDamageRadius = 4.3f * 8f;
             }
 
                 @Override
@@ -3190,6 +3190,9 @@ public class EUBlocks {
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.editorOnly;
         }};
+
+        EUGet.donorItems.addAll(T2sporePress, javelin, waterBomb, buffrerdMemoryBank);
+        EUGet.developerItems.addAll(siliconFurnace, guiY, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork, crystalTower);
     }
 
     //by guiY for Twilight Fall

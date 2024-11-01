@@ -2,6 +2,7 @@ package ExtraUtilities.content;
 
 import ExtraUtilities.ExtraUtilitiesMod;
 import arc.Core;
+import arc.Events;
 import arc.func.Cons;
 import arc.func.Cons2;
 import arc.graphics.Color;
@@ -17,24 +18,32 @@ import arc.math.geom.Position;
 import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ImageButton;
+import arc.scene.ui.ScrollPane;
+import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
+import arc.util.Scaling;
 import arc.util.Time;
 import arc.util.noise.Noise;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
+import mindustry.ctype.Content;
+import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.PointBulletType;
 import mindustry.entities.pattern.ShootSpread;
+import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Bullet;
 import mindustry.gen.Entityc;
 import mindustry.gen.Iconc;
 import mindustry.gen.Velc;
+import mindustry.graphics.Pal;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
 import mindustry.ui.Fonts;
@@ -42,12 +51,17 @@ import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatCat;
+import mindustry.world.meta.StatValue;
+import mindustry.world.meta.Stats;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
+import static arc.Core.settings;
 import static mindustry.Vars.*;
 import static mindustry.content.Liquids.*;
 import static mindustry.content.Items.*;
@@ -84,6 +98,23 @@ public class EUGet {
 
     public static void setBreakStart(boolean breakStart) {
         EUGet.breakStart = breakStart;
+    }
+
+    public static Seq<UnlockableContent> donorItems = new Seq<>();
+    public static Seq<UnlockableContent> developerItems = new Seq<>();
+    private static final String DONOR = Core.bundle.get("mod.extra-utilities-donor-item");
+    private static final String DEVELOPER = Core.bundle.get("mod.extra-utilities-developer-item");
+    public static void loadItems(){
+        //if(headless) return;
+//        Events.run(EventType.Trigger.update, () -> {
+//
+//        });
+        for(var c : donorItems){
+            c.description = (c.description == null ? DONOR : c.description + "\n" + DONOR);
+        }
+        for(var c : developerItems){
+            c.description = (c.description == null ? DEVELOPER : c.description + "\n" + DEVELOPER);
+        }
     }
 
     //use for pool

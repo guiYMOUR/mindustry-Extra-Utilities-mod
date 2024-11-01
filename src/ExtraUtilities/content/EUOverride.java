@@ -36,6 +36,7 @@ import mindustry.world.blocks.liquid.Conduit;
 import mindustry.world.blocks.payloads.Constructor;
 import mindustry.world.blocks.payloads.PayloadConveyor;
 import mindustry.world.blocks.payloads.PayloadRouter;
+import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
@@ -91,8 +92,8 @@ public class EUOverride {
         Blocks.beryllicStone.attributes.set(EUAttribute.EKOil, 70 * (0.15f/135));
 
         Blocks.arc.consumePower(2f);
-        Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 120));
-        Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, Items.surgeAlloy, 100));
+        Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 200));
+        Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, Items.surgeAlloy, 200));
         ((BaseTurret)Blocks.scathe).fogRadiusMultiplier = 0.75f;
 
         ((UnitFactory)Blocks.airFactory).plans.add(new UnitFactory.UnitPlan(EUUnitTypes.winglet, 60f * 30, with(Items.silicon, 20, Items.titanium, 10, Items.lead, 15)));
@@ -465,4 +466,27 @@ public class EUOverride {
         if(des != null) block.description = des;
         block.details = dtl;
     }
+
+//    public static void addAdvFoc(){
+//        for(var b : Vars.content.blocks()){
+//            if(b.isModded() && b instanceof GenericCrafter gc){
+//                int l = b.requirements.length + gc.outputItems.length;
+//                ItemStack[] is = new ItemStack[l];
+//                ItemStack[] os = new ItemStack[gc.outputItems.length];
+//                for(int i = 0; i < b.requirements.length; i++){
+//                    is[i] = new ItemStack(b.requirements[i].item, (int) (b.requirements[i].amount * 1.2f));
+//                }
+//                for(int i = 1; i <= gc.outputItems.length; i++){
+//                    is[l - i] = new ItemStack(gc.outputItems[i - 1].item, 10 * gc.size);
+//                    os[i - 1] = new ItemStack(gc.outputItems[i -1].item, Mathf.ceil(gc.outputItems[i - 1].amount * 1.5f));
+//                }
+//                Block advGc = new GenericCrafter(b.name + "-ac"){{
+//                    requirements = is;
+//                    category = gc.category;
+//                    size = b.size + 1;
+//                    outputItems = os;
+//                }};
+//            }
+//        }
+//    }
 }

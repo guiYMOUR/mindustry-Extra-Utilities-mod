@@ -3308,5 +3308,8 @@ public class EUUnitTypes {
 
             setEnginesMirror(new UnitEngine(6, -5.8f, 1.6f, 315f));
         }};
+
+        EUGet.donorItems.addAll(napoleon, havoc, arcana);
+        EUGet.developerItems.addAll(winglet);
     }
 }

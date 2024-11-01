@@ -25,6 +25,7 @@ import arc.scene.ui.ScrollPane;
 import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
+import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.Vars;
@@ -33,6 +34,7 @@ import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType.*;
 import mindustry.gen.Icon;
+import mindustry.gen.Iconc;
 import mindustry.gen.Tex;
 import mindustry.graphics.Pal;
 import mindustry.maps.Map;
@@ -42,9 +44,10 @@ import mindustry.type.Liquid;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
-import mindustry.ui.fragments.MenuFragment;
-import mindustry.world.blocks.defense.turrets.LaserTurret;
-import universecore.ui.elements.markdown.Markdown;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatCat;
+import mindustry.world.meta.StatValue;
+import mindustry.world.meta.Stats;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -219,13 +222,14 @@ public class ExtraUtilitiesMod extends Mod{
     }
 
     public ExtraUtilitiesMod() {
-        Log.info("Loaded ExtraUtilities Mod constructor.");
-        Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log));
-
         //WTMF - What This May From
         Log.info("Extra Utilities: Load WTMF");
-        Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, EUFrom::load));
-        //
+        Events.on(ClientLoadEvent.class, e -> Time.runTask(1f, EUFrom::load));
+        Log.info("Loading completed, congratulations! :)");
+
+        Log.info("Loaded ExtraUtilities Mod constructor.");
+        Events.on(ClientLoadEvent.class, e -> Time.runTask(6f, ExtraUtilitiesMod::log));
+
         Log.info("Extra Utilities: building rand subtitle...");
     }
 
@@ -480,8 +484,9 @@ public class ExtraUtilitiesMod extends Mod{
         TDPlanet.load();
         TDSectorPresets.load();
 
-
         EUTechTree.load();
+
+        if(!headless) EUGet.loadItems();
     }
 
     public static void rebuildRandSubTitle(String title){
