@@ -1,19 +1,10 @@
 # Extra Utilities
 
 ![logo](https://user-images.githubusercontent.com/77377005/230295079-496e1c3b-052c-4320-b1f4-3de6d7c4692c.png)
-![work](https://user-images.githubusercontent.com/77377005/231817466-63545b19-6286-4ab4-b151-8bc95ce501f0.gif)
-![mk2](https://github.com/user-attachments/assets/941fc344-5e44-4139-93c9-2ba28dccab7d)
-![holeMissile](https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/aa04a359-c12e-4011-9752-b7ec9f48b80d)
-![bow](https://github.com/user-attachments/assets/d497c42b-9f33-49fa-8982-df5e5f7c2eed)
 
-
-<img width="340" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/0fe411f3-9879-4485-b48f-023292c8c434">
-
-<img width="698" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/7e6ecd31-89d9-4dc0-b477-11b52a1a5b46">
-
-![20241109_162507](https://github.com/user-attachments/assets/0aa7a521-0b89-4d2d-9911-1376d6906d99)
-
-![20241107_200712](https://github.com/user-attachments/assets/004cd172-253f-44c2-badb-28fefc7ed6b3)
+<img width="300" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/0fe411f3-9879-4485-b48f-023292c8c434"><img width="300" alt="image" src="https://user-images.githubusercontent.com/77377005/231817466-63545b19-6286-4ab4-b151-8bc95ce501f0.gif"><img width="300" alt="image" src="https://github.com/user-attachments/assets/941fc344-5e44-4139-93c9-2ba28dccab7d">
+<br></br>
+<img width="300" alt="image" src="https://github.com/user-attachments/assets/d497c42b-9f33-49fa-8982-df5e5f7c2eed"><img width="300" alt="image" src="https://github.com/user-attachments/assets/0aa7a521-0b89-4d2d-9911-1376d6906d99"><img width="300" alt="image" src="https://github.com/user-attachments/assets/004cd172-253f-44c2-badb-28fefc7ed6b3">
 
 - English | [中文](README_cn.md)
 
