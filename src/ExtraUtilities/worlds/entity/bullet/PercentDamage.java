@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.entity.bullet;
 
+import ExtraUtilities.content.EUFx;
 import arc.graphics.Color;
 import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
@@ -13,10 +14,10 @@ public class PercentDamage extends BasicBulletType {
     public PercentDamage(){
         lifetime = 54;
         shootEffect = Fx.shootLiquid;
-        hitEffect = Fx.bubble;
+        hitEffect = EUFx.hitOut;
         smokeEffect = Fx.none;
         trailEffect = Fx.none;
-        despawnEffect = Fx.bubble;
+        despawnEffect = Fx.blastExplosion;
         damage = 10;
         speed = 4;
         status = StatusEffects.none;
@@ -37,11 +38,8 @@ public class PercentDamage extends BasicBulletType {
 
     @Override
     public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) {
-        hitEffect.at(x, y);
-        if(build.health < damage){
-            build.kill();
-            return;
-        }
-        build.health -= Math.ceil(build.maxHealth * percent);
+        hitEffect.at(build.x, build.y, b.rotation(), build);
+        if(build.health <= damage) build.kill();
+        else build.health -= Math.ceil(build.maxHealth * percent);
     }
 }

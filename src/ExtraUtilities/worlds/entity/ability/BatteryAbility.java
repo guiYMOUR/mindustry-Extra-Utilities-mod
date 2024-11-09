@@ -19,6 +19,8 @@ import mindustry.entities.Effect;
 import mindustry.entities.Lightning;
 import mindustry.entities.Units;
 import mindustry.entities.abilities.Ability;
+import mindustry.entities.bullet.BulletType;
+import mindustry.entities.effect.MultiEffect;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Groups;
@@ -33,6 +35,7 @@ import mindustry.world.blocks.power.PowerNode;
 public class BatteryAbility extends Ability {
     public float capacity, shieldRange, range, px, py;
     public Effect abEff = EUFx.shieldDefense;
+    public BulletType deathElc;
 
     public BatteryAbility(float capacity, float shieldRange, float range, float px, float py){
         this.capacity = capacity;
@@ -40,6 +43,14 @@ public class BatteryAbility extends Ability {
         this.range = range;
         this.px = px;
         this.py = py;
+        deathElc = new ElectricStorm(capacity/100, Pal.heal, 20){{
+            lifetime = 300;
+            splashDamageRadius = 20 * 8;
+            despawnEffect = hitEffect = new MultiEffect(
+                    EUFx.ElectricExp(60, 15, splashDamageRadius),
+                    EUFx.diffEffect(90, 1.8f, 24 * 8f, 10, 56, 24, 10, Pal.heal, 0)
+            );
+        }};
     }
 
     public static Effect absorb;
@@ -139,10 +150,6 @@ public class BatteryAbility extends Ability {
 
     @Override
     public void death(Unit unit) {
-        new ElectricStorm(capacity/100 + amount/100, Pal.heal, 20 + (int)amount/1000){{
-            lifetime = 300;
-            splashDamageRadius = 20 * 8;
-            despawnEffect = hitEffect = EUFx.ElectricExp(60, 15, splashDamageRadius);
-        }}.create(unit, unit.x, unit.y, 0);
+        deathElc.create(unit, unit.x, unit.y, 0);
     }
 }

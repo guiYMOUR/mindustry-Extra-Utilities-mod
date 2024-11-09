@@ -14,6 +14,7 @@ import static ExtraUtilities.ExtraUtilitiesMod.name;
 public class DeathBullet extends Ability {
     public BulletType db;
     public Object data;
+    public boolean withRotate = false;
 
     protected UnitType statUnit;
 
@@ -30,7 +31,7 @@ public class DeathBullet extends Ability {
     @Override
     public void death(Unit unit) {
         if(db == null) return;
-        db.create(unit, unit.team, unit.x, unit.y, 0, -1, 1, 1, data);
+        db.create(unit, unit.team, unit.x, unit.y, withRotate ? unit.rotation() : 0, -1, 1, 1, data);
     }
 
     @Override

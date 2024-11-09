@@ -81,9 +81,9 @@ public class TerritoryFieldAbility extends Ability {
 
     @Override
     public void draw(Unit unit) {
-        Lines.stroke(2, unit.team.color);
+        Lines.stroke(.4f, unit.team.color);
         Lines.circle(unit.x, unit.y, range);
-        Draw.alpha(0.08f);
+        Draw.alpha(0.035f);
         Fill.circle(unit.x, unit.y, range);
     }
 }

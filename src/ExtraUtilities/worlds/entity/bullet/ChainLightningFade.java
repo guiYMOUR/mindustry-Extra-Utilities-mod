@@ -10,6 +10,7 @@ import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.*;
+import arc.struct.FloatSeq;
 import arc.util.Time;
 import arc.util.Tmp;
 import arc.util.pooling.Pools;
@@ -54,11 +55,14 @@ public class ChainLightningFade extends BulletType {
         float spacing = dst / links;
 
         b.random.setSeed(b.id);
-        b.resetPos = new float[links + 1][2];
+        //b.resetPos = new float[links + 1][2];
         int i;
 
         float ox = b.x, oy = b.y;
-        b.resetPos[0] = new float[]{b.x, b.y};
+        b.px.add(b.x);
+        b.py.add(b.y);
+//        b.resetPos[0][0] = b.x;
+//        b.resetPos[0][1] = b.y;
         for(i = 0; i < links; i++){
             float nx, ny;
             if(i == links - 1){
@@ -71,7 +75,10 @@ public class ChainLightningFade extends BulletType {
                 ny = b.y + normy * len + Tmp.v1.y;
             }
 
-            b.resetPos[i + 1] = new float[]{nx, ny};
+            b.px.add(nx);
+            b.py.add(ny);
+//            b.resetPos[i + 1][0] = nx;
+//            b.resetPos[i + 1][1] = ny;
 
             float length = EUGet.pos(ox, oy).dst(nx, ny);
             float angle = EUGet.pos(ox, oy).angleTo(nx, ny);
@@ -89,7 +96,8 @@ public class ChainLightningFade extends BulletType {
     }
 
     private void draw(chain b){
-        if(b.resetPos.length > 0) {
+        if(b.px.size != b.py.size) return;
+        if(b.px.size > 0) {
             Lines.stroke(stroke * Mathf.curve(b.fout(), 0, 0.7f));
             Draw.color(Color.white, color, b.fin());
 
@@ -99,19 +107,36 @@ public class ChainLightningFade extends BulletType {
             float fin = Mathf.curve(b.fin(), 0, 0.5f);
             int i;
 
-            for (i = 0; i < (b.resetPos.length - 1) * fin; i++) {
+//            for (i = 0; i < (b.resetPos.length - 1) * fin; i++) {
+//                float ox, nx, oy, ny;
+//                if(!back) {
+//                    ox = b.resetPos[i][0];
+//                    oy = b.resetPos[i][1];
+//                    nx = b.resetPos[i + 1][0];
+//                    ny = b.resetPos[i + 1][1];
+//                } else {
+//                    int fi = b.resetPos.length - 1 - i;
+//                    ox = b.resetPos[fi][0];
+//                    oy = b.resetPos[fi][1];
+//                    nx = b.resetPos[fi - 1][0];
+//                    ny = b.resetPos[fi - 1][1];
+//                }
+//
+//                Lines.line(ox, oy, nx, ny);
+//            }
+            for(i = 0; i < (b.px.size - 1) * fin; i++){
                 float ox, nx, oy, ny;
                 if(!back) {
-                    ox = b.resetPos[i][0];
-                    oy = b.resetPos[i][1];
-                    nx = b.resetPos[i + 1][0];
-                    ny = b.resetPos[i + 1][1];
+                    ox = b.px.get(i);
+                    oy = b.py.get(i);
+                    nx = b.px.get(i + 1);
+                    ny = b.py.get(i + 1);
                 } else {
-                    int fi = b.resetPos.length - 1 - i;
-                    ox = b.resetPos[fi][0];
-                    oy = b.resetPos[fi][1];
-                    nx = b.resetPos[fi - 1][0];
-                    ny = b.resetPos[fi - 1][1];
+                    int fi = b.px.size - 1 - i;
+                    ox = b.px.get(fi);
+                    oy = b.py.get(fi);
+                    nx = b.px.get(fi - 1);
+                    ny = b.py.get(fi - 1);
                 }
 
                 Lines.line(ox, oy, nx, ny);
@@ -142,14 +167,22 @@ public class ChainLightningFade extends BulletType {
 
     @Override
     public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
-        Bullet bullet = chain.create();
+        chain bullet = chain.create();
+        bullet.resetXY();
         return EUGet.anyOtherCreate(bullet, this, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
     }
 
     public static class chain extends Bullet{
         public final Rand random = new Rand();
 
-        public float[][] resetPos;
+        //public float[][] resetPos;
+        public FloatSeq px = new FloatSeq();
+        public FloatSeq py = new FloatSeq();
+
+        public void resetXY(){
+            px.clear();
+            py.clear();
+        }
 
         public static chain create() {
             return Pools.obtain(chain.class, chain::new);

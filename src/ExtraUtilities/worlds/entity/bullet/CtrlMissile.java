@@ -14,6 +14,7 @@ import arc.util.Time;
 import mindustry.Vars;
 import mindustry.entities.Mover;
 import mindustry.entities.Units;
+import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.part.DrawPart;
 import mindustry.entities.units.WeaponMount;
@@ -23,9 +24,7 @@ import mindustry.graphics.Layer;
 import mindustry.world.blocks.ControlBlock;
 
 /** 真的真的真的看不惯猫的那套单位制导技术*/
-public class CtrlMissile extends BulletType {
-    public String sprite;
-    public float width, height;
+public class CtrlMissile extends BasicBulletType {
     public boolean autoHoming = false;
     public boolean low = false;
     public Sound loopSound = Sounds.missileTrail;
@@ -112,7 +111,7 @@ public class CtrlMissile extends BulletType {
         super.draw(b);
         Draw.z(low ? Layer.flyingUnitLow : Layer.flyingUnit);
         if (width > 0 && height > 0) Draw.rect(Core.atlas.find(sprite), b.x, b.y, width, height, b.rotation() - 90);
-        else Draw.rect(Core.atlas.find(sprite), b.x, b.y, b.rotation() - 90);
+        else Draw.rect(frontRegion, b.x, b.y, b.rotation() - 90);
         Draw.reset();
     }
 }

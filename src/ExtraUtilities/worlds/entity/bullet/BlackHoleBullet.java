@@ -97,7 +97,7 @@ public class BlackHoleBullet extends BulletType {
         });
 
         if(!Vars.headless && (Core.settings != null && Core.settings.getBool("eu-show-hole-acc-disk")) && b.time <= b.lifetime - 72) for(int i = 0; i < amount; i++){
-            var data = Pools.obtain(EUFx.ateData.class, EUFx.ateData::new);
+            EUFx.ateData data = EUFx.ateData.create();
             float outRDI = i % 2 == 0 ? outRad * 1.2f : outRad;
             data.width = Mathf.random(minWidth, maxWidth) * in;
             data.inRad = inRad * 0.9f * in;
