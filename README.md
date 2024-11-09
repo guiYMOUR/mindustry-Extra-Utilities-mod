@@ -1,4 +1,4 @@
-![20241107_200712](https://github.com/user-attachments/assets/004cd172-253f-44c2-badb-28fefc7ed6b3)# Extra Utilities
+# Extra Utilities
 
 ![logo](https://user-images.githubusercontent.com/77377005/230295079-496e1c3b-052c-4320-b1f4-3de6d7c4692c.png)
 ![work](https://user-images.githubusercontent.com/77377005/231817466-63545b19-6286-4ab4-b151-8bc95ce501f0.gif)
@@ -10,8 +10,8 @@
 <img width="340" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/0fe411f3-9879-4485-b48f-023292c8c434">
 
 <img width="698" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/7e6ecd31-89d9-4dc0-b477-11b52a1a5b46">
-![unit](https://github.com/user-attachments/assets/66d4a29a-dfdc-4c65-b919-463b93ce1e46)
-![DeathAnimation](https://github.com/user-attachments/assets/6b83a22f-8049-4eaf-858c-ba5f1c80ee76)
+![20241109_162507](https://github.com/user-attachments/assets/0aa7a521-0b89-4d2d-9911-1376d6906d99)
+![20241107_200712](https://github.com/user-attachments/assets/004cd172-253f-44c2-badb-28fefc7ed6b3)
 
 - English | [中文](README_cn.md)
 
