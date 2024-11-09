@@ -26,6 +26,8 @@ import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
 import ExtraUtilities.worlds.blocks.unit.UnitBoost;
 import ExtraUtilities.worlds.consumers.BetterConsumeLiquidsDynamic;
 import ExtraUtilities.worlds.drawer.*;
+import ExtraUtilities.worlds.entity.animation.AnimationType;
+import ExtraUtilities.worlds.entity.animation.DeathAnimation;
 import ExtraUtilities.worlds.entity.bullet.*;
 import arc.Core;
 import arc.graphics.Color;
@@ -107,14 +109,14 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG, heatPower, windPower, waterPower,
         //turret
-            dissipation, anti_Missile, sandGo, guiY, javelin, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
+            blackhole, dissipation, anti_Missile, sandGo, guiY, javelin, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
             aparajito, aparajitoLarge,
             buffrerdMemoryBank, clock, tableClock,
             turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker, waterBomb,
-            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower, blackhole;
+            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower ;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
         public LiquidStack[] liquid;
 
@@ -1074,7 +1076,7 @@ public class EUBlocks {
             reload = 12f;
             shoot.shots = 4;
             ammoPerShot = 4;
-            maxAmmo = ammoPerShot * 4;
+            maxAmmo = ammoPerShot * 5;
             xRand = 2;
             inaccuracy = 24;
             coolant = null;
@@ -1097,7 +1099,7 @@ public class EUBlocks {
                         trailInterval = 1;
                         trailColor = Items.sand.color;
                         trailParam = 3.1f;
-                        knockback = 1.9f;
+                        knockback = 2.3f;
                         status = StatusEffects.slow;
                         statusDuration = 60f;
                         hitEffect = despawnEffect = new Effect(24, e -> {
@@ -1134,6 +1136,9 @@ public class EUBlocks {
         guiY = new ItemTurret("guiY"){{
             requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
             size = 2;
+            Color eccl = Color.valueOf("87CEEB");
+            Color eccb = Color.valueOf("6D90BC");
+
             ammo(
                     Items.silicon, new CtrlMissile(name("carrot"), 20, 20){{
                         shootEffect = Fx.shootBig;
@@ -3191,7 +3196,7 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
 
-        EUGet.donorItems.addAll(T2sporePress, javelin, waterBomb, buffrerdMemoryBank);
+        EUGet.donorItems.addAll(largeElectricHeater, T2sporePress, javelin, waterBomb, buffrerdMemoryBank);
         EUGet.developerItems.addAll(siliconFurnace, guiY, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork, crystalTower);
     }
 

@@ -14,6 +14,7 @@ import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Position;
 import arc.math.geom.Vec2;
+import arc.struct.FloatSeq;
 import arc.struct.Seq;
 import arc.util.Structs;
 import arc.util.Time;
@@ -31,6 +32,7 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.graphics.Trail;
 import mindustry.type.UnitType;
+import mindustry.world.Block;
 
 import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static ExtraUtilities.content.EUGet.*;
@@ -392,9 +394,12 @@ public class EUFx {
             float spacing = dst / links;
 
             rand.setSeed(e.id);
-            float[][] resetPos = new float[links + 1][2];
+            //float[][] resetPos = new float[links + 1][2];
+            FloatSeq seq = Pools.obtain(FloatSeq.class, FloatSeq::new);
 
-            resetPos[0] = new float[]{e.x, e.y};
+            //resetPos[0][0] = e.x;
+            //resetPos[0][1] = e.y;
+            seq.add(e.x, e.y);
             for(int i = 0; i < links; i++) {
                 float nx, ny;
                 if (i == links - 1) {
@@ -407,7 +412,9 @@ public class EUFx {
                     ny = e.y + normy * len + Tmp.v1.y;
                 }
 
-                resetPos[i + 1] = new float[]{nx, ny};
+                //resetPos[i + 1][0] = nx;
+                //resetPos[i + 1][1] = ny;
+                seq.add(nx, ny);
             }
 
             Lines.stroke(stroke * Mathf.curve(e.fout(), 0, 0.7f));
@@ -419,16 +426,34 @@ public class EUFx {
             rand.setSeed(e.id);
             float fin = Mathf.curve(e.fin(), 0, 0.5f);
 
-            for (int j = 0; j < (resetPos.length - 1) * fin; j++) {
-                float ox = resetPos[j][0], oy = resetPos[j][1];
-                float nx = resetPos[j + 1][0], ny = resetPos[j + 1][1];
-
+//            for (int j = 0; j < (resetPos.length - 1) * fin; j++) {
+//                float ox = resetPos[j][0], oy = resetPos[j][1];
+//                float nx = resetPos[j + 1][0], ny = resetPos[j + 1][1];
+//
+//                Lines.line(ox, oy, nx, ny);
+//            }
+            for(int j = 0; j < (seq.size - 2) * fin; j+=2){
+                float ox = seq.get(j);
+                float oy = seq.get(j + 1);
+                float nx = seq.get(j + 2);
+                float ny = seq.get(j + 3);
                 Lines.line(ox, oy, nx, ny);
             }
 
+            seq.clear();
+            Pools.free(seq);
             Draw.reset();
         }).followParent(false);
     }
+
+    public static Effect waitChainHit18 = new Effect(27, e -> {
+        if(e.time > 9){
+            Draw.color(e.color);
+            float out = (e.lifetime - e.time)/18;
+            float in = 1 - out;
+            Angles.randLenVectors(e.id, 5, 21 * Interp.fastSlow.apply(in), e.rotation, 45, (x, y) -> Fill.square(e.x + x, e.y + y, 5 * out, Mathf.randomSeed(e.id, 180)));
+        }
+    });
 
     public static Effect ElectricExp(float lifetime, float sw, float r){
         return new Effect(lifetime, e -> {
@@ -451,7 +476,8 @@ public class EUFx {
                     lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + out * r/4);
                     Drawf.light(e.x + x, e.y + y, out * r, Draw.getColor(), 0.8f);
                 });
-                Effect.shake(3, 3, e.x, e.y);
+
+                if(!state.isPaused()) Effect.shake(3, 3, e.x, e.y);
             }
         });
     }
@@ -673,6 +699,10 @@ public class EUFx {
 
         public boolean out = false;
 
+        public static ateData create(){
+            return Pools.obtain(ateData.class, ateData::new);
+        }
+
         @Override
         public void reset() {
             width = 0;
@@ -723,4 +753,38 @@ public class EUFx {
                 })
         );
     }
+
+    public static Effect hitOut = new Effect(60, e -> {
+        if(e.data instanceof Unit u) {
+            UnitType type = u.type;
+            if(type != null) {
+                TextureRegion rg = type.fullIcon;
+                float w = rg.width * rg.scl() * xscl;
+                float h = rg.height * rg.scl() * yscl;
+                float dx = EUGet.dx(e.x, Math.max(w, h) * 0.3f * e.finpow(), e.rotation),
+                        dy = EUGet.dy(e.y, Math.max(w, h) * 0.3f * e.finpow(), e.rotation);
+                float z = Draw.z();
+                Draw.z(Layer.effect + 10);
+                Draw.alpha(e.foutpow());
+                Draw.rect(rg, dx, dy, w * 1.2f * e.finpow(), h * 1.2f * e.finpow(), u.rotation - 90);
+                Draw.z(z);
+            }
+        }
+
+        if(e.data instanceof Building b) {
+            Block type = b.block;
+            if(type != null) {
+                TextureRegion rg = type.fullIcon;
+                float w = rg.width * rg.scl() * xscl;
+                float h = rg.height * rg.scl() * yscl;
+                float dx = EUGet.dx(e.x, h * 0.2f * e.finpow(), e.rotation),
+                        dy = EUGet.dy(e.y, h * 0.2f * e.finpow(), e.rotation);
+                float z = Draw.z();
+                Draw.z(Layer.effect + 10);
+                Draw.alpha(e.foutpow());
+                Draw.rect(rg, dx, dy, w * 1.2f * e.finpow(), h * 1.2f * e.finpow());
+                Draw.z(z);
+            }
+        }
+    });
 }

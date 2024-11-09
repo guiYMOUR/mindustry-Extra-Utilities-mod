@@ -19,6 +19,7 @@ import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ImageButton;
 import arc.scene.ui.ScrollPane;
+import arc.scene.ui.layout.Collapser;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
@@ -39,10 +40,7 @@ import mindustry.entities.bullet.PointBulletType;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.game.EventType;
 import mindustry.game.Team;
-import mindustry.gen.Bullet;
-import mindustry.gen.Entityc;
-import mindustry.gen.Iconc;
-import mindustry.gen.Velc;
+import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
@@ -69,6 +67,8 @@ import static mindustry.content.Items.*;
 /**unfinished*/
 
 public class EUGet {
+    public static int[] signsZero = {-1, 0, 1};
+
     public static Color rainBowRed = Color.valueOf("ff8787");
     public static Color MIKU = Color.valueOf("39c5bb");
 
@@ -397,6 +397,23 @@ public class EUGet {
         style.imageUp = imageUp;
         ib.setStyle(style);
         if(listener != null) ib.changed(listener);
-        return  ib;
+        return ib;
+    }
+
+    public static void CollapseTextToTable(Table t, String text){
+        Table ic = new Table();
+        ic.add(text).wrap().fillX().width(500f).padTop(2).padBottom(6).left();
+        ic.row();
+        Collapser coll = new Collapser(ic, true);
+        coll.setDuration(0.1f);
+        t.row();
+        t.table(st -> {
+            st.add(Core.bundle.get("eu-clickToShow")).center();
+            st.row();
+            st.button(Icon.downOpen, Styles.emptyi, () -> coll.toggle(true)).update(i -> i.getStyle().imageUp = (!coll.isCollapsed() ? Icon.upOpen : Icon.downOpen)).pad(5).size(8).center();
+        }).left();
+        t.row();
+        t.add(coll);
+        t.row();
     }
 }

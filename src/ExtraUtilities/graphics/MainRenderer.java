@@ -7,6 +7,7 @@ import arc.graphics.g2d.*;
 import arc.graphics.gl.*;
 import arc.struct.*;
 import arc.util.Tmp;
+import arc.util.pooling.Pool;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
@@ -22,7 +23,7 @@ public class MainRenderer{
     private FrameBuffer buffer;
 
     private static final float[][] initFloat = new float[512][];
-    //private static final Pool<BlackHole> holePool = Pools.get(BlackHole.class, BlackHole::new);
+    private static final Pool<BlackHole> holePool = Pools.get(BlackHole.class, BlackHole::new);
 
     protected MainRenderer(){
         if(!Vars.headless) {
@@ -79,6 +80,8 @@ public class MainRenderer{
                 Draw.color(Tmp.c2.set(Color.black).a(hole.alpha));
                 Fill.circle(hole.x, hole.y, hole.inRadius * 1.5f);
                 Draw.color();
+                //之前忘了
+                holePool.free(hole);
             }
             MainShader.holeShader.blackHoles = blackholes;
             buffer.blit(MainShader.holeShader);
@@ -86,8 +89,6 @@ public class MainRenderer{
             buffer.begin();
             Draw.rect();
             buffer.end();
-
-            //holePool.freeAll(holes);
             holes.clear();
         });
     }
@@ -95,7 +96,7 @@ public class MainRenderer{
     private void addHole(float x, float y, float inRadius, float outRadius, float alpha){
         if(inRadius > outRadius || outRadius <= 0) return;
 
-        holes.add(Pools.obtain(BlackHole.class, BlackHole::new).set(x, y, inRadius, outRadius, alpha));
+        holes.add(holePool.obtain().set(x, y, inRadius, outRadius, alpha));
     }
 
     private static class BlackHole{

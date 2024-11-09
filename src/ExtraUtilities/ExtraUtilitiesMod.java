@@ -64,18 +64,20 @@ public class ExtraUtilitiesMod extends Mod{
         return ModName + "-" + add;
     }
     public static void addToTable(UnlockableContent c, Table t){
-        t.table(Styles.grayPanel, img -> {
-            img.button(bt -> bt.image(c.uiIcon).size(64).pad(5), Styles.cleari, () -> ui.content.show(c)).left().tooltip("click to show");
-        }).pad(10).margin(10).left();
-        t.image(Tex.whiteui, Pal.accent).growY().width(3).pad(4).margin(5).left();
-        t.table(info -> {
-            var n = info.add(c.localizedName).wrap().fillX().left().maxWidth(Core.graphics.getWidth()/2f).get();
-            info.row();
-            info.image(Tex.whiteui, Pal.accent).left().width(n.getWidth() * 1.3f).height(3f).row();
-            info.add(c.description).wrap().fillX().left().width(Core.graphics.getWidth()/2f).padTop(10).row();
-            info.image(Tex.whiteui, Pal.accent).left().width(Core.graphics.getWidth()/2f).height(3f).row();
-        }).left().pad(6);
         t.row();
+        t.table(log -> {
+            log.table(Styles.grayPanel, img -> {
+                img.button(bt -> bt.image(c.uiIcon).size(64).pad(5), Styles.cleari, () -> ui.content.show(c)).left().tooltip("click to show");
+            }).pad(10).margin(10).left();
+            log.image(Tex.whiteui, Pal.accent).growY().width(3).pad(4).margin(5).left();
+            log.table(info -> {
+                var n = info.add(c.localizedName).wrap().fillX().left().maxWidth(Core.graphics.getWidth()/2f).get();
+                info.row();
+                info.image(Tex.whiteui, Pal.accent).left().width(n.getWidth() * 1.3f).height(3f).row();
+                info.add(c.description).wrap().fillX().left().width(Core.graphics.getWidth()/2f).padTop(10).row();
+                info.image(Tex.whiteui, Pal.accent).left().width(Core.graphics.getWidth()/2f).height(3f).row();
+            }).left().pad(6);
+        });
     }
 
     public static String toText(String str){
@@ -92,6 +94,7 @@ public class ExtraUtilitiesMod extends Mod{
     private static final Mat setMat = new Mat();
     private static final Mat reMat = new Mat();
     private static final Vec2 vec2 = new Vec2();
+    private static final Seq<UnlockableContent> updateLog = new Seq<>();
 
     public static Mods.LoadedMod EU;
 
@@ -139,8 +142,43 @@ public class ExtraUtilitiesMod extends Mod{
                     //top.add(Core.bundle.format("tips.description")).row();
                 });
                 cont.row();
+                updateLog.clear();
+                updateLog.addAll(EUBlocks.sandGo,
+                        EUUnitTypes.suzerain, EUUnitTypes.apocalypse, EUUnitTypes.nebula, EUUnitTypes.nihilo, EUUnitTypes.narwhal, EUUnitTypes.regency,
+                        EUBlocks.guiY
+                );
                 ScrollPane p = cont.pane(t -> {
                     //t.left().defaults().left();
+                    t.table(log -> {
+                        log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
+                        log.table(main -> {
+                            main.table(title -> {
+                                title.add(Core.bundle.format("extra-utilities.update-log", EU.meta.version)).left();
+                            }).left().padTop(4);
+                            main.row();
+
+                            main.table(info -> {
+                                for(int i = 0; i < updateLog.size; i++){
+                                    UnlockableContent content = updateLog.get(i);
+                                    info.table(img -> {
+                                        img.add(EUGet.selfStyleImageButton(new TextureRegionDrawable(content.uiIcon), Styles.emptyi, () -> ui.content.show(content))).size(40).pad(10).left().scaling(Scaling.fit);
+                                    }).left().pad(4);
+                                    info.image(Tex.whiteui, Pal.accent).growY().width(3).pad(4).margin(5).left();
+                                    int finalI = i;
+                                    info.table(c -> {
+                                        c.add(content.localizedName).left();
+                                        c.row();
+                                        c.add(Core.bundle.get("extra-utilities.update-log-" + finalI)).wrap().fillX().left().width(Core.graphics.getWidth()/2f).padTop(10).row();
+                                        if(finalI != updateLog.size - 1) c.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
+                                    }).left();
+                                    info.row();
+                                }
+                            }).pad(4);
+                            main.image(Tex.whiteui, Pal.accent).growY().width(3).pad(4).margin(5).left();
+                        }).left().pad(6);
+                        log.row();
+                        log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
+                    });
                     addToTable(EUBlocks.waterBomb, t);
                     addToTable(EUBlocks.sandGo, t);
                     addToTable(EUBlocks.aparajito, t);
