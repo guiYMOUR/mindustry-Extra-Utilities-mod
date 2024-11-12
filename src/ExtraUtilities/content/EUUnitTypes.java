@@ -1162,7 +1162,7 @@ public class EUUnitTypes {
                             autoHoming = true;
                             homingDelay = 12;
                             homingPower = 12f;
-                            damage = 15;
+                            damage = 10;
                             pierceArmor = true;
                             buildingDamageMultiplier = 1f;
                             shootEffect = new Effect(24, e -> {
@@ -1283,7 +1283,7 @@ public class EUUnitTypes {
                         });
                         bullet = new BulletType(){{
                             speed = 6;
-                            damage = 80;
+                            damage = 64;
                             lifetime = 60;
                             homingDelay = 24;
                             homingPower = 0.2f;
@@ -1314,7 +1314,7 @@ public class EUUnitTypes {
                             hitSound = Sounds.cannon;
                             hitSoundPitch = 1.2f;
                             intervalBullet = new BulletType(){{
-                                damage = 15;
+                                damage = 12;
                                 pierceArmor = true;
                                 speed = 3;
                                 lifetime = 75;
@@ -1483,7 +1483,7 @@ public class EUUnitTypes {
                         x = 12;
                         y = 2;
                         shootSound = Sounds.missileLarge;
-                        reload = 60;
+                        reload = 90;
                         recoil = 4;
                     }
 
@@ -1503,7 +1503,7 @@ public class EUUnitTypes {
                         shoot.shotDelay = 3;
                         ejectEffect = Fx.casing4;
                         //bullet = ((ItemTurret)Blocks.spectre).ammoTypes.get(Items.thorium);
-                        bullet = new BasicBulletType(13f, 80){{
+                        bullet = new BasicBulletType(13f, 66){{
                             pierce = true;
                             pierceCap = 10;
                             width = 14f;
@@ -1513,14 +1513,14 @@ public class EUUnitTypes {
                             fragVelocityMin = 0.4f;
 
                             hitEffect = Fx.blastExplosion;
-                            splashDamage = 18f;
-                            splashDamageRadius = 13f;
+                            splashDamage = 20f;
+                            splashDamageRadius = 16f;
 
                             fragBullets = 3;
                             fragLifeMin = 0f;
                             fragRandomSpread = 30f;
 
-                            fragBullet = new BasicBulletType(9f, 21){{
+                            fragBullet = new BasicBulletType(9f, 20){{
                                 width = 10f;
                                 height = 10f;
                                 pierce = true;
@@ -1671,8 +1671,9 @@ public class EUUnitTypes {
                 });
                 hitEffect = Fx.massiveExplosion;
                 smokeEffect = Fx.shootBig2;
-                damage = 1450;
+                damage = 1350;
                 lifetime = 10;
+                pierceCap = 3;
             }
 
                 @Override
@@ -2398,7 +2399,7 @@ public class EUUnitTypes {
                         top = false;
                         shake = 3;
                         shootY = 2;
-                        bullet = new MissileBulletType(6f, 35){{
+                        bullet = new MissileBulletType(6f, 40){{
                             lifetime = 54;
                             width = 8f;
                             height = 10f;
@@ -2427,7 +2428,7 @@ public class EUUnitTypes {
                         inaccuracy = 12;
                         ejectEffect = Fx.none;
                         shootSound = Sounds.missileSmall;
-                        reload = 45;
+                        reload = 36;
                         recoil = 2;
                     }},
                     new Weapon(name("nihilo-a")){{
@@ -2445,7 +2446,7 @@ public class EUUnitTypes {
                         x = 14.5f;
                         y = -10;
                         shootSound = Sounds.dullExplosion;
-                        reload = 60;
+                        reload = 45;
                         recoil = 4;
                     }},
                     new Weapon(name("nihilo-air")){{
