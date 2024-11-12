@@ -13,7 +13,7 @@ import mindustry.world.blocks.logic.LogicBlock;
 
 public class aimBulletTurret extends ItemTurret {
     public BulletType aimBullet;
-    public boolean logicCtrlAble = true;
+    public boolean logicCtrlAble = false;
 
     public aimBulletTurret(String name) {
         super(name);
