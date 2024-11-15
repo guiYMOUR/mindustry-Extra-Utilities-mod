@@ -1,6 +1,7 @@
 package ExtraUtilities.content;
 
 import ExtraUtilities.graphics.MainRenderer;
+import ExtraUtilities.ui.ItemDisplay;
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
 import ExtraUtilities.worlds.blocks.distribution.StackHelper;
 import ExtraUtilities.worlds.blocks.effect.Breaker;
@@ -66,7 +67,6 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.graphics.Trail;
 import mindustry.type.*;
-import mindustry.ui.ItemDisplay;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;

@@ -1,5 +1,6 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.ui.ItemImage;
 import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
 import arc.Core;
 import arc.graphics.Color;
@@ -23,7 +24,6 @@ import mindustry.gen.Iconc;
 import mindustry.graphics.Pal;
 import mindustry.type.*;
 import mindustry.ui.Fonts;
-import mindustry.ui.ItemImage;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.ContinuousLiquidTurret;
