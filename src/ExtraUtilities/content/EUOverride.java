@@ -122,8 +122,19 @@ public class EUOverride {
 
         UnitTypes.quell.health = 6500;
         UnitTypes.quell.armor = 7;
+
+        UnitTypes.disrupt.health = 13000;
+
+        UnitTypes.tecta.weapons.get(0).bullet.damage = 60;
+        UnitTypes.tecta.weapons.get(0).bullet.splashDamage = 95;
+        UnitTypes.tecta.health = 9000;
+
+        UnitTypes.obviate.hitSize = 2.5f * 8;
+    }
+
+    public static void overrideUnitMissile(){
         UnitTypes.quell.targetAir = true;
-        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{//
+        UnitTypes.quell.weapons.get(0).bullet = new CtrlMissile("quell-missile", -1, -1){{
             shootEffect = Fx.shootBig;
             smokeEffect = Fx.shootBigSmoke2;
             speed = 4.3f;
@@ -139,9 +150,8 @@ public class EUOverride {
         }};
         UnitTypes.quell.weapons.get(0).shake = 1;
 
-        UnitTypes.disrupt.health = 13000;
         UnitTypes.disrupt.targetAir = true;
-        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{//
+        UnitTypes.disrupt.weapons.get(0).bullet = new CtrlMissile("disrupt-missile", -1, -1){{
             shootEffect = Fx.sparkShoot;
             smokeEffect = Fx.shootSmokeTitan;
             hitColor = Pal.suppress;
@@ -183,7 +193,7 @@ public class EUOverride {
         }};
         UnitTypes.disrupt.weapons.get(0).shake = 1f;
 
-        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", -1, -1){{//
+        UnitTypes.anthicus.weapons.get(0).bullet = new CtrlMissile("anthicus-missile", -1, -1){{
             shootEffect = new MultiEffect(Fx.shootBigColor, new Effect(9, e -> {
                 color(Color.white, e.color, e.fin());
                 stroke(0.7f + e.fout());
@@ -231,12 +241,6 @@ public class EUOverride {
         }};
         UnitTypes.anthicus.weapons.get(0).shake = 2;
         UnitTypes.anthicus.weapons.get(0).reload = 120;
-
-        UnitTypes.tecta.weapons.get(0).bullet.damage = 0;
-        UnitTypes.tecta.weapons.get(0).bullet.splashDamage = 95;
-        UnitTypes.tecta.health = 9000;
-
-        UnitTypes.obviate.hitSize = 2.5f * 8;
     }
 
     public static void overrideBuilder(){

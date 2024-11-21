@@ -87,6 +87,7 @@ public class ExtraUtilitiesMod extends Mod{
     public static boolean hardMod = Core.settings.getBool("eu-hard-mode");
     public static boolean onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
     public static boolean overrideUnitArm = Core.settings.getBool("eu-override-unit");
+    public static boolean overrideUnitMissile = Core.settings.getBool("eu-override-unit-missile");
     public static String massageRand;
 
     private static boolean show = false;
@@ -143,8 +144,7 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                updateLog.addAll(EUBlocks.sandGo,
-                        EUUnitTypes.suzerain, EUUnitTypes.apocalypse, EUUnitTypes.nebula, EUUnitTypes.nihilo, EUUnitTypes.narwhal, EUUnitTypes.regency,
+                updateLog.addAll(EUUnitTypes.suzerain, EUUnitTypes.regency, EUBlocks.fiammetta,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -326,6 +326,7 @@ public class ExtraUtilitiesMod extends Mod{
         settings.defaults("eu-hard-mode", false);
         settings.defaults("use-eu-cursor", true);
         settings.defaults("eu-show-version", true);
+        settings.defaults("eu-override-unit-missile", true);
         //settings.remove("eu-WTMF-open");
 
         Vars.mods.locateMod(ModName).meta.hidden = onlyPlugIn;
@@ -470,6 +471,8 @@ public class ExtraUtilitiesMod extends Mod{
 
                         settingsTable.checkPref("eu-override-unit", false);
 
+                        settingsTable.checkPref("eu-override-unit-missile", true);
+
                         settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-hard-mode", false, null) {
                             @Override
                             public void add(SettingsMenuDialog.SettingsTable table) {
@@ -514,6 +517,7 @@ public class ExtraUtilitiesMod extends Mod{
 
         EUAttribute.load();
         EUOverride.overrideUnit1();
+        if(overrideUnitMissile) EUOverride.overrideUnitMissile();
         EUUnitTypes.load();
         EUUnitTypes.loadBoss();
         EUOverride.overrideBlock1();

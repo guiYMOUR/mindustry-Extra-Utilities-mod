@@ -716,14 +716,18 @@ public class EUFx {
         }
     }
 
-    public static Effect airAsh(float lifetime, float range, float pin, Color color, float width, int amount) {
+    public static Effect airAsh(float lifetime, float range, float pin, Color color, float width, int amount){
+        return airAsh(lifetime, range, 0, pin, color, width, amount);
+    }
+
+    public static Effect airAsh(float lifetime, float range, float start, float pin, Color color, float width, int amount) {
         return new MultiEffect(
                 new Effect(lifetime, e -> {
                     float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
                     for(int a : Mathf.signs) {
                         for (int i = 0; i < amount; i++) {
-                            float dx = EUGet.dx(e.x, range * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10)),
-                                    dy = EUGet.dy(e.y, range * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10));
+                            float dx = EUGet.dx(e.x, range * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10)),
+                                    dy = EUGet.dy(e.y, range * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10));
                             Draw.color(color);
                             Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
                         }
@@ -733,8 +737,8 @@ public class EUFx {
                     float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
                     for(int a : Mathf.signs) {
                         for (int i = 0; i < amount; i++) {
-                            float dx = EUGet.dx(e.x, (range - pin) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120),
-                                    dy = EUGet.dy(e.y, (range - pin) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120);
+                            float dx = EUGet.dx(e.x, (range - pin) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120),
+                                    dy = EUGet.dy(e.y, (range - pin) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120);
                             Draw.color(color);
                             Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
                         }
@@ -744,8 +748,8 @@ public class EUFx {
                     float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
                     for(int a : Mathf.signs) {
                         for (int i = 0; i < amount; i++) {
-                            float dx = EUGet.dx(e.x, (range - pin * 2) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240),
-                                    dy = EUGet.dy(e.y, (range - pin * 2) * e.fin(), (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240);
+                            float dx = EUGet.dx(e.x, (range - pin * 2) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240),
+                                    dy = EUGet.dy(e.y, (range - pin * 2) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240);
                             Draw.color(color);
                             Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
                         }

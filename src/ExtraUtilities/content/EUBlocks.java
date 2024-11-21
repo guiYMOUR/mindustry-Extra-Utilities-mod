@@ -2415,7 +2415,7 @@ public class EUBlocks {
                 despawnEffect = hitEffect = new MultiEffect(EUFx.expFtEffect(10, 15, splashDamageRadius, 30, 0.2f), EUFx.fiammettaExp(splashDamageRadius), new Effect(20, e -> {
                     Lines.stroke(16 * e.fout(), EUItems.lightninAlloy.color);
                     Lines.circle(e.x, e.y, (splashDamageRadius + 56) * e.fin());
-                }));
+                }), EUFx.airAsh(51, splashDamageRadius * .4f, splashDamageRadius * .8f, splashDamageRadius/10f, EUItems.lightninAlloy.color, 2.7f, 30));
                 keepVelocity = false;
                 buildingDamageMultiplier = 0.6f;
 
@@ -2460,18 +2460,18 @@ public class EUBlocks {
                         intervalBullet = new BulletType(){{
                             lifetime = 32;
                             speed = 0;
-                            despawnEffect = hitEffect = new MultiEffect(new Effect(30, e -> {
-                                float r = Math.min(10 * 8 * e.fin(), 6 * 8);
-                                Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
-                                Fill.circle(e.x, e.y, r);
-                                float ww = r * 2f, hh = r * 2f;
-                                Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
-                                Draw.rect(Core.atlas.find(name("firebird-light")), e.x, e.y, ww, hh);
-                            }), EUFx.expFtEffect(5, 12, 6 * 4, 30, 0.2f));
-                            despawnSound = hitSound = Sounds.explosion;
-                            collides = absorbable = hittable = false;
                             splashDamageRadius = 6 * 8;
                             splashDamage = 300;
+                            despawnEffect = hitEffect = new MultiEffect(new Effect(30, e -> {
+                                float r = Math.min(10 * 8 * e.fin(), 6 * 8);
+                                Draw.color(Tmp.c1.set(EUItems.lightninAlloy.color).a(e.fout()));
+                                Fill.circle(e.x, e.y, r);
+                                float ww = r * 2f, hh = r * 2f;
+                                Draw.color(Tmp.c2.set(EUItems.lightninAlloy.color).a(e.fout()));
+                                Draw.rect(Core.atlas.find(name("firebird-light")), e.x, e.y, ww, hh);
+                            }), EUFx.expFtEffect(5, 12, 6 * 4, 30, 0.2f), EUFx.airAsh(42, splashDamageRadius * .4f, splashDamageRadius * .8f, splashDamageRadius/10f, EUItems.lightninAlloy.color, 1.1f, 30));
+                            despawnSound = hitSound = Sounds.explosion;
+                            collides = absorbable = hittable = false;
                         }
 
                             @Override
@@ -2489,12 +2489,12 @@ public class EUBlocks {
                         hitSize = 20;
                         despawnEffect = new MultiEffect(new Effect(30, e -> {
                             float r = Math.min(16 * 8 * e.fin(), 10 * 8);
-                            Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
+                            Draw.color(Tmp.c3.set(EUItems.lightninAlloy.color).a(e.fout()));
                             Fill.circle(e.x, e.y, r);
                             float ww = r * 2f, hh = r * 2f;
-                            Draw.color(EUItems.lightninAlloy.color.cpy().a(e.fout()));
+                            Draw.color(Tmp.c4.set(EUItems.lightninAlloy.color).a(e.fout()));
                             Draw.rect(Core.atlas.find(name("firebird-light")), e.x, e.y, ww, hh);
-                        }), EUFx.expFtEffect(6, 15, 10 * 4, 30, 0.2f));
+                        }), EUFx.expFtEffect(6, 15, 10 * 4, 30, 0.2f), EUFx.airAsh(51, splashDamageRadius * .4f, splashDamageRadius * .8f, splashDamageRadius/10f, EUItems.lightninAlloy.color, 2.1f, 30));
                         despawnSound = Sounds.explosion;
                         hitEffect = Fx.none;
                         trailLength = 15;
