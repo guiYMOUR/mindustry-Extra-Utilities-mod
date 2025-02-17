@@ -2,7 +2,6 @@ package ExtraUtilities.worlds.entity.bullet;
 
 import ExtraUtilities.content.EUBulletTypes;
 import ExtraUtilities.content.EUGet;
-import ExtraUtilities.graphics.MainRenderer;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -20,8 +19,6 @@ import mindustry.gen.Bullet;
 import mindustry.gen.Entityc;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Trail;
-
-import java.util.Arrays;
 
 import static mindustry.Vars.headless;
 

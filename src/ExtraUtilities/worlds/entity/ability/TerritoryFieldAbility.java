@@ -58,8 +58,10 @@ public class TerritoryFieldAbility extends Ability {
             }
         });
         Units.nearbyEnemies(unit.team, unit.x, unit.y, range, u -> {
-            u.apply(EUStatusEffects.speedDown, 60);
-            if(damageAm > 0 && !u.dead && u.targetable(unit.team)) u.damage((damageAm / 60f) * Time.delta);
+            if(!u.inFogTo(unit.team) && u.targetable(unit.team)) {
+                u.apply(EUStatusEffects.speedDown, 60);
+                if (damageAm > 0 && !u.dead) u.damage((damageAm / 60f) * Time.delta);
+            }
         });
 
         if(open){

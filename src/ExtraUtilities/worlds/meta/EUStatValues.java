@@ -1,6 +1,7 @@
 package ExtraUtilities.worlds.meta;
 
 import ExtraUtilities.content.EUGet;
+import ExtraUtilities.ui.ItemDisplay;
 import arc.Core;
 import arc.func.Boolf;
 import arc.graphics.Color;
@@ -18,7 +19,6 @@ import mindustry.ctype.UnlockableContent;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Tex;
 import mindustry.type.*;
-import mindustry.ui.ItemDisplay;
 import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.meta.StatUnit;

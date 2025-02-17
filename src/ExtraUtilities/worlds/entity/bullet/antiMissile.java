@@ -41,6 +41,7 @@ public class antiMissile extends BasicBulletType {
         lifetime = (homingRange * 2.5f) / 15;
         absorbable = false;
         hittable = false;
+        reflectable = false;
         collides = false;
         collidesTiles = false;
         collidesAir = false;

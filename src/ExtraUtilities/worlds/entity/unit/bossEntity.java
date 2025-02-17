@@ -55,25 +55,25 @@ public class bossEntity extends UnitEntity{
     @Override
     public void damage(float amount) {
         if(reSp()) return;
-        super.damage(amount * 0.1f);
+        super.damage(Math.min(800, amount * 0.1f));
     }
 
     @Override
     public void damagePierce(float amount) {
         if(reSp()) return;
-        super.damagePierce(amount * 0.15f);
+        super.damagePierce(Math.min(800, amount * 0.15f));
     }
 
     @Override
     public void damageContinuous(float amount) {
         if(reSp()) return;
-        super.damageContinuous(amount * 0.1f);
+        super.damageContinuous(Math.min(800, amount * 0.1f));
     }
 
     @Override
     public void damageContinuousPierce(float amount) {
         if(reSp()) return;
-        super.damageContinuousPierce(amount * 0.15f);
+        super.damageContinuousPierce(Math.min(800, amount * 0.15f));
     }
 
     @Override

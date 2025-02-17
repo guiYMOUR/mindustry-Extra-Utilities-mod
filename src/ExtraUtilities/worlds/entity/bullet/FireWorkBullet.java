@@ -152,7 +152,7 @@ public class FireWorkBullet extends BulletType {
             trailWidth = 1.7f;
             trailLength = 6;
             hitEffect = despawnEffect = Fx.none;
-            hittable = false;
+            hittable = reflectable = false;
             absorbable = true;
             keepVelocity = false;
         }

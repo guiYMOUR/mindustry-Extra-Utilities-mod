@@ -6,6 +6,7 @@ import arc.util.Time;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
+import mindustry.gen.Posc;
 import mindustry.gen.Teamc;
 
 
@@ -42,9 +43,9 @@ public class aimToPosBullet extends BulletType {
         if(b.time > homingDelay && target != null) {
             b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(target), rotSpeed * Time.delta));
         }
-        if(!(b.data instanceof Position[] pos)) return;
+        if(!(b.data instanceof Position pos)) return;
         b.initVel(b.rotation(), b.time < before ? speed * (1 - b.time / (before + 10)) : speed * b.fin());
         if(target != null) return;
-        if(b.time > homingDelay) b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(pos[1]), rotSpeed * Time.delta));
+        if(b.time > homingDelay) b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(pos), rotSpeed * Time.delta));
     }
 }
