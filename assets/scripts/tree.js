@@ -230,8 +230,8 @@ lib.addToResearch(clWallL, { parent: clWall.name, });
 // lib.addToResearch(aws, { parent: 'surge-wall-large', });
 // lib.addToResearch(awl, { parent: aws.name, });
 // lib.addToResearch(rws, { parent: aws.name, });
-lib.addToResearch(rws, { parent: 'surge-wall-large', });
-lib.addToResearch(rwl, { parent: rws.name, });
+//lib.addToResearch(rws, { parent: 'surge-wall-large', });
+//lib.addToResearch(rwl, { parent: rws.name, });
 
 /*lib.addToResearch(unitF, { parent: 'tetrative-reconstructor',
     objectives: Seq.with(

@@ -321,7 +321,9 @@ rws.requirements = ItemStack.with(
 );
 rws.buildVisibility = BuildVisibility.shown;
 rws.category = Category.defense;
+rws.alwaysUnlocked = true;
 exports.rws = rws;
+
 const rwl = new ReleaseShieldWall("rwl");
 rwl.size = 2;
 rwl.maxHandle = 180 * 4;
@@ -338,4 +340,5 @@ rwl.requirements = ItemStack.with(
 );
 rwl.buildVisibility = BuildVisibility.shown;
 rwl.category = Category.defense;
+rwl.alwaysUnlocked = true;
 exports.rwl = rwl;
