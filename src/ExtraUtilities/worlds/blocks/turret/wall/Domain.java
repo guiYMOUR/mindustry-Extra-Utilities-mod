@@ -61,7 +61,7 @@ public class Domain extends Block {
             Lines.circle(e.x, e.y, e.rotation * e.fout());
         }
     }).layer(Layer.shields);
-    public float range = 22.5f * 8;
+    public float range = 25f * 8;
     public int bulletAmount = 50;
     public float coolDown = 8;
     public float coolDownBk = 5;

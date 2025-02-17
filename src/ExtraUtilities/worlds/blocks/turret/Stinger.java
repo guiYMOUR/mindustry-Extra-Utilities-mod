@@ -4,6 +4,7 @@ import ExtraUtilities.worlds.entity.bullet.RainBullet;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
+import arc.struct.Seq;
 import arc.util.Time;
 import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
@@ -51,14 +52,20 @@ public class Stinger extends PowerTurret {
             super.updateTile();
 
             for(Unit unit : unitMap.keys()) {
-                if (unit == null || unit.dead || unit.type == null || !unit.type.isEnemy || !unit.type.killable) {
+                if(unit == null) {
+                    //F**K, why map cannot remove null ??????
+                    unitMap.clear();
+                    return;
+                }
+                if (unit.dead || unit.type == null || !unit.type.isEnemy || !unit.type.killable) {
                     unitMap.remove(unit);
                 }
             }
-            for(Unit unit : unitMap.keys()){
+            for(Unit unit : unitMap.keys()) {
                 if(unit == null) continue;
                 unitMap.put(unit, unitMap.get(unit) + Time.delta);
                 if(unitMap.get(unit) > delay){
+                    unitMap.remove(unit);
                     if(killTrigger > 0 && unit.health < unit.maxHealth * killTrigger && Mathf.chance(killChance)){
                         unit.health -= unit.health;
                         unit.kill();
@@ -66,7 +73,6 @@ public class Stinger extends PowerTurret {
                         unit.apply(StatusEffects.unmoving, 60f * 1.5f);
                         rainBullet.create(this, unit.x, unit.y, Mathf.random(360));
                     }
-                    unitMap.remove(unit);
                 }
             }
         }

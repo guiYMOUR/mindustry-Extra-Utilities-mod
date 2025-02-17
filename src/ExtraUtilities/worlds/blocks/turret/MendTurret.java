@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.blocks.turret;
 
+import ExtraUtilities.ui.ItemDisplay;
 import ExtraUtilities.worlds.entity.bullet.HealCone;
 import arc.func.Boolf;
 import arc.math.Mathf;
@@ -10,7 +11,6 @@ import mindustry.entities.Units;
 import mindustry.gen.Healthc;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
-import mindustry.ui.ItemDisplay;
 import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.turrets.ContinuousTurret;
 import mindustry.world.consumers.ConsumeItems;
