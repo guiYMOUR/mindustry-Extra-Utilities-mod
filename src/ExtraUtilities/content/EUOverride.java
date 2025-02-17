@@ -52,6 +52,7 @@ public class EUOverride {
     public static void overrideBlockAll(){
         for(int i = 0; i < Vars.content.blocks().size; i ++){
             Block block = Vars.content.blocks().get(i);
+            if(block != null) block.canOverdrive = false;
             if(block instanceof Turret && block.size >= 5){
                 if(block.requirements == null || block.requirements.length == 0) continue;
                 boolean has = false;
@@ -92,7 +93,7 @@ public class EUOverride {
         Blocks.beryllicStone.attributes.set(EUAttribute.EKOil, 70 * (0.15f/135));
 
         Blocks.arc.consumePower(2f);
-        Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.surgeAlloy, 400, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 300, EUItems.lightninAlloy, 200));
+        Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 350, EUItems.lightninAlloy, 350));
         Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, Items.surgeAlloy, 200));
         ((BaseTurret)Blocks.scathe).fogRadiusMultiplier = 0.75f;
 

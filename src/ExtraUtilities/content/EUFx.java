@@ -499,6 +499,7 @@ public class EUFx {
     public static Effect diffuse(int size, Color color, float life) {
         return new Effect(life, e -> {
             float f = e.fout();
+            if(f < 1e-4f) return;
             float r = Math.max(0f, Mathf.clamp(2f - f * 2f) * size * tilesize / 2f - f - 0.2f), w = Mathf.clamp(0.5f - f) * size * tilesize;
             Lines.stroke(3f * f, color);
             Lines.beginLine();
@@ -624,7 +625,8 @@ public class EUFx {
         return new Effect(lifetime, e -> {
             rand.setSeed(e.id);
             float pin = (1 - e.foutpow());
-            Lines.stroke(st * e.foutpow(), color);
+            if(color != null) Lines.stroke(st * e.foutpow(), color);
+            else Lines.stroke(st * e.foutpow(), e.color);
             Lines.circle(e.x, e.y, r * pin);
             for(int i = 0; i < amt/2; i++){
                 float a = rand.random(180);
@@ -723,34 +725,37 @@ public class EUFx {
     public static Effect airAsh(float lifetime, float range, float start, float pin, Color color, float width, int amount) {
         return new MultiEffect(
                 new Effect(lifetime, e -> {
+                    Color c = color == null ? e.color : color;
                     float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
                     for(int a : Mathf.signs) {
                         for (int i = 0; i < amount; i++) {
                             float dx = EUGet.dx(e.x, range * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10)),
                                     dy = EUGet.dy(e.y, range * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10));
-                            Draw.color(color);
+                            Draw.color(c);
                             Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
                         }
                     }
                 }),
                 new Effect(lifetime, e -> {
+                    Color c = color == null ? e.color : color;
                     float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
                     for(int a : Mathf.signs) {
                         for (int i = 0; i < amount; i++) {
                             float dx = EUGet.dx(e.x, (range - pin) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120),
                                     dy = EUGet.dy(e.y, (range - pin) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 120);
-                            Draw.color(color);
+                            Draw.color(c);
                             Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
                         }
                     }
                 }),
                 new Effect(lifetime, e -> {
+                    Color c = color == null ? e.color : color;
                     float fee = e.time < e.lifetime/2 ? e.fin() * 2 : e.fout() * 2;
                     for(int a : Mathf.signs) {
                         for (int i = 0; i < amount; i++) {
                             float dx = EUGet.dx(e.x, (range - pin * 2) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240),
                                     dy = EUGet.dy(e.y, (range - pin * 2) * e.fin() + start, (e.time * 8 + i) * a + Mathf.randomSeed(e.id, -10, 10) + 240);
-                            Draw.color(color);
+                            Draw.color(c);
                             Fill.circle(dx, dy, (width * i / amount + 0.2f) * fee);
                         }
                     }
@@ -789,6 +794,42 @@ public class EUFx {
                 Draw.rect(rg, dx, dy, w * 1.2f * e.finpow(), h * 1.2f * e.finpow());
                 Draw.z(z);
             }
+        }
+    });
+
+    public static Effect audioEffect = new Effect(30, e -> {
+        Draw.color(e.color);
+//        float z = Draw.z();
+//        Draw.z(Layer.flyingUnitLow);
+        Draw.alpha(2 * e.foutpow());
+        Angles.randLenVectors(e.id, 1, e.fin() * 20f, Mathf.randomSeed(e.id, 360), 0, (x, y) -> Fill.poly(e.x + x, e.y + y, 3, 5 * e.fout(), Mathf.randomSeed(e.id, 360)));
+        //Draw.z(z);
+    });
+
+    public static Effect layerCircle(float life, float r, Color color){
+        return new Effect(life, e -> {
+            for(int i = 0; i < r; i++){
+                Lines.stroke(1, Tmp.c1.set(color).a(i/r * 0.8f * e.foutpow()));
+                Lines.circle(e.x, e.y, i * e.finpow());
+            }
+        });
+    }
+
+    public static Effect layerCircle(float life, float r){
+        return new Effect(life, e -> {
+            for(int i = 0; i < r; i++){
+                Lines.stroke(1, Tmp.c1.set(e.color).a(i/r * 0.8f * e.foutpow()));
+                Lines.circle(e.x, e.y, i * e.finpow());
+            }
+        });
+    }
+
+    public static Effect layerCircle = new Effect(90, e -> {
+        float r = e.rotation;
+        float pin = 1 - e.foutpow();
+        for(int i = 0; i < r; i++){
+            Lines.stroke(1, Tmp.c1.set(e.color).a(i/r * 0.8f * e.foutpow()));
+            Lines.circle(e.x, e.y, i * pin);
         }
     });
 }

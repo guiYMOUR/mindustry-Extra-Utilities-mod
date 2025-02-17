@@ -43,6 +43,9 @@ public class EUTechTree {
         addToNode(segment, () -> node(dissipation));
         if(Vars.content.block(name("shotgun")) != null)
             addToNode(Vars.content.block(name("shotgun")), () -> node(onyxBlaster));
+        if(Vars.content.block(name("magstorm")) != null){
+            addToNode(Vars.content.block(name("magstorm")), () -> node(arbiter));
+        }
         addToNode(cyclone, () -> {
             node(turretResupplyPoint);
             node(celebration, () -> node(celebrationMk2));
@@ -50,6 +53,7 @@ public class EUTechTree {
         });
         addToNode(swarmer, () -> node(blackhole));
         addToNode(foreshadow, () -> node(sancta));
+        addToNode(parallax, () -> node(cobweb));
 
         addToNode(mendProjector, () -> node(mendTurret));
 
@@ -94,6 +98,9 @@ public class EUTechTree {
                 node(anti_Missile);
             });
             node(javelin);
+        });
+        addToNode(diffuse, () -> {
+            node(shootingStar);
         });
         addToNode(reinforcedSurgeWall,
                 () -> node(aparajito,

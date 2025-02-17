@@ -14,6 +14,7 @@ import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.gen.Unit;
+import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
 
@@ -136,4 +137,19 @@ public class EUStatusEffects {
             }
         }
     };
+
+    public static StatusEffect starFlame = new StatusEffect("star-flame"){{
+        damage = 1;
+        color = Pal.thoriumPink;
+        effectChance = 0.03f;
+        effect = new Effect(24, e -> {
+            Angles.randLenVectors(e.id, 3, 13 * e.finpow(), e.rotation, 180, (x, y) -> {
+                Draw.color(Tmp.c4.set(EUGet.rainBowRed).shiftHue(Mathf.randomSeed(e.id, 360) + x * x + y * y + e.time * 2));
+                Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 7, e.rotation + 90);
+                Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 7, e.rotation - 90);
+                Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 5, e.rotation);
+                Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 5, e.rotation + 180);
+            });
+        });
+    }};
 }

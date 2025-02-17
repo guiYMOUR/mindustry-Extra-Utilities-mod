@@ -14,6 +14,7 @@ import arc.graphics.g2d.PixmapRegion;
 import arc.graphics.g2d.TextureAtlas;
 import arc.graphics.g2d.TextureRegion;
 import arc.graphics.gl.PixmapTextureData;
+import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
@@ -21,6 +22,7 @@ import arc.scene.ui.ImageButton;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Collapser;
 import arc.scene.ui.layout.Table;
+import arc.struct.IntMap;
 import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
@@ -100,6 +102,43 @@ public class EUGet {
         EUGet.breakStart = breakStart;
     }
 
+    //因为有中文，所以用数字代替了
+    public static String[] donors = {
+            "冷冻液",
+            "zhraa11",
+            "标枪",
+            "花杨永瀛",
+            "灰尘庙",
+            "维生素",
+            "鱼鱼"
+    };
+    public static String[] developers = {
+            "guiY",
+            "carrot"
+    };
+    public static IntMap<Seq<UnlockableContent>> donorMap = new IntMap<>();
+    public static IntMap<Seq<UnlockableContent>> developerMap = new IntMap<>();
+    static {
+        //冷冻液
+        donorMap.put(0, new Seq<>());
+        //zhraa11
+        donorMap.put(1, new Seq<>());
+        //标枪
+        donorMap.put(2, new Seq<>());
+        //花杨永瀛
+        donorMap.put(3, new Seq<>());
+        //灰尘庙
+        donorMap.put(4, new Seq<>());
+        //维生素
+        donorMap.put(5, new Seq<>());
+        //鱼鱼
+        donorMap.put(6, new Seq<>());
+
+        //guiY
+        developerMap.put(0, new Seq<>());
+        //carrot
+        developerMap.put(1, new Seq<>());
+    }
     public static Seq<UnlockableContent> donorItems = new Seq<>();
     public static Seq<UnlockableContent> developerItems = new Seq<>();
     private static final String DONOR = Core.bundle.get("mod.extra-utilities-donor-item");
@@ -160,6 +199,14 @@ public class EUGet {
 
     public static float dy(float py, float r, float angle){
         return py + r * (float) Math.sin(angle * Math.PI/180);
+    }
+
+    public static float txy(float px, float py, float a, float b, float theta, float angle, int xy){
+        float x = a * Mathf.cosDeg(angle);
+        float y = b * Mathf.sinDeg(angle);
+        float xRotated = x * Mathf.cosDeg(theta) - y * Mathf.sinDeg(theta) + px;
+        float yRotated = x * Mathf.sinDeg(theta) + y * Mathf.cosDeg(theta) + py;
+        return xy == 0 ? xRotated : yRotated;
     }
 
     public static float posx(float x, float length, float angle){
@@ -415,5 +462,76 @@ public class EUGet {
         t.row();
         t.add(coll);
         t.row();
+    }
+
+    /**
+     * 人为移动子弹
+     * @param b 要移动的子弹
+     * @param endX 结束坐标X
+     * @param endY 结束坐标Y
+     * @param speed 速度
+     */
+    public static void movePoint(Bullet b, float endX, float endY, float speed) {
+        // 计算两点之间的距离
+        float distance = (float) Math.sqrt(Math.pow(endX - b.x, 2) + Math.pow(endY - b.y, 2));
+
+        float moveSpeed = distance * speed;
+
+        // 计算移动方向的单位向量
+        float dx = (endX - b.x) / distance;
+        float dy = (endY - b.y) / distance;
+
+        // 计算每个tick内移动的距离
+        float moveDistance = moveSpeed * Time.delta;
+
+        // 更新子弹的位置
+        b.x += dx * moveDistance;
+        b.y += dy * moveDistance;
+
+        // 检查是否到达或超过终点
+        if (Math.abs(b.x - endX) < 1e-4f && Math.abs(b.y - endY) < 1e-4f) {
+            b.x = endX;
+            b.y = endY;
+        }
+    }
+
+    /**
+     * 根据已知两点和x坐标求y坐标
+     * @param x1 第一个点的x坐标
+     * @param y1 第一个点的y坐标
+     * @param x2 第二个点的x坐标
+     * @param y2 第二个点的y坐标
+     * @param x  要求y坐标的点的x坐标
+     * @return   对应的y坐标
+     */
+    public float lineY(float x1, float y1, float x2, float y2, float x) {
+        // 计算斜率
+        float slope = (y2 - y1) / (x2 - x1);
+
+        // 计算截距
+        float intercept = y1 - slope * x1;
+
+        // 根据直线方程 y = mx + b 计算y坐标
+        return slope * x + intercept;
+    }
+
+    /**
+     * 根据已知点、线的角度和另一个点的x坐标，求解该点的y坐标。
+     * @param x1 已知点的x坐标
+     * @param y1 已知点的y坐标
+     * @param angle 线与x轴正方向的夹角（以度为单位）
+     * @param x2 另一个点的x坐标
+     * @return 求解的y坐标
+     */
+    public float angleY(float x1, float y1, float angle, float x2) {
+        // 处理角度为90度或270度的特殊情况
+        if (angle == 90 || angle == 270) {
+            // 如果角度为90度或270度，直线是垂直的，y坐标与y1相同
+            return y1;
+        }
+        // 斜率
+        float slope = (float) Math.tan(Math.toRadians(angle));
+        // 计算y坐标并返回
+        return slope * (x2 - x1) + y1;
     }
 }

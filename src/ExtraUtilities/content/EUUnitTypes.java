@@ -726,7 +726,7 @@ public class EUUnitTypes {
                 targetInterval = targetSwitchInterval = 10;
                 bullet = new BulletType(){{
                     damage = 600;
-                    collidesTiles = hittable = absorbable = false;
+                    collidesTiles = hittable = absorbable = reflectable = false;
                     speed = 50;
                     lifetime = 200 * 8 / speed;
                     trailEffect = new Effect(40, e -> {
@@ -4053,7 +4053,10 @@ public class EUUnitTypes {
             setEnginesMirror(new UnitEngine(6, -5.8f, 1.6f, 315f));
         }};
 
-        EUGet.donorItems.addAll(napoleon, havoc, arcana);
+        EUGet.donorItems.addAll(napoleon, arcana);
+        EUGet.donorMap.get(3).addAll(napoleon, arcana);
+
         EUGet.developerItems.addAll(winglet);
+        EUGet.developerMap.get(1).addAll(winglet);
     }
 }

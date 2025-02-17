@@ -27,10 +27,9 @@ import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
 import ExtraUtilities.worlds.blocks.unit.UnitBoost;
 import ExtraUtilities.worlds.consumers.BetterConsumeLiquidsDynamic;
 import ExtraUtilities.worlds.drawer.*;
-import ExtraUtilities.worlds.entity.animation.AnimationType;
-import ExtraUtilities.worlds.entity.animation.DeathAnimation;
 import ExtraUtilities.worlds.entity.bullet.*;
 import arc.Core;
+import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -42,10 +41,8 @@ import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.Position;
 import arc.math.geom.Vec2;
-import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Image;
-import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Stack;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -61,6 +58,7 @@ import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
 import mindustry.entities.units.BuildPlan;
+import mindustry.game.EventType;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -94,8 +92,8 @@ import static ExtraUtilities.ExtraUtilitiesMod.*;
 
 public class EUBlocks {
     public static Block
-        //drill!
-            arkyciteExtractor, nitrogenWell, quantumExplosion, minerPoint, minerCenter,
+        //drill?!
+            arkyciteExtractor, nitrogenWell, phasicDrill, quantumExplosion, minerPoint, minerCenter,
         //liquid
             ekPump, liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
         //transport
@@ -109,14 +107,15 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG, heatPower, windPower, waterPower,
         //turret
-            blackhole, dissipation, anti_Missile, sandGo, guiY, javelin, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
+            blackhole, dissipation, anti_Missile, sandGo, guiY, javelin, shootingStar, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, arbiter, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
+            cobweb, quantumGravity,
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
             aparajito, aparajitoLarge,
             buffrerdMemoryBank, clock, tableClock,
             turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker, waterBomb,
-            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower ;
+            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
         public LiquidStack[] liquid;
 
@@ -166,12 +165,23 @@ public class EUBlocks {
             liquidCapacity = 30f;
             fogRadius = 3;
         }};
+        phasicDrill = new PhasicDrill("phasic-drill"){{
+            requirements(Category.production, with(Items.titanium, 90, Items.silicon, 100, Items.thorium, 80, Items.phaseFabric, 55));
+            drillTime = 150;
+            size = 4;
+            tier = 6;
+            liquidBoostIntensity = 1.6f;
+            rotateSpeed = 6.5f;
+
+            consumePower(5f);
+            consumeLiquid(Liquids.cryofluid, 0.05f).boost();
+        }};
         quantumExplosion = new ExplodeDrill("quantum-explosion"){{
             if(!hardMod) {
-                requirements(Category.production, with(Items.thorium, 600, Items.silicon, 800, Items.phaseFabric, 200, Items.surgeAlloy, 200));
+                requirements(Category.production, with(Items.thorium, 600, Items.silicon, 800, EUItems.lightninAlloy, 200));
                 drillTime = 60f * 3f;
             } else {
-                requirements(Category.production, with(Items.thorium, 800, Items.silicon, 1000, Items.phaseFabric, 240, Items.surgeAlloy, 260));
+                requirements(Category.production, with(Items.thorium, 800, Items.silicon, 1000, EUItems.lightninAlloy, 240));
                 drillTime = 60 * 4f;
                 drillTimeBurst = 60f * 5.5f;
             }
@@ -1342,12 +1352,10 @@ public class EUBlocks {
                     for(int i = 0; i < amount; i++){
                         float angleOffset = i * spread - (amount - 1) * spread / 2f;
 
-                        Position p1 = EUGet.pos(tb.x, tb.y);
+//                        Position p1 = EUGet.pos(tb.x, tb.y);
                         Position p2 = EUGet.pos(b.x, b.y);
 
-                        Position[] pos = {p1, p2};
-
-                        iceBar.create(tb, tb.team, tb.x, tb.y, tb.rotation - 180 + angleOffset + Mathf.random(-inSpread, inSpread), -1, 1, 1, pos);
+                        iceBar.create(tb, tb.team, tb.x, tb.y, tb.rotation - 180 + angleOffset + Mathf.random(-inSpread, inSpread), -1, 1, 1, p2);
                     }
                 }
 
@@ -1365,6 +1373,225 @@ public class EUBlocks {
                     Lines.lineAngle(b.x, b.y, b.rotation() - 180, 4f);
                 }
             };
+        }};
+
+        shootingStar = new LingSha("shooting-star"){{
+            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 400, EUItems.lightninAlloy, 150, Items.thorium, 250));
+            size = 5;
+            health = 4288;
+
+            reload = 90f;
+            range = 30 * 8f;
+
+            buff = EUStatusEffects.starFlame;
+
+            shoot = new ShootSpread(9, 4);
+
+            //alwaysUnlocked = true;
+
+            BulletType starHit = new BulletType(){{
+                damage = 150;
+                pierceArmor = true;
+                reflectable = false;
+                absorbable = false;
+                pierce = true;
+                pierceBuilding = true;
+                buildingDamageMultiplier = 0.2f;
+                status = EUStatusEffects.starFlame;
+                statusDuration = 6 * 60f;
+                lifetime = 60;
+                trailWidth = 4;
+                trailLength = 10;
+                trailColor = Color.valueOf("#f7d7fc");
+                hitEffect = despawnEffect = new Effect(60, e -> {
+                    Angles.randLenVectors(e.id, 3, 12 * e.finpow(), e.rotation, 180, (x, y) -> {
+                        Draw.color(Tmp.c4.set(EUGet.rainBowRed).shiftHue(Mathf.randomSeed(e.id, 360) + x * x + y * y + e.time * 2));
+                        Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 7, e.rotation + 90);
+                        Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 7, e.rotation - 90);
+                        Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 5, e.rotation);
+                        Drawf.tri(e.x + x, e.y + y, 3 * e.foutpow(), 5, e.rotation + 180);
+                    });
+                    Angles.randLenVectors(e.id, 5, 10 * e.finpow(), e.rotation, 180, (x, y) -> {
+                        Draw.color(Tmp.c4.set(EUGet.rainBowRed).shiftHue(Mathf.randomSeed(e.id, 360) + x * x + y * y + e.time * 2));
+                        Fill.circle(e.x + x, e.y + y, 4 * e.foutpow());
+                    });
+                });
+
+                trailEffect = new Effect(45, e -> {
+                    Draw.color(e.color);
+                    Angles.randLenVectors(e.id, 1, 16 * e.finpow(), e.rotation, 180, (x, y) -> {
+                        Fill.poly(e.x + x, e.y + y, 5, 6 * e.foutpow(), e.time * 5);
+                    });
+                });
+            }
+
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    Draw.color(trailColor);
+                    float fin = Interp.smoother.apply(Math.min(1, b.fin() * 10));
+                    //Draw.rect(Core.atlas.find(name("star")), b.x, b.y, 12 * fin, 12 * fin, b.time * 3);
+                    Fill.poly(b.x, b.y, 5, 6 * fin, b.time * 5);
+                }
+
+                @Override
+                public void updateTrailEffects(Bullet b) {
+                    if (b.timer.get(2, 1)) {
+                        trailEffect.at(b.x, b.y, trailColor);
+                    }
+                }
+
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    if(b.time < 51){
+                        float fout = Interp.smoother.apply(Math.max(0, 1 - b.time/42));
+                        b.initVel(b.rotation(), 6 * fout);
+                    } else {
+                        if(b.data instanceof Unit target){
+                            if(target.dead) b.remove();
+                            b.rotation(b.angleTo(target));
+                            b.initVel(b.rotation(), 42);
+                            //EUGet.movePoint(b, target.x, target.y, 1);
+                        }
+                    }
+                }
+            };
+
+            ammo(Items.thorium,
+                    new BulletType(){{
+                        damage = 150;
+                        ammoMultiplier = 1;
+                        reflectable = false;
+                        pierce = true;
+                        pierceCap = 5;
+                        status = EUStatusEffects.starFlame;
+                        statusDuration = 6 * 60f;
+                        lifetime = 42;
+                        speed = 20;
+                        trailWidth = 6;
+                        trailLength = 18;
+                        trailColor = Color.valueOf("#f7d7fc");
+                        hitEffect = despawnEffect = new Effect(72, e -> {
+                            Angles.randLenVectors(e.id, 5, 32 * e.finpow(), e.rotation, 180, (x, y) -> {
+                                Draw.color(Tmp.c4.set(EUGet.rainBowRed).shiftHue(Mathf.randomSeed(e.id, 360) + x * x + y * y + e.time * 2));
+                                Drawf.tri(e.x + x, e.y + y, 5 * e.foutpow(), 15, e.rotation + 90);
+                                Drawf.tri(e.x + x, e.y + y, 5 * e.foutpow(), 15, e.rotation - 90);
+                                Drawf.tri(e.x + x, e.y + y, 5 * e.foutpow(), 10, e.rotation);
+                                Drawf.tri(e.x + x, e.y + y, 5 * e.foutpow(), 10, e.rotation + 180);
+                            });
+                        });
+                        trailEffect = new Effect(45, e -> {
+                            Draw.color(e.color);
+                            Angles.randLenVectors(e.id, 1, 16 * e.finpow(), e.rotation, 180, (x, y) -> {
+                                Fill.poly(e.x + x, e.y + y, 5, 12 * e.foutpow(), e.time * 5);
+                            });
+
+//                            float z = Draw.z();
+//                            Draw.z(Layer.flyingUnitLow);
+//                            Draw.color(Tmp.c1.set(Pal.coalBlack).a(0.3f));
+//                            Angles.randLenVectors(e.id, 2, 16 * e.finpow(), e.rotation, 180, (x, y) -> {
+//                                Fill.poly(e.x + x, e.y + y, 5, 16 * e.foutpow(), e.time * 5);
+//                            });
+//
+//                            Draw.z(z);
+                        });
+                    }
+
+                        final EventType.UnitDamageEvent bulletDamageEvent = new EventType.UnitDamageEvent();
+
+                        @Override
+                        public void draw(Bullet b) {
+                            super.draw(b);
+                            float z = Draw.z();
+                            Draw.z(Layer.flyingUnitLow + 5);
+                            Draw.color(b.team.color);
+                            float fin = Interp.smoother.apply(Math.min(1, b.fin() * 10));
+                            //Draw.rect(Core.atlas.find(name("star")), b.x, b.y, 24 * fin, 24 * fin, b.rotation() + b.time * 5);
+                            Fill.poly(b.x, b.y, 5, 12 * fin, b.rotation() + b.time * 5f);
+                            Draw.z(z);
+                        }
+
+                        @Override
+                        public void update(Bullet b) {
+                            super.update(b);
+                            b.initVel(b.rotation(), speed * b.foutpow());
+                        }
+
+                        @Override
+                        public void updateTrailEffects(Bullet b) {
+                            if(b.timer.get(2, 1)){
+                                trailEffect.at(b.x, b.y, b.team.color);
+                            }
+
+                            Tmp.v1.set(Mathf.sin(b.time, 2.2f, 10), 0).rotate(b.rotation() - 90);
+                            Tmp.v2.set(-Mathf.sin(b.time, 2.2f, 10), 0).rotate(b.rotation() - 90);
+                            float x1 = b.x + Tmp.v1.x;
+                            float y1 = b.y + Tmp.v1.y;
+                            float x2 = b.x + Tmp.v2.x;
+                            float y2 = b.y + Tmp.v2.y;
+                            EUFx.normalTrail.at(x1, y1, 3, trailColor);
+                            EUFx.normalTrail.at(x2, y2, 3, trailColor);
+                        }
+
+                        @Override
+                        public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                            boolean wasDead = entity instanceof Unit u && u.dead;
+
+                            if(entity instanceof Healthc h){
+                                if(pierceArmor){
+                                    h.damagePierce(b.damage);
+                                }else{
+                                    h.damage(b.damage);
+                                }
+                            }
+
+                            if(entity instanceof Unit unit){
+                                Tmp.v3.set(unit).sub(b).nor().scl(knockback * 80f);
+                                if(impact) Tmp.v3.setAngle(b.rotation() + (knockback < 0 ? 180f : 0f));
+                                unit.impulse(Tmp.v3);
+                                if(!unit.hasEffect(status)) {
+                                    unit.apply(status, statusDuration);
+                                } else {
+                                    if(b.owner instanceof TurretBuild tb && !unit.dead){
+                                        starHit.create(tb, b.team, tb.x, tb.y, tb.rotation - 180 + Mathf.random(-72, 72), -1, 1, 1, unit);
+                                        unit.unapply(status);
+                                    }
+                                }
+
+                                Events.fire(bulletDamageEvent.set(unit, b));
+                            }
+
+                            if(!wasDead && entity instanceof Unit unit && unit.dead){
+                                Events.fire(new EventType.UnitBulletDestroyEvent(unit, b));
+                            }
+
+                            handlePierce(b, health, entity.x(), entity.y());
+                        }
+                    }
+            );
+
+            rotateSpeed = 2;
+            drawer = new DrawTurret("reinforced-"){{
+                parts.add(
+                        new RegionPart("-mid"){{
+                            progress = PartProgress.recoil;
+                            mirror = false;
+                            moveY = -0.8f;
+                        }},
+                        new RegionPart(){{
+                            progress = PartProgress.recoil;
+                            moveY = -4f;
+                            under = true;
+                            mirror = true;
+                        }},
+                        new LingShaPart(){{
+                            wx = 0;
+                            wy = -24;
+                        }}
+                );
+            }};
+
         }};
 
         antiaircraft = new ItemTurret("antiaircraft"){{
@@ -2233,6 +2460,65 @@ public class EUBlocks {
             squareSprite = false;
         }};
 
+        arbiter = new ItemTurret("arbiter"){{
+            requirements(Category.turret, with(Items.silicon, 3000, EUItems.lightninAlloy, 2000, Items.phaseFabric, 2000));
+
+            hasPower = true;
+            consumePower(10);
+
+            size = 7;
+            health = 8000;
+
+            reload = 720;
+            canOverdrive = false;
+            coolant = consume(new ConsumeLiquid(Liquids.water, 120f / 60f));
+            coolantMultiplier = 0.3f;
+            shootSound = Sounds.largeExplosion;
+
+            range = 70 * 8;
+
+            ammo(EUItems.lightninAlloy,
+                    new ArbiterBulletType(){{
+                        damage = 1200;
+                        pierceArmor = true;
+                        buildingDamageMultiplier = 0.2f;
+                    }}
+            );
+
+            ammoPerShot = 20;
+            maxAmmo = ammoPerShot * 3;
+
+            recoil = 5;
+            recoilTime = 60;
+
+            minWarmup = 0.9f;
+
+            drawer = new DrawTurret(){{
+                parts.add(
+                        new RegionPart("-r"){{
+                            progress = PartProgress.warmup;
+                            moveX = 8f;
+                            moveY = 8f;
+                            mirror = false;
+                            layerOffset = -1f;
+                            moves.add(new PartMove(PartProgress.recoil, 0f, -6f, 0f));
+                        }},
+                        new RegionPart("-l"){{
+                            progress = PartProgress.warmup;
+                            moveX = -8f;
+                            moveY = 8f;
+                            mirror = false;
+                            layerOffset = -1f;
+                            moves.add(new PartMove(PartProgress.recoil, 0f, -6f, 0f));
+                        }},
+                        new ArbiterPart(36){{
+                            wx = 0;
+                            wy = -16;
+                        }}
+                );
+            }};
+        }};
+
         blackhole = new aimBulletTurret("blackhole"){{
             requirements(Category.turret, with(Items.silicon, 600, EUItems.lightninAlloy, 400, Items.phaseFabric, 300));
             coolant = consume(new ConsumeLiquid(Liquids.water, 1));
@@ -2747,6 +3033,28 @@ public class EUBlocks {
             };
         }};
 
+        cobweb = new Cobweb("cobweb"){{
+            requirements(Category.turret, with(Items.silicon, 200, Items.graphite, 200, EUItems.lightninAlloy, 50));
+
+            hasPower = true;
+            size = 3;
+            force = 30f;
+            scaledForce = 12f;
+            range = 320f;
+            damage = 1.5f;
+            scaledHealth = 200;
+            rotateSpeed = 10;
+
+            //alwaysUnlocked = true;
+
+            laserWidth = 1;
+            shootLength = 10;
+
+            coolant = consumeCoolant(0.3f);
+            coolantMulti = 4;
+            consumePower(6f);
+        }};
+
         imaginaryReconstructor = new Reconstructor("imaginary-reconstructor"){{
             requirements(Category.units, with(Items.silicon, 3000, Items.graphite, 3500, Items.titanium, 1000, Items.thorium, 800, Items.plastanium, 600, Items.phaseFabric, 350, EUItems.lightninAlloy, 200));
             size = 11;
@@ -3080,7 +3388,7 @@ public class EUBlocks {
         }};
 
         quantumDomain = new Domain("quantum-domain"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 300 + (hardMod ? 50 : 0), Items.silicon, 800, Items.surgeAlloy, 400, Items.phaseFabric, 350));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 400 + (hardMod ? 100 : 0), Items.silicon, 800, Items.surgeAlloy, 400, Items.phaseFabric, 350));
             size = 5;
             health = 5000;
             hasPower = true;
@@ -3089,7 +3397,10 @@ public class EUBlocks {
             shieldHealth = 3500f - (hardMod ? 500 : 0);
             canOverdrive = false;
             placeableLiquid = true;
-            consumePower(9);
+            upSpeed = 2f;
+            upSpeedAfter = 2.75f;
+
+            consumePower(10);
             alwaysUnlocked = true;
         }};
 
@@ -3196,8 +3507,16 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
 
-        EUGet.donorItems.addAll(largeElectricHeater, T2sporePress, javelin, waterBomb, buffrerdMemoryBank);
+        EUGet.donorItems.addAll(T2sporePress, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
+        EUGet.donorMap.get(0).addAll(T2sporePress);
+        EUGet.donorMap.get(1).addAll(waterBomb);
+        EUGet.donorMap.get(2).addAll(javelin);
+        EUGet.donorMap.get(4).addAll(buffrerdMemoryBank);
+        EUGet.donorMap.get(5).addAll(shootingStar);
+
         EUGet.developerItems.addAll(siliconFurnace, guiY, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork, crystalTower);
+        EUGet.developerMap.get(0).addAll(guiY, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork);
+        EUGet.developerMap.get(1).addAll(siliconFurnace, onyxBlaster);
     }
 
     //by guiY for Twilight Fall

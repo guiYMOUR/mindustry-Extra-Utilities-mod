@@ -144,7 +144,8 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                updateLog.addAll(EUUnitTypes.suzerain, EUUnitTypes.regency, EUBlocks.fiammetta,
+                updateLog.addAll(EUBlocks.phasicDrill, EUBlocks.cobweb, EUBlocks.shootingStar, EUBlocks.arbiter,
+                        EUBlocks.quantumExplosion, EUBlocks.quantumDomain, Blocks.smite,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -179,11 +180,10 @@ public class ExtraUtilitiesMod extends Mod{
                         log.row();
                         log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
                     });
-                    addToTable(EUBlocks.waterBomb, t);
-                    addToTable(EUBlocks.sandGo, t);
-                    addToTable(EUBlocks.aparajito, t);
-                    addToTable(EUBlocks.aparajitoLarge, t);
-                    addToTable(EUBlocks.buffrerdMemoryBank, t);
+                    addToTable(EUBlocks.cobweb, t);
+                    addToTable(EUBlocks.arbiter, t);
+                    addToTable(EUBlocks.shootingStar, t);
+                    addToTable(EUBlocks.phasicDrill, t);
                     addToTable(EUBlocks.anti_Missile, t);
                     addToTable(EUBlocks.unitBooster, t);
                     addToTable(EUBlocks.ADC, t);
@@ -489,6 +489,14 @@ public class ExtraUtilitiesMod extends Mod{
                                 });
                                 box.left();
                                 addDesc(table.add(box).left().padTop(3f).get());
+                                table.row();
+                            }
+                        });
+
+                        settingsTable.pref(new SettingsMenuDialog.SettingsTable.Setting(Core.bundle.get("eu-show-donor-and-develop")) {
+                            @Override
+                            public void add(SettingsMenuDialog.SettingsTable table) {
+                                table.button(name, eui.ddItemsList::toShow).margin(14).width(200f).pad(6);
                                 table.row();
                             }
                         });
