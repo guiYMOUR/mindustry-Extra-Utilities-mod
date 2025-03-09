@@ -144,8 +144,9 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                updateLog.addAll(EUBlocks.phasicDrill, EUBlocks.cobweb, EUBlocks.shootingStar, EUBlocks.arbiter,
-                        EUBlocks.quantumExplosion, EUBlocks.quantumDomain, Blocks.smite,
+                updateLog.addAll(EUBlocks.adaptiveMiner, EUBlocks.adaptiveMinerII, EUBlocks.ekSeparator,
+                        TDSectorPresets.st1,
+                        EUBlocks.shootingStar, EUBlocks.phasicDrill,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -180,15 +181,16 @@ public class ExtraUtilitiesMod extends Mod{
                         log.row();
                         log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
                     });
+                    addToTable(TDSectorPresets.st1, t);
+                    addToTable(EUBlocks.adaptiveMiner, t);
+                    addToTable(EUBlocks.adaptiveMinerII, t);
+                    addToTable(EUBlocks.ekSeparator, t);
                     addToTable(EUBlocks.cobweb, t);
                     addToTable(EUBlocks.arbiter, t);
                     addToTable(EUBlocks.shootingStar, t);
                     addToTable(EUBlocks.phasicDrill, t);
-                    addToTable(EUBlocks.anti_Missile, t);
-                    addToTable(EUBlocks.unitBooster, t);
-                    addToTable(EUBlocks.ADC, t);
                     addToTable(EUBlocks.guiY, t);
-                    addToTable(EUBlocks.guiYsDomain, t);
+                    addToTable(EUBlocks.ADC, t);
                 }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f).get();
                 buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
                     Core.settings.put("eu-first-load", !b);

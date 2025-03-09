@@ -73,6 +73,7 @@ import mindustry.world.blocks.distribution.DuctBridge;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.ArmoredConduit;
+import mindustry.world.blocks.liquid.LiquidBlock;
 import mindustry.world.blocks.power.ConsumeGenerator;
 import mindustry.world.blocks.production.*;
 import mindustry.world.blocks.units.Reconstructor;
@@ -99,7 +100,7 @@ public class EUBlocks {
         //transport
             stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
-            siliconFurnace, T2blast, T2sporePress, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
+            siliconFurnace, T2blast, T2sporePress, adaptiveMiner, adaptiveMinerII, ekSeparator, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
@@ -164,14 +165,16 @@ public class EUBlocks {
             consumePower(40/60f);
             liquidCapacity = 30f;
             fogRadius = 3;
+            squareSprite = false;
         }};
         phasicDrill = new PhasicDrill("phasic-drill"){{
-            requirements(Category.production, with(Items.titanium, 90, Items.silicon, 100, Items.thorium, 80, Items.phaseFabric, 55));
-            drillTime = 150;
+            requirements(Category.production, with(Items.titanium, 150, Items.silicon, 180, Items.thorium, 100, Items.phaseFabric, 55));
+            drillTime = 144;
             size = 4;
             tier = 6;
-            liquidBoostIntensity = 1.6f;
+            liquidBoostIntensity = 1.7f;
             rotateSpeed = 6.5f;
+            hardnessDrillMultiplier = 10;
 
             consumePower(5f);
             consumeLiquid(Liquids.cryofluid, 0.05f).boost();
@@ -298,6 +301,7 @@ public class EUBlocks {
             transportTime = 1f;
 
             placeableLiquid = true;
+            squareSprite = false;
         }};
         liquidNode = new PhaseNode("lb"){{
             requirements(Category.liquid, with(Items.metaglass, 80, Items.silicon, 90, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 25));
@@ -311,6 +315,7 @@ public class EUBlocks {
             consumePower(1f);
 
             placeableLiquid = true;
+            squareSprite = false;
             //transportTime = 1;
         }};
 
@@ -364,6 +369,7 @@ public class EUBlocks {
                     Draw.reset();
                 }
             };
+            squareSprite = false;
         }};
 
 
@@ -371,6 +377,7 @@ public class EUBlocks {
             requirements(Category.crafting, with(Items.silicon, 130, EUItems.crispSteel, 100, Items.lead, 160, Items.thorium, 80));
             size = 4;
             itemCapacity = 35;
+            squareSprite = false;
             consumePower(6);
             consumeItem(Items.metaglass, 3);
             consumeLiquid(Liquids.water, 12/60f);
@@ -488,16 +495,81 @@ public class EUBlocks {
             consumePower(1.5f);
         }};
 
+
+        adaptiveMiner = new AdaptiveMining("adaptive-mining"){{
+            requirements(Category.production, with());
+            pullItem.putAll(
+                    Items.copper, 5,
+                    Items.lead, 5,
+                    Items.silicon, 1,
+                    Items.graphite, 1,
+                    Items.beryllium, 5
+            );
+
+            alwaysUnlocked = true;
+        }};
+
+        adaptiveMinerII = new AdaptiveMining("adaptive-mining-II"){{
+            requirements(Category.production, with(Items.silicon, 60, Items.graphite, 60));
+            pullItem.putAll(
+                    Items.copper, 4,
+                    Items.lead, 4,
+                    Items.silicon, 2,
+                    Items.graphite, 3,
+                    Items.titanium, 2,
+                    Items.thorium, 1,
+                    Items.tungsten, 1,
+                    Items.beryllium, 4
+            );
+
+            size = 2;
+
+            outTime = 210;
+
+            researchCostMultiplier = 0.2f;
+        }};
+
+        ekSeparator = new OutLiquidSeparator("ek-separator"){{
+            requirements(Category.crafting, with(Items.graphite, 200, Items.silicon, 170, Items.tungsten, 100, Items.thorium, 100));
+            outputLiquid = new LiquidStack(Liquids.water, 0.1f);
+            addLiquidBar(Liquids.water);
+            results = ItemStack.with(
+                    Items.beryllium, 3,
+                    Items.graphite, 3,
+                    Items.silicon, 2,
+                    Items.tungsten, 1,
+                    Items.thorium, 1
+            );
+            craftTime = 21;
+
+            size = 3;
+
+            hasPower = true;
+            consumePower(4f);
+            consumeItem(Items.sand);
+            consumeLiquids(LiquidStack.with(Liquids.slag, 0.15f, Liquids.nitrogen, 0.1f));
+
+            squareSprite = false;
+            drawer = new DrawMulti(
+                    new DrawRegion("-bottom"),
+                    new DrawLiquidTile(Liquids.slag, 5),
+                    new DrawRegion("-rot", 2, true),
+                    new DrawLiquidRegion(Liquids.nitrogen),
+                    new DrawDefault()
+            );
+        }};
         //stone!!!
         stoneExtractor = new AttributeCrafter("stoneExtractor"){{
-            requirements(Category.production, with(Items.silicon, 100, Items.graphite, 120));
+            requirements(Category.production, with(Items.silicon, 60, Items.graphite, 60));
             outputItem = new ItemStack(EUItems.stone, 1);
             craftTime = 30;
             size = 2;
             hasPower = true;
             attribute = EUAttribute.stone;
-            baseEfficiency = 0;
-            minEfficiency = 0.001f;
+            baseEfficiency = 0.8f;
+            maxBoost = 1.5f;
+            //minEfficiency = 0.001f;
+            alwaysUnlocked = true;
 
             drawer = new DrawMulti(
                     new DrawRegion("-bottom"),
@@ -543,9 +615,12 @@ public class EUBlocks {
             }).layer(Layer.debris);
 
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawFrames(){{frames = 5;}}, new DrawDefault(), new DrawRegion("-top"));
+
+            alwaysUnlocked = true;
+            squareSprite = false;
         }};
         stoneMelting = new HeatCrafter("stoneMelting"){{
-            requirements(Category.crafting, with(Items.silicon, 180, EUItems.stone, 100, Items.graphite, 80, Items.oxide, 40));
+            requirements(Category.crafting, with(Items.silicon, 180, EUItems.stone, 100, Items.graphite, 80, Items.tungsten, 50));
             size = 3;
             consumeItem(EUItems.stone);
             heatRequirement = 6;
@@ -555,6 +630,9 @@ public class EUBlocks {
             craftTime = 30f;
             liquidCapacity = 120;
             drawer = new DrawMulti(new DrawRegion("-bottom"), new DrawLiquidRegion(), new DrawDefault(), new DrawHeatInput());
+
+            alwaysUnlocked = true;
+            squareSprite = false;
         }};
 
         T2oxide = new HeatProducer("T2oxide"){{
@@ -1386,6 +1464,7 @@ public class EUBlocks {
             buff = EUStatusEffects.starFlame;
 
             shoot = new ShootSpread(9, 4);
+            squareSprite = false;
 
             //alwaysUnlocked = true;
 
@@ -1437,7 +1516,8 @@ public class EUBlocks {
                 @Override
                 public void updateTrailEffects(Bullet b) {
                     if (b.timer.get(2, 1)) {
-                        trailEffect.at(b.x, b.y, trailColor);
+                        //trailEffect.at(b.x, b.y, trailColor);
+                        trailEffect.at(b.x, b.y, Tmp.c4.set(EUGet.rainBowRed).shiftHue(b.time * 6));
                     }
                 }
 
@@ -1460,7 +1540,7 @@ public class EUBlocks {
 
             ammo(Items.thorium,
                     new BulletType(){{
-                        damage = 150;
+                        damage = 220;
                         ammoMultiplier = 1;
                         reflectable = false;
                         pierce = true;
@@ -1484,7 +1564,7 @@ public class EUBlocks {
                         trailEffect = new Effect(45, e -> {
                             Draw.color(e.color);
                             Angles.randLenVectors(e.id, 1, 16 * e.finpow(), e.rotation, 180, (x, y) -> {
-                                Fill.poly(e.x + x, e.y + y, 5, 12 * e.foutpow(), e.time * 5);
+                                Fill.poly(e.x + x, e.y + y, 5, 10 * e.foutpow(), e.time * 5);
                             });
 
 //                            float z = Draw.z();
@@ -1521,7 +1601,8 @@ public class EUBlocks {
                         @Override
                         public void updateTrailEffects(Bullet b) {
                             if(b.timer.get(2, 1)){
-                                trailEffect.at(b.x, b.y, b.team.color);
+                                //trailEffect.at(b.x, b.y, b.team.color);
+                                trailEffect.at(b.x, b.y, trailColor);
                             }
 
                             Tmp.v1.set(Mathf.sin(b.time, 2.2f, 10), 0).rotate(b.rotation() - 90);
@@ -1530,8 +1611,10 @@ public class EUBlocks {
                             float y1 = b.y + Tmp.v1.y;
                             float x2 = b.x + Tmp.v2.x;
                             float y2 = b.y + Tmp.v2.y;
-                            EUFx.normalTrail.at(x1, y1, 3, trailColor);
-                            EUFx.normalTrail.at(x2, y2, 3, trailColor);
+                            //EUFx.normalTrail.at(x1, y1, 3, trailColor);
+                            EUFx.normalTrail.at(x1, y1, 3, Tmp.c1.set(EUGet.rainBowRed).shiftHue(b.time * 10));
+                            //EUFx.normalTrail.at(x2, y2, 3, trailColor);
+                            EUFx.normalTrail.at(x2, y2, 3, Tmp.c2.set(EUGet.rainBowRed).shiftHue(b.time * 10));
                         }
 
                         @Override
@@ -2474,6 +2557,7 @@ public class EUBlocks {
             coolant = consume(new ConsumeLiquid(Liquids.water, 120f / 60f));
             coolantMultiplier = 0.3f;
             shootSound = Sounds.largeExplosion;
+            squareSprite = false;
 
             range = 70 * 8;
 
@@ -2672,6 +2756,7 @@ public class EUBlocks {
             reload = 360;
             shootSound = Sounds.missileLarge;
             canOverdrive = false;
+            squareSprite = false;
 
             drawer = new DrawTurret("reinforced-");
         }};
@@ -3507,8 +3592,8 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
 
-        EUGet.donorItems.addAll(T2sporePress, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
-        EUGet.donorMap.get(0).addAll(T2sporePress);
+        EUGet.donorItems.addAll(T2sporePress, phasicDrill, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
+        EUGet.donorMap.get(0).addAll(T2sporePress, phasicDrill);
         EUGet.donorMap.get(1).addAll(waterBomb);
         EUGet.donorMap.get(2).addAll(javelin);
         EUGet.donorMap.get(4).addAll(buffrerdMemoryBank);

@@ -84,11 +84,17 @@ public class EUOverride {
         //S
         Blocks.stone.attributes.set(EUAttribute.stone, 0.3f);
         Blocks.basalt.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.shale.attributes.set(EUAttribute.stone, 0.1f);
         Blocks.pebbles.attributes.set(EUAttribute.stone, 0.25f);
         Blocks.craters.attributes.set(EUAttribute.stone, 0.15f);
         //E
         Blocks.yellowStone.attributes.set(EUAttribute.stone, 0.25f);
         Blocks.carbonStone.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.rhyolite.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.rhyoliteCrater.attributes.set(EUAttribute.stone, 0.15f);
+        Blocks.roughRhyolite.attributes.set(EUAttribute.stone, 0.1f);
+        Blocks.ferricStone.attributes.set(EUAttribute.stone, 0.2f);
+        Blocks.ferricCraters.attributes.set(EUAttribute.stone, 0.15f);
         Blocks.arkyicStone.attributes.set(EUAttribute.EKOil, 100 * (0.15f/135));
         Blocks.beryllicStone.attributes.set(EUAttribute.EKOil, 70 * (0.15f/135));
 

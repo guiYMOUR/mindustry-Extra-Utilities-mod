@@ -15,6 +15,7 @@ public class TDPlanet {
     public static void load(){
         TD = new Planet("TD", Planets.sun, 1, 2){{
             generator = new ErekirPlanetGenerator();
+            iconColor = EUGet.MIKU;
             meshLoader = () -> new SunMesh(
                     this, 4,
                     5, 0.3, 1.7, 1.2, 1,

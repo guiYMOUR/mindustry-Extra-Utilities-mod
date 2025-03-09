@@ -109,16 +109,25 @@ public class EUTechTree {
         );
         addToNode(surgeCrucible, () -> node(ELA));
         addToNode(slagIncinerator, () -> node(liquidIncinerator));
+        addToNode(slagIncinerator, () -> node(ekSeparator));
 
         //TD
-        TDPlanet.TD.techTree = nodeRoot("TD", TD1, () -> addToNode(TD1, () -> {
-            node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
-            node(guiYTD1, () -> node(BossTD, Seq.with(new SectorComplete(TD1)), () -> node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {})));
-            node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
-            node(EUItems.stone, () -> node(stoneExtractor, () -> {
-                node(stoneCrusher);
-                node(stoneMelting);
-            }));
+        TDPlanet.TD.techTree = nodeRoot("TD", pd, () -> addToNode(pd, () -> {
+            node(TD1, () ->{
+                node(TD2, Seq.with(new SectorComplete(TD1)), () -> {});
+                node(guiYTD1, () -> node(BossTD, Seq.with(new SectorComplete(TD1)), () -> node(regency, ItemStack.with(EUItems.lightninAlloy, 15000), () -> {})));
+                node(guiYCL1, Seq.with(new SectorComplete(TD1)), () -> {});
+            });
+
+            node(st1, () -> {
+                node(EUItems.stone, () -> node(stoneExtractor, () -> {
+                    node(adaptiveMiner, () -> {
+                        node(adaptiveMinerII);
+                    });
+                    node(stoneCrusher);
+                    node(stoneMelting);
+                }));
+            });
             node(breaker);
             node(waterBomb);
             node(coreKeeper);
