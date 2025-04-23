@@ -1469,7 +1469,7 @@ public class EUBlocks {
             //alwaysUnlocked = true;
 
             BulletType starHit = new BulletType(){{
-                damage = 150;
+                damage = 120;
                 pierceArmor = true;
                 reflectable = false;
                 absorbable = false;
@@ -1540,7 +1540,7 @@ public class EUBlocks {
 
             ammo(Items.thorium,
                     new BulletType(){{
-                        damage = 220;
+                        damage = 180;
                         ammoMultiplier = 1;
                         reflectable = false;
                         pierce = true;
@@ -2996,7 +2996,7 @@ public class EUBlocks {
 
             mine = new BulletType(){{
                 lifetime = 30 * 60f;
-                damage = 25;
+                damage = 60;
                 pierceArmor = true;
                 collidesTiles = collidesAir = false;
                 hitEffect = despawnEffect = none;
@@ -3040,7 +3040,7 @@ public class EUBlocks {
 
             mine = new BulletType(){{
                 lifetime = 45 * 60f;
-                damage = 30;
+                damage = 120;
                 pierceArmor = true;
                 collides = collidesAir = collidesGround = collidesTiles = false;
                 hitEffect = despawnEffect = none;
@@ -3055,7 +3055,7 @@ public class EUBlocks {
                     lifetime = 0;
                     speed = 0;
                     damage = 0;
-                    splashDamage = 300;
+                    splashDamage = 1200;
                     splashDamageRadius = 10f * 8;
                     hitEffect = despawnEffect = new ExplosionEffect(){{
                         waveRad = smokeRad = sparkRad = splashDamageRadius;

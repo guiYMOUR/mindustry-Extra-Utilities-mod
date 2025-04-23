@@ -111,6 +111,8 @@ public class EUTechTree {
         addToNode(slagIncinerator, () -> node(liquidIncinerator));
         addToNode(slagIncinerator, () -> node(ekSeparator));
 
+        addToNode(blastDrill, () -> node(phasicDrill));
+
         //TD
         TDPlanet.TD.techTree = nodeRoot("TD", pd, () -> addToNode(pd, () -> {
             node(TD1, () ->{

@@ -47,13 +47,13 @@ public class DefenderHealAI extends DefenderAI {
                 if(!target.within(unit, unit.type.range * 0.7f)){
                     moveTo(target, unit.type.range * 0.7f);
                     if(!target.within(unit, unit.type.range * 1.2f)){
-                        if(unit.type.canBoost || (unit.pathType() == Pathfinder.costNaval && !unit.floorOn().isLiquid)){
+                        if(unit.type.canBoost || (unit.type.naval && !unit.floorOn().isLiquid)){
                             unit.elevation = Mathf.approachDelta(unit.elevation, 1, unit.type.riseSpeed);
                         }
                     }
                 }
                 if(target.within(unit, unit.type.range * 1.2f)){
-                    if(unit.type.canBoost && unit.elevation > 0.001 && !unit.onSolid() && !(unit.pathType() == Pathfinder.costNaval && !unit.floorOn().isLiquid)){
+                    if(unit.type.canBoost && unit.elevation > 0.001 && !unit.onSolid() && !(unit.type.naval && !unit.floorOn().isLiquid)){
                         unit.elevation = Mathf.approachDelta(unit.elevation, 0, unit.type.riseSpeed);
                     }
                 }

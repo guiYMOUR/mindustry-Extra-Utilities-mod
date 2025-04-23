@@ -2513,11 +2513,11 @@ public class EUUnitTypes {
         }};
 
         narwhal = new UnitType("narwhal"){{
-            if(Version.build == 146){
-                UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
-                defaultCommand = c;
-                commands = new UnitCommand[]{UnitCommand.moveCommand, UnitCommand.assistCommand, UnitCommand.rebuildCommand, c, UnitCommand.boostCommand};
-            }
+//            if(Version.build == 146){
+//                UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
+//                defaultCommand = c;
+//                commands = new UnitCommand[]{UnitCommand.moveCommand, UnitCommand.assistCommand, UnitCommand.rebuildCommand, c, UnitCommand.boostCommand};
+//            }
             armor = 48;
             drag = 0.2f;
             flying = false;
@@ -2569,9 +2569,9 @@ public class EUUnitTypes {
                         shoot = new ShootBarrel();
                         ((ShootBarrel)shoot).barrels = new float[]{
                                 0, 8, 0,
-                                -8, 0, 45,
-                                0, -8, 90,
-                                8, 0, 135
+                                -8, 0, 90,
+                                0, -8, 180,
+                                8, 0, 270
                         };
                         shoot.shots = 4;
                         shoot.shotDelay = 12;
