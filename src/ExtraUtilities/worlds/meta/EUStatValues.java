@@ -9,6 +9,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.scene.Element;
 import arc.scene.style.TextureRegionDrawable;
+import arc.scene.ui.layout.Collapser;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -17,6 +18,7 @@ import arc.util.Strings;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.bullet.BulletType;
+import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.type.*;
 import mindustry.ui.Styles;
@@ -151,11 +153,40 @@ public class EUStatValues {
                             sep(bt, (type.status.minfo.mod == null ? type.status.emoji() : "") + "[stat]" + type.status.localizedName + "[lightgray] ~ [stat]" + ((int) (type.statusDuration / 60f)) + "[lightgray] " + Core.bundle.get("unit.seconds"));
                         }
 
-                        if (type.fragBullet != null) {
-                            sep(bt, Core.bundle.format("bullet.frags", type.fragBullets));
+                        if(type.intervalBullet != null){
                             bt.row();
 
-                            StatValues.ammo(ObjectMap.of(t, type.fragBullet), indent + 1, false).display(bt);
+                            Table ic = new Table();
+                            StatValues.ammo(ObjectMap.of(t, type.intervalBullet), true, false).display(ic);
+                            Collapser coll = new Collapser(ic, true);
+                            coll.setDuration(0.1f);
+
+                            bt.table(it -> {
+                                it.left().defaults().left();
+
+                                it.add(Core.bundle.format("bullet.interval", Strings.autoFixed(type.intervalBullets / type.bulletInterval * 60, 2)));
+                                it.button(Icon.downOpen, Styles.emptyi, () -> coll.toggle(false)).update(i -> i.getStyle().imageUp = (!coll.isCollapsed() ? Icon.upOpen : Icon.downOpen)).size(8).padLeft(16f).expandX();
+                            });
+                            bt.row();
+                            bt.add(coll);
+                        }
+
+                        if(type.fragBullet != null){
+                            bt.row();
+
+                            Table fc = new Table();
+                            StatValues.ammo(ObjectMap.of(t, type.fragBullet), true, false).display(fc);
+                            Collapser coll = new Collapser(fc, true);
+                            coll.setDuration(0.1f);
+
+                            bt.table(ft -> {
+                                ft.left().defaults().left();
+
+                                ft.add(Core.bundle.format("bullet.frags", type.fragBullets));
+                                ft.button(Icon.downOpen, Styles.emptyi, () -> coll.toggle(false)).update(i -> i.getStyle().imageUp = (!coll.isCollapsed() ? Icon.upOpen : Icon.downOpen)).size(8).padLeft(16f).expandX();
+                            });
+                            bt.row();
+                            bt.add(coll);
                         }
                     }).padTop(compact ? 0 : -9).padLeft(indent * 8).left().get().background(compact ? null : Tex.underline);
 

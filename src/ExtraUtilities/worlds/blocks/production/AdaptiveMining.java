@@ -13,9 +13,12 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
 
+import mindustry.content.Planets;
+import mindustry.ctype.UnlockableContent;
 import mindustry.game.Team;
 import mindustry.gen.Building;
 import mindustry.type.Item;
+import mindustry.type.Planet;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
@@ -142,19 +145,15 @@ public class AdaptiveMining extends Block {
         public float rot = 0;
         public float work = 0;
         public ObjectIntMap<Item> ruleCopy = new ObjectIntMap<>();
-        public ObjectSet<Item> set = new ObjectSet<>();
 
         @Override
         public void updateTile() {
             if(!nearbyCore()) return;
             rot += Time.delta;
             if(Vars.net.client()) return;
-            if(set != state.rules.hiddenBuildItems) {
-                set = state.rules.hiddenBuildItems;
-            }
 
             for(Item item : pullItem.keys()) {
-                if(!set.contains(item) && (!state.isCampaign() || item.unlocked())){
+                if(item.isOnPlanet(state.getPlanet()) && !item.isHidden() && (!state.isCampaign() || item.unlocked())){
                     ruleCopy.put(item, pullItem.get(item));
                 }
             }

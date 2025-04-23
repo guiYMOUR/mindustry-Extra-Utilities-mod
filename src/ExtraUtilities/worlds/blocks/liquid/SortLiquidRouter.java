@@ -79,7 +79,7 @@ public class SortLiquidRouter extends LiquidRouter {
         @Override
         public boolean acceptLiquid(Building source, Liquid liquid) {
             //int rel = this.relativeToEdge(source.tile);
-            return (!rotate || Edges.getFacingEdge(source.tile(), tile).relativeTo(tile) == rotation) && super.acceptLiquid(source, liquid) && (sortLiquid == null || sortLiquid == liquid);
+            return (!rotate || Edges.getFacingEdge(source.tile, tile).relativeTo(tile) == rotation) && super.acceptLiquid(source, liquid) && (sortLiquid == null || sortLiquid == liquid);
         }
 
         @Override

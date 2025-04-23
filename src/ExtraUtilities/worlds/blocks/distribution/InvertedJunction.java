@@ -1,6 +1,8 @@
 package ExtraUtilities.worlds.blocks.distribution;
 
 import ExtraUtilities.worlds.drawer.DrawInvertedJunction;
+import ExtraUtilities.worlds.meta.BufferItem;
+import ExtraUtilities.worlds.meta.DirectionalItemBuffer;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.*;
@@ -8,18 +10,23 @@ import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
+import arc.util.Eachable;
 import arc.util.Time;
 import arc.util.io.*;
-import mindustry.gen.*;
+import mindustry.entities.units.BuildPlan;
+import mindustry.gen.Building;
+import mindustry.gen.Teamc;
+import mindustry.gen.Unit;
 import mindustry.type.Item;
 import mindustry.ui.Styles;
-import mindustry.world.blocks.distribution.Junction;
+import mindustry.world.Block;
 import mindustry.world.draw.*;
+import mindustry.world.meta.BlockGroup;
 
 import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static mindustry.Vars.*;
 
-public class InvertedJunction extends Junction {
+public class InvertedJunction extends Block {
     public String placeSprite;
     //为什么写drawer？减少一点点内存消耗
     public DrawBlock drawer = new DrawInvertedJunction();
@@ -28,10 +35,22 @@ public class InvertedJunction extends Junction {
 
     public Color[] colors = {Color.valueOf("bf92f9"), Color.valueOf("c0ecff"), Color.valueOf("84f491"), Color.valueOf("fffa763")};
 
-    public TextureRegion arrow1, arrow2;
+    public TextureRegion arrow1, arrow2, place;
+
+    public float speed = 26; //frames taken to go through this junction
+    public int capacity = 6;
+
 
     public InvertedJunction(String name) {
         super(name);
+
+        update = true;
+        solid = false;
+        underBullets = true;
+        group = BlockGroup.transportation;
+        unloadable = false;
+        floating = true;
+        noUpdateDisabled = true;
 
         sync = true;
         configurable = true;
@@ -43,9 +62,25 @@ public class InvertedJunction extends Junction {
         super.load();
         arrow1 = Core.atlas.find(name("arrow-1"));
         arrow2 = Core.atlas.find(name("arrow-2"));
+        place = Core.atlas.find(placeSprite);
     }
 
-    public class InvertedJunctionBuild extends JunctionBuild{
+    @Override
+    public void drawPlanConfig(BuildPlan plan, Eachable<BuildPlan> list) {
+        if(plan.config == null) return;
+        Draw.rect(place, plan.drawx(), plan.drawy());
+        Draw.rect(Core.atlas.find(ModName + "-junction-" + plan.config), plan.drawx(), plan.drawy());
+        Draw.color();
+    }
+
+    @Override
+    public boolean outputsItems(){
+        return true;
+    }
+
+    public class InvertedJunctionBuild extends Building{
+        public DirectionalItemBuffer buffer = new DirectionalItemBuffer(capacity);
+
         public int loc = 1;
 
         @Override
@@ -95,6 +130,17 @@ public class InvertedJunction extends Junction {
         }
 
         @Override
+        public int acceptStack(Item item, int amount, Teamc source){
+            return 0;
+        }
+
+        @Override
+        public void handleItem(Building source, Item item){
+            int relative = source.relativeTo(tile);
+            buffer.accept(relative, item);
+        }
+
+        @Override
         public void drawSelect() {
             super.drawSelect();
             //输出显示
@@ -141,12 +187,14 @@ public class InvertedJunction extends Junction {
         @Override
         public void write(Writes write) {
             super.write(write);
+            buffer.write(write);
             write.i(loc);
         }
 
         @Override
         public void read(Reads read, byte revision) {
             super.read(read, revision);
+            buffer.read(read);
             loc = read.i();
         }
     }
