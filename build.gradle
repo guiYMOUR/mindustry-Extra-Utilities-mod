@@ -15,7 +15,7 @@ sourceSets.main.java.srcDirs = ["src"]
 
 repositories{
     mavenCentral()
-    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven{ url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
     maven{ url 'https://www.jitpack.io' }
 }
 
@@ -24,7 +24,8 @@ sourceCompatibility = 17
 
 ext{
     //the build number that this mod is made for
-    mindustryVersion = 'v146'
+    mindustryVersion = 'ab0a47a837628f8bb70802fd7ef6b581005e5113'
+    arcVersion = 'v148'
     jabelVersion = "93fde537c7"
     //sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
@@ -35,17 +36,17 @@ allprojects{
     tasks.withType(JavaCompile){
 
         options.encoding = 'UTF-8'
-        
+
         options.compilerArgs.addAll(['--release', '8'])
     }
 }
 
 dependencies{
     implementation 'org.jetbrains:annotations:24.0.1'
-    implementation "com.github.EB-wilson.UniverseCore:scenes:2.1.1"
-    implementation "com.github.EB-wilson.UniverseCore:markdown:2.1.1"
+//    implementation "com.github.EB-wilson.UniverseCore:scenes:2.1.1"
+//    implementation "com.github.EB-wilson.UniverseCore:markdown:2.1.1"
 
-    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Arc:arc-core:$arcVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
@@ -64,14 +65,6 @@ task jarAndroid{
         //collect dependencies needed for desugaring
         def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
 
-        // def buildToolsDir = new File("$sdkRoot/build-tools/").listFiles().sort().reverse().find { f -> f.isDirectory() && new File(f, "d8").exists() }  
-        // if (!buildToolsDir) throw new GradleException("No valid build-tools directory found containing 'd8'.")  
-        // def d8Path = new File(buildToolsDir, "d8").absolutePath  
- 
-        // "$d8Path $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"  
-        //     .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
-
-        
         //dex and desugar files - this requires d8 in your PATH
         "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
             .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
