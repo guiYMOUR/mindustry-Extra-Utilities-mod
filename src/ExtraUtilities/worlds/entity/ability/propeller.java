@@ -39,7 +39,10 @@ public class propeller extends Ability {
 
     @Override
     public void update(Unit unit) {
-        if(unit.pathType() == Pathfinder.costNaval && !unit.floorOn().isLiquid){
+        if(
+                unit.type != null && unit.type.naval &&
+                        !unit.floorOn().isLiquid
+        ){
             unit.elevation = 1;
         }
         float realSpeed = unit.elevation * speed * Time.delta;

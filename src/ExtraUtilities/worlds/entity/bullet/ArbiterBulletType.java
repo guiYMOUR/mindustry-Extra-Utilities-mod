@@ -188,7 +188,7 @@ public class ArbiterBulletType extends BulletType {
         if(!(b instanceof Arbiter a)) return;
         updateTrail(b);
         updateBulletInterval(b);
-        Vars.control.sound.loop(Sounds.wind, b, 1.2f);
+        if(!Vars.headless) Vars.control.sound.loop(Sounds.wind, b, 1.2f);
         float fin = Math.min(b.finpow() * 10, 1);
         float fout = b.time > b.lifetime - 24 ? Interp.smoother.apply((b.lifetime - b.time) /24) : 1;
         if(b.timer.get(1)) {
@@ -351,7 +351,7 @@ public class ArbiterBulletType extends BulletType {
         Damage.status(b.team, b.x, b.y, splashDamageRadius, StatusEffects.electrified, 5 * 60, collidesAir, collidesGround);
         Damage.status(b.team, b.x, b.y, splashDamageRadius, StatusEffects.wet, 5 * 60, collidesAir, collidesGround);
         Damage.status(b.team, b.x, b.y, splashDamageRadius, StatusEffects.sapped, 5 * 60, collidesAir, collidesGround);
-        despawnSound.at(b.x, b.y, 2);
+        if(!Vars.headless) despawnSound.at(b.x, b.y, 2);
         Effect.shake(5, 5, b);
         EUFx.layerCircle.at(b.x, b.y, splashDamageRadius, b.team.color);
         despawnEffect.at(b.x, b.y, b.team.color);
@@ -445,7 +445,7 @@ public class ArbiterBulletType extends BulletType {
         @Override
         public void hit(Bullet b, float x, float y) {
             hitEffect.at(x, y, splashDamageRadius, b.team.color);
-            hitSound.at(x, y, hitSoundPitch, hitSoundVolume);
+            if(Vars.headless) hitSound.at(x, y, hitSoundPitch, hitSoundVolume);
 
             Effect.shake(1, 1, b);
             //createSplashDamage(b, x, y);
@@ -482,7 +482,7 @@ public class ArbiterBulletType extends BulletType {
 
         @Override
         public void despawned(Bullet b) {
-            despawnSound.at(b);
+            if(!Vars.headless) despawnSound.at(b);
             createSplashDamage(b, b.x, b.y);
             despawnEffect.at(b.x, b.y, splashDamageRadius, b.team.color);
         }
