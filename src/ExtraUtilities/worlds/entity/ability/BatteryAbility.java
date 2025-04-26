@@ -48,7 +48,8 @@ public class BatteryAbility extends Ability {
             splashDamageRadius = 20 * 8;
             despawnEffect = hitEffect = new MultiEffect(
                     EUFx.ElectricExp(60, 15, splashDamageRadius),
-                    EUFx.diffEffect(90, 1.8f, 24 * 8f, 10, 56, 24, 10, Pal.heal, 0)
+                    EUFx.diffEffect(90, 1.8f, 24 * 8f, 10, 56, 24, 10, Pal.heal, 0),
+                    EUFx.layerCircle(90, 24 * 8f)
             );
         }};
     }
@@ -109,9 +110,13 @@ public class BatteryAbility extends Ability {
         }
         if(target == null || target.block == null) return;
         if(Mathf.zero(Renderer.laserOpacity)) return;
+        float z = Draw.z();
         Draw.z(Layer.power);
         setupColor(target.power.graph.getSatisfaction());
         ((PowerNode)target.block).drawLaser(x, y, target.x, target.y, 2, target.block.size);
+
+        Draw.z(z);
+        Draw.reset();
     }
 
     @Override
