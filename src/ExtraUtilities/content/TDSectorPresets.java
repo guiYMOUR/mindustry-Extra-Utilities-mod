@@ -2,6 +2,7 @@ package ExtraUtilities.content;
 
 import arc.Core;
 import mindustry.Vars;
+import mindustry.content.Planets;
 import mindustry.gen.Icon;
 import mindustry.type.SectorPreset;
 

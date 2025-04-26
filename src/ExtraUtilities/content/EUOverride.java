@@ -1,5 +1,7 @@
 package ExtraUtilities.content;
 
+import ExtraUtilities.ExtraUtilitiesMod;
+import ExtraUtilities.ui.EUI;
 import ExtraUtilities.worlds.entity.bullet.ChainLightningFade;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import ExtraUtilities.worlds.entity.bullet.liLaserBullet;
@@ -41,32 +43,93 @@ import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
 
-import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
-import static ExtraUtilities.ExtraUtilitiesMod.name;
+import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
 import static mindustry.content.Items.*;
 import static mindustry.type.ItemStack.with;
 
 public class EUOverride {
-    public static void overrideBlockAll(){
-        for(int i = 0; i < Vars.content.blocks().size; i ++){
+    public static void overrideBlockAll(boolean hard, boolean coreResetV7, boolean coreReset){
+        for(int i = 0; i < Vars.content.blocks().size; i ++) {
             Block block = Vars.content.blocks().get(i);
-            if(block != null) block.canOverdrive = false;
-            if(block instanceof Turret && block.size >= 5){
-                if(block.requirements == null || block.requirements.length == 0) continue;
-                boolean has = false;
-                for(ItemStack stack : block.requirements){
-                    if(stack.item == EUItems.lightninAlloy){
-                        has = true;
-                        break;
-                    }
+            if (block != null) {
+                if(coreResetV7 || coreReset) {
+                    if(block.requirements.length == 0) block.shownPlanets.addAll(Vars.content.planets().copy().removeAll(p -> p == Planets.sun));
+                    else block.shownPlanets.clear();
+
+                    block.postInit();
                 }
-                if(has) continue;
-                ItemStack[] copy = new ItemStack[block.requirements.length + 1];
-                System.arraycopy(block.requirements, 0, copy, 0, block.requirements.length);
-                copy[block.requirements.length] = new ItemStack(EUItems.lightninAlloy, 50 * (block.size - 4));
-                block.requirements = copy;
+            }
+            if (hard) {
+                if (block != null) block.canOverdrive = false;
+                if (block instanceof Turret && block.size >= 5) {
+                    if (block.requirements == null || block.requirements.length == 0) continue;
+                    boolean has = false;
+                    for (ItemStack stack : block.requirements) {
+                        if (stack.item == EUItems.lightninAlloy) {
+                            has = true;
+                            break;
+                        }
+                    }
+                    if (has) continue;
+                    ItemStack[] copy = new ItemStack[block.requirements.length + 1];
+                    System.arraycopy(block.requirements, 0, copy, 0, block.requirements.length);
+                    copy[block.requirements.length] = new ItemStack(EUItems.lightninAlloy, 50 * (block.size - 4));
+                    block.requirements = copy;
+                }
+            }
+        }
+    }
+
+    public static void overrideTDRules(boolean coreReset){
+        if(coreReset){
+            for(Item i : Vars.content.items()){
+                if(i != null){
+                    //if(i.shownPlanets.isEmpty()) continue;
+                    i.shownPlanets.clear();
+                    i.shownPlanets.addAll(Vars.content.planets().copy().removeAll(p -> p == Planets.sun));
+                    i.postInit();
+                }
+            }
+            for(Liquid l : Vars.content.liquids()){
+                if(l != null){
+                    //if(l.shownPlanets.isEmpty()) continue;
+                    l.shownPlanets.clear();
+                    l.shownPlanets.addAll(Vars.content.planets().copy().removeAll(p -> p == Planets.sun));
+                    l.postInit();
+                }
+            }
+        } else {
+            for (Item i : Vars.content.items()) {
+                if (i != null) {
+                    if (i.shownPlanets.isEmpty()) continue;
+                    i.shownPlanets.add(TDPlanet.TD);
+                    i.postInit();
+                }
+            }
+            for (Liquid l : Vars.content.liquids()) {
+                if (l != null) {
+                    if (l.shownPlanets.isEmpty()) continue;
+                    l.shownPlanets.add(TDPlanet.TD);
+                    l.postInit();
+                }
+            }
+            EUItems.lightninAlloy.shownPlanets.clear();
+            EUItems.crispSteel.shownPlanets.clear();
+            EUBlocks.LA.shownPlanets.clear();
+            EUBlocks.LA.postInit();
+            EUBlocks.ELA.shownPlanets.clear();
+            EUBlocks.ELA.postInit();
+            EUItems.lightninAlloy.shownPlanets.addAll(EUBlocks.LA.shownPlanets);
+            EUItems.lightninAlloy.shownPlanets.addAll(EUBlocks.ELA.shownPlanets);
+            EUItems.lightninAlloy.postInit();
+            Block crispSteelCrafter = Vars.content.block(name("crisp-steel-smelter"));
+            if (crispSteelCrafter != null) {
+                crispSteelCrafter.shownPlanets.clear();
+                crispSteelCrafter.postInit();
+                EUItems.crispSteel.shownPlanets.addAll(crispSteelCrafter.shownPlanets);
+                EUItems.crispSteel.postInit();
             }
         }
     }
@@ -250,25 +313,29 @@ public class EUOverride {
         UnitTypes.anthicus.weapons.get(0).reload = 120;
     }
 
-    public static void overrideBuilder(){
+    public static void overrideUnitForAll(boolean armor, boolean coreReset){
         for(int i = 0; i < Vars.content.units().size; i++){
             UnitType u = Vars.content.unit(i);
+            if(u != null){
+                if(coreReset) {
+                    if (u.shownPlanets.isEmpty()) continue;
+                    u.shownPlanets.addAll(Vars.content.planets().copy().removeAll(p -> p == Planets.sun));
+                    u.postInit();
+                } else {
+                    if (u.shownPlanets.isEmpty()) continue;
+                    u.shownPlanets.add(TDPlanet.TD);
+                    u.postInit();
+                }
+            }
+            if(u != null && armor){
+                u.armor = Math.min(u.armor, 80);
+                u.health = Math.min(u.health, 130000);
+            }
             if(u != null && u.buildSpeed > 0){
                 StatusEffect s = Vars.content.statusEffect("new-horizon-scanner-down");
                 if(s != null) u.immunities.add(s);
             }
         }
-    }
-
-    public static void overrideAmr(){
-        for(int i = 0; i < Vars.content.units().size; i++){
-            UnitType u = Vars.content.unit(i);
-            if(u != null){
-                u.armor = Math.min(u.armor, 80);
-                u.health = Math.min(u.health, 130000);
-            }
-        }
-
     }
 
     //special changes on April Fools'Day

@@ -1,13 +1,16 @@
 package ExtraUtilities.content;
 
 import arc.graphics.Color;
+import arc.util.noise.Noise;
 import mindustry.content.Blocks;
 import mindustry.content.Planets;
+import mindustry.content.TechTree;
 import mindustry.graphics.g3d.HexSkyMesh;
 import mindustry.graphics.g3d.MultiMesh;
 import mindustry.graphics.g3d.SunMesh;
 import mindustry.maps.planet.ErekirPlanetGenerator;
 import mindustry.type.Planet;
+import mindustry.type.Sector;
 
 public class TDPlanet {
     public static Planet TD;
@@ -45,6 +48,37 @@ public class TDPlanet {
                 r.enemyCoreBuildRadius = 1;
                 r.bannedBlocks.addAll(Blocks.launchPad, Blocks.smite, EUBlocks.breaker, EUBlocks.quantumDomain);
             };
-        }};
+        }
+
+            @Override
+            public void init() {
+                applyDefaultRules(campaignRules);
+                loadRules();
+
+                if(techTree == null){
+                    techTree = TechTree.roots.find(n -> n.planet == this);
+                }
+
+                if(techTree != null && autoAssignPlanet){
+                    techTree.addDatabaseTab(this);
+                }
+
+                for(Sector sector : sectors){
+                    sector.loadInfo();
+                }
+
+                if(generator != null){
+                    Noise.setSeed(sectorSeed < 0 ? id + 1 : sectorSeed);
+
+                    for(Sector sector : sectors){
+                        generator.generateSector(sector);
+                    }
+
+                    updateBaseCoverage();
+                }
+
+                clipRadius = Math.max(clipRadius, radius + atmosphereRadOut + 0.5f);
+            }
+        };
     }
 }

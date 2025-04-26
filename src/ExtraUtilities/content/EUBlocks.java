@@ -1454,7 +1454,7 @@ public class EUBlocks {
         }};
 
         shootingStar = new LingSha("shooting-star"){{
-            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 400, EUItems.lightninAlloy, 150, Items.thorium, 250));
+            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 400, EUItems.lightninAlloy, 200, Items.thorium, 250));
             size = 5;
             health = 4288;
 
@@ -1465,6 +1465,8 @@ public class EUBlocks {
 
             shoot = new ShootSpread(9, 4);
             squareSprite = false;
+            shootSound = Sounds.malignShoot;
+            soundPitchMin = soundPitchMax = 0.5f;
 
             //alwaysUnlocked = true;
 
@@ -2531,7 +2533,7 @@ public class EUBlocks {
             recoil = 4f;
             reload = hardMod ? 195f : 360f;
             shootY = 0f;
-            rotateSpeed = 1.2f;
+            rotateSpeed = 1f;
             minWarmup = 0.95f;
             shootWarmupSpeed = 0.04f;
             shootSound = Sounds.largeCannon;
@@ -2576,6 +2578,7 @@ public class EUBlocks {
             recoilTime = 60;
 
             minWarmup = 0.9f;
+            rotateSpeed = 1.2f;
 
             drawer = new DrawTurret(){{
                 parts.add(
@@ -3493,7 +3496,6 @@ public class EUBlocks {
             requirements(Category.effect, with(EUItems.lightninAlloy, 10 + (hardMod ? 5 : 0)));
             placeableLiquid = true;
             floating = true;
-
             alwaysUnlocked = true;
         }};
         waterBomb = new WaterBomb("water-bomb"){{

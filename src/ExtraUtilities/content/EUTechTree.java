@@ -31,13 +31,13 @@ public class EUTechTree {
         addToNode(pyrolysisGenerator, () -> node(liquidConsumeGenerator));
         addToNode(thermalGenerator, () -> node(thermalReactor));
         addToNode(tetrativeReconstructor, () -> node(imaginaryReconstructor, () -> {
-            node(suzerain);
-            node(nebula);
-            node(asphyxia);
-            node(Tera);
-            node(apocalypse);
-            node(nihilo);
-            node(narwhal);
+            node(suzerain, Seq.with(new Research(UnitTypes.reign)), () -> {});
+            node(nebula, Seq.with(new Research(UnitTypes.corvus)), () -> {});
+            node(asphyxia, Seq.with(new Research(UnitTypes.toxopid)), () -> {});
+            node(Tera, Seq.with(new Research(UnitTypes.oct)), () -> {});
+            node(apocalypse, Seq.with(new Research(UnitTypes.eclipse)), () -> {});
+            node(nihilo, Seq.with(new Research(UnitTypes.omura)), () -> {});
+            node(narwhal, Seq.with(new Research(UnitTypes.navanax)), () -> {});
         }));
         addToNode(airFactory, () -> node(winglet));
         addToNode(segment, () -> node(dissipation));

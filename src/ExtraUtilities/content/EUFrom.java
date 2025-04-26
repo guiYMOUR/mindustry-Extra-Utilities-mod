@@ -45,6 +45,7 @@ import mindustry.world.meta.StatCat;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static ExtraUtilities.ExtraUtilitiesMod.onlyPlugIn;
+import static arc.Core.app;
 import static arc.Core.settings;
 import static mindustry.Vars.*;
 
@@ -72,7 +73,7 @@ public class EUFrom {
 
     public static void load(){
         if(ui == null || ui.settings == null) return;
-        settings.defaults("eu-WTMF-open", true);
+        settings.defaults("eu-WTMF-open", app == null || app.isDesktop());
         if(settings.getBool("eu-WTMF-open")) {
 
 

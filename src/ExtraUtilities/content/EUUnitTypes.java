@@ -1125,7 +1125,7 @@ public class EUUnitTypes {
                         shoot.shotDelay = 6;
                         baseRotation = -90;
                         BulletType cage = new LaserBulletType(){{
-                            damage = 10;
+                            damage = 8;
                             pierceArmor = true;
                             lifetime = 30f;
                             hitEffect = new Effect(24, e -> {
@@ -1163,7 +1163,7 @@ public class EUUnitTypes {
                             autoHoming = true;
                             homingDelay = 12;
                             homingPower = 12f;
-                            damage = 10;
+                            damage = 11;
                             pierceArmor = true;
                             buildingDamageMultiplier = 1f;
                             shootEffect = new Effect(24, e -> {
@@ -1284,7 +1284,7 @@ public class EUUnitTypes {
                         });
                         bullet = new BulletType(){{
                             speed = 6;
-                            damage = 64;
+                            damage = 62;
                             lifetime = 60;
                             homingDelay = 24;
                             homingPower = 0.2f;
@@ -1310,7 +1310,7 @@ public class EUUnitTypes {
                             intervalBullets = 2;
                             intervalSpread = 180f;
                             intervalRandomSpread = 0;
-                            intervalDelay = 24;
+                            intervalDelay = 27;
                             hittable = absorbable = false;
                             hitSound = Sounds.cannon;
                             hitSoundPitch = 1.2f;
@@ -1504,7 +1504,7 @@ public class EUUnitTypes {
                         shoot.shotDelay = 3;
                         ejectEffect = Fx.casing4;
                         //bullet = ((ItemTurret)Blocks.spectre).ammoTypes.get(Items.thorium);
-                        bullet = new BasicBulletType(13f, 66){{
+                        bullet = new BasicBulletType(13f, 61){{
                             pierce = true;
                             pierceCap = 10;
                             width = 14f;
@@ -1521,7 +1521,7 @@ public class EUUnitTypes {
                             fragLifeMin = 0f;
                             fragRandomSpread = 30f;
 
-                            fragBullet = new BasicBulletType(9f, 20){{
+                            fragBullet = new BasicBulletType(9f, 22){{
                                 width = 10f;
                                 height = 10f;
                                 pierce = true;
@@ -1583,7 +1583,8 @@ public class EUUnitTypes {
             }});
 
             BulletType railAsh = new BulletType(){{
-                damage = 50;
+                damage = 61;
+                pierceArmor = true;
                 healPercent = 3f;
                 collidesTeam = true;
                 homingDelay = 30;
@@ -1672,7 +1673,7 @@ public class EUUnitTypes {
                 });
                 hitEffect = Fx.massiveExplosion;
                 smokeEffect = Fx.shootBig2;
-                damage = 1350;
+                damage = 999;
                 lifetime = 10;
                 pierceCap = 3;
             }
@@ -2276,7 +2277,7 @@ public class EUUnitTypes {
             BulletType air = new BulletType(){{
                 speed = 24;
                 lifetime = 50 * 8 / speed;
-                damage = splashDamage = 400;
+                damage = splashDamage = 360;
                 splashDamageRadius = 10 * 8;
                 absorbable = hittable = collides = collidesTiles = collidesGround = false;
                 despawnHit = false;
@@ -2374,7 +2375,7 @@ public class EUUnitTypes {
                 pierceEffect = Fx.railHit;
                 hitEffect = Fx.massiveExplosion;
                 smokeEffect = Fx.shootBig2;
-                damage = 1350 - (hardMod ? 150 : 0);
+                damage = 1250 - (hardMod ? 150 : 0);
                 pointEffectSpace = 30f;
                 pointEffect = Fx.railTrail;
                 pierceDamageFactor = 0.6f;
@@ -2400,7 +2401,7 @@ public class EUUnitTypes {
                         top = false;
                         shake = 3;
                         shootY = 2;
-                        bullet = new MissileBulletType(6f, 40){{
+                        bullet = new MissileBulletType(6f, 35){{
                             lifetime = 54;
                             width = 8f;
                             height = 10f;
@@ -2408,7 +2409,7 @@ public class EUUnitTypes {
                             splashDamageRadius = 32f;
                             splashDamage = 45;
                             hitEffect = despawnEffect = Fx.blastExplosion;
-                            lightningDamage = 12;
+                            lightningDamage = 14;
                             lightning = 3;
                             lightningLength = 10;
                             trailWidth = 1.7f;
@@ -2416,6 +2417,7 @@ public class EUUnitTypes {
                             homingRange = 12 * 8f;
                             homingPower = 0.2f;
                             homingDelay = 15f;
+                            frontColor = Pal.surge;
 
                             sprite = "missile-large";
                         }};
@@ -2429,7 +2431,7 @@ public class EUUnitTypes {
                         inaccuracy = 12;
                         ejectEffect = Fx.none;
                         shootSound = Sounds.missileSmall;
-                        reload = 36;
+                        reload = 39;
                         recoil = 2;
                     }},
                     new Weapon(name("nihilo-a")){{
@@ -2540,7 +2542,9 @@ public class EUUnitTypes {
 
             abilities.add(new UnitSpawnAbility(UnitTypes.mega, 32 * 60, 0, 27));
             abilities.add(new BatteryAbility(80000, 120, 120, 0, -15));
+            abilities.add(new RegenAbility(){{percentAmount = 0.5f/60f;}});
             abilities.add(new RepairFieldAbility(400, 60 * 3, 120));
+            abilities.add(new BoostAbility());
 
             deathExplosionEffect = Fx.none;
             deathSound = Sounds.none;
@@ -2582,7 +2586,7 @@ public class EUUnitTypes {
 
                         bullet = new CtrlMissile("missile-large", 6, 10){{
                             status = StatusEffects.electrified;
-                            damage = 108;
+                            damage = 98;
                             buildingDamageMultiplier = 1f;
                             pierceArmor = true;
                             autoHoming = true;
@@ -2682,7 +2686,7 @@ public class EUUnitTypes {
                             mirror = false;
                             bullet = new HealCone(){{
                                 lifetime = 240;
-                                healPercent = 8;
+                                healPercent = 6;
                             }};
                             reload = 180;
                             rotate = true;

@@ -1,5 +1,6 @@
 package ExtraUtilities;
 
+import ExtraUtilities.ai.DefenderHealAI;
 import ExtraUtilities.content.*;
 import ExtraUtilities.graphics.MainRenderer;
 import ExtraUtilities.net.EUCall;
@@ -29,6 +30,7 @@ import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.*;
 import mindustry.Vars;
+import mindustry.ai.UnitCommand;
 import mindustry.content.Blocks;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.UnlockableContent;
@@ -44,6 +46,7 @@ import mindustry.type.Liquid;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.*;
+import mindustry.world.Block;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatCat;
 import mindustry.world.meta.StatValue;
@@ -84,10 +87,12 @@ public class ExtraUtilitiesMod extends Mod{
         return Core.bundle.format(str);
     }
 
-    public static boolean hardMod = Core.settings.getBool("eu-hard-mode");
-    public static boolean onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
-    public static boolean overrideUnitArm = Core.settings.getBool("eu-override-unit");
-    public static boolean overrideUnitMissile = Core.settings.getBool("eu-override-unit-missile");
+    public static boolean hardMod;
+    public static boolean onlyPlugIn;
+    public static boolean coreResetV7;
+    public static boolean coreReset;
+    public static boolean overrideUnitArm;
+    public static boolean overrideUnitMissile;
     public static String massageRand;
 
     private static boolean show = false;
@@ -144,9 +149,11 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                updateLog.addAll(EUBlocks.adaptiveMiner, EUBlocks.adaptiveMinerII, EUBlocks.ekSeparator,
-                        TDSectorPresets.st1,
-                        EUBlocks.shootingStar, EUBlocks.phasicDrill,
+                Block duoII = content.block(name("T2-duo"));
+                Block duoIII = content.block(name("T3-duo"));
+                updateLog.addAll(
+                        duoII, duoIII, EUBlocks.sancta, EUBlocks.arbiter,
+                        EUUnitTypes.suzerain, EUUnitTypes.nebula, EUUnitTypes.nihilo, EUUnitTypes.narwhal,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -263,7 +270,7 @@ public class ExtraUtilitiesMod extends Mod{
 
     public ExtraUtilitiesMod() {
         //WTMF - What This May From
-        Log.info("Extra Utilities: Load WTMF");
+        Log.info("Extra Utilities: try load WTMF");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(1f, EUFrom::load));
         Log.info("Loading completed, congratulations! :)");
 
@@ -293,6 +300,8 @@ public class ExtraUtilitiesMod extends Mod{
         ui.drillCursor = newCursor("drill.png", Fonts.cursorScale());
         ui.unloadCursor = newCursor("unload.png", Fonts.cursorScale());
         ui.targetCursor = newCursor("target.png", Fonts.cursorScale());
+        //TODO new cursor
+        //ui.repairCursor = newCursor("repair.png", Fonts.cursorScale());
     }
 
     public static boolean isAps(){
@@ -304,6 +313,13 @@ public class ExtraUtilitiesMod extends Mod{
         //return true;
     }
 
+    private boolean EUVerUnChange(String ver){
+        String verHard = ver + "-hard";
+        String verV8 = ver + "-V8";
+        String verAll = ver + "-all";
+        return ver == null || ver.equals(EU.meta.version) || verHard.equals(EU.meta.version) || verV8.equals(EU.meta.version) ||verAll.equals(EU.meta.version);
+    }
+
     @Override
     public void init() {
         boolean aps = isAps();
@@ -311,12 +327,27 @@ public class ExtraUtilitiesMod extends Mod{
 
         //settings.remove("eu-override-unit");
         settings.defaults("eu-override-unit", false);
+        settings.defaults("eu-plug-in-mode", false);
+        settings.defaults("eu-hard-mode", false);
+        settings.defaults("use-eu-cursor", true);
+        settings.defaults("eu-show-version", true);
+        settings.defaults("eu-override-unit-missile", true);
+        settings.defaults("eu-reset-core-to-V7", true);
+        settings.defaults("eu-reset-core-to-all", false);
+
+        hardMod = Core.settings.getBool("eu-hard-mode");
+        onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
+        coreResetV7 = Core.settings.getBool("eu-reset-core-to-V7");
+        coreReset = Core.settings.getBool("eu-reset-core-to-all");
+        overrideUnitArm = Core.settings.getBool("eu-override-unit");
+        overrideUnitMissile = Core.settings.getBool("eu-override-unit-missile");
 
         if(!onlyPlugIn) {
             MainRenderer.init();
             EUCall.registerPackets();
-            EUOverride.overrideBuilder();
-            if(overrideUnitArm) EUOverride.overrideAmr();
+            EUOverride.overrideUnitForAll(overrideUnitArm, coreReset);
+            EUOverride.overrideTDRules(coreReset);
+            EUOverride.overrideBlockAll(hardMod, coreResetV7, coreReset);
             EUOverride.overrideJs();
             afterEnterLoad();
 
@@ -324,11 +355,7 @@ public class ExtraUtilitiesMod extends Mod{
             if(ui != null) if(aps) Events.on(ClientLoadEvent.class, e -> Time.runTask(10f, ExtraUtilitiesMod::log2));
         }
 
-        settings.defaults("eu-plug-in-mode", false);
-        settings.defaults("eu-hard-mode", false);
-        settings.defaults("use-eu-cursor", true);
-        settings.defaults("eu-show-version", true);
-        settings.defaults("eu-override-unit-missile", true);
+
         //settings.remove("eu-WTMF-open");
 
         Vars.mods.locateMod(ModName).meta.hidden = onlyPlugIn;
@@ -339,11 +366,23 @@ public class ExtraUtilitiesMod extends Mod{
         }
 
         if(hardMod){
-            EUOverride.overrideBlockAll();
             EUOverride.overrideHard();
             Mods.LoadedMod mod = Vars.mods.locateMod(ModName);
             mod.meta.displayName = mod.meta.displayName + " Hard!";
             mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-hard";
+        }
+
+        if(!onlyPlugIn){
+            if(!coreResetV7 && !coreReset){
+                Mods.LoadedMod mod = Vars.mods.locateMod(ModName);
+                mod.meta.displayName = mod.meta.displayName + "-V8";
+                mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-V8";
+            }
+            if(coreReset){
+                Mods.LoadedMod mod = Vars.mods.locateMod(ModName);
+                mod.meta.displayName = mod.meta.displayName + "-all";
+                mod.meta.version = Vars.mods.locateMod(ModName).meta.version + "-all";
+            }
         }
 
         if(ui != null) {
@@ -434,7 +473,7 @@ public class ExtraUtilitiesMod extends Mod{
 
                     settingsTable.checkPref("use-eu-cursor", true);
                     settingsTable.checkPref("eu-show-version", true);
-                    settingsTable.checkPref("eu-WTMF-open", true);
+                    settingsTable.checkPref("eu-WTMF-open", false);
 
                     settingsTable.pref(new SettingsMenuDialog.SettingsTable.CheckSetting("eu-plug-in-mode", false, null) {
                         @Override
@@ -455,11 +494,13 @@ public class ExtraUtilitiesMod extends Mod{
                     });
 
                     if(!onlyPlugIn) {
+                        settingsTable.checkPref("eu-reset-core-to-V7", true);
+                        settingsTable.checkPref("eu-reset-core-to-all", false);
                         settingsTable.checkPref("eu-show-miner-point", true);
                         settingsTable.checkPref("eu-show-hole-acc-disk", true);
 
                         settingsTable.checkPref("eu-first-load", true);
-                        if(!settings.get("eu-version", "").equals(EU.meta.version)){
+                        if(!EUVerUnChange((String) settings.get("eu-version", ""))){
                             settings.put("eu-first-load", true);
                             settings.put("eu-version", EU.meta.version);
                         }
@@ -508,6 +549,10 @@ public class ExtraUtilitiesMod extends Mod{
         }
 
         setColorName();
+
+        UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
+        EUUnitTypes.narwhal.commands.add(c);
+        EUUnitTypes.narwhal.defaultCommand = c;
     }
 
     @Override
@@ -530,6 +575,7 @@ public class ExtraUtilitiesMod extends Mod{
         if(overrideUnitMissile) EUOverride.overrideUnitMissile();
         EUUnitTypes.load();
         EUUnitTypes.loadBoss();
+
         EUOverride.overrideBlock1();
         EUBlocks.load();
 
