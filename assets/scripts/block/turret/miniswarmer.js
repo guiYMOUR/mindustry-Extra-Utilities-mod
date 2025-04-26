@@ -27,5 +27,6 @@ swMin.requirements = ItemStack.with(
 );
 swMin.buildVisibility = BuildVisibility.shown;
 swMin.category = Category.turret;
+swMin.researchCostMultiplier = 0.5;
 
 exports.swMin = swMin;
