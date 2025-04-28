@@ -160,6 +160,7 @@ public class AdaptiveMining extends Block {
 
             int sum = 0;
             for(Item item : ruleCopy.keys()) sum += ruleCopy.get(item);
+            if(sum <= 0) return;
             if((work += Time.delta) > outTime){
                 work -= outTime;
                 int i = Mathf.random(0, sum - 1);
