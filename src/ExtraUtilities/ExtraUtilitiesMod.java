@@ -531,13 +531,15 @@ public class ExtraUtilitiesMod extends Mod{
                     }
                 });
             }
+
+            if(!onlyPlugIn) {
+                UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
+                EUUnitTypes.narwhal.commands.add(c);
+                EUUnitTypes.narwhal.defaultCommand = c;
+            }
         }
 
         setColorName();
-
-        UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
-        EUUnitTypes.narwhal.commands.add(c);
-        EUUnitTypes.narwhal.defaultCommand = c;
     }
 
     @Override
