@@ -326,21 +326,6 @@ public class ExtraUtilitiesMod extends Mod{
         if(aps) EU.meta.version = "2.4.8p5";
 
         //settings.remove("eu-override-unit");
-        settings.defaults("eu-override-unit", false);
-        settings.defaults("eu-plug-in-mode", false);
-        settings.defaults("eu-hard-mode", false);
-        settings.defaults("use-eu-cursor", true);
-        settings.defaults("eu-show-version", true);
-        settings.defaults("eu-override-unit-missile", true);
-        settings.defaults("eu-reset-core-to-V7", true);
-        settings.defaults("eu-reset-core-to-all", false);
-
-        hardMod = Core.settings.getBool("eu-hard-mode");
-        onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
-        coreResetV7 = Core.settings.getBool("eu-reset-core-to-V7");
-        coreReset = Core.settings.getBool("eu-reset-core-to-all");
-        overrideUnitArm = Core.settings.getBool("eu-override-unit");
-        overrideUnitMissile = Core.settings.getBool("eu-override-unit-missile");
 
         if(!onlyPlugIn) {
             MainRenderer.init();
@@ -563,6 +548,24 @@ public class ExtraUtilitiesMod extends Mod{
         String[] me = ms.split(",");
         int len = me.length;
         massageRand = me[Mathf.random(len - 1)];
+
+        if(settings != null){
+            settings.defaults("eu-override-unit", false);
+            settings.defaults("eu-plug-in-mode", false);
+            settings.defaults("eu-hard-mode", false);
+            settings.defaults("use-eu-cursor", true);
+            settings.defaults("eu-show-version", true);
+            settings.defaults("eu-override-unit-missile", true);
+            settings.defaults("eu-reset-core-to-V7", true);
+            settings.defaults("eu-reset-core-to-all", false);
+
+            hardMod = Core.settings.getBool("eu-hard-mode");
+            onlyPlugIn = Core.settings.getBool("eu-plug-in-mode");
+            coreResetV7 = Core.settings.getBool("eu-reset-core-to-V7");
+            coreReset = Core.settings.getBool("eu-reset-core-to-all");
+            overrideUnitArm = Core.settings.getBool("eu-override-unit");
+            overrideUnitMissile = Core.settings.getBool("eu-override-unit-missile");
+        }
 
         if(onlyPlugIn) return;
 
