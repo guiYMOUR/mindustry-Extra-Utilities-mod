@@ -115,13 +115,4 @@ public class MainRenderer{
 
         }
     }
-
-    private void BreakerDraw(){
-        EUGet.setBreakStart(input.keyDown(Binding.control));
-    }
-
-    public void allDraw(){
-        advancedDraw();
-        BreakerDraw();
-    }
 }

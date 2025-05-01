@@ -96,12 +96,6 @@ public class EUGet {
     public static Color EC20 = new Color();
     public static Color EC21 = new Color();
 
-    public static boolean breakStart = false;
-
-    public static void setBreakStart(boolean breakStart) {
-        EUGet.breakStart = breakStart;
-    }
-
     //因为有中文，所以用数字代替了
     public static String[] donors = {
             "冷冻液",
