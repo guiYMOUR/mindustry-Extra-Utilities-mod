@@ -152,8 +152,8 @@ public class ExtraUtilitiesMod extends Mod{
                 Block duoII = content.block(name("T2-duo"));
                 Block duoIII = content.block(name("T3-duo"));
                 updateLog.addAll(
-                        duoII, duoIII, EUBlocks.sancta, EUBlocks.arbiter,
-                        EUUnitTypes.suzerain, EUUnitTypes.nebula, EUUnitTypes.nihilo, EUUnitTypes.narwhal,
+                        duoII, duoIII,
+                        EUBlocks.shootingStar, EUBlocks.arbiter,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -301,7 +301,7 @@ public class ExtraUtilitiesMod extends Mod{
         ui.unloadCursor = newCursor("unload.png", Fonts.cursorScale());
         ui.targetCursor = newCursor("target.png", Fonts.cursorScale());
         //TODO new cursor
-        //ui.repairCursor = newCursor("repair.png", Fonts.cursorScale());
+        ui.repairCursor = newCursor("repair.png", Fonts.cursorScale());
     }
 
     public static boolean isAps(){

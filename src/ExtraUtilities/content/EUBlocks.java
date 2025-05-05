@@ -1266,6 +1266,7 @@ public class EUBlocks {
             accurateDelay = false;
 
             range = 26.25f * 8;
+            trackingRange = range * 1.2f;
             ammoPerShot = 2;
             maxAmmo = ammoPerShot * 4;
             shoot = new ShootAlternate(6f);
@@ -1290,6 +1291,7 @@ public class EUBlocks {
             heatRequirement = 45f;
             maxHeatEfficiency = 2f;
             range = 55 * 8;
+            trackingRange = range * 1.3f;
             reload = 2 * 60;
             size = 5;
             shootSound = Sounds.malignShoot;
@@ -1454,7 +1456,7 @@ public class EUBlocks {
         }};
 
         shootingStar = new LingSha("shooting-star"){{
-            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 400, EUItems.lightninAlloy, 200, Items.thorium, 250));
+            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 400, EUItems.lightninAlloy, 300, Items.thorium, 250));
             size = 5;
             health = 4288;
 
@@ -1465,13 +1467,15 @@ public class EUBlocks {
 
             shoot = new ShootSpread(9, 4);
             squareSprite = false;
-            shootSound = Sounds.malignShoot;
-            soundPitchMin = soundPitchMax = 0.5f;
+            shootSound = Sounds.shootBig;
+            soundPitchMin = soundPitchMax = 0.6f;
+
+            minWarmup = 0.7f;
 
             //alwaysUnlocked = true;
 
             BulletType starHit = new BulletType(){{
-                damage = 120;
+                damage = 150;
                 pierceArmor = true;
                 reflectable = false;
                 absorbable = false;
@@ -1542,7 +1546,7 @@ public class EUBlocks {
 
             ammo(Items.thorium,
                     new BulletType(){{
-                        damage = 180;
+                        damage = 200;
                         ammoMultiplier = 1;
                         reflectable = false;
                         pierce = true;
@@ -1639,7 +1643,9 @@ public class EUBlocks {
                                     unit.apply(status, statusDuration);
                                 } else {
                                     if(b.owner instanceof TurretBuild tb && !unit.dead){
-                                        starHit.create(tb, b.team, tb.x, tb.y, tb.rotation - 180 + Mathf.random(-72, 72), -1, 1, 1, unit);
+                                        float dx = EUGet.dx(tb.x, 24, tb.rotation - 180);
+                                        float dy = EUGet.dy(tb.y, 24, tb.rotation - 180);
+                                        starHit.create(tb, b.team, dx, dy, tb.rotation - 180 + Mathf.random(-72, 72), -1, 1, 1, unit);
                                         unit.unapply(status);
                                     }
                                 }
@@ -1656,6 +1662,28 @@ public class EUBlocks {
                     }
             );
 
+            shootEffect = new MultiEffect(
+                    new Effect(30, e -> {
+                        Draw.color(Pal.missileYellow);
+                        Angles.randLenVectors(e.id, 7, e.finpow() * 120f, e.rotation, 24, (x, y) -> {
+                            float ang = Mathf.angle(x, y);
+                            Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 8f + 1.5f);
+                            Drawf.tri(e.x + x, e.y + y, 6 * e.foutpow(), 60, ang);
+                            Drawf.tri(e.x + x, e.y + y, 6 * e.foutpow(), 6, ang + 180);
+                        });
+                    }),
+                    new Effect(30, e -> {
+                        Draw.color(Pal.darkishGray);
+                        Angles.randLenVectors(e.id, 11, e.finpow() * 160f, e.rotation, 27, (x, y) -> {
+                            float ang = Mathf.angle(x, y);
+                            Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 8f + 1.5f);
+                            Drawf.tri(e.x + x, e.y + y, 6 * e.foutpow(), 72, ang);
+                            Drawf.tri(e.x + x, e.y + y, 6 * e.foutpow(), 6, ang + 180);
+                        });
+                    })
+            );
+            shootY = 16;
+            ammoEjectBack = 8;
             rotateSpeed = 2;
             drawer = new DrawTurret("reinforced-"){{
                 parts.add(
@@ -1664,11 +1692,17 @@ public class EUBlocks {
                             mirror = false;
                             moveY = -0.8f;
                         }},
-                        new RegionPart(){{
+                        new RegionPart("-r"){{
                             progress = PartProgress.recoil;
                             moveY = -4f;
                             under = true;
-                            mirror = true;
+                            mirror = false;
+                        }},
+                        new RegionPart("-l"){{
+                            progress = PartProgress.recoil;
+                            moveY = -4f;
+                            under = true;
+                            mirror = false;
                         }},
                         new LingShaPart(){{
                             wx = 0;
@@ -1841,6 +1875,7 @@ public class EUBlocks {
             rotateSpeed = 4.5f;
             all = true;
             range = 36 * 8;
+            trackingRange = range * 1.3f;
             reload = 60;
             recoil = 4;
             coolant = consumeCoolant(0.5f);
@@ -2527,6 +2562,7 @@ public class EUBlocks {
             scaledHealth = 180;
 
             range = 80 * 8;
+            trackingRange = range * 1.2f;
             ammoPerShot = hardMod ? 8 : 15;
             maxAmmo = ammoPerShot * 3;
             shake = 6f;
@@ -2562,6 +2598,9 @@ public class EUBlocks {
             squareSprite = false;
 
             range = 70 * 8;
+            trackingRange = range * 1.2f;
+
+            predictTarget = false;
 
             ammo(EUItems.lightninAlloy,
                     new ArbiterBulletType(){{

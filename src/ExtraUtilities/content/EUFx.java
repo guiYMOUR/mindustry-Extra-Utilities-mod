@@ -832,4 +832,23 @@ public class EUFx {
             Lines.circle(e.x, e.y, i * pin);
         }
     });
+
+    public static Effect casing4Double = new Effect(40f, e -> {
+        color(Pal.lightOrange, Pal.lightishGray, Pal.lightishGray, e.fin());
+        alpha(e.fout(0.5f));
+        float rot = Math.abs(e.rotation) + 90f;
+
+        for(int i : Mathf.signs){
+            float len = (7f + e.finpow() * 11f) * i;
+            float lr = rot + Mathf.randomSeedRange(e.id + i + 6, 20f * e.fin()) * i;
+
+            rect(Core.atlas.find("casing"),
+                    e.x + trnsx(lr, len) + Mathf.randomSeedRange(e.id + i + 7, 3f * e.fin()),
+                    e.y + trnsy(lr, len) + Mathf.randomSeedRange(e.id + i + 8, 3f * e.fin()),
+                    3f, 6f,
+                    rot + e.fin() * 50f * i
+            );
+        }
+
+    }).layer(Layer.bullet);
 }
