@@ -64,7 +64,7 @@ public class MultiBulletTurret extends Turret {
         super.setStats();
 
         stats.remove(Stat.itemCapacity);
-        stats.add(Stat.ammo, EUStatValues.ammo(ammoTypes));
+        stats.add(Stat.ammo, EUStatValues.ammo(ammoTypes, all));
         if(all){
             stats.remove(Stat.reload);
             stats.add(Stat.reload, Core.bundle.format("stat.extra-utilities-shootTime", Strings.autoFixed(reload/60f, 2)));

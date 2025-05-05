@@ -34,19 +34,26 @@ public class LingShaPart extends DrawPart {
         Draw.rect(star, ax, ay, 24, 24, rot * 2);
         Draw.rect(starBig, ax, ay, 24, 24, -rot);
         Draw.color(color);
+
+        float tz = Layer.turret - 1;
+        Draw.z(tz+ (Layer.effect - tz) * (warmup < 0.6f ? 0 : warmup));
         for(int i : Mathf.signs) {
+            float wax = params.x + Angles.trnsx(rot, 8 * i, 1),
+                    way = params.y + Angles.trnsy(rot, 8 * i, 1);
             float ag = rot + 90 * i - 90;
-            float ex = EUGet.dx(ax, 16, ag),
-                    ey = EUGet.dy(ay, 16, ag);
-            Drawf.tri(ex, ey, 4 * warmup, 22, ag);
-            Drawf.tri(ex, ey, 4 * warmup, 5, ag + 180);
-            ag += (int) (Time.time/60f) * 6;
-            ex = EUGet.dx(ax, 16, ag);
-            ey = EUGet.dy(ay, 16, ag);
-            Drawf.tri(ex, ey, 4 * warmup, 16, ag);
-            Drawf.tri(ex, ey, 4 * warmup, 5, ag + 180);
+            float ex = EUGet.dx(wax, 9 * warmup, ag - 4 * warmup * i);
+            float ey = EUGet.dy(way, 9  * warmup, ag - 4 * warmup * i);
+            Drawf.tri(ex, ey, 3 * warmup, 22 * warmup, ag);
+            ex = EUGet.dx(wax, 9 * warmup, ag - 8 * warmup * i);
+            ey = EUGet.dy(way, 9  * warmup, ag - 8 * warmup * i);
+            Drawf.tri(ex, ey, 3 * warmup, 22, ag - 8 * warmup * i + 90 * i);
+            ex = EUGet.dx(wax, 9 * warmup, ag - 16 * warmup * i);
+            ey = EUGet.dy(way, 9  * warmup, ag - 16 * warmup * i);
+            Drawf.tri(ex, ey, 4 * warmup, 22, ag - 24 * warmup * i + 90 * i);
+            Drawf.tri(ex, ey, 4 * warmup, 5, ag + 180 - 24 * warmup * i + 90 * i);
         }
         Draw.z(z);
+        Draw.reset();
     }
 
     @Override

@@ -5,6 +5,7 @@ import ExtraUtilities.ui.ItemDisplay;
 import arc.Core;
 import arc.func.Boolf;
 import arc.graphics.Color;
+import arc.graphics.g2d.Font;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.scene.Element;
@@ -21,6 +22,7 @@ import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
 import mindustry.type.*;
+import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.meta.StatUnit;
@@ -55,15 +57,15 @@ public class EUStatValues {
     }
 
     /** Anuke写的液体也能用捏 */
-    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType[]> map){
-        return ammo(map, 0, false);
+    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType[]> map, boolean all){
+        return ammo(map, 0, false, all);
     }
 
-    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType[]> map, boolean showUnit){
-        return ammo(map, 0, showUnit);
+    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType[]> map, boolean showUnit, boolean all){
+        return ammo(map, 0, showUnit, all);
     }
 
-    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType[]> map, int indent, boolean showUnit){
+    public static <T extends UnlockableContent> StatValue ammo(ObjectMap<T, BulletType[]> map, int indent, boolean showUnit, boolean all){
         return table -> {
 
             table.row();
@@ -74,13 +76,20 @@ public class EUStatValues {
             for(T t : orderedKeys) {
                 boolean compact = t instanceof UnitType && !showUnit || indent > 0;
                 if (!compact && !(t instanceof Turret)) {
-                    table.image(icon(t)).size(3 * 8).padRight(4).right().top();
-                    table.add(t.localizedName).padRight(10).left().top();
+                    table.table(item -> {
+                        item.image(icon(t)).size(3 * 8).padRight(4).left().top().with(i -> StatValues.withTooltip(i, t, false));
+                        item.add(t.localizedName).padRight(10).left().top();
+                    }).left().pad(10);
                 }
+                table.row();
+                table.table(tip -> {
+                    if(all) tip.add(Core.bundle.get("stat.eu-multi-all")).left();
+                    else tip.add(Core.bundle.get("stat.eu-multi-flow")).left();
+                }).left().padBottom(5);
                 table.row();
                 for(BulletType type : map.get(t)){
                     if (type.spawnUnit != null && type.spawnUnit.weapons.size > 0) {
-                        ammo(ObjectMap.of(t, type.spawnUnit.weapons.first().bullet), indent, false).display(table);
+                        ammo(ObjectMap.of(t, type.spawnUnit.weapons.first().bullet), indent, false, all).display(table);
                         return;
                     }
 
