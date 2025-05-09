@@ -38,7 +38,13 @@ public class BoostAbility extends Ability {
 
     @Override
     public void update(Unit unit) {
-        timer += Time.delta;
+        if(scp >= range) {
+            timer = 0;
+            scp = 0;
+            builds.clear();
+            ems.clear();
+        }
+
         if(timer >= reload){
             scp += Time.delta * deepSeek;
 
@@ -52,13 +58,8 @@ public class BoostAbility extends Ability {
                 Fx.healBlockFull.at(e.x, e.y, 0, Pal.sap, e.block);
                 ems.add(e);
             });
-
-            if(scp >= range) {
-                timer = 0;
-                scp = 0;
-                builds.clear();
-                ems.clear();
-            }
+        } else {
+            timer += Time.delta;
         }
     }
 
