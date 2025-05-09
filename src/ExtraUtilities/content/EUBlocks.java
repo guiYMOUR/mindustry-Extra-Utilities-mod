@@ -1278,6 +1278,7 @@ public class EUBlocks {
             minWarmup = 0.85f;
             shootWarmupSpeed = 0.07f;
             shootSound = Sounds.missile;
+            researchCostMultiplier = 0.2f;
 
             squareSprite = false;
 
