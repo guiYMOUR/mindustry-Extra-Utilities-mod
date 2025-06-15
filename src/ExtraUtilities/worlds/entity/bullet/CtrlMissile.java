@@ -11,6 +11,7 @@ import arc.math.geom.Position;
 import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
+import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.entities.Mover;
 import mindustry.entities.Units;
@@ -114,4 +115,9 @@ public class CtrlMissile extends BasicBulletType {
         else Draw.rect(frontRegion, b.x, b.y, b.rotation() - 90);
         Draw.reset();
     }
+
+//    @Override
+//    public void removed(Bullet b) {
+//        if(b.data instanceof Position p) Pools.free(p);
+//    }
 }

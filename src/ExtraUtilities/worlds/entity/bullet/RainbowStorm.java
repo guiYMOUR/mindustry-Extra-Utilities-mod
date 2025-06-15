@@ -17,6 +17,7 @@ import mindustry.entities.bullet.BulletType;
 import mindustry.game.Team;
 import mindustry.gen.Bullet;
 import mindustry.gen.Entityc;
+import mindustry.gen.Teamc;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Trail;
 
@@ -159,7 +160,10 @@ public class RainbowStorm extends BulletType {
     }
 
     @Override
-    public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
+    public @Nullable Bullet create(
+            @Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl,
+            float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY, @Nullable Teamc target
+    ){
         rbs bullet = rbs.create();
 
         for(int i = 0; i < 2; i++){
@@ -168,7 +172,7 @@ public class RainbowStorm extends BulletType {
             }
         }
         if(bullet.child.size > 0) bullet.child.clear();
-        return EUGet.anyOtherCreate(bullet, this, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+        return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
     }
 
     public static class rbs extends Bullet {

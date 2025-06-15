@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.util.Tmp;
@@ -24,6 +25,8 @@ public class AimPart extends DrawPart {
     public PartProgress progress = PartProgress.reload;
     public PartProgress warmup = PartProgress.warmup;
 
+    public TextureRegion aim;
+
     @Override
     public void draw(PartParams params) {
         float z = Draw.z();
@@ -33,12 +36,14 @@ public class AimPart extends DrawPart {
         float fout = 1 - progress.getClamp(params);
         float track = Mathf.curve(fout, 0, 0.25f) * Mathf.curve(fout, 0, 0.3f) * fout;
 
+        if(wp < 0.0001f) return;
+
         Tmp.v1.set(x, y).rotate(params.rotation - 90);
         float px = params.x + Tmp.v1.x, py = params.y + Tmp.v1.y;
         for(int i = 0; i <= length / spacing; i++){
             Tmp.v1.trns(params.rotation + rt, i * spacing);
             float f = Interp.pow3Out.apply(Mathf.clamp((fout * length - i * spacing) / spacing)) * (0.6f + track * 0.4f) * wp;
-            Draw.rect(Core.atlas.find(name("aim-shoot")), px + Tmp.v1.x, py + Tmp.v1.y, 120 * Draw.scl * f, 120 * Draw.scl * f, params.rotation - 90 + rt);
+            Draw.rect(aim, px + Tmp.v1.x, py + Tmp.v1.y, 120 * Draw.scl * f, 120 * Draw.scl * f, params.rotation - 90 + rt);
         }
         if(!drawLine) return;
         Tmp.v1.trns(params.rotation + rt, 0, (2 - track) * Vars.tilesize * width);
@@ -52,6 +57,6 @@ public class AimPart extends DrawPart {
 
     @Override
     public void load(String s) {
-
+        aim = Core.atlas.find(name("aim-shoot"));
     }
 }

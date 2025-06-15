@@ -3,10 +3,10 @@ package ExtraUtilities.worlds.entity.bullet;
 import arc.math.Angles;
 import arc.math.geom.Position;
 import arc.util.Time;
+import arc.util.pooling.Pools;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Bullet;
-import mindustry.gen.Posc;
 import mindustry.gen.Teamc;
 
 
@@ -48,4 +48,9 @@ public class aimToPosBullet extends BulletType {
         if(target != null) return;
         if(b.time > homingDelay) b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(pos), rotSpeed * Time.delta));
     }
+
+//    @Override
+//    public void removed(Bullet b) {
+//        if(b.data instanceof Position p) Pools.free(p);
+//    }
 }

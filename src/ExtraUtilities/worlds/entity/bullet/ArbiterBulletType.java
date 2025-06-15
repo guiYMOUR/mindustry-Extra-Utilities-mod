@@ -232,6 +232,11 @@ public class ArbiterBulletType extends BulletType {
                         } else {
                             ut.damagePierce(damage / 12);
                             ut.health -= ((ut.maxHealth * 0.01f / 12) * (1 + ut.type.hitSize/100));
+                            if(ut.hasEffect(EUStatusEffects.breakage)){
+                                float dmg = damage/24;
+                                if(ut.health <= dmg) ut.kill();
+                                else ut.health -= dmg;
+                            }
                         }
                     }
                 }
@@ -375,7 +380,10 @@ public class ArbiterBulletType extends BulletType {
     }
 
     @Override
-    public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
+    public @Nullable Bullet create(
+            @Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl,
+            float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY, @Nullable Teamc target
+    ){
         Arbiter bullet = Arbiter.create();
 
         for(int i = 0; i < 6; i++){
@@ -388,7 +396,7 @@ public class ArbiterBulletType extends BulletType {
         bullet.ebs.clear();
         bullet.ibs.clear();
 
-        return EUGet.anyOtherCreate(bullet, this, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+        return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
     }
 
     public static class Arbiter extends Bullet {

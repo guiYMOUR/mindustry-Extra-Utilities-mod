@@ -24,6 +24,8 @@ public class ElectricStorm extends BulletType {
     public int maxTarget;
     public Sound sound = Sounds.spark;
 
+    Effect chain4 = EUFx.chainLightningFadeOverride(4);
+
     public ElectricStorm(float damage, Color color, int maxTarget){
         this.damage = damage;
         this.splashDamage = damage * 10;
@@ -52,7 +54,7 @@ public class ElectricStorm extends BulletType {
             for(int i = 0; i < t.size; i++){
                 Healthc hc = t.get(i);
                 if(hc != null){
-                    EUFx.chainLightningFade.at(b.x, b.y, 4, color.cpy().a(0.3f), hc);
+                    chain4.at(b.x, b.y, 0, color.cpy().a(0.3f), hc);
                     Fx.randLifeSpark.at(hc.getX(), hc.getY(), b.angleTo(hc), color);
                     if(hc instanceof Building bd){
                         bd.applySlowdown(0, 300);
@@ -94,7 +96,7 @@ public class ElectricStorm extends BulletType {
                 float a = Mathf.random(360);
                 float x = EUGet.dx(b.x, baseRange, a);
                 float y = EUGet.dy(b.y, baseRange, a);
-                EUFx.chainLightningFade.at(x, y, 8, color, b);
+                EUFx.chainLightningFade.at(x, y, 0, color, b);
             }
         }
     }

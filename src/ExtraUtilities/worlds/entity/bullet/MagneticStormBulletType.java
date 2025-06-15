@@ -158,7 +158,10 @@ public class MagneticStormBulletType extends BasicBulletType {
             }
 
             @Override
-            public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
+            public @Nullable Bullet create(
+                    @Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl,
+                    float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY, @Nullable Teamc target
+            ){
                 mgs bullet = mgs.create();
 
                 for(int i = 0; i < 2; i++){
@@ -166,7 +169,7 @@ public class MagneticStormBulletType extends BasicBulletType {
                         bullet.trails[i].clear();
                     }
                 }
-                return EUGet.anyOtherCreate(bullet, this, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+                return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
             }
         };
         intervalBullets = 3;
@@ -349,7 +352,10 @@ public class MagneticStormBulletType extends BasicBulletType {
     }
 
     @Override
-    public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
+    public @Nullable Bullet create(
+            @Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl,
+            float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY, @Nullable Teamc target
+    ){
         mgs bullet = mgs.create();
 
         for(int i = 0; i < 6; i++){
@@ -357,7 +363,7 @@ public class MagneticStormBulletType extends BasicBulletType {
                 bullet.trails[i].clear();
             }
         }
-        return EUGet.anyOtherCreate(bullet, this, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+        return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
     }
 
     public static class mgs extends Bullet{

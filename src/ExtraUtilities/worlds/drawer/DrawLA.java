@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.drawer;
 
+import ExtraUtilities.content.EUFx;
 import ExtraUtilities.content.EUGet;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -10,6 +11,7 @@ import arc.math.Mathf;
 import arc.math.geom.Position;
 import arc.math.geom.Vec2;
 import arc.util.Time;
+import arc.util.pooling.Pools;
 import mindustry.content.Fx;
 import mindustry.entities.bullet.BulletType;
 import mindustry.gen.Building;
@@ -111,9 +113,11 @@ public class DrawLA extends DrawBlock {
                         x2 = bx + Mathf.random(-range, range),
                         y1 = by + Mathf.random(-range, range),
                         y2 = by + Mathf.random(-range, range);
-                Fx.chainLightning.at(x1, y1, 0, color, pos(x2, y2));
+                float ang = Angles.angle(x1, y1, x2, y2);
+                float len = Mathf.dst(x1, y1, x2, y2);
+                EUFx.chainLightning.at(x1, y1, ang, color, len);
                 if(Mathf.chance(0.1f)){
-                    lightBullet.create(build, build.team, bx, by, Mathf.random(360f), -1, 1, 1, pos(bx, by));
+                    lightBullet.create(build, build.team, bx, by, Mathf.random(360f), -1, 1, 1, build);
                     Sounds.malignShoot.at(bx, by, 0.6f, 0.5f);
                 }
             }
@@ -158,5 +162,10 @@ public class DrawLA extends DrawBlock {
                 Draw.z(z);
             }
         }
+
+//        @Override
+//        public void removed(Bullet b) {
+//            if(b.data instanceof Position p) Pools.free(p);
+//        }
     };
 }

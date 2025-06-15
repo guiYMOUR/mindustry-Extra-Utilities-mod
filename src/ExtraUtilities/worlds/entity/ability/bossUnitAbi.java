@@ -21,6 +21,7 @@ import mindustry.entities.Units;
 import mindustry.entities.abilities.Ability;
 import mindustry.gen.Building;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -32,6 +33,8 @@ import static ExtraUtilities.ExtraUtilitiesMod.name;
 
 //Of course, these can all be written in the bossEntity class, but this Ability class was written before the bossEntity class, so...
 public class bossUnitAbi extends Ability{
+    public Effect desUnit = EUFx.unitDesGone;
+
     public int maxPick = 20;
     public float pickRange = 60 * 8;
 
@@ -146,7 +149,10 @@ public class bossUnitAbi extends Ability{
 
                 Units.nearbyEnemies(unit.team, unit.x, unit.y, pickRange, u -> {
                     if (!u.dead && !Vars.net.client() && u.type != null && u.type.killable && u.targetable(unit.team)) {
-                        Call.unitDeath(u.id);
+                        //Call.unitDeath(u.id);
+                        desUnit.at(u.x, u.y, u.hitSize * 4f, unit.team.color);
+                        u.remove();
+                        if(u != null) Groups.unit.remove(u);
                         uee += 0.5f;
                     }
                 });
