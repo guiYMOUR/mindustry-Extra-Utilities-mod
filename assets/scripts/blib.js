@@ -3,6 +3,12 @@
     return Vars.player.team().core().items.has(b.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources;
 };*/
 //静态库，全部外用
+
+//importPackage(Packages.mindustry);
+// const Vars = Packages.mindustry.Vars;
+// global.Vars = Vars;
+// module.exports = Vars;
+
 //星球设置区块
 
 //读取我自己的Java class

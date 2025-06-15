@@ -6,7 +6,7 @@ const lib = require("blib");
 const LiquidMassDriver = lib.getClass("ExtraUtilities.worlds.blocks.liquid.LiquidMassDriver");
 
 const driver = new LiquidMassDriver("ld");
-driver.range = 55 * 8;
+driver.range = 45 * 8;
 driver.reload = 150;
 driver.knockback = 3;
 driver.hasPower = true;

@@ -6,7 +6,7 @@ lib.setBuildingSimple(T2duo, ItemTurret.ItemTurretBuild, {});
 T2duo.shoot = lib.moreShootAlternate(3.6, 2);
 T2duo.reload = hardMod ? 36 : 15;
 T2duo.restitution = 0.03;
-T2duo.range = 125;
+T2duo.range = 152;
 T2duo.shootCone = 15;
 T2duo.ammoUseEffect = Fx.casing1;
 T2duo.health = hardMod ? 640 : 320;

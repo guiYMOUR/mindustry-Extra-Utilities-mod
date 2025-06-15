@@ -27,27 +27,10 @@ const eff1 = new Effect(12, cons(e => {
     }
 }));
 
-const shovel = extend(Drill, "shovel", {});
-shovel.buildType = prov(() => {
-    return new JavaAdapter(Drill.DrillBuild, {
-        draw(){
-            Draw.color(Color.valueOf("ffd06b"));
-            Draw.alpha(this.warmup);
-            Draw.rect(Core.atlas.find(lib.aModName + "-shovel-rotator"), this.x, this.y, this.timeDrilled * 6);
-            Draw.alpha(1);
-            Draw.color();
-            Draw.rect(Core.atlas.find(lib.aModName + "-shovel"), this.x, this.y);
-            Draw.color(Pal.surge);
-            Draw.alpha(this.warmup * 0.6 * (1 - 0.3 + Mathf.absin(Time.time, 3, 0.3)));
-            Draw.blend(Blending.additive);
-            Draw.rect(Core.atlas.find(lib.aModName + "-shovel-rim"), this.x, this.y);
-            Draw.blend();
-            Draw.color();
-        },
-    }, shovel);
-});
+const shovelBuild = lib.getClass("ExtraUtilities.worlds.forJS.shovel");
+const shovel = new shovelBuild("shovel");
 shovel.requirements = ItemStack.with(
-    Items.metaglass, 55,
+    Items.metaglass, 60,
     Items.silicon, 130,
     Items.titanium, 80,
 );
@@ -55,7 +38,8 @@ shovel.buildVisibility = BuildVisibility.shown;
 shovel.category = Category.production;
 shovel.drillTime = 36 + (hardMod ? 9 : 0);
 shovel.size = 3;
-//shovel.drawRim = true;
+shovel.rotateSpeed = 6;
+shovel.heatColor = Pal.surge;
 shovel.hasPower = true;
 shovel.tier = 0;
 shovel.updateEffect = Fx.mineBig;
@@ -64,45 +48,11 @@ shovel.drillEffect = Fx.none;
 shovel.warmupSpeed = 0.02;
 shovel.hasLiquids = false;
 shovel.liquidBoostIntensity = 1;
-shovel.consumePower(2);
+shovel.consumePower(2.5);
 shovel.buildCostMultiplier = 0.8;
 exports.shovel = shovel;
 
 const boof = 2;
-// const testDrill = extend(BeamDrill, "beam-drill", {
-//     drawPlace(x, y, rotation, valid){
-//         this.drawPotentialLinks(x, y);
-//         this.super$drawPlace(x, y, rotation, valid);
-//     },
-//     setStats(){
-//         this.super$setStats();
-//         this.stats.add(Stat.boostEffect, boof, StatUnit.timesSpeed);
-//     },
-// });
-// testDrill.buildType = prov(() => {
-//     return new JavaAdapter(BeamDrill.BeamDrillBuild, {
-//         delta(){
-//             var boost = this.liquids.total() > 1 ? boof : 1;
-//             return Time.delta * this.timeScale * boost;
-//         },
-//     }, testDrill);
-// });
-// testDrill.drillTime = 150;
-// testDrill.tier = 5;
-// testDrill.size = 2;
-// testDrill.range = 5;
-// testDrill.hasPower = true;
-// testDrill.drawArrow = true;
-// testDrill.consumes.power(1);
-// testDrill.consumes.liquid(Liquids.water, 0.03).boost();
-// testDrill.requirements = ItemStack.with(
-//     Items.copper, 85,
-//     Items.graphite, 55,
-//     Items.silicon, 55
-// );
-// testDrill.buildVisibility = BuildVisibility.shown;
-// testDrill.category = Category.production;
-// exports.testDrill = testDrill;
 
 const DrawSolidPump = lib.getClass("ExtraUtilities.worlds.blocks.production.DrawSolidPump");
 var weBoost = 1.5;
@@ -210,14 +160,18 @@ exports.T2CU = T2CU;
 
 const blastOilExtractor = extend(Fracker, "blast-oil-extractor", {});
 blastOilExtractor.buildType = prov(() => {
+    var x;
+    var y;
     return new JavaAdapter(Fracker.FrackerBuild, {
         updateTile(){
+            x = this.getX();
+            y = this.getY();
             this.super$updateTile();
             if(Mathf.chance(this.delta() * this.block.updateEffectChance) && this.efficiency > 0 && this.typeLiquid() < this.block.liquidCapacity - 0.001){
-                var range = Mathf.range(this.block.size * 2);
-                var range2 = Mathf.range(this.block.size * 2);
-                eff1.at(this.getX() + range, this.getY() + range2, 0, {color:Items.blastCompound.color, fout:false, rad:12});
-                Sounds.explosion.at(this.getX() + range, this.getY() + range2, Mathf.random(0.7, 1.2));
+                var range = Mathf.range(4 * 2);
+                var range2 = Mathf.range(4 * 2);
+                eff1.at(x + range, y + range2, 0, {color:Items.blastCompound.color, fout:false, rad:12});
+                Sounds.explosion.at(x + range, y + range2, Mathf.random(0.7, 1.2));
             }
         },
     }, blastOilExtractor);
@@ -258,15 +212,18 @@ const dustExtractor = extend(GenericCrafter, "dust-extractor", {
 });
 dustExtractor.buildType = prov(() => {
     const block = dustExtractor;
+    var x, y;
     return new JavaAdapter(GenericCrafter.GenericCrafterBuild, {
         updateTile(){
+            x = this.getX();
+            y = this.getY();
             var boost = this.liquids.get(this.liquids.current()) > 1 ? boof : 1;
             if(this.efficiency > 0){
                 this.progress += this.getProgressIncrease(block.craftTime/boost);
                 this.totalProgress += this.delta();
                 this.warmup = Mathf.approachDelta(this.warmup, 1, block.warmupSpeed);
                 if(Mathf.chanceDelta(block.updateEffectChance)){
-                    this.block.updateEffect.at(this.getX() + Mathf.range(block.size * 4), this.getY() + Mathf.range(block.size * 4));
+                    this.block.updateEffect.at(x + Mathf.range(2 * 4), y + Mathf.range(2 * 4));
                 }
             }else{
                 this.warmup = Mathf.approachDelta(this.warmup, 0, block.warmupSpeed);
@@ -279,7 +236,7 @@ dustExtractor.buildType = prov(() => {
                     }
                 }
                 for(var i = 0; i < 3; i++){
-                    block.craftEffect.at(this.x, this.y);
+                    block.craftEffect.at(x, y);
                 }
                 this.progress %= 1;
             }
