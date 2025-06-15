@@ -13,6 +13,7 @@ import arc.util.pooling.Pools;
 import mindustry.content.Fx;
 import mindustry.content.Liquids;
 import mindustry.entities.Effect;
+import mindustry.entities.units.BuildPlan;
 import mindustry.gen.*;
 import mindustry.graphics.*;
 import mindustry.logic.LAccess;
@@ -92,6 +93,22 @@ public class LiquidMassDriver extends Block {
         Lines.stroke(2f, Pal.placing);
         Lines.dashLine(x1, y1, x2, y2, segs);
         Draw.reset();
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        drawer.load(this);
+    }
+
+    @Override
+    protected TextureRegion[] icons() {
+        return drawer.finalIcons(this);
+    }
+
+    @Override
+    public void drawPlanRegion(BuildPlan plan, Eachable<BuildPlan> list) {
+        drawer.drawPlan(this, plan, list);
     }
 
     public static class LiquidBulletData implements Poolable {

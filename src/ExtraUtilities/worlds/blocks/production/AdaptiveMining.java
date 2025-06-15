@@ -133,6 +133,8 @@ public class AdaptiveMining extends Block {
 
     @Override
     public TextureRegion[] icons(){
+        TextureRegion rf = Core.atlas.find(name);
+        if (rf.found()) return new TextureRegion[]{rf};
         return drawer.finalIcons(this);
     }
 
