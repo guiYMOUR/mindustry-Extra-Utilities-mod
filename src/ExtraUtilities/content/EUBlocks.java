@@ -9,6 +9,7 @@ import ExtraUtilities.worlds.blocks.effect.CoreKeeper;
 import ExtraUtilities.worlds.blocks.effect.WaterBomb;
 import ExtraUtilities.worlds.blocks.fireWork;
 import ExtraUtilities.worlds.blocks.heat.*;
+import ExtraUtilities.worlds.blocks.liquid.LiquidMassDriver;
 import ExtraUtilities.worlds.blocks.liquid.LiquidUnloadingValve;
 import ExtraUtilities.worlds.blocks.liquid.SortLiquidRouter;
 import ExtraUtilities.worlds.blocks.logic.Clock;
@@ -39,7 +40,9 @@ import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.Rand;
+import arc.math.geom.Geometry;
 import arc.math.geom.Position;
+import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.Image;
@@ -59,6 +62,7 @@ import mindustry.entities.part.*;
 import mindustry.entities.pattern.*;
 import mindustry.entities.units.BuildPlan;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -96,7 +100,7 @@ public class EUBlocks {
         //drill?!
             arkyciteExtractor, nitrogenWell, phasicDrill, quantumExplosion, minerPoint, minerCenter,
         //liquid
-            ekPump, liquidSorter, liquidValve, communicatingValve, liquidIncinerator,
+            ekPump, liquidSorter, liquidValve, communicatingValve, ekLiquidDriver, liquidIncinerator,
         //transport
             stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
@@ -109,7 +113,7 @@ public class EUBlocks {
             liquidConsumeGenerator, thermalReactor, LG, heatPower, windPower, waterPower,
         //turret
             blackhole, dissipation, anti_Missile, sandGo, guiY, javelin, shootingStar, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, arbiter, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
-            cobweb, quantumGravity,
+            cobweb, rust, quantumGravity,
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
         //other&sandbox
@@ -260,6 +264,8 @@ public class EUBlocks {
             underBullets = true;
             rotate = false;
 
+            squareSprite = false;
+
             //alwaysUnlocked = true;
         }};
         liquidValve = new SortLiquidRouter("liquid-valve"){{
@@ -270,11 +276,29 @@ public class EUBlocks {
             underBullets = true;
             configurable = false;
 
+            squareSprite = false;
+
             //alwaysUnlocked = true;
         }};
         communicatingValve = new LiquidUnloadingValve("communicating-valve"){{
             requirements(Category.liquid, with(Items.silicon, 20, Items.oxide, 25, Items.graphite, 30));
             health = 80;
+            squareSprite = false;
+        }};
+
+        ekLiquidDriver = new LiquidMassDriver("eld"){{
+            requirements(Category.liquid, with(Items.beryllium, 200, Items.silicon, 150, Items.oxide, 140, Items.graphite, 200, Items.tungsten, 120));
+            size = 3;
+            range = 50 * 8;
+            knockback = 4;
+            hasPower = true;
+            consumePower(2f);
+            liquidCapacity = 1000;
+            reload = 240;
+            rotateSpeed = 2;
+            squareSprite = false;
+            armor = 5;
+            researchCostMultiplier = 0.5f;
         }};
 
         liquidIncinerator = new LiquidIncinerator("liquid-incinerator"){{
@@ -956,6 +980,9 @@ public class EUBlocks {
 
             explosionProof = false;
 
+            Effect chainE8 = EUFx.chainLightningFadeOverride(8);
+            Effect chainE6 = EUFx.chainLightningFadeOverride(6);
+            Effect chainE10 = EUFx.chainLightningFadeOverride(10);
             BulletType bi = new BulletType(){{
                 damage = 0;
                 speed = 6;
@@ -980,7 +1007,7 @@ public class EUBlocks {
                 public void update(Bullet b) {
                     b.rotation(b.rotation() + 4f * Time.delta);
                     if(b.time < b.lifetime && b.timer.get(1, 10))
-                        EUFx.chainLightningFade.at(b.x, b.y, 8, EUItems.lightninAlloy.color, b.data);
+                        chainE8.at(b.x, b.y, 8, EUItems.lightninAlloy.color, b.data);
                     trailEffect.at(b.x, b.y, b.rotation(), b.time);
                 }
 
@@ -1003,19 +1030,20 @@ public class EUBlocks {
 
                 @Override
                 public void update(Bullet b) {
-                    Seq<Healthc> seq = new Seq<>();
-                    float r = splashDamageRadius * (1 - b.foutpow());
-                    Vars.indexer.allBuildings(b.x, b.y, r, seq::addUnique);
-                    Units.nearby(b.x - r, b.y - r, r * 2, r * 2, u -> {
-                        if(u.type != null && u.type.targetable && b.within(u, r)) seq.addUnique(u);
-                    });
-                    for(int i = 0; i < seq.size; i++){
-                        Healthc hc = seq.get(i);
-                        if(hc != null && !hc.dead()) {
-                            if(!b.hasCollided(hc.id())) {
-                                if(hc.health() <= damage) hc.kill();
-                                else hc.health(hc.health() - damage);
-                                b.collided.add(hc.id());
+                    if(b instanceof diffBullet.diffEnt d) {
+                        float r = splashDamageRadius * (1 - b.foutpow());
+                        Vars.indexer.allBuildings(b.x, b.y, r, d.seq::addUnique);
+                        Units.nearby(b.x - r, b.y - r, r * 2, r * 2, u -> {
+                            if (u.type != null && u.type.targetable && b.within(u, r)) d.seq.addUnique(u);
+                        });
+                        for (int i = 0; i < d.seq.size; i++) {
+                            Healthc hc = d.seq.get(i);
+                            if (hc != null && !hc.dead()) {
+                                if (!b.hasCollided(hc.id())) {
+                                    if (hc.health() <= damage) hc.kill();
+                                    else hc.health(hc.health() - damage);
+                                    b.collided.add(hc.id());
+                                }
                             }
                         }
                     }
@@ -1036,8 +1064,20 @@ public class EUBlocks {
                     if(b.time < b.lifetime - EUFx.chainLightningFade.lifetime && b.timer.get(1, 1)){
                         float ag = Mathf.random(360);
                         float px = EUGet.dx(b.x, r, ag), py = EUGet.dy(b.y, r, ag);
-                        EUFx.chainLightningFade.at(b.x, b.y, 10, EUItems.lightninAlloy.color, EUGet.pos(px, py));
+                        float len = Mathf.dst(b.x, b.y, px, py);
+                        float ang = Angles.angle(px, py, b.x, b.y);
+                        chainE10.at(px, py, ang, EUItems.lightninAlloy.color, len);
                     }
+                }
+
+                @Override
+                public @Nullable Bullet create(
+                        @Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl,
+                        float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY, @Nullable Teamc target
+                ){
+                    diffBullet.diffEnt bullet = diffBullet.diffEnt.create();
+                    if(bullet.seq.size > 0) bullet.seq.clear();
+                    return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
                 }
             };
             BulletType fbd = new fBullet(bd, 20){{
@@ -1086,7 +1126,9 @@ public class EUBlocks {
                     if(b.timer.get(2, intervalDelay)){
                         float bx = b.x + Mathf.random(-size * tilesize, size * tilesize), by = b.y + Mathf.random(-size * tilesize, size * tilesize);
                         g2.at(bx, by);
-                        EUFx.chainLightningFade.at(b.x, b.y, 6, EUItems.lightninAlloy.color, EUGet.pos(bx, by));
+                        float len = Mathf.dst(b.x, b.y, bx, by);
+                        float angle = Angles.angle(b.x, b.y, bx, by);
+                        chainE6.at(b.x, b.y, angle, EUItems.lightninAlloy.color, len);
                         intervalBullet.create(b, b.team, bx, by, Mathf.random(360), -1, 1, 1, 0f);
                     }
                 }
@@ -1234,9 +1276,9 @@ public class EUBlocks {
                         speed = 4.3f;
                         keepVelocity = false;
                         maxRange = 6f;
-                        lifetime = 60f;
-                        damage = 90 - (hardMod ? 15 : 0);
-                        splashDamage = 110 - (hardMod ? 20 : 0);
+                        lifetime = 54f;
+                        damage = 70;
+                        splashDamage = 90;
                         splashDamageRadius = 32;
                         buildingDamageMultiplier = 0.8f;
                         absorbable = true;
@@ -3181,6 +3223,62 @@ public class EUBlocks {
             coolant = consumeCoolant(0.3f);
             coolantMulti = 4;
             consumePower(6f);
+        }};
+
+        rust = new WitchService("rust"){{
+            requirements(Category.turret, with(Items.thorium, 400, Items.silicon, 550, EUItems.lightninAlloy, 350));
+            size = 2;
+            alwaysUnlocked = true;
+
+            hasPower = true;
+            consumePower(4.5f);
+            consumeLiquid(Liquids.water, 0.2f);
+            liquidCapacity = 12;
+
+            applyIn = new Effect(60, e -> {
+                if(!(e.data instanceof Unit u) || !u.isAdded() || u.dead) return;
+                float size = u.hitSize * 2;
+                for(int i = 0; i < 2; i ++){
+                    for(int r = 0; r < 15; r++){
+                        float dx = EUGet.dx(e.x, size * e.foutpow() + size * 0.01f * r * e.foutpow(), 360 * e.foutpow() + 180 * i + r * size/24),
+                                dy = EUGet.dy(e.y, size * e.foutpow() + size * 0.01f * r * e.foutpow(), 360 * e.foutpow() + 180 * i + r * size/24);
+                        Draw.color(Pal.techBlue);
+                        Fill.circle(dx, dy, size/16 * ((15 - r)/15f));
+                    }
+                }
+            });
+            applyOut = new Effect(30, e -> {
+                if(!(e.data instanceof Unit u) || !u.isAdded() || u.dead) return;
+                float size = u.hitSize * 2;
+                Lines.stroke(size/16 * e.finpow(), Pal.techBlue);
+                Lines.square(e.x, e.y, size * e.foutpow(), 135 * e.finpow());
+                float z = Draw.z();
+                if(u.type != null && u.type.fullIcon != null){
+                    Draw.z(Layer.flyingUnit);
+                    Draw.color(Pal.stoneGray);
+                    Draw.alpha(e.foutpow());
+                    Draw.rect(u.type.fullIcon, e.x, e.y, u.rotation - 90);
+                }
+                Draw.reset();
+                Draw.z(z);
+            });
+            work = new Effect(36, e -> {
+                if(!(e.data instanceof Rect r)) return;
+
+                float z = Draw.z();
+                Draw.z(Layer.blockUnder);
+                Draw.color(Pal.techBlue);
+                Draw.alpha(e.foutpow() * 0.5f);
+                Fill.rect(r);
+
+                Draw.z(z);
+                Draw.alpha(1);
+                Lines.stroke(3 * e.foutpow());
+                Lines.rect(r);
+                Draw.reset();
+            });
+
+            drawer = new DrawRust();
         }};
 
         imaginaryReconstructor = new Reconstructor("imaginary-reconstructor"){{

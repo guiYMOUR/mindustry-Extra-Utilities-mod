@@ -20,13 +20,16 @@ import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
+import arc.math.geom.Position;
 import arc.math.geom.Rect;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectSet;
 import arc.struct.Seq;
+import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
+import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.ai.UnitCommand;
 import mindustry.ai.types.FlyingFollowAI;
@@ -48,6 +51,7 @@ import mindustry.entities.pattern.ShootHelix;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.entities.units.WeaponMount;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -59,6 +63,7 @@ import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
 import mindustry.ui.Styles;
+import mindustry.world.Build;
 import mindustry.world.blocks.defense.MendProjector;
 import mindustry.world.blocks.defense.RegenProjector;
 import mindustry.world.meta.BlockFlag;
@@ -341,6 +346,10 @@ public class EUUnitTypes {
 
             PrismCtr btL = new PrismCtr();
 
+            float lifetime = 48;
+
+            ChainLightningFade initLit = new ChainLightningFade(lifetime + 30, 4 * lifetime, 5, eccl, 50, Fx.hitLancer);
+
             float[] ags = {-10, 10, -30, 30};
             for(float a : ags){
                 weapons.add(new Weapon(){{
@@ -394,8 +403,10 @@ public class EUUnitTypes {
                             float ex, ey;
                             ex = b.x + Angles.trnsx(b.rotation(), speed * b.lifetime);
                             ey = b.y + Angles.trnsy(b.rotation(), speed * b.lifetime);
-                            new ChainLightningFade(b.lifetime + 30, 4 * b.lifetime, 5, eccl, 50, Fx.hitLancer).create(b, b.team, b.x, b.y, 0, -1, 1, 1, EUGet.pos(ex, ey));
-                            new ChainLightningFade(b.lifetime + 30, 4 * b.lifetime, 5, eccl, 50, Fx.hitLancer).create(b, b.team, b.x, b.y, 0, -1, 1, 1, EUGet.pos(ex, ey));
+                            float len = Mathf.dst(b.x, b.y, ex, ey);
+                            float ang = Angles.angle(b.x, b.y, ex, ey);
+                            initLit.create(b, b.team, b.x, b.y, ang, -1, 1, 1, len);
+                            initLit.create(b, b.team, b.x, b.y, ang, -1, 1, 1, len);
                         }
                     };
                 }
@@ -765,8 +776,18 @@ public class EUUnitTypes {
 
                     @Override
                     public void hitEntity(Bullet b, Hitboxc entity, float health) {
-                        if(entity instanceof Unit u && !(entity instanceof bossEntity) && u.type != null){
-                            u.health -= (damage * (u.type.hitSize/10f + 1) * ((u.type.armor)/10f + 1) + u.maxHealth * 0.2f);
+                        if(entity instanceof Unit u && u.type != null){
+                            if(entity instanceof bossEntity) return;
+                            float rawDamage = (damage * (u.type.hitSize/10f + 1) * ((u.type.armor)/10f + 1) + u.maxHealth * 0.2f);
+                            if(u.health <= rawDamage * 2){
+                                Unit ut = u.type.create(b.team);
+                                ut.health(u.health);
+                                ut.rotation(u.rotation());
+                                ut.set(u);
+                                ut.add();
+                                u.remove();
+                                if(u != null) Groups.unit.remove(u);
+                            } else u.health -= rawDamage;
                         }
                         super.hitEntity(b, entity, health);
                     }
@@ -814,7 +835,7 @@ public class EUUnitTypes {
 
                 @Override
                 protected Teamc findTarget(Unit unit, float x, float y, float range, boolean air, boolean ground) {
-                    return Units.bestEnemy(unit.team, x, y, range + Math.abs(shootY), u -> u.checkTarget(air, ground) && !(u instanceof bossEntity) && u.type != null && (u.type.hitSize >= 50 || u.type.armor >= 50 || u.maxHealth >= 60000), UnitSorts.strongest);
+                    return Units.bestEnemy(unit.team, x, y, range + Math.abs(shootY), u -> u.checkTarget(air, ground) && !(u instanceof bossEntity) && u.type != null && (u.type.hitSize >= 50 || u.type.armor >= 50 || u.maxHealth >= 50000), UnitSorts.strongest);
                 }
 
                 @Override
@@ -3197,17 +3218,17 @@ public class EUUnitTypes {
                             particles = 9;
                     }}
             );
-            for(float xx : new float[]{14.2f, -14.2f}){
-                abilities.add(
-                        new SuppressionFieldAbility() {{
-                            orbRadius = 5;
-                            particleSize = 9;
-                            y = -12.4f;
-                            x = xx;
-                            particles = 6;
-                        }}
-                );
-            }
+//            for(float xx : new float[]{14.2f, -14.2f}){
+//                abilities.add(
+//                        new SuppressionFieldAbility() {{
+//                            orbRadius = 5;
+//                            particleSize = 9;
+//                            y = -12.4f;
+//                            x = xx;
+//                            particles = 6;
+//                        }}
+//                );
+//            }
 
             weapons.add(
                     new Weapon(){{
@@ -3302,7 +3323,11 @@ public class EUUnitTypes {
                             public void createFrags(Bullet b, float x, float y) {
                                 super.createFrags(b, x, y);
                                 if(!(b.owner instanceof Unit owner)) return;
-                                if(!b.absorbed) ms.create(owner, owner.team, b.x, b.y, owner.rotation(), -1, 1, 1, EUGet.pos(owner.mounts[0].aimX, owner.mounts[0].aimY));
+                                if(!b.absorbed) {
+                                    Bullet m = ms.create(owner, owner.team, b.x, b.y, owner.rotation(), 1, 1);
+                                    m.aimX = owner.mounts[0].aimX;
+                                    m.aimY = owner.mounts[0].aimY;
+                                }
                             }
 
                             @Override
@@ -3386,12 +3411,39 @@ public class EUUnitTypes {
                         y = 0;
                         shootCone = 360;
                         BulletType cdd = new diffBullet(360, 3){{
-                            damage = splashDamage = 450;
+                            damage = splashDamage = 400;
                             splashDamageRadius = 11f * 8;
                             lifetime = 90;
                             color = Pal.suppress;
                             pfin = false;
                         }
+
+                            @Override
+                            public void update(Bullet b) {
+                                if(b instanceof diffEnt d) {
+                                    float r = splashDamageRadius * (1 - b.foutpow());
+                                    Vars.indexer.allBuildings(b.x, b.y, r, bd -> {
+                                        if (bd.team != b.team && bd.block != null && bd.block.targetable && Angles.within(b.rotation(), b.angleTo(bd), cont))
+                                            d.seq.addUnique(bd);
+                                    });
+                                    Units.nearbyEnemies(b.team, b.x - r, b.y - r, r * 2, r * 2, u -> {
+                                        if (u.type != null && u.type.targetable && b.within(u, r) && Angles.within(b.rotation(), b.angleTo(u), cont))
+                                            d.seq.addUnique(u);
+                                    });
+                                    for (int i = 0; i < d.seq.size; i++) {
+                                        Healthc hc = d.seq.get(i);
+                                        if (hc != null && !hc.dead()) {
+                                            if (!b.hasCollided(hc.id())) {
+                                                hc.damagePierce(damage);
+                                                if(hc.health() <= damage * 0.1f) hc.kill();
+                                                else hc.health(hc.health() - damage * 0.1f);
+                                                EUFx.diffHit.at(hc.getX(), hc.getY(), 0, color, hc);
+                                                b.collided.add(hc.id());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
 
                             @Override
                             public void draw(Bullet b) {
@@ -3468,27 +3520,39 @@ public class EUUnitTypes {
                             @Override
                             public void update(Bullet b) {
                                 super.update(b);
-                                b.initVel(b.rotation(), 0);
-                                if(!(b.owner instanceof Unit owner)) return;
-                                Seq<Building> ms = new Seq<>();
-                                Seq<Building> bs = new Seq<>();
-                                Units.nearbyBuildings(owner.x, owner.y, (speed + 0.1f) * lifetime, building -> {
-                                    if(building.team != b.team && building.block != null && building.block.targetable){
-                                        if(building instanceof MendProjector.MendBuild || building instanceof RegenProjector.RegenProjectorBuild)
-                                            ms.addUnique(building);
-                                        else
-                                            bs.addUnique(building);
+                                if (b instanceof HavocDi h) {
+                                    b.initVel(b.rotation(), 0);
+                                    if (!(b.owner instanceof Unit owner)) return;
+                                    Units.nearbyBuildings(owner.x, owner.y, (speed + 0.1f) * lifetime, building -> {
+                                        if (building.team != b.team && building.block != null && building.block.targetable) {
+                                            if (building instanceof MendProjector.MendBuild || building instanceof RegenProjector.RegenProjectorBuild)
+                                                h.ms.addUnique(building);
+                                            else
+                                                h.bs.addUnique(building);
+                                        }
+                                    });
+                                    h.ms.removeAll(building -> building == null || building.dead);
+                                    h.bs.removeAll(building -> building == null || building.dead);
+                                    h.ms.sort(building -> building.dst(owner));
+                                    h.bs.sort(building -> building.dst(owner));
+                                    Building building = h.ms.size > 0 ? h.ms.get(0) : h.bs.size > 0 ? h.bs.get(0) : null;
+                                    if (building != null) {
+                                        cll.create(b, building.x, building.y, 0);
                                     }
-                                });
-                                ms.removeAll(building -> building == null || building.dead);
-                                bs.removeAll(building -> building == null || building.dead);
-                                ms.sort(building -> building.dst(owner));
-                                bs.sort(building -> building.dst(owner));
-                                Building building = ms.size > 0 ? ms.get(0) : bs.size > 0 ? bs.get(0) : null;
-                                if(building != null){
-                                    cll.create(b, building.x, building.y, 0);
+                                    b.remove();
                                 }
-                                b.remove();
+                            }
+
+                            @Override
+                            public @Nullable
+                            Bullet create(
+                                    @Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl,
+                                    float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY, @Nullable Teamc target
+                            ){
+                                HavocDi bullet = HavocDi.create();
+                                if(bullet.bs.size > 0) bullet.bs.clear();
+                                if(bullet.ms.size > 0) bullet.ms.clear();
+                                return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
                             }
                         };
 
@@ -3500,6 +3564,7 @@ public class EUUnitTypes {
                                     @Override
                                     public void draw(PartParams params) {
                                         float warmup = progress.getClamp(params);
+                                        if(warmup < 0.001f) return;
                                         float rd = 1 - reload.getClamp(params);
                                         Draw.z(Layer.effect);
                                         Lines.stroke(7 * warmup, Pal.suppress);
@@ -3512,7 +3577,14 @@ public class EUUnitTypes {
                                     }
                                 }
                         );
-                    }},
+                    }
+                        @Override
+                        public void addStats(UnitType u, Table t) {
+                            String text = "[lightgray]" + Core.bundle.get("unit.extra-utilities-havoc.weapon-1.description") + "[]";
+                            EUGet.CollapseTextToTable(t, text);
+                            super.addStats(u, t);
+                        }
+                    },
                     new Weapon(){{
                         x = y = 0;
                         mirror = false;
@@ -3707,7 +3779,7 @@ public class EUUnitTypes {
                         shootY = 10;
 
                         BulletType crack = new LaserBulletType(){{
-                            damage = 90;
+                            damage = 87;
                             length = 100;
                             lifetime = 20;
                             laserAbsorb = false;
@@ -3747,8 +3819,10 @@ public class EUUnitTypes {
                         };
                         BulletType fff = new fBullet(crackFrag, 10);
 
+                        float life = 22;
+                        Effect initE = EUFx.chainLightningFade(life * 2, 2.5f, life * 4);
                         bullet = new BulletType(){{
-                            lifetime = 22;
+                            lifetime = life;
                             speed = 20;
                             splashDamage = 250;
                             splashDamageRadius = 8.5f * 8;
@@ -3817,8 +3891,11 @@ public class EUUnitTypes {
                                 float ex, ey;
                                 ex = b.x + Angles.trnsx(b.rotation(), speed * b.lifetime);
                                 ey = b.y + Angles.trnsy(b.rotation(), speed * b.lifetime);
-                                EUFx.chainLightningFade(b.lifetime * 2).at(b.x, b.y, b.lifetime * 4, trailColor, EUGet.pos(ex, ey));
-                                EUFx.chainLightningFade(b.lifetime * 2).at(b.x, b.y, b.lifetime * 4, trailColor, EUGet.pos(ex, ey));
+                                //Position pos = EUGet.pos(ex, ey);
+                                float len = Mathf.dst(b.x, b.y, ex, ey);
+                                float angle = Angles.angle(b.x, b.y, ex, ey);
+                                initE.at(b.x, b.y, angle, trailColor, len);
+                                initE.at(b.x, b.y, angle, trailColor, len);
                             }
 
                             @Override
@@ -3935,7 +4012,7 @@ public class EUUnitTypes {
                         targetInterval = targetSwitchInterval = 12;
                         mountType = reRotMount::new;
 
-                        bullet = new BasicBulletType(6, 50){{
+                        bullet = new BasicBulletType(6, 41){{
                             width = 10;
                             height = 15;
                             shootEffect = Fx.lancerLaserShoot;
@@ -3943,6 +4020,7 @@ public class EUUnitTypes {
                             lifetime = 24f;
                             pierce = true;
                             pierceBuilding = true;
+                            pierceArmor = true;
                             absorbable = false;
                             trailLength = 7;
                             trailWidth = 3;
@@ -4062,5 +4140,14 @@ public class EUUnitTypes {
 
         EUGet.developerItems.addAll(winglet);
         EUGet.developerMap.get(1).addAll(winglet);
+    }
+
+    public static class HavocDi extends Bullet{
+        public Seq<Building> ms = new Seq<>();
+        public Seq<Building> bs = new Seq<>();
+
+        public static HavocDi create(){
+            return Pools.obtain(HavocDi.class, HavocDi::new);
+        }
     }
 }

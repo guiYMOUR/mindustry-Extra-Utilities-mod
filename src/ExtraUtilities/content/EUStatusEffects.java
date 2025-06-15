@@ -7,8 +7,10 @@ import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.struct.ObjectSet;
+import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
@@ -17,8 +19,14 @@ import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.type.StatusEffect;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatUnit;
+
+import static mindustry.content.Fx.rand;
 
 public class EUStatusEffects {
+    public static Seq<StatusEffect> elements = new Seq<>();
+
 
     public static StatusEffect poison = new StatusEffect("poison"){{
         transitionDamage = 156;
@@ -152,4 +160,68 @@ public class EUStatusEffects {
             });
         });
     }};
+
+
+    public static StatusEffect breakage = new StatusEffect("breakage"){{
+        damage = -1;
+        parentizeApplyEffect = true;
+        applyColor = Pal.techBlue;
+        applyEffect = new Effect(45, e -> {
+            if(!(e.data instanceof Unit u)) return;
+            float size = u.hitSize * 2;
+            rand.setSeed(e.id);
+            float pin = (1 - e.foutpow());
+            Lines.stroke(size/24 * e.foutpow(), e.color);
+            Lines.circle(e.x, e.y, size * pin);
+            for(int i = 0; i < 5; i++){
+                float a = rand.random(180);
+                float lx = EUGet.dx(e.x, size * pin, a);
+                float ly = EUGet.dy(e.y, size * pin, a);
+                Drawf.tri(lx, ly, size/32 * e.foutpow(), (size + rand.random(-size, size)) * e.foutpow(), a + 180);
+            }
+            for(int i = 0; i < 5; i++){
+                float a = 180 + rand.random(180);
+                float lx = EUGet.dx(e.x, size * pin, a);
+                float ly = EUGet.dy(e.y, size * pin, a);
+                Drawf.tri(lx, ly, size/32 * e.foutpow(), (size + rand.random(-size, size)) * e.foutpow(), a + 180);
+            }
+        });
+    }
+
+        @Override
+        public void setStats() {
+            super.setStats();
+            stats.remove(Stat.healing);
+            stats.addMultModifier(Stat.damageMultiplier, 0.8f);
+            stats.addMultModifier(Stat.speedMultiplier, 0.4f);
+            stats.addMultModifier(Stat.reloadMultiplier, 0.5f);
+            stats.add(Stat.damage, 60f, StatUnit.perSecond);
+        }
+
+        @Override
+        public void applied(Unit unit, float time, boolean extend) {
+            super.applied(unit, time, extend);
+
+            unit.health -= 100;
+        }
+
+        @Override
+        public void update(Unit unit, float time) {
+
+            unit.damageMultiplier *= 0.8f;
+            unit.speedMultiplier *= 0.4f;
+            unit.reloadMultiplier *= 0.5f;
+
+            unit.health -= Time.delta;
+
+            if(effect != Fx.none && Mathf.chanceDelta(effectChance)){
+                Tmp.v1.rnd(Mathf.range(unit.type.hitSize/2f));
+                effect.at(unit.x + Tmp.v1.x, unit.y + Tmp.v1.y, 0, color, parentizeEffect ? unit : null);
+            }
+        }
+    };
+
+    public static void load(){
+        elements.addAll(breakage);
+    }
 }

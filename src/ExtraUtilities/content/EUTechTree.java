@@ -68,6 +68,7 @@ public class EUTechTree {
             node(reinforcedDuctBridge);
             node(ekMessDriver);
         });
+        addToNode(reinforcedDuctBridge, () -> node(ekLiquidDriver));
         addToNode(reinforcedBridgeConduit, () -> node(phaseReinforcedBridgeConduit));
         addToNode(reinforcedPump, () -> node(ekPump));
         addToNode(electricHeater, () -> node(largeElectricHeater));

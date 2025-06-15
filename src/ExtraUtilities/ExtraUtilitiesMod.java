@@ -149,11 +149,13 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                Block duoII = content.block(name("T2-duo"));
-                Block duoIII = content.block(name("T3-duo"));
+                Block minisp = content.block(name("minisp"));
+                Block ld = content.block(name("ld"));
                 updateLog.addAll(
-                        duoII, duoIII,
-                        EUBlocks.shootingStar, EUBlocks.arbiter,
+                        EUStatusEffects.breakage, EUBlocks.rust, EUBlocks.ekLiquidDriver,
+                        ld, minisp,
+                        EUUnitTypes.regency, EUUnitTypes.havoc, EUUnitTypes.arcana, EUBlocks.sancta, EUBlocks.arbiter,
+                        EUBlocks.LG, EUBlocks.LA, EUBlocks.adaptiveMiner, EUBlocks.adaptiveMinerII,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -188,16 +190,15 @@ public class ExtraUtilitiesMod extends Mod{
                         log.row();
                         log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
                     });
+                    addToTable(EUStatusEffects.breakage, t);
+                    addToTable(EUBlocks.rust, t);
+                    addToTable(EUBlocks.ekLiquidDriver, t);
                     addToTable(TDSectorPresets.st1, t);
                     addToTable(EUBlocks.adaptiveMiner, t);
                     addToTable(EUBlocks.adaptiveMinerII, t);
                     addToTable(EUBlocks.ekSeparator, t);
-                    addToTable(EUBlocks.cobweb, t);
-                    addToTable(EUBlocks.arbiter, t);
                     addToTable(EUBlocks.shootingStar, t);
-                    addToTable(EUBlocks.phasicDrill, t);
                     addToTable(EUBlocks.guiY, t);
-                    addToTable(EUBlocks.ADC, t);
                 }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f).get();
                 buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
                     Core.settings.put("eu-first-load", !b);
@@ -483,6 +484,7 @@ public class ExtraUtilitiesMod extends Mod{
                         settingsTable.checkPref("eu-reset-core-to-all", false);
                         settingsTable.checkPref("eu-show-miner-point", true);
                         settingsTable.checkPref("eu-show-hole-acc-disk", true);
+                        settingsTable.checkPref("eu-show-rust-range", true);
 
                         settingsTable.checkPref("eu-first-load", true);
                         if(!EUVerUnChange((String) settings.get("eu-version", ""))){
@@ -574,6 +576,7 @@ public class ExtraUtilitiesMod extends Mod{
         if(isAps()) hardMod = true;
 
         EUOverride.overrideItem();
+        EUStatusEffects.load();
 
         EUAttribute.load();
         EUOverride.overrideUnit1();

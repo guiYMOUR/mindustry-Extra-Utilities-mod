@@ -16,6 +16,8 @@ import arc.graphics.g2d.TextureRegion;
 import arc.graphics.gl.PixmapTextureData;
 import arc.math.Mathf;
 import arc.math.geom.Position;
+import arc.math.geom.Rect;
+import arc.math.geom.Vec2;
 import arc.scene.style.Drawable;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.ImageButton;
@@ -26,9 +28,11 @@ import arc.struct.IntMap;
 import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
+import arc.util.Nullable;
 import arc.util.Scaling;
 import arc.util.Time;
 import arc.util.noise.Noise;
+import arc.util.pooling.Pools;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
@@ -96,6 +100,8 @@ public class EUGet {
     public static Color EC20 = new Color();
     public static Color EC21 = new Color();
 
+    //public static Rect r1 = new Rect();
+
     //因为有中文，所以用数字代替了
     public static String[] donors = {
             "冷冻液",
@@ -150,8 +156,9 @@ public class EUGet {
         }
     }
 
+
     //use for pool
-    public static class EPos implements Position{
+    public static class EPos implements arc.math.geom.Position {
         public float x, y;
 
         public EPos set(float x, float y){
@@ -186,6 +193,20 @@ public class EUGet {
             }
         };
     }
+
+    public static float pointAngleX(float px, float angle, float dst){
+        return (px + dst * Mathf.cosDeg(angle));
+    }
+    public static float pointAngleY(float py, float angle, float dst){
+        return (py + dst * Mathf.sinDeg(angle));
+    }
+
+//    public static Position pos(float x, float y){
+//        Position p = Pools.obtain(Position.class, Position::new);
+//        p.setX(x);
+//        p.setY(y);
+//        return p;
+//    }
 
     public static float dx(float px, float r, float angle){
         return px + r * (float) Math.cos(angle * Math.PI/180);
@@ -286,26 +307,28 @@ public class EUGet {
     }
 
     //use for cst bullet
-    public static Bullet anyOtherCreate(Bullet bullet, BulletType bt, Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY){
+    public static Bullet anyOtherCreate(Bullet bullet, BulletType bt, Entityc shooter, Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY, @Nullable Teamc target){
+        if(bt == null) return null;
         bullet.type = bt;
         bullet.owner = owner;
+        bullet.shooter = (shooter == null ? owner : shooter);
         bullet.team = team;
         bullet.time = 0f;
         bullet.originX = x;
         bullet.originY = y;
         if(!(aimX == -1f && aimY == -1f)){
-            bullet.aimTile = world.tileWorld(aimX, aimY);
+            bullet.aimTile = target instanceof Building b ? b.tile : world.tileWorld(aimX, aimY);
         }
         bullet.aimX = aimX;
         bullet.aimY = aimY;
 
-        bullet.initVel(angle, bt.speed * velocityScl);
+        bullet.initVel(angle, bt.speed * velocityScl * (bt.velocityScaleRandMin != 1f || bt.velocityScaleRandMax != 1f ? Mathf.random(bt.velocityScaleRandMin, bt.velocityScaleRandMax) : 1f));
         if(bt.backMove){
             bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
         }else{
             bullet.set(x, y);
         }
-        bullet.lifetime = bt.lifetime * lifetimeScl;
+        bullet.lifetime = bt.lifetime * lifetimeScl * (bt.lifeScaleRandMin != 1f || bt.lifeScaleRandMax != 1f ? Mathf.random(bt.lifeScaleRandMin, bt.lifeScaleRandMax) : 1f);
         bullet.data = data;
         bullet.drag = bt.drag;
         bullet.hitSize = bt.hitSize;
@@ -317,8 +340,7 @@ public class EUGet {
         }
         bullet.add();
 
-        if(bt.keepVelocity && owner instanceof Velc) bullet.vel.add(((Velc)owner).vel());
-
+        if(bt.keepVelocity && owner instanceof Velc v) bullet.vel.add(v.vel());
         return bullet;
     }
 

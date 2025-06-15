@@ -450,6 +450,7 @@ public class EUOverride {
             reloadMultiplier = 1.2f;
             ammoMultiplier = 8;
             toColor = EUItems.lightninAlloy.color.cpy().mul(Pal.surge);
+            shootEffect = smokeEffect = Fx.none;
             fragBullet = new liLaserBullet(damage/2){{
                 length = 100;
                 lifetime = 15;
