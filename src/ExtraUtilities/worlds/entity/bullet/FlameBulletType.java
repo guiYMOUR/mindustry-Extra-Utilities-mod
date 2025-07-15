@@ -48,7 +48,7 @@ public class FlameBulletType extends BulletType {
         Units.nearbyEnemies(b.team, b.x, b.y, flameLength, unit -> {
             if(Angles.within(b.rotation(), b.angleTo(unit), flameCone) && unit.checkTarget(collidesAir, collidesGround)){
                 Fx.hitFlameSmall.at(unit);
-                unit.damage(damage);
+                unit.damage(b.damage);
                 unit.apply(status, statusDuration);
             }
         });
@@ -56,7 +56,7 @@ public class FlameBulletType extends BulletType {
         indexer.allBuildings(b.x, b.y, flameLength, other -> {
             if(other.team != b.team && Angles.within(b.rotation(), b.angleTo(other), flameCone)){
                 Fx.hitFlameSmall.at(other);
-                other.damage(damage * buildingDamageMultiplier);
+                other.damage(b.damage * buildingDamageMultiplier);
             }
         });
     }

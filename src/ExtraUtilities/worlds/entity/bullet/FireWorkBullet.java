@@ -7,6 +7,7 @@ import arc.graphics.g2d.Draw;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.util.Nullable;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
 import mindustry.entities.bullet.BulletType;
@@ -17,6 +18,7 @@ import mindustry.gen.Sounds;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.world.Tile;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 
@@ -30,6 +32,8 @@ public class FireWorkBullet extends BulletType {
     public boolean outline = false;
     public float width = 15;
     public float height = 15;
+
+    public boolean breaker = false;
 
     public int num = 30;
 
@@ -119,6 +123,24 @@ public class FireWorkBullet extends BulletType {
         super.hit(b);
         explode(b);
     }
+
+//    @Override
+//    public void update(Bullet b) {
+//        super.update(b);
+//        if(!breaker) return;
+//        Tile tile = Vars.world.tileWorld(b.x, b.y);
+//        if(checkEvnWall(tile)){
+//
+//        }
+//    }
+//
+//    private boolean checkEvnWall(Tile tile){
+//        return tile != null && tile.block() != null && tile.build == null && tile.block().solid && !tile.block().breakable;
+//    }
+//
+//    public void explodeWall(Bullet b) {
+//
+//    }
 
     public void explode(Bullet b) {
         if(fire == null) return;

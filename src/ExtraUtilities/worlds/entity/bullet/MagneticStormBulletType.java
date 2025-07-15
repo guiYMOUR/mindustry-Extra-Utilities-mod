@@ -34,7 +34,7 @@ public class MagneticStormBulletType extends BasicBulletType {
     public Color cor;
     public Color liC;
     /** damage[min, mid, max, des]*/
-    public float[] damages = {15, 18, 20, 32};
+    public float[] damages = {16, 18, 20, 32};
 
     public int msTl = 15;
 
@@ -294,7 +294,7 @@ public class MagneticStormBulletType extends BasicBulletType {
 
         if(b.timer.get(2, 9)) {
             Groups.bullet.intersect(b.x - dsRange, b.y - dsRange, dsRange * 2, dsRange * 2, ob -> {
-                if (ob instanceof mgs && ob.within(b, dsRange) && ob.team == b.team) {
+                if (ob instanceof mgs && ob.within(b, dsRange) && ob.team == b.team && ob != b) {
                     float bdx = b.x + Mathf.random(-20, 20), bdy = b.y + Mathf.random(-20, 20);
                     lightning.create(b, b.team, bdx, bdy, ob.angleTo(bdx, bdy) + 180, -1, 1, 1, ob);
                 }

@@ -207,22 +207,22 @@ public class ArbiterBulletType extends BulletType {
         if(b.timer.get(3, 5)) {
             Units.nearbyBuildings(b.x, b.y, estRange, bd -> {
                 if (bd != null && bd.team != b.team) {
-                    if(bd.health <= damage / 12 * buildingDamageMultiplier && a.ens.size < maxAbs && bd.block != null && bd.block.size <= 3) {
+                    if(bd.health <= b.damage / 12 * buildingDamageMultiplier && a.ens.size < maxAbs && bd.block != null && bd.block.size <= 3) {
                         a.ens.addUnique(dateBullet.create(b, b.team, bd.x, bd.y, 0, -1, 0, 1, bd.block));
                         bd.kill();
-                    } else bd.damagePierce(damage / 12 * buildingDamageMultiplier);
+                    } else bd.damagePierce(b.damage / 12 * buildingDamageMultiplier);
                 }
             });
 
             Units.nearbyEnemies(b.team, b.x, b.y, estRange, ut -> {
                 if(ut != null && ut.type != null && ut.targetable(b.team) && !ut.inFogTo(b.team)) {
                     if(ut.type.armor > 80){
-                        if(ut.health <= damage * ut.type.armor){
+                        if(ut.health <= b.damage * ut.type.armor){
                             ut.kill();
                             ut.remove();
-                        } else ut.health -= damage * ut.type.armor;
+                        } else ut.health -= b.damage * ut.type.armor;
                     } else {
-                        if ((ut.health <= ((ut.maxHealth * 0.01f / 12) * (1 + ut.hitSize/100)) || ut.health <= damage / 12)
+                        if ((ut.health <= ((ut.maxHealth * 0.01f / 12) * (1 + ut.hitSize/100)) || ut.health <= b.damage / 12)
                                 && a.ens.size < maxAbs && ut.type.hitSize <= 20) {
                             if (!(ut instanceof bossEntity)) {
                                 a.ens.addUnique(dateBullet.create(b, b.team, ut.x, ut.y, 0, -1, 1, 1, ut.type));
@@ -230,10 +230,10 @@ public class ArbiterBulletType extends BulletType {
                                 ut.remove();
                             }
                         } else {
-                            ut.damagePierce(damage / 12);
+                            ut.damagePierce(b.damage / 12);
                             ut.health -= ((ut.maxHealth * 0.01f / 12) * (1 + ut.type.hitSize/100));
                             if(ut.hasEffect(EUStatusEffects.breakage)){
-                                float dmg = damage/24;
+                                float dmg = b.damage/24;
                                 if(ut.health <= dmg) ut.kill();
                                 else ut.health -= dmg;
                             }
@@ -244,7 +244,7 @@ public class ArbiterBulletType extends BulletType {
         }
 
         Groups.bullet.intersect(b.x - estRange, b.y - estRange, estRange * 2, estRange * 2, bullet -> {
-            if(bullet.type != null && bullet.team != b.team && b.within(bullet, estRange) && bullet.damage >= damage/12) {
+            if(bullet.type != null && bullet.team != b.team && b.within(bullet, estRange) && bullet.damage >= b.damage/12) {
                 bullet.vel.limit(3);
                 bullet.damage -= Time.delta;
             }
