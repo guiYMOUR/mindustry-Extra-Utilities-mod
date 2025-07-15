@@ -123,7 +123,7 @@ public class EUStatValues {
                         }
 
                         if (!compact && !Mathf.equal(type.reloadMultiplier, 1f)) {
-                            sep(bt, Core.bundle.format("bullet.reload", Strings.autoFixed(type.reloadMultiplier, 2)));
+                            sep(bt, Core.bundle.format("bullet.reload", Strings.autoFixed(type.reloadMultiplier * 100, 2)));
                         }
 
                         if (type.knockback > 0) {
@@ -224,17 +224,28 @@ public class EUStatValues {
         };
     }
 
-    public static <T extends UnlockableContent> StatValue ammoString(ObjectMap<T, BulletType> map){
+    public static <T extends UnlockableContent> StatValue ammoString(ObjectMap<T, BulletType> map, String add){
         return table -> {
             for(T i : map.keys()){
                 table.row();
                 table.table(c -> {
                     c.image(icon(i)).size(32).scaling(Scaling.fit).padRight(4).left().top();
-                    c.add(Core.bundle.get("stat-" + i.name + ".ammo")).padRight(10).left().top();
+                    c.add(Core.bundle.get("stat-" + add + "-" + i.name + ".ammo")).padRight(10).left().top();
                     c.background(Tex.underline);
                 }).left();
                 table.row();
             }
+        };
+    }
+    public static StatValue ammoString(Item i, String add){
+        return table -> {
+            table.row();
+            table.table(c -> {
+                c.image(icon(i)).size(32).scaling(Scaling.fit).padRight(4).left().top();
+                c.add(Core.bundle.get("stat-" + add + "-" + i.name + ".ammo")).padRight(10).left().top();
+                c.background(Tex.underline);
+            }).left();
+            table.row();
         };
     }
 
@@ -277,6 +288,28 @@ public class EUStatValues {
                 }
             }).growX().colspan(table.getColumns());
             table.row();
+        };
+    }
+
+    public static StatValue ability(String name, int abs){
+        return table -> {
+            table.row();
+            for(int i = 0; i < abs; i++){
+                int finalI = i;
+                table.table(c -> {
+                    c.add(
+                            Core.bundle.format("stat-" + "abi", finalI + 1) + " " +
+                                    Core.bundle.get("stat-" + name + ".abi-" + finalI + ".name")
+                    ).padRight(10).left().top();
+                }).left();
+                table.row();
+                table.table(c -> {
+                    c.add(Core.bundle.get("stat-" + name + ".abi-" + finalI + ".description")).padRight(10).left().top();
+                    c.row();
+                    c.background(Tex.underline);
+                }).left();
+                table.row();
+            }
         };
     }
 }

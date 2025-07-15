@@ -36,7 +36,7 @@ public class Fiammetta extends ItemTurret {
         super.setStats();
         if(ammoTypes == null) return;
 
-        stats.add(Stat.ammo, EUStatValues.ammoString(ammoTypes));
+        stats.add(Stat.ammo, EUStatValues.ammoString(ammoTypes, "fa"));
     }
 
     @Override

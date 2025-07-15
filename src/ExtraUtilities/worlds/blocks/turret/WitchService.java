@@ -222,7 +222,7 @@ public class WitchService extends Block {
                     }
                 });
                 for(Unit u : findMap.keys()){
-                    if(u == null || !u.isAdded() || u.dead) {
+                    if(u == null || !u.isAdded() || u.dead || u.hasEffect(eType)) {
                         findMap.remove(u);
                         continue;
                     }
