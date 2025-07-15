@@ -30,7 +30,7 @@ T2rip.requirements = ItemStack.with(
     Items.copper, 200,
     Items.graphite, 150,
     Items.titanium, 70,
-    Items.silicon, 30 + (hardMod ? 30 : 0)
+    Items.silicon, 40 + (hardMod ? 30 : 0)
 );
 T2rip.buildVisibility = BuildVisibility.shown;
 T2rip.category = Category.turret;

@@ -23,7 +23,7 @@ lib.Coolant(swMin, 0.2, false);
 swMin.requirements = ItemStack.with(
     Items.graphite, 60,
     Items.titanium, 55,
-    Items.silicon, 55
+    Items.silicon, 60
 );
 swMin.buildVisibility = BuildVisibility.shown;
 swMin.category = Category.turret;

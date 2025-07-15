@@ -24,8 +24,8 @@ prism.health = 220 * 5 * 5;
 prism.coolantMultiplier = 1;
 prism.squareSprite = false;
 prism.requirements = ItemStack.with(
-    Items.lead, 800,
-    Items.silicon, 650,
+    Items.lead, 1200,
+    Items.silicon, 800,
     Items.metaglass, 650,
     Items.thorium, 500,
     items.lightninAlloy, 350

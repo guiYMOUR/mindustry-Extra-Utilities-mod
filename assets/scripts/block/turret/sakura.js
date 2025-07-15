@@ -17,10 +17,10 @@ sakura.shootEffect = Fx.thoriumShoot;
 sakura.smokeEffect = Fx.thoriumShoot;
 lib.Coolant(sakura, 0.4, 2.5);
 sakura.requirements = ItemStack.with(
-    Items.lead, 180,
-    Items.silicon, 120,
-    Items.titanium, 100,
-    Items.thorium, 85
+    Items.lead, 200,
+    Items.silicon, 200,
+    Items.titanium, 150,
+    Items.thorium, 120
 );
 sakura.buildVisibility = BuildVisibility.shown;
 sakura.category = Category.turret;

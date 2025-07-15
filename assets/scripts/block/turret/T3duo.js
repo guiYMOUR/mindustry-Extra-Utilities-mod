@@ -11,7 +11,7 @@ lib.setBuildingSimple(T3duo, ItemTurret.ItemTurretBuild, {
                 Sounds.pew.at(this.x, this.y);
             }
         } else {
-            if(Mathf.chance(0.08)){
+            if(Mathf.chance(0.04)){
                 lib.toBullet(Blocks.spectre, Items.thorium).create(this, this.team, this.x, this.y, this.rotation, 1 ,1);
                 Sounds.shootBig.at(this.x, this.y);
             }
@@ -31,7 +31,7 @@ T3duo.limitRange();
 T3duo.ammoTypes = Blocks.duo.ammoTypes;
 T3duo.coolant = T3duo.consume(new ConsumeCoolant(0.1));
 T3duo.requirements = ItemStack.with(
-    Items.copper, 75,
+    Items.copper, 80,
     Items.graphite, 40
 );
 T3duo.recoils = 2;

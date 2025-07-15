@@ -116,12 +116,12 @@ rainbow.health = 200 * 3 * 3;
 rainbow.shootType = r1;
 lib.Coolant(rainbow, 0.4, 2.5);
 rainbow.requirements = ItemStack.with(
-    Items.lead, 340,
+    Items.lead, 400,
     Items.silicon, 300,
     Items.metaglass, 200,
-    Items.thorium, 170,
+    Items.thorium, 200,
     Items.surgeAlloy, 80 + (hardMod ? 40 : 0),
-    items.crispSteel, 85 + (hardMod ? 35 : 0)
+    items.crispSteel, 105 + (hardMod ? 35 : 0)
 );
 rainbow.buildVisibility = BuildVisibility.shown;
 rainbow.category = Category.turret;

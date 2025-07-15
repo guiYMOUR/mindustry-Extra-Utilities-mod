@@ -19,7 +19,7 @@ lib.Coolant(T2fuse, 0.4);
 T2fuse.coolantMultiplier = 3;
 T2fuse.requirements = ItemStack.with(
     Items.copper, 280,
-    items.crispSteel, 175,
+    items.crispSteel, 200,
     Items.thorium, 150,
     Items.surgeAlloy, 60 + (hardMod ? 40 : 0),
 );

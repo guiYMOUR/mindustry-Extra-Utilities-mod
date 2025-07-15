@@ -21,11 +21,11 @@ swT2.shootSound = Sounds.missile;
 
 lib.Coolant(swT2, 0.3);
 swT2.requirements = ItemStack.with(
-    Items.graphite, 155,
-    Items.titanium, 180,
-    Items.plastanium, 80,
-    Items.silicon, 120,
-    Items.surgeAlloy, 80
+    Items.graphite, 200,
+    Items.titanium, 240,
+    Items.plastanium, 90,
+    Items.silicon, 190,
+    Items.surgeAlloy, 90
 );
 swT2.buildVisibility = BuildVisibility.shown;
 swT2.category = Category.turret;

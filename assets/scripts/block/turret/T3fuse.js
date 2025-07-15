@@ -16,11 +16,11 @@ lib.Coolant(T3fuse, 0.6);
 T3fuse.coolantMultiplier = 2;
 T3fuse.shootSound = Sounds.shotgun;
 T3fuse.requirements = ItemStack.with(
-    Items.copper, 550,
-    Items.graphite, 320,
-    Items.titanium, 270,
-    Items.thorium, 150,
-    Items.silicon, 150 + (hardMod ? 30 : 0),
+    Items.copper, 500,
+    Items.graphite, 400,
+    Items.titanium, 300,
+    Items.thorium, 200,
+    Items.silicon, 170 + (hardMod ? 30 : 0),
     items.lightninAlloy, 100 + (hardMod ? 20 : 0)
 );
 T3fuse.buildVisibility = BuildVisibility.shown;

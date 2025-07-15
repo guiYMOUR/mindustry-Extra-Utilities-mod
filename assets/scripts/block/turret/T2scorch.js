@@ -48,10 +48,10 @@ Object.assign(T2scorch, {
 });
 lib.Coolant(T2scorch, 0.2, 2);
 T2scorch.requirements = ItemStack.with(
-    Items.copper, 60,
-    Items.graphite, 40,
-    items.crispSteel, 20,
-    Items.titanium, 30
+    Items.copper, 70,
+    Items.graphite, 50,
+    items.crispSteel, 30,
+    Items.titanium, 40
 );
 T2scorch.buildVisibility = BuildVisibility.shown;
 T2scorch.category = Category.turret;

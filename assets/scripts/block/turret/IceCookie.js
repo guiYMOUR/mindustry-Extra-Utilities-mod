@@ -57,8 +57,8 @@ Object.assign(IM, {
     shootSound : Sounds.bang,
 });
 IM.requirements = ItemStack.with(
-    Items.copper, 80,
-    Items.graphite, 50,
+    Items.copper, 100,
+    Items.graphite, 70,
     items.crispSteel, 60
 );
 IM.coolant = IM.consumeCoolant(0.15);

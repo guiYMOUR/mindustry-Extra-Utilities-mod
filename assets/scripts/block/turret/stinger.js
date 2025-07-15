@@ -85,8 +85,8 @@ stinger.drawer = (() => {
     return d;
 })();
 stinger.requirements = ItemStack.with(
-    Items.silicon, 250,
-    Items.titanium, 200,
+    Items.silicon, 300,
+    Items.titanium, 250,
     Items.thorium, 200,
     Items.plastanium, 150 + (hardMod ? 80 : 0),
     Items.surgeAlloy, 110 + (hardMod ? 50 : 0)

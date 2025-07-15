@@ -31,11 +31,11 @@ T3rip.ammoTypes = Blocks.ripple.ammoTypes;
 T3rip.ammoTypes.put(Items.surgeAlloy, bullets.artillerySurge);
 T3rip.requirements = ItemStack.with(
     Items.copper, 300,
-    Items.graphite, 220,
-    Items.titanium, 155,
-    Items.thorium, 100,
-    Items.silicon, 85 + (hardMod ? 65 : 0),
-    Items.surgeAlloy, 80 + (hardMod ? 20 : 0)
+    Items.graphite, 300,
+    Items.titanium, 200,
+    Items.thorium, 130,
+    Items.silicon, 115 + (hardMod ? 65 : 0),
+    Items.surgeAlloy, 100 + (hardMod ? 20 : 0)
 );
 T3rip.buildVisibility = BuildVisibility.shown;
 T3rip.category = Category.turret;

@@ -186,10 +186,10 @@ storm.drawer = (() => {
 
 storm.squareSprite = false;
 storm.requirements = ItemStack.with(
-    Items.graphite, 780,
-    Items.silicon, 600,
-    Items.thorium, 350,
-    Items.surgeAlloy, 220 + (hardMod ? 80 : 0),
+    Items.graphite, 800,
+    Items.silicon, 700,
+    Items.thorium, 400,
+    Items.surgeAlloy, 270 + (hardMod ? 80 : 0),
     items.lightninAlloy, 300
 );
 storm.buildVisibility = BuildVisibility.shown;

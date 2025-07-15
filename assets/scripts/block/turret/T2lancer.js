@@ -47,10 +47,10 @@ T2lan.targetAir = false;
 T2lan.shootSound = Sounds.laser;
 lib.Coolant(T2lan, 0.4, 2);
 T2lan.requirements = ItemStack.with(
-    Items.silicon, 125 + (hardMod ? 35 : 0),
-    Items.graphite, 125 + (hardMod ? 45 : 0),
-    Items.plastanium, 75 + (hardMod ? 50 : 0),
-    items.crispSteel, 120 + (hardMod ? 80 : 0)
+    Items.silicon, 155 + (hardMod ? 35 : 0),
+    Items.graphite, 155 + (hardMod ? 45 : 0),
+    Items.plastanium, 85 + (hardMod ? 50 : 0),
+    items.crispSteel, 140 + (hardMod ? 80 : 0)
 );
 T2lan.buildVisibility = BuildVisibility.shown;
 T2lan.category = Category.turret;

@@ -69,8 +69,8 @@ shotgun.ammo(
 );
 shotgun.requirements = ItemStack.with(
     Items.copper, 60,
-    Items.lead, 65,
-    Items.graphite, 50,
+    Items.lead, 70,
+    Items.graphite, 60,
     Items.titanium, 40,
 );
 shotgun.buildVisibility = BuildVisibility.shown;

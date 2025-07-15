@@ -22,7 +22,7 @@ minisp.requirements = ItemStack.with(
     Items.graphite, 175,
     Items.silicon, 175,
     Items.titanium, 150,
-    items.crispSteel, 120
+    items.crispSteel, 140
 );
 minisp.buildVisibility = BuildVisibility.shown;
 minisp.category = Category.turret;

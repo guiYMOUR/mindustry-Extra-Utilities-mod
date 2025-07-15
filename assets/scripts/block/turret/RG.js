@@ -138,12 +138,12 @@ RG.ammo(
 );
 RG.requirements = ItemStack.with(
     //Items.copper, 500,
-    Items.lead, 750,
-    Items.silicon, 700,
+    Items.lead, 900,
+    Items.silicon, 800,
     Items.graphite, 600,
     Items.titanium, 400,
-    Items.plastanium, 280,
-    items.lightninAlloy, 250
+    Items.plastanium, 320,
+    items.lightninAlloy, 270
 );
 RG.consumePower(15);
 RG.buildVisibility = BuildVisibility.shown;
