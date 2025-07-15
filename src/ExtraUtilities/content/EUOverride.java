@@ -5,6 +5,7 @@ import ExtraUtilities.ui.EUI;
 import ExtraUtilities.worlds.entity.bullet.ChainLightningFade;
 import ExtraUtilities.worlds.entity.bullet.CtrlMissile;
 import ExtraUtilities.worlds.entity.bullet.liLaserBullet;
+import ExtraUtilities.worlds.meta.EUStatValues;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Lines;
@@ -42,6 +43,7 @@ import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssembler;
 import mindustry.world.blocks.units.UnitFactory;
+import mindustry.world.meta.Stat;
 
 import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static arc.graphics.g2d.Draw.color;
@@ -105,6 +107,7 @@ public class EUOverride {
                 if (i != null) {
                     if (i.shownPlanets.isEmpty()) continue;
                     i.shownPlanets.add(TDPlanet.TD);
+                    if(i.shownPlanets.contains(Planets.serpulo)) i.shownPlanets.add(TDPlanet.supEX);
                     i.postInit();
                 }
             }
@@ -112,6 +115,7 @@ public class EUOverride {
                 if (l != null) {
                     if (l.shownPlanets.isEmpty()) continue;
                     l.shownPlanets.add(TDPlanet.TD);
+                    if(l.shownPlanets.contains(Planets.serpulo)) l.shownPlanets.add(TDPlanet.supEX);
                     l.postInit();
                 }
             }
@@ -161,7 +165,8 @@ public class EUOverride {
         Blocks.arkyicStone.attributes.set(EUAttribute.EKOil, 100 * (0.15f/135));
         Blocks.beryllicStone.attributes.set(EUAttribute.EKOil, 70 * (0.15f/135));
 
-        Blocks.arc.consumePower(2f);
+        Blocks.arc.consumePower(2.5f);
+        ((ItemTurret) Blocks.foreshadow).ammoTypes.put(EUItems.lightninAlloy, EUBulletTypes.foreshadowEUBullet);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 350, EUItems.lightninAlloy, 350));
         Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, Items.surgeAlloy, 200));
         ((BaseTurret)Blocks.scathe).fogRadiusMultiplier = 0.75f;
@@ -324,6 +329,7 @@ public class EUOverride {
                 } else {
                     if (u.shownPlanets.isEmpty()) continue;
                     u.shownPlanets.add(TDPlanet.TD);
+                    if(u.shownPlanets.contains(Planets.serpulo)) u.shownPlanets.add(TDPlanet.supEX);
                     u.postInit();
                 }
             }

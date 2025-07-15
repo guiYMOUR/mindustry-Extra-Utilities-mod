@@ -37,6 +37,7 @@ import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
+import mindustry.content.StatusEffects;
 import mindustry.ctype.Content;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Mover;
@@ -50,6 +51,7 @@ import mindustry.gen.*;
 import mindustry.graphics.Pal;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
+import mindustry.type.StatusEffect;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
@@ -110,7 +112,8 @@ public class EUGet {
             "花杨永瀛",
             "灰尘庙",
             "维生素",
-            "鱼鱼"
+            "鱼鱼",
+            "penitent"
     };
     public static String[] developers = {
             "guiY",
@@ -133,6 +136,8 @@ public class EUGet {
         donorMap.put(5, new Seq<>());
         //鱼鱼
         donorMap.put(6, new Seq<>());
+        //penitent
+        donorMap.put(7, new Seq<>());
 
         //guiY
         developerMap.put(0, new Seq<>());
@@ -501,13 +506,11 @@ public class EUGet {
         float moveDistance = moveSpeed * Time.delta;
 
         // 更新子弹的位置
-        b.x += dx * moveDistance;
-        b.y += dy * moveDistance;
+        b.move(dx * moveDistance, dy * moveDistance);
 
         // 检查是否到达或超过终点
         if (Math.abs(b.x - endX) < 1e-4f && Math.abs(b.y - endY) < 1e-4f) {
-            b.x = endX;
-            b.y = endY;
+            b.set(endX, endY);
         }
     }
 
@@ -549,5 +552,9 @@ public class EUGet {
         float slope = (float) Math.tan(Math.toRadians(angle));
         // 计算y坐标并返回
         return slope * (x2 - x1) + y1;
+    }
+
+    public static boolean isDeBuff(StatusEffect status){
+        return status != null && status != StatusEffects.none && (status.damage > 0 || status.damageMultiplier < 1 || status.disarm || status.speedMultiplier < 1 || status.reloadMultiplier < 1 || status.healthMultiplier < 1);
     }
 }

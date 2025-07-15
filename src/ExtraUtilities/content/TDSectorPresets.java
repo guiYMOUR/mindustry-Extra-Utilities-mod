@@ -13,6 +13,10 @@ public class TDSectorPresets {
             //by guiY
             st1,
             guiYTD1, guiYCL1, BossTD;
+
+    //s ex
+    public static SectorPreset
+            groundZEx, relicValley;
     public static void load(){
         pd = new SectorPreset("preparation", TDPlanet.TD, 12){{
             alwaysUnlocked = true;
@@ -50,8 +54,19 @@ public class TDSectorPresets {
         }};
 
         BossTD = new SectorPreset("TD-boss", TDPlanet.TD, 24){{
-            difficulty = 8;
+            difficulty = 9;
             captureWave = 121;
+        }};
+
+        groundZEx = new SectorPreset("groundZEX", TDPlanet.supEX, 23){{
+            difficulty = 6;
+            captureWave = 50;
+            //alwaysUnlocked = true;
+        }};
+        relicValley = new SectorPreset("relicValley", TDPlanet.supEX, 10){{
+            difficulty = 9;
+            captureWave = 60;
+            //alwaysUnlocked = true;
         }};
     }
 }

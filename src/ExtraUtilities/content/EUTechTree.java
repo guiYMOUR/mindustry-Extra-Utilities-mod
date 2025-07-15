@@ -59,6 +59,8 @@ public class EUTechTree {
 
         addToNode(memoryCell, () -> node(buffrerdMemoryBank));
         addToNode(message, () -> node(clock));
+
+        //addToNode(SectorPresets.cruxscape, () -> node(TDPlanet.supEX));
         //E
         addToNode(turbineCondenser, () -> {
             node(nitrogenWell);
@@ -136,6 +138,11 @@ public class EUTechTree {
             node(coreKeeper);
             node(mineCellT1, () -> node(mineCellT2));
         }));
+        //ex
+        TDPlanet.supEX.techTree = nodeRoot(TDPlanet.supEX.localizedName, TDPlanet.supEX, () ->
+                addToNode(TDPlanet.supEX, () ->
+                        node(groundZEx, Seq.with(new SectorComplete(SectorPresets.planetaryTerminal)), () ->
+                                node(relicValley, Seq.with(new SectorComplete(groundZEx)), () -> {}))));
     }
 
     public static void addToNode(UnlockableContent p, Runnable c) {

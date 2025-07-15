@@ -2298,8 +2298,8 @@ public class EUUnitTypes {
             BulletType air = new BulletType(){{
                 speed = 24;
                 lifetime = 50 * 8 / speed;
-                damage = splashDamage = 360;
-                splashDamageRadius = 10 * 8;
+                damage = splashDamage = 370;
+                splashDamageRadius = 11 * 8;
                 absorbable = hittable = collides = collidesTiles = collidesGround = false;
                 despawnHit = false;
                 scaleLife = true;
@@ -2380,10 +2380,13 @@ public class EUUnitTypes {
                 public void despawned(Bullet b) {
                     Units.nearbyEnemies(b.team, b.x, b.y, splashDamageRadius, u -> {
                         if(u.checkTarget(collidesAir, collidesGround) && u.type != null && (u.targetable(b.team) || u.hittable())){
-                            u.damagePierce(splashDamage);
-                            float pDamage = damage * 0.2f;
-                            if(u.health <= pDamage) u.kill();
-                            else u.health -= pDamage;
+                            u.damagePierce(b.damage);
+                            u.apply(status, statusDuration);
+                            if(u.within(b, splashDamageRadius * 0.5f)) {
+                                float pDamage = b.damage * 0.2f;
+                                if (u.health <= pDamage) u.kill();
+                                else u.health -= pDamage;
+                            }
                         }
                     });
 
@@ -3830,9 +3833,10 @@ public class EUUnitTypes {
                             trailWidth = 5;
                             trailColor = Pal.techBlue;
                             trailRotation = true;
+                            int[] side = {-8, 8};
                             trailEffect = new Effect(30, e ->{
                                 color(e.color);
-                                for(int x : new int[]{-8, 8}){
+                                for(int x : side){
                                     Tmp.v1.set(x, -3).rotate(e.rotation - 90);
                                     Fill.circle(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 6 * e.foutpow());
                                 }
@@ -3891,7 +3895,6 @@ public class EUUnitTypes {
                                 float ex, ey;
                                 ex = b.x + Angles.trnsx(b.rotation(), speed * b.lifetime);
                                 ey = b.y + Angles.trnsy(b.rotation(), speed * b.lifetime);
-                                //Position pos = EUGet.pos(ex, ey);
                                 float len = Mathf.dst(b.x, b.y, ex, ey);
                                 float angle = Angles.angle(b.x, b.y, ex, ey);
                                 initE.at(b.x, b.y, angle, trailColor, len);

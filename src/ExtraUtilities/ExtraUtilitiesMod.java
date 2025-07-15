@@ -5,6 +5,7 @@ import ExtraUtilities.content.*;
 import ExtraUtilities.graphics.MainRenderer;
 import ExtraUtilities.net.EUCall;
 import ExtraUtilities.ui.EUI;
+import ExtraUtilities.worlds.meta.EUStatValues;
 import arc.*;
 import arc.Graphics;
 import arc.graphics.Color;
@@ -149,13 +150,10 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                Block minisp = content.block(name("minisp"));
-                Block ld = content.block(name("ld"));
+                Block duoIII = content.block(name("T3-duo"));
                 updateLog.addAll(
-                        EUStatusEffects.breakage, EUBlocks.rust, EUBlocks.ekLiquidDriver,
-                        ld, minisp,
-                        EUUnitTypes.regency, EUUnitTypes.havoc, EUUnitTypes.arcana, EUBlocks.sancta, EUBlocks.arbiter,
-                        EUBlocks.LG, EUBlocks.LA, EUBlocks.adaptiveMiner, EUBlocks.adaptiveMinerII,
+                        TDPlanet.supEX, TDSectorPresets.groundZEx, TDSectorPresets.relicValley, EUBlocks.penitent,
+                        duoIII, EUBlocks.onyxBlaster, EUBlocks.antiaircraft, Blocks.foreshadow,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -190,14 +188,13 @@ public class ExtraUtilitiesMod extends Mod{
                         log.row();
                         log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
                     });
+                    addToTable(TDPlanet.supEX, t);
+                    addToTable(TDSectorPresets.groundZEx, t);
+                    addToTable(TDSectorPresets.relicValley, t);
+                    addToTable(EUBlocks.penitent, t);
                     addToTable(EUStatusEffects.breakage, t);
                     addToTable(EUBlocks.rust, t);
                     addToTable(EUBlocks.ekLiquidDriver, t);
-                    addToTable(TDSectorPresets.st1, t);
-                    addToTable(EUBlocks.adaptiveMiner, t);
-                    addToTable(EUBlocks.adaptiveMinerII, t);
-                    addToTable(EUBlocks.ekSeparator, t);
-                    addToTable(EUBlocks.shootingStar, t);
                     addToTable(EUBlocks.guiY, t);
                 }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f).get();
                 buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
@@ -334,6 +331,7 @@ public class ExtraUtilitiesMod extends Mod{
             EUOverride.overrideUnitForAll(overrideUnitArm, coreReset);
             EUOverride.overrideTDRules(coreReset);
             EUOverride.overrideBlockAll(hardMod, coreResetV7, coreReset);
+            Blocks.foreshadow.stats.add(Stat.ammo, EUStatValues.ammoString(EUItems.lightninAlloy, "fs"));
             EUOverride.overrideJs();
             afterEnterLoad();
 
@@ -538,6 +536,12 @@ public class ExtraUtilitiesMod extends Mod{
                 UnitCommand c = new UnitCommand("EUAssist", "defense", u -> new DefenderHealAI());
                 EUUnitTypes.narwhal.commands.add(c);
                 EUUnitTypes.narwhal.defaultCommand = c;
+
+                if(Core.atlas != null){
+                    TextureRegionDrawable ex = new TextureRegionDrawable(Core.atlas.find("extra-utilities-serpuloEX"));
+                    Icon.icons.put("ex", ex);
+                    TDPlanet.supEX.icon = "ex";
+                }
             }
         }
 

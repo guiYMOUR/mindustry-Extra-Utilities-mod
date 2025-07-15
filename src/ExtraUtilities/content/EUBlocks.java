@@ -29,6 +29,7 @@ import ExtraUtilities.worlds.blocks.unit.UnitBoost;
 import ExtraUtilities.worlds.consumers.BetterConsumeLiquidsDynamic;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.bullet.*;
+import ExtraUtilities.worlds.meta.EUStatValues;
 import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
@@ -112,7 +113,7 @@ public class EUBlocks {
         //power
             liquidConsumeGenerator, thermalReactor, LG, heatPower, windPower, waterPower,
         //turret
-            blackhole, dissipation, anti_Missile, sandGo, guiY, javelin, shootingStar, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, arbiter, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
+            blackhole, dissipation, anti_Missile, penitent, sandGo, guiY, javelin, shootingStar, antiaircraft, onyxBlaster, celebration, celebrationMk2, sancta, arbiter, RG, fiammetta, turretResupplyPoint, mineCellT1, mineCellT2,
             cobweb, rust, quantumGravity,
         //unit
             imaginaryReconstructor, unitBooster, advAssemblerModule, finalF,
@@ -964,7 +965,7 @@ public class EUBlocks {
             canOverdrive = false;
         }};
         LG = new LightenGenerator("lightnin-generator"){{
-            requirements(Category.power, with(Items.metaglass, 600, Items.graphite, 550, Items.silicon, 470, Items.surgeAlloy, 550, EUItems.lightninAlloy, 270));
+            requirements(Category.power, with(Items.metaglass, 1000, Items.graphite, 800, Items.silicon, 900, Items.surgeAlloy, 550, EUItems.lightninAlloy, 300));
             fuelItem = EUItems.lightninAlloy;
             consumeItem(fuelItem);
             liquidCapacity = 60;
@@ -1159,7 +1160,7 @@ public class EUBlocks {
 
 
         dissipation = new dissipation("dissipation"){{
-            requirements(Category.turret, with(Items.silicon, 180, Items.thorium, 100,EUItems.lightninAlloy, 60, Items.phaseFabric, 80));
+            requirements(Category.turret, with(Items.silicon, 300, Items.thorium, 180,EUItems.lightninAlloy, 80, Items.phaseFabric, 120));
             hasPower = true;
             size = 3;
             range = 220;
@@ -1174,7 +1175,7 @@ public class EUBlocks {
         }};
 
         anti_Missile = new antiMissileTurret("anti-missile"){{
-            requirements(Category.turret, with(Items.graphite, 100, Items.silicon, 130, Items.oxide, 100, Items.thorium, 60));
+            requirements(Category.turret, with(Items.graphite, 150, Items.silicon, 180, Items.oxide, 120, Items.thorium, 60));
             size = 2;
             reload = 60f / 2.67f;
             shoot = new ShootAlternate(5);
@@ -1196,6 +1197,99 @@ public class EUBlocks {
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
             drawer = new DrawTurret("reinforced-");
 
+            squareSprite = false;
+        }};
+
+        penitent = new Penitent("penitent"){{
+            requirements(Category.turret, with(Items.graphite, 502, Items.silicon, 404, Items.thorium, 303));
+
+            size = 3;
+            health = 3000;
+            range = 35 * 8f;
+            loadReload = 120f;
+
+            shoot = new ShootBarrel(){{
+                barrels = new float[]{
+                        -9, 1, 6,
+                        -8f, 1, 3,
+                        -7, 1, 0,
+                        7, 1, 0,
+                        8f, 1, -3,
+                        9, 1, -6
+                };
+            }};
+
+            shootSound = Sounds.malignShoot;
+            soundPitchMax = soundPitchMin = 0.7f;
+
+            shootType = new BulletType(){{
+                ammoMultiplier = 1;
+                damage = 40;
+                speed = 8f;
+                lifetime = 39f;
+                homingDelay = 6f;
+                homingRange = 12 * 8;
+                homingPower = 0.5f;
+                trailColor = EUItems.lightninAlloy.color;
+                trailLength = 10;
+                trailWidth = 3f;
+                status = StatusEffects.slow;
+                statusDuration = 30;
+                hitEffect = despawnEffect = new Effect(24, e -> {
+                    Draw.color(EUItems.lightninAlloy.color);
+                    Angles.randLenVectors(e.id, 7, 32 * e.finpow(), e.rotation, 0, (x, y) -> Fill.square(e.x + x, e.y + y, 8 * e.foutpow()));
+                });
+                shootEffect = Fx.none;
+                smokeEffect = new Effect(30, e -> {
+                    Draw.color(EUItems.lightninAlloy.color);
+                    Angles.randLenVectors(e.id, 4, 40 * e.finpow(), e.rotation, 90, (x, y) -> Fill.square(e.x + x, e.y + y, 6 * e.foutpow()));
+                });
+                hitSound = despawnSound = Sounds.back;
+                absorbable = false;
+                collidesGround = collidesTiles = false;
+            }
+
+                @Override
+                public void draw(Bullet b) {
+                    super.draw(b);
+                    Draw.color(trailColor);
+                    Drawf.tri(b.x, b.y, 6f, 13, b.rotation());
+                    Drawf.tri(b.x, b.y, 4f, 10, b.rotation() + 150);
+                    Drawf.tri(b.x, b.y, 4f, 10, b.rotation() - 150);
+                }
+
+                @Override
+                public void update(Bullet b) {
+                    super.update(b);
+                    b.initVel(b.rotation(), speed * b.fin() * 1.8f);
+                }
+
+                @Override
+                public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                    super.hitEntity(b, entity, health);
+                    if(entity instanceof Unit unit){
+                        if(!unit.dead){
+                            int i = 0;
+                            for(var status : content.statusEffects()){
+                                if(EUGet.isDeBuff(status) && unit.hasEffect(status)){
+                                    i++;
+                                }
+                            }
+                            unit.damagePierce(Math.min(0.3f, i * 0.1f) * b.damage);
+                        }
+                    }
+                }
+            };
+
+            rotateSpeed = 5;
+            loadSpeed = 0.7f;
+
+            targetGround = false;
+
+            consumePower(8);
+
+            coolant = consume(new ConsumeLiquid(Liquids.water, 24f / 60f));
+            drawer = new DrawTurret("reinforced-");
             squareSprite = false;
         }};
 
@@ -1264,7 +1358,7 @@ public class EUBlocks {
         }};
 
         guiY = new ItemTurret("guiY"){{
-            requirements(Category.turret, with(Items.beryllium, 65, Items.graphite, 90, Items.silicon, 66));
+            requirements(Category.turret, with(Items.beryllium, 75, Items.graphite, 90, Items.silicon, 66));
             size = 2;
             Color eccl = Color.valueOf("87CEEB");
             Color eccb = Color.valueOf("6D90BC");
@@ -1329,7 +1423,7 @@ public class EUBlocks {
 
         javelin = new PowerTurret("javelin"){{
             //1 + 1 = ⑨
-            requirements(Category.turret, with(Items.surgeAlloy, 250, Items.silicon, 850, Items.carbide, 500, Items.phaseFabric, 300));
+            requirements(Category.turret, with(Items.surgeAlloy, 250, Items.silicon, 850, Items.carbide, 550, Items.phaseFabric, 300));
             consumePower(12f);
             heatRequirement = 45f;
             maxHeatEfficiency = 2f;
@@ -1499,7 +1593,7 @@ public class EUBlocks {
         }};
 
         shootingStar = new LingSha("shooting-star"){{
-            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 400, EUItems.lightninAlloy, 300, Items.thorium, 250));
+            requirements(Category.turret, with(Items.silicon, 866, Items.graphite, 866, EUItems.lightninAlloy, 300, Items.thorium, 328));
             size = 5;
             health = 4288;
 
@@ -1754,15 +1848,21 @@ public class EUBlocks {
                 );
             }};
 
-        }};
+        }
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, EUStatValues.ability(name, 2));
+            }
+        };
 
         antiaircraft = new ItemTurret("antiaircraft"){{
-            requirements(Category.turret, with(Items.silicon, 400, Items.graphite, 500, Items.surgeAlloy, 180, Items.thorium, 280));
+            requirements(Category.turret, with(Items.silicon, 800, Items.graphite, 600, Items.surgeAlloy, 250, Items.thorium, 350));
             size = 3;
             range = 45 * 8;
 
             health = 2000;
-            reload = 60 / .7f;
+            reload = 60 / .8f;
             recoil = 4;
             recoilTime = recoil * reload - 30;
             shootY = 18;
@@ -1770,18 +1870,22 @@ public class EUBlocks {
             minRange = 8 * 8;
             shake = 4;
 
-            shootSound = Sounds.shotgun;
+            //shootSound = Sounds.shotgun;
+            shootSound = Sounds.pulseBlast;
+            soundPitchMax = soundPitchMin = 0.8f;
 
-            ammo(Items.silicon, new BulletType(){{
+            ammo(Items.surgeAlloy, new BulletType(){{
                 ammoMultiplier = 1;
                 speed = 24;
                 lifetime = 45 * 8 / speed;
-                damage = splashDamage = 350;
-                splashDamageRadius = 10 * 8;
+                damage = splashDamage = 450;
+                splashDamageRadius = 11 * 8;
                 absorbable = hittable = collides = collidesTiles = collidesGround = false;
                 despawnHit = false;
                 scaleLife = true;
                 rangeOverride = 50 * 8;
+                status = EUStatusEffects.awsl;
+                statusDuration = 18f;
                 trailEffect = new MultiEffect(
                         new Effect(40, e -> {
                             Draw.color(e.color);
@@ -1862,10 +1966,13 @@ public class EUBlocks {
                 public void despawned(Bullet b) {
                     Units.nearbyEnemies(b.team, b.x, b.y, splashDamageRadius, u -> {
                         if(u.checkTarget(collidesAir, collidesGround) && u.type != null && (u.targetable(b.team) || u.hittable())){
-                            u.damagePierce(splashDamage);
-                            float pDamage = damage * 0.2f;
-                            if(u.health <= pDamage) u.kill();
-                            else u.health -= pDamage;
+                            u.damagePierce(b.damage);
+                            u.apply(status, statusDuration);
+                            if(u.within(b, splashDamageRadius * 0.5f)) {
+                                float pDamage = b.damage * 0.2f;
+                                if (u.health <= pDamage) u.kill();
+                                else u.health -= pDamage;
+                            }
                         }
                     });
 
@@ -1873,17 +1980,24 @@ public class EUBlocks {
                 }
             });
 
-            ammoPerShot = 10;
-            maxAmmo = ammoPerShot * 4;
+            ammoPerShot = 3;
+            maxAmmo = ammoPerShot * 5;
             coolantMultiplier = 1.8f;
 
             coolant = consumeCoolant(0.6f);
             consumePower(5);
-        }};
+        }
+
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, EUStatValues.ability(name, 1));
+            }
+        };
 
         // 梦幻联动
         onyxBlaster = new MultiBulletTurret("onyx-blaster"){{
-            requirements(Category.turret, with(Items.graphite, 400, Items.silicon, 450, Items.thorium, 300, Items.surgeAlloy, 220));
+            requirements(Category.turret, with(Items.graphite, 800, Items.silicon, 750, Items.thorium, 360, Items.surgeAlloy, 250));
             size = 4;
             health = 3200;
 
@@ -1922,7 +2036,7 @@ public class EUBlocks {
             reload = 60;
             recoil = 4;
             coolant = consumeCoolant(0.5f);
-            coolantMultiplier = 3;
+            coolantMultiplier = 2f;
             shootSound = Sounds.shootAltLong;
             smokeEffect = new Effect(20, e -> {
                 Draw.color(Pal.sap);
@@ -1949,9 +2063,9 @@ public class EUBlocks {
                 hitEffect = despawnEffect = Fx.none;
                 lightning = 2;
                 lightningColor = Pal.heal;
-                lightningDamage = 16;
+                lightningDamage = 12;
                 status = EUStatusEffects.awsl;
-                statusDuration = 18;
+                statusDuration = 10;
             }};
             BulletType b1 = new BulletType(){{
                 ammoMultiplier = 2;
@@ -1965,22 +2079,23 @@ public class EUBlocks {
                 hittable = false;
                 absorbable = false;
                 despawnEffect = hitEffect = Fx.none;
+                reloadMultiplier = 0.8f;
             }};
 
             BulletType bb2 = new BasicBulletType(){{
                 damage = 55;
                 speed = 9;
                 sprite = name("shotgunShot");
-                width = 3;
-                height = 7;
+                width = 5;
+                height = 11;
                 frontColor = Pal.sapBullet;
                 lifetime = 30;
                 hitEffect = despawnEffect = Fx.none;
                 fragBullet = new BasicBulletType(){{
                     damage = 26;
                     frontColor = Pal.sapBullet;
-                    width = 3;
-                    height = 2;
+                    width = 4;
+                    height = 3;
                     shrinkY = 0;
                     speed = 10;
                     lifetime = 5;
@@ -2006,8 +2121,8 @@ public class EUBlocks {
                 damage = 66;
                 speed = 9;
                 sprite = name("shotgunShot");
-                width = 3;
-                height = 7;
+                width = 5;
+                height = 11;
                 frontColor = Items.thorium.color;
                 lifetime = 30;
                 hitEffect = despawnEffect = Fx.none;
@@ -2111,7 +2226,7 @@ public class EUBlocks {
             ammo(Items.thorium, bullets1, Items.carbide, bullets2, Items.surgeAlloy, bullets3, EUItems.lightninAlloy, bullets4);
         }};
         celebration = new MultiBulletTurret("celebration"){{
-            requirements(Category.turret, with(Items.silicon, 160, Items.titanium, 140, Items.thorium, 80, EUItems.crispSteel, 70));
+            requirements(Category.turret, with(Items.silicon, 180, Items.titanium, 170, Items.thorium, 100, EUItems.crispSteel, 110));
             drawer = new DrawTurret("reinforced-");
             shoot = new ShootSpread(2, 4);
             inaccuracy = 3;
@@ -2164,7 +2279,7 @@ public class EUBlocks {
         celebrationMk2 = new MultiBulletTurret("celebration-mk2"){{
             size = 5;
             drawer = new DrawMulti(new DrawTurret("reinforced-"), new DrawMk2());
-            requirements(Category.turret, with(Items.silicon, 666, Items.graphite, 521, Items.thorium, 520, EUItems.lightninAlloy, 288 + (hardMod ? 40 : 0)));
+            requirements(Category.turret, with(Items.silicon, 888, Items.graphite, 666, Items.thorium, 520, EUItems.lightninAlloy, 288 + (hardMod ? 40 : 0)));
             inaccuracy = 3;
             shootEffect = EUFx.Mk2Shoot(90);
             smokeEffect = Fx.none;
@@ -2402,7 +2517,7 @@ public class EUBlocks {
 
         sancta = new ItemTurret("sancta"){{
             //int amount = 2000 + (hardMod ? 500 : 0);
-            int amount = 2000;
+            int amount = 3000;
             requirements(Category.turret, with(EUItems.lightninAlloy, amount, Items.phaseFabric, amount, Items.surgeAlloy, amount));
             size = 7;
             BulletType normal = new ScarletDevil(EUItems.lightninAlloy.color){{
@@ -2622,10 +2737,17 @@ public class EUBlocks {
             coolEffect = Fx.none;
             canOverdrive = false;
             squareSprite = false;
-        }};
+        }
+
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, EUStatValues.ability(name, 2));
+            }
+        };
 
         arbiter = new ItemTurret("arbiter"){{
-            requirements(Category.turret, with(Items.silicon, 3000, EUItems.lightninAlloy, 2000, Items.phaseFabric, 2000));
+            requirements(Category.turret, with(Items.graphite, 3500, EUItems.lightninAlloy, 2500, Items.phaseFabric, 3000));
 
             hasPower = true;
             consumePower(10);
@@ -2686,10 +2808,17 @@ public class EUBlocks {
                         }}
                 );
             }};
-        }};
+        }
+
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, EUStatValues.ability(name, 2));
+            }
+        };
 
         blackhole = new aimBulletTurret("blackhole"){{
-            requirements(Category.turret, with(Items.silicon, 600, EUItems.lightninAlloy, 400, Items.phaseFabric, 300));
+            requirements(Category.turret, with(Items.silicon, 900, EUItems.lightninAlloy, 400, Items.phaseFabric, 500));
             coolant = consume(new ConsumeLiquid(Liquids.water, 1));
             coolantMultiplier = 0.5f;
             BulletType bt = new BlackHoleBullet(){{
@@ -3050,14 +3179,14 @@ public class EUBlocks {
         }};
 
         turretResupplyPoint = new TurretResupplyPoint("turret-resupply-point"){{
-            requirements(Category.turret, with(Items.graphite, 80, Items.silicon, 120, Items.thorium, 70, Items.titanium, 50));
+            requirements(Category.turret, with(Items.graphite, 100, Items.silicon, 120, Items.thorium, 70, Items.titanium, 50));
             size = 2;
             hasPower = true;
             consumePower(1);
         }};
 
         turretSpeeder = new TurretSpeeder("turret-speeder"){{
-            requirements(Category.turret, with(Items.oxide, 120, Items.silicon, 200, Items.thorium, 100, Items.surgeAlloy, 40));
+            requirements(Category.turret, with(Items.oxide, 120, Items.silicon, 200, Items.thorium, 120, Items.surgeAlloy, 40));
             size = 3;
             speedBoost = 1.33f;
 
@@ -3553,7 +3682,7 @@ public class EUBlocks {
         }};
 
         mendTurret = new MendTurret("heal"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 80, Items.silicon, 300, Items.graphite, 280, Items.thorium, 180));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 120, Items.silicon, 500, Items.graphite, 470, Items.thorium, 230));
             size = 3;
             range = 22 * 8;
             shootType = new HealCone(30, range - 8, false){{
@@ -3569,7 +3698,7 @@ public class EUBlocks {
             consumeItem(Items.phaseFabric).boost();
         }};
         coreKeeper = new CoreKeeper("core-keeper"){{
-            requirements(Category.effect, with(EUItems.lightninAlloy, 50 + (hardMod ? 50 : 0), Items.silicon, 400, Items.thorium, 200));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 50 + (hardMod ? 50 : 0), Items.silicon, 800, Items.thorium, 400));
             size = 3;
             health = 1080;
             range = 40 + (hardMod ? 16 : 0);
@@ -3732,15 +3861,16 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
 
-        EUGet.donorItems.addAll(T2sporePress, phasicDrill, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
+        EUGet.donorItems.addAll(T2sporePress, phasicDrill, penitent, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
         EUGet.donorMap.get(0).addAll(T2sporePress, phasicDrill);
         EUGet.donorMap.get(1).addAll(waterBomb);
         EUGet.donorMap.get(2).addAll(javelin);
         EUGet.donorMap.get(4).addAll(buffrerdMemoryBank);
         EUGet.donorMap.get(5).addAll(shootingStar);
+        EUGet.donorMap.get(7).addAll(penitent);
 
-        EUGet.developerItems.addAll(siliconFurnace, guiY, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork, crystalTower);
-        EUGet.developerMap.get(0).addAll(guiY, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork);
+        EUGet.developerItems.addAll(siliconFurnace, guiY, rust, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork, crystalTower);
+        EUGet.developerMap.get(0).addAll(guiY, fiammetta, rust, guiYsDomain, allNode, ADC, randomer, fireWork);
         EUGet.developerMap.get(1).addAll(siliconFurnace, onyxBlaster);
     }
 
