@@ -1285,6 +1285,7 @@ public class EUBlocks {
             loadSpeed = 0.7f;
 
             targetGround = false;
+            alwaysUnlocked = true;
 
             consumePower(8);
 
