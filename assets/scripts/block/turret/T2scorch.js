@@ -15,7 +15,7 @@ const T2scorch = extend(ItemTurret, "T2scorch", {
         this.super$setStats();
         if(this.ammoTypes == null) return;
 
-        this.stats.add(Stat.ammo, value.ammoString(this.ammoTypes));
+        this.stats.add(Stat.ammo, value.ammoString(this.ammoTypes, "t2sh"));
     },
 });
 T2scorch.ammo(
