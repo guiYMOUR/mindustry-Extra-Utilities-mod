@@ -86,6 +86,7 @@ public class LightenGenerator extends NuclearReactor {
             hitEffect = Fx.none;
             despawnEffect = Fx.none;
             ammoMultiplier = 3;
+
             trailEffect = new Effect(12, e ->{
                 Draw.color(EUItems.lightninAlloy.color);
                 Drawf.tri(e.x, e.y, 4 * e.fout(), 11, e.rotation);
@@ -95,21 +96,23 @@ public class LightenGenerator extends NuclearReactor {
                 }
             });
 
-            absorbable = hittable = false;
+            absorbable = hittable = reflectable = false;
         }
             @Override
             public void update(Bullet b) {
-                if(b.time > 18){
-                    Teamc target = Units.closestTarget(b.team, ((LightenGeneratorBuild)b.owner).x, ((LightenGeneratorBuild)b.owner).y, enemyRange,
-                            e -> (e.isGrounded() && collidesGround) || (e.isFlying() && collidesAir),
-                            t -> this.collidesGround);
-                    Teamc targetTo = target != null ? target : (Teamc)b.owner;
-                    float homingPower = target == null ? 0.08f : 0.5f;
-                    if (targetTo != null) {
-                        b.vel.setAngle(Mathf.slerpDelta(b.rotation() + 0.01f, b.angleTo(targetTo), homingPower));
+                if(b.owner instanceof LightenGeneratorBuild owner) {
+                    if (b.time > 18) {
+                        Teamc target = Units.closestTarget(b.team, owner.x, owner.y, enemyRange,
+                                e -> (e.isGrounded() && collidesGround) || (e.isFlying() && collidesAir),
+                                t -> this.collidesGround);
+                        Teamc targetTo = target != null ? target : (Teamc) b.owner;
+                        float homingPower = target == null ? 0.08f : 0.5f;
+                        if (targetTo != null) {
+                            b.vel.setAngle(Mathf.slerpDelta(b.rotation() + 0.01f, b.angleTo(targetTo), homingPower));
+                        }
                     }
+                    trailEffect.at(b.x, b.y, b.rotation(), b.time);
                 }
-                trailEffect.at(b.x, b.y, b.rotation(), b.time);
             }
 
             @Override
