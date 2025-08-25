@@ -34,13 +34,16 @@ import arc.util.Time;
 import arc.util.noise.Noise;
 import arc.util.pooling.Pools;
 import mindustry.Vars;
+import mindustry.ai.types.MissileAI;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.Content;
 import mindustry.ctype.UnlockableContent;
+import mindustry.entities.EntityCollisions;
 import mindustry.entities.Mover;
+import mindustry.entities.Units;
 import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.PointBulletType;
@@ -55,6 +58,7 @@ import mindustry.type.StatusEffect;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
+import mindustry.world.blocks.ControlBlock;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.meta.Stat;
@@ -314,6 +318,41 @@ public class EUGet {
     //use for cst bullet
     public static Bullet anyOtherCreate(Bullet bullet, BulletType bt, Entityc shooter, Entityc owner, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY, @Nullable Teamc target){
         if(bt == null) return null;
+        angle += bt.angleOffset + Mathf.range(bt.randomAngleOffset);
+
+        if(!Mathf.chance(bt.createChance)) return null;
+        if(bt.ignoreSpawnAngle) angle = 0;
+        if(bt.spawnUnit != null){
+            //don't spawn units clientside!
+            if(!net.client()){
+                Unit spawned = bt.spawnUnit.create(team);
+                spawned.set(x, y);
+                spawned.rotation = angle;
+                //immediately spawn at top speed, since it was launched
+                if(bt.spawnUnit.missileAccelTime <= 0f){
+                    spawned.vel.trns(angle, bt.spawnUnit.speed);
+                }
+                //assign unit owner
+                if(spawned.controller() instanceof MissileAI ai){
+                    if(shooter instanceof Unit unit){
+                        ai.shooter = unit;
+                    }
+
+                    if(shooter instanceof ControlBlock control){
+                        ai.shooter = control.unit();
+                    }
+
+                }
+                spawned.add();
+                Units.notifyUnitSpawn(spawned);
+            }
+            //Since bullet init is never called, handle killing shooter here
+            if(bt.killShooter && owner instanceof Healthc h && !h.dead()) h.kill();
+
+            //no bullet returned
+            return null;
+        }
+
         bullet.type = bt;
         bullet.owner = owner;
         bullet.shooter = (shooter == null ? owner : shooter);
@@ -328,14 +367,11 @@ public class EUGet {
         bullet.aimY = aimY;
 
         bullet.initVel(angle, bt.speed * velocityScl * (bt.velocityScaleRandMin != 1f || bt.velocityScaleRandMax != 1f ? Mathf.random(bt.velocityScaleRandMin, bt.velocityScaleRandMax) : 1f));
-        if(bt.backMove){
-            bullet.set(x - bullet.vel.x * Time.delta, y - bullet.vel.y * Time.delta);
-        }else{
-            bullet.set(x, y);
-        }
+        bullet.set(x, y);
+        bullet.lastX = x;
+        bullet.lastY = y;
         bullet.lifetime = bt.lifetime * lifetimeScl * (bt.lifeScaleRandMin != 1f || bt.lifeScaleRandMax != 1f ? Mathf.random(bt.lifeScaleRandMin, bt.lifeScaleRandMax) : 1f);
         bullet.data = data;
-        bullet.drag = bt.drag;
         bullet.hitSize = bt.hitSize;
         bullet.mover = mover;
         bullet.damage = (damage < 0 ? bt.damage : damage) * bullet.damageMultiplier();
@@ -506,7 +542,8 @@ public class EUGet {
         float moveDistance = moveSpeed * Time.delta;
 
         // 更新子弹的位置
-        b.move(dx * moveDistance, dy * moveDistance);
+        //b.move(dx * moveDistance, dy * moveDistance);
+        collisions.move(b, dx * moveDistance, dy * moveDistance);
 
         // 检查是否到达或超过终点
         if (Math.abs(b.x - endX) < 1e-4f && Math.abs(b.y - endY) < 1e-4f) {

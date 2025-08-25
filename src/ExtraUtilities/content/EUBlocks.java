@@ -2171,7 +2171,7 @@ public class EUBlocks {
             BulletType bst = new BasicBulletType(9, 120, name("onyx-blaster-bullet")){{
                 splashDamage = 90;
                 splashDamageRadius = 10 * 8;
-                lifetime = 30;
+                lifetime = 18;
                 width = height = 18;
                 shrinkY = 0;
 
@@ -2196,7 +2196,7 @@ public class EUBlocks {
             BulletType bs = new BasicBulletType(9, 120, name("onyx-blaster-bullet")){{
                 splashDamage = 90;
                 splashDamageRadius = 10 * 8;
-                lifetime = 30;
+                lifetime = 18;
                 width = height = 18;
                 shrinkY = 0;
                 status = StatusEffects.sapped;

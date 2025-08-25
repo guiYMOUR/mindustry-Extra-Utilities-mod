@@ -151,6 +151,7 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.row();
                 updateLog.clear();
                 Block duoIII = content.block(name("T3-duo"));
+                Block T2scorch = content.block(name("T2scorch"));
                 updateLog.addAll(
                         TDPlanet.supEX, TDSectorPresets.groundZEx, TDSectorPresets.relicValley, EUBlocks.penitent,
                         duoIII, EUBlocks.onyxBlaster, EUBlocks.antiaircraft, Blocks.foreshadow,

@@ -15,6 +15,7 @@ import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
+import mindustry.entities.units.StatusEntry;
 import mindustry.gen.Unit;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
@@ -133,7 +134,7 @@ public class EUStatusEffects {
     }
 
         @Override
-        public void update(Unit unit, float time) {
+        public void update(Unit unit, StatusEntry entry) {
             if(damage > 0){
                 unit.damageContinuousPierce(damage);
             }else if(damage < 0){
@@ -206,7 +207,7 @@ public class EUStatusEffects {
         }
 
         @Override
-        public void update(Unit unit, float time) {
+        public void update(Unit unit, StatusEntry entry) {
 
             unit.damageMultiplier *= 0.8f;
             unit.speedMultiplier *= 0.4f;
