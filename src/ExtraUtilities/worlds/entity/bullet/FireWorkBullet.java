@@ -4,6 +4,7 @@ import ExtraUtilities.content.EUGet;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.util.Nullable;
@@ -39,6 +40,8 @@ public class FireWorkBullet extends BulletType {
 
     public @Nullable BulletType fire;
     public @Nullable BulletType textFire = null;
+
+    public TextureRegion ammo;
 
     public FireWorkBullet(float damage, float speed, String sprite, Color color, float rad){
         this.damage = damage;
@@ -86,6 +89,12 @@ public class FireWorkBullet extends BulletType {
         this(damage, speed, name("mb-b"), Color.gray, 6 * 8);
     }
 
+    @Override
+    public void load() {
+        super.load();
+
+        ammo = Core.atlas.find(sprite);
+    }
 
     @Override
     public void drawTrail(Bullet b) {
@@ -102,12 +111,12 @@ public class FireWorkBullet extends BulletType {
         super.draw(b);
         if(outline){
             Draw.color(colorful ? EUGet.EC2.set(EUGet.rainBowRed).shiftHue(b.time * 2) : color);
-            Draw.rect(Core.atlas.find(sprite), b.x, b.y, width * 1.1f, height * 1.1f, b.rotation() - 90);
+            Draw.rect(ammo, b.x, b.y, width * 1.1f, height * 1.1f, b.rotation() - 90);
             Draw.color(Color.darkGray);
-            Draw.rect(Core.atlas.find(sprite), b.x, b.y, width * 0.8f, height * 0.8f, b.rotation() - 90);
+            Draw.rect(ammo, b.x, b.y, width * 0.8f, height * 0.8f, b.rotation() - 90);
         } else {
             Draw.color(colorful ? EUGet.EC2.set(EUGet.rainBowRed).shiftHue(b.time * 2) : color);
-            Draw.rect(Core.atlas.find(sprite), b.x, b.y, width, height, b.rotation() - 90);
+            Draw.rect(ammo, b.x, b.y, width, height, b.rotation() - 90);
         }
         Draw.reset();
     }
@@ -146,13 +155,13 @@ public class FireWorkBullet extends BulletType {
         if(fire == null) return;
         for(int i = 0; i < num; i++){
             if(colorful && childColorful){
-                Color c = colors[(int) Mathf.random(0, colors.length-0.01f)];
+                Color c = colors[Mathf.random(0, colors.length - 1)];
                 fire.create(b, b.team, b.x, b.y, Mathf.random(360), -1, 1, 1, c);
             } else fire.create(b, b.team, b.x, b.y, Mathf.random(360), -1, 1, 1, color);
         }
         if(textFire != null){
             if(colorful){
-                Color c = colors[Mathf.random(0, colors.length)];
+                Color c = colors[Mathf.random(0, colors.length - 1)];
                 textFire.create(b, b.team, b.x, b.y, 0, -1, 1, 1, c);
             } else textFire.create(b, b.team, b.x, b.y, 0, -1, 1, 1, color);
         }
@@ -168,14 +177,14 @@ public class FireWorkBullet extends BulletType {
         public colorFire(boolean stop, float speed, float lifetime){
             this.stop = stop;
             damage = 0;
-            collides = false;
+            collides = collidesAir = collidesGround = false;
             this.speed = speed;
             this.lifetime = lifetime;
             trailWidth = 1.7f;
             trailLength = 6;
             hitEffect = despawnEffect = Fx.none;
             hittable = reflectable = false;
-            absorbable = true;
+            absorbable = false;
             keepVelocity = false;
         }
 
@@ -220,30 +229,42 @@ public class FireWorkBullet extends BulletType {
         public String sprite;
         public float width;
         public float height;
+
+        public TextureRegion string;
+
         public spriteBullet(String sprite, float width, float height){
             this.sprite = sprite;
             this.width = width;
             this.height = height;
             damage = 0;
-            collides = false;
+            collides = collidesAir = collidesGround = false;
             speed = 0;
             lifetime = 60;
             hitEffect = despawnEffect = Fx.none;
             hittable = false;
             absorbable = false;
+            reflectable = false;
 
             keepVelocity = false;
         }
         public spriteBullet(String sprite){
             this(sprite, 96, 96);
         }
+
+        @Override
+        public void load() {
+            super.load();
+
+            string = Core.atlas.find(sprite);
+        }
+
         @Override
         public void draw(Bullet b) {
             super.draw(b);
             if(!(b.data instanceof Color)) return;
             Draw.z(Layer.bullet);
             Draw.color(b.data == Color.white ? EUGet.EC20.set(EUGet.rainBowRed).shiftHue(b.time * 2) : (Color)b.data);
-            Draw.rect(Core.atlas.find(sprite), b.x, b.y,  width * b.fout(), height * b.fout(), 0);
+            Draw.rect(string, b.x, b.y,  width * b.fout(), height * b.fout(), 0);
         }
     }
 }

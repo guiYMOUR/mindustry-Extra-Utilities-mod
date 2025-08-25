@@ -91,7 +91,8 @@ public class ChainLightningFade extends BulletType {
             if(damage > 0){
                 float length = Mathf.dst(ox, oy, nx, ny);
                 float angle = Angles.angle(ox, oy, nx, ny);
-                Damage.collideLine(b, b.team, hitEffect, ox, oy, angle, length, large, false);
+                //Damage.collideLine(b, b.team, hitEffect, ox, oy, angle, length, large, false);
+                Damage.collideLine(b, b.team, ox, oy, angle, length, large, false);
             }
             ox = nx;
             oy = ny;
