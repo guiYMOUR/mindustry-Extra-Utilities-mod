@@ -12,7 +12,7 @@ sakura.size = 3;
 sakura.rotateSpeed = 5;
 sakura.inaccuracy = 0;
 sakura.range = 240;
-sakura.shootSound = Sounds.shootBig;
+sakura.shootSound = Sounds.shootSpectre;
 sakura.shootEffect = Fx.thoriumShoot;
 sakura.smokeEffect = Fx.thoriumShoot;
 lib.Coolant(sakura, 0.4, 2.5);

@@ -41,7 +41,7 @@ public class fireWork extends Block {
 
         @Override
         public void despawned(Bullet b) {
-            Sounds.bang.at(b);
+            Sounds.unitExplode2.at(b);
             Color color = colors[(int)Mathf.random(0, colors.length - 0.1f)];
             if(Mathf.chance(0.4)){
                 for(int i = 0; i < 15; i++){

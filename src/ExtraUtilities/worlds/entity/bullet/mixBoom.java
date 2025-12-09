@@ -36,7 +36,7 @@ public class mixBoom extends BulletType {
         trailEffect = Fx.artilleryTrail;
         trailInterval = 2;
 
-        despawnSound = hitSound = Sounds.shootBig;
+        despawnSound = hitSound = Sounds.shootSpectre;
     }
 
     @Override

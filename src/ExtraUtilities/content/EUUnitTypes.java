@@ -360,7 +360,7 @@ public class EUUnitTypes {
                     rotate = true;
                     mirror = false;
                     x = y = 0;
-                    shootSound = Sounds.cannon;
+                    shootSound = Sounds.mediumCannon;
 
                     bullet = new BulletType(){{
                         speed = 5;
@@ -485,7 +485,7 @@ public class EUUnitTypes {
                                 trailInterval = 1;
                                 pierceArmor = true;
                                 hitShake = despawnShake = 4;
-                                hitSound = despawnSound = Sounds.shootAlt;
+                                hitSound = despawnSound = Sounds.shootBreach;
                                 lightning = 1;
                                 lightningColor = eccl;
                                 lightningDamage = 15;
@@ -629,7 +629,7 @@ public class EUUnitTypes {
                                 Angles.randLenVectors(e.id, 5, 32 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 20 * e.foutpow()));
                             });
                             hitShake = despawnShake = 7;
-                            hitSound = despawnSound = Sounds.bang;
+                            hitSound = despawnSound = Sounds.unitExplode2;
                             hitEffect = despawnEffect = new MultiEffect(
                                     new Effect(90, e -> {
                                         Draw.color(trailColor);
@@ -926,7 +926,7 @@ public class EUUnitTypes {
                             );
 
                             hitShake = despawnShake = 14;
-                            hitSound = despawnSound = Sounds.explosionbig;
+                            hitSound = despawnSound = Sounds.reactorExplosion2;
                         }
                             @Override
                             public void update(Bullet b) {
@@ -1333,7 +1333,7 @@ public class EUUnitTypes {
                             intervalRandomSpread = 0;
                             intervalDelay = 27;
                             hittable = absorbable = false;
-                            hitSound = Sounds.cannon;
+                            hitSound = Sounds.mediumCannon;
                             hitSoundPitch = 1.2f;
                             intervalBullet = new BulletType(){{
                                 damage = 12;
@@ -1558,7 +1558,7 @@ public class EUUnitTypes {
                         x = 25.5f;
                         y = 0;
                         shootCone = 80f;
-                        shootSound = Sounds.bang;
+                        shootSound = Sounds.unitExplode2;
                         reload = 24 + (hardMod ? 6 : 0);
                         recoil = 5;
 
@@ -2860,7 +2860,7 @@ public class EUUnitTypes {
                         minWarmup = 0.9f;
 
                         bullet = new ScarletDevil(esc){{
-                            hitSound = despawnSound = Sounds.explosionbig;
+                            hitSound = despawnSound = Sounds.reactorExplosion2;
                             damage = 310;
                             splashDamage = 390;
                             splashDamageRadius = 13 * 8f;
@@ -3054,7 +3054,7 @@ public class EUUnitTypes {
                             damage = 0;
                             speed = 1;
                             lifetime = 46 * 8;
-                            despawnSound = hitSound = Sounds.cannon;
+                            despawnSound = hitSound = Sounds.mediumCannon;
                             despawnShake = hitShake = 4;
                             despawnEffect = hitEffect = new MultiEffect(new Effect(60, 160, (e) -> {
                                 Draw.color(esc);
@@ -3405,7 +3405,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(){{
-                        shootSound = Sounds.cannon;
+                        shootSound = Sounds.mediumCannon;
                         reload = 300;
                         autoTarget = true;
                         controllable = false;
@@ -3479,7 +3479,7 @@ public class EUUnitTypes {
                                 Lines.circle(b.x, b.y, 18 * b.fout());
                             }
                             {
-                                despawnSound = Sounds.explosionbig;
+                                despawnSound = Sounds.reactorExplosion2;
                             }
                         };
                         BulletType cll = new fBullet(cff, 90){{
@@ -3998,7 +3998,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(name("arcana-wp")){{
-                        shootSound = Sounds.blaster;
+                        shootSound = Sounds.shootCleroi;
                         x = 11.2f;
                         y = 25f;
                         recoil = 2;

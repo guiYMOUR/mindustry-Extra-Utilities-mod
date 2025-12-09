@@ -41,7 +41,7 @@ public class CtrlMissile extends BasicBulletType {
         trailLength = 7;
         lifetime = 60 * 1.7f;
         buildingDamageMultiplier = 0.8f;
-        hitSound = despawnSound = Sounds.bang;
+        hitSound = despawnSound = Sounds.unitExplode3;
         absorbable = false;
         keepVelocity = false;
         //必要的

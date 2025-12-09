@@ -88,7 +88,7 @@ suzerain.weapons.add(
         w.rotate = false;
         w.x = 30;
         w.y = 1;
-        w.shootSound = Sounds.bang;
+        w.shootSound = Sounds.unitExplode2;
         w.reload = 24;
         w.recoil = 5;
         return w;

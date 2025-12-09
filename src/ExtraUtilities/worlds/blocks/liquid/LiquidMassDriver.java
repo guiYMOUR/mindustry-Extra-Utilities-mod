@@ -38,7 +38,7 @@ public class LiquidMassDriver extends Block {
     public Effect shootEffect = Fx.shootBig2;
     public Effect smokeEffect = Fx.shootBigSmoke2;
     public Effect receiveEffect = Fx.mineBig;
-    public Sound shootSound = Sounds.shootBig;
+    public Sound shootSound = Sounds.massdriver;
     public float shake = 3f;
 
     public DrawBlock drawer = new DrawLiquidDriver();

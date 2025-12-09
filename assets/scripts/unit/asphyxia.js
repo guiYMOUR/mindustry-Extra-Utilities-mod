@@ -59,7 +59,7 @@ asphyxia.weapons.add(
         w.reload = 60;
         w.rotate = true;
         w.bullet = lineBullet;
-        w.shootSound = Sounds.bang;
+        w.shootSound = Sounds.unitExplode2;
         return w;
     })()
 );

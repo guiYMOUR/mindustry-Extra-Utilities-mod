@@ -1082,7 +1082,7 @@ public class EUBlocks {
                 }
             };
             BulletType fbd = new fBullet(bd, 20){{
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.reactorExplosion2;
                 hitSoundVolume = 2;
             }};
             Effect g1 = EUFx.gone(EUItems.lightninAlloy.color, size * 8 * 1.6f, 6);
@@ -1605,7 +1605,7 @@ public class EUBlocks {
 
             shoot = new ShootSpread(9, 4);
             squareSprite = false;
-            shootSound = Sounds.shootBig;
+            shootSound = Sounds.shootSpectre;
             soundPitchMin = soundPitchMax = 0.6f;
 
             minWarmup = 0.7f;
@@ -2038,7 +2038,7 @@ public class EUBlocks {
             recoil = 4;
             coolant = consumeCoolant(0.5f);
             coolantMultiplier = 2f;
-            shootSound = Sounds.shootAltLong;
+            shootSound = Sounds.shootDiffuse;
             smokeEffect = new Effect(20, e -> {
                 Draw.color(Pal.sap);
                 Angles.randLenVectors(e.id, 5, 20 * e.fin(), e.rotation, 30, (x, y) -> Fill.circle(e.x + x, e.y + y, 5 * e.fout()));
@@ -2547,7 +2547,7 @@ public class EUBlocks {
                         //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
                     }
                 });
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.reactorExplosion2;
                 healColor = EUItems.lightninAlloy.color;
                 buildingDamageMultiplier = 0.7f;
 
@@ -2587,7 +2587,7 @@ public class EUBlocks {
                 if(bullet.time < 70) bullet.initVel(bullet.rotation(), bullet.type.speed * fout);
             };
             BulletType hard = new ScarletDevil(EUItems.lightninAlloy.color){{
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.reactorExplosion2;
                 damage = 800;
                 splashDamage = 800;
                 splashDamageRadius = 13 * 8f;
@@ -2609,7 +2609,7 @@ public class EUBlocks {
                         //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
                     }
                 });
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.reactorExplosion2;
                 healColor = EUItems.lightninAlloy.color;
                 buildingDamageMultiplier = 0.7f;
 
@@ -3005,7 +3005,7 @@ public class EUBlocks {
                 keepVelocity = false;
                 buildingDamageMultiplier = 0.6f;
 
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.reactorExplosion2;
                 despawnShake = hitShake = 8;
             }
 

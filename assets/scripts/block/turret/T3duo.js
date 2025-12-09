@@ -13,7 +13,7 @@ lib.setBuildingSimple(T3duo, ItemTurret.ItemTurretBuild, {
         } else {
             if(Mathf.chance(0.04)){
                 lib.toBullet(Blocks.spectre, Items.thorium).create(this, this.team, this.x, this.y, this.rotation, 1 ,1);
-                Sounds.shootBig.at(this.x, this.y);
+                Sounds.shootSpectre.at(this.x, this.y);
             }
         }
     }
