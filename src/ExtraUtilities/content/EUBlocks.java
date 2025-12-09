@@ -1082,7 +1082,7 @@ public class EUBlocks {
                 }
             };
             BulletType fbd = new fBullet(bd, 20){{
-                hitSound = despawnSound = Sounds.reactorExplosion2;
+                hitSound = despawnSound = Sounds.reactorExplosion;
                 hitSoundVolume = 2;
             }};
             Effect g1 = EUFx.gone(EUItems.lightninAlloy.color, size * 8 * 1.6f, 6);
@@ -2547,7 +2547,7 @@ public class EUBlocks {
                         //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
                     }
                 });
-                hitSound = despawnSound = Sounds.reactorExplosion2;
+                hitSound = despawnSound = Sounds.reactorExplosion;
                 healColor = EUItems.lightninAlloy.color;
                 buildingDamageMultiplier = 0.7f;
 
@@ -2587,7 +2587,7 @@ public class EUBlocks {
                 if(bullet.time < 70) bullet.initVel(bullet.rotation(), bullet.type.speed * fout);
             };
             BulletType hard = new ScarletDevil(EUItems.lightninAlloy.color){{
-                hitSound = despawnSound = Sounds.reactorExplosion2;
+                hitSound = despawnSound = Sounds.reactorExplosion;
                 damage = 800;
                 splashDamage = 800;
                 splashDamageRadius = 13 * 8f;
@@ -2609,7 +2609,7 @@ public class EUBlocks {
                         //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
                     }
                 });
-                hitSound = despawnSound = Sounds.reactorExplosion2;
+                hitSound = despawnSound = Sounds.reactorExplosion;
                 healColor = EUItems.lightninAlloy.color;
                 buildingDamageMultiplier = 0.7f;
 
@@ -3005,7 +3005,7 @@ public class EUBlocks {
                 keepVelocity = false;
                 buildingDamageMultiplier = 0.6f;
 
-                hitSound = despawnSound = Sounds.reactorExplosion2;
+                hitSound = despawnSound = Sounds.reactorExplosion;
                 despawnShake = hitShake = 8;
             }
 

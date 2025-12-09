@@ -33,7 +33,7 @@ public class ElectricStorm extends BulletType {
         this.maxTarget = maxTarget;
         keepVelocity = absorbable = hittable = collides = collidesAir = collidesGround = false;
         despawnEffect = hitEffect = Fx.none;
-        despawnSound = Sounds.reactorExplosion2;
+        despawnSound = Sounds.reactorExplosion;
         speed = 0;
     }
 

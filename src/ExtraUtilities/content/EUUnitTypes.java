@@ -926,7 +926,7 @@ public class EUUnitTypes {
                             );
 
                             hitShake = despawnShake = 14;
-                            hitSound = despawnSound = Sounds.reactorExplosion2;
+                            hitSound = despawnSound = Sounds.reactorExplosion;
                         }
                             @Override
                             public void update(Bullet b) {
@@ -2860,7 +2860,7 @@ public class EUUnitTypes {
                         minWarmup = 0.9f;
 
                         bullet = new ScarletDevil(esc){{
-                            hitSound = despawnSound = Sounds.reactorExplosion2;
+                            hitSound = despawnSound = Sounds.reactorExplosion;
                             damage = 310;
                             splashDamage = 390;
                             splashDamageRadius = 13 * 8f;
@@ -3479,7 +3479,7 @@ public class EUUnitTypes {
                                 Lines.circle(b.x, b.y, 18 * b.fout());
                             }
                             {
-                                despawnSound = Sounds.reactorExplosion2;
+                                despawnSound = Sounds.reactorExplosion;
                             }
                         };
                         BulletType cll = new fBullet(cff, 90){{
