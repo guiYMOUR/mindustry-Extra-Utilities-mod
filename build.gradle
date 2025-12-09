@@ -25,7 +25,7 @@ sourceCompatibility = 17
 ext{
     //the build number that this mod is made for
     mindustryVersion = '58eee2b'
-    arcVersion = 'v149'
+    arcVersion = 'v153'
     jabelVersion = "93fde537c7"
     //sdkVersion = '30'
     sdkRoot = System.getenv("ANDROID_HOME")
