@@ -49,8 +49,8 @@ public class Prism_old extends PowerTurret {
         super(name);
         canOverdrive = false;
         coolantMultiplier = 1f;
-        shootSound = Sounds.laser;//EUSounds.prismShoot;
-        loopSound = Sounds.pulse;//EUSounds.prismLoop;
+        shootSound = Sounds.shootLancer;//EUSounds.prismShoot;
+        loopSound = Sounds.loopPulse;//EUSounds.prismLoop;
         loopSoundVolume = 2f;
     }
 

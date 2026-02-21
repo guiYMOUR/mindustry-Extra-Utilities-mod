@@ -148,7 +148,7 @@ public class Domain extends Block {
         emitLight = true;
         envEnabled |= Env.space;
 
-        ambientSound = Sounds.shield;
+        ambientSound = Sounds.loopShield;
         ambientSoundVolume = 0.08f;
     }
 

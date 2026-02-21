@@ -1,6 +1,7 @@
 package ExtraUtilities.worlds.blocks.production;
 
 import arc.math.Mathf;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.type.Item;
@@ -55,7 +56,7 @@ public class Randomer extends Block {
             int l = Mathf.random(content.liquids().size);
             Liquid outLiquid = content.liquid(l);
 
-            counter += edelta();
+            counter += Time.delta;
             float limit = 60f / itemsPerSecond;
             while(counter >= limit && outputItem != null){
                 items.set(outputItem, 1);

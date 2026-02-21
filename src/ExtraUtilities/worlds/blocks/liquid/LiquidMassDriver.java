@@ -38,7 +38,9 @@ public class LiquidMassDriver extends Block {
     public Effect shootEffect = Fx.shootBig2;
     public Effect smokeEffect = Fx.shootBigSmoke2;
     public Effect receiveEffect = Fx.mineBig;
-    public Sound shootSound = Sounds.shootBig;
+    public Sound shootSound = Sounds.massdriver;
+    public Sound receiveSound = Sounds.massdriverReceive;
+    public float shootSoundVolume = 0.5f;
     public float shake = 3f;
 
     public DrawBlock drawer = new DrawLiquidDriver();
@@ -316,7 +318,7 @@ public class LiquidMassDriver extends Block {
 
             Effect.shake(shake, shake, this);
 
-            shootSound.at(tile, Mathf.random(0.9f, 1.1f));
+            shootSound.at(x, y, 1f + Mathf.range(0.2f), shootSoundVolume);
         }
 
         public void handlePayload(Bullet bullet, LiquidBulletData data){
@@ -325,6 +327,9 @@ public class LiquidMassDriver extends Block {
 
             Effect.shake(shake, shake, this);
             receiveEffect.at(bullet);
+
+
+            receiveSound.at(x, y, 1f + Mathf.range(0.2f), shootSoundVolume);
 
             reloadCounter = 1f;
             bullet.remove();

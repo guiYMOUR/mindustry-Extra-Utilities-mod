@@ -11,6 +11,7 @@ import arc.math.geom.Geometry;
 import arc.scene.style.TextureRegionDrawable;
 import arc.scene.ui.layout.Table;
 import arc.util.Eachable;
+import arc.util.Strings;
 import arc.util.Time;
 import arc.util.io.*;
 import mindustry.entities.units.BuildPlan;
@@ -22,6 +23,8 @@ import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.draw.*;
 import mindustry.world.meta.BlockGroup;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatUnit;
 
 import static ExtraUtilities.ExtraUtilitiesMod.*;
 import static mindustry.Vars.*;
@@ -38,6 +41,8 @@ public class InvertedJunction extends Block {
     public TextureRegion arrow1, arrow2, place;
 
     public float speed = 26; //frames taken to go through this junction
+    public float displayedSpeed = 11;
+
     public int capacity = 6;
 
 
@@ -63,6 +68,17 @@ public class InvertedJunction extends Block {
         arrow1 = Core.atlas.find(name("arrow-1"));
         arrow2 = Core.atlas.find(name("arrow-2"));
         place = Core.atlas.find(placeSprite);
+    }
+
+    @Override
+    public void setStats(){
+        super.setStats();
+
+        //(60f / speed * capacity) returns 13.84 which is not the actual value (non linear, depends on fps)
+        stats.add(Stat.itemsMoved, displayedSpeed, StatUnit.itemsSecond);
+        stats.add(Stat.itemCapacity, table -> {
+            table.add(Strings.autoFixed(capacity, 2) + " " + StatUnit.items.localized() + " " + StatUnit.perSide.localized());
+        });
     }
 
     @Override

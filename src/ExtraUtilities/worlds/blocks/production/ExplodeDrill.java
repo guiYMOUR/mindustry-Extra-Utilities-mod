@@ -67,7 +67,7 @@ public class ExplodeDrill extends Drill {
     public float circleRange = 0f;
     public float stroke = 1.5f;
 
-    public Sound burstSound = Sounds.laser;
+    public Sound burstSound = Sounds.blockExplodeElectric;
 
     public ExplodeDrill(String name){
         super(name);

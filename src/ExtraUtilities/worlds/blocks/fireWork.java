@@ -41,7 +41,7 @@ public class fireWork extends Block {
 
         @Override
         public void despawned(Bullet b) {
-            Sounds.bang.at(b);
+            Sounds.explosion.at(b);
             Color color = colors[(int)Mathf.random(0, colors.length - 0.1f)];
             if(Mathf.chance(0.4)){
                 for(int i = 0; i < 15; i++){
@@ -92,7 +92,7 @@ public class fireWork extends Block {
             trailWidth = 2.2f;
             trailLength = 10;
             hitEffect = despawnEffect = Fx.none;
-            despawnSound = Sounds.missile;
+            despawnSound = Sounds.shootMissile;
             hittable = false;
             absorbable = false;
         }
@@ -132,7 +132,7 @@ public class fireWork extends Block {
         speed = 0;
         lifetime = 60;
         hitEffect = despawnEffect = Fx.none;
-        despawnSound = Sounds.missile;
+        despawnSound = Sounds.shootMissile;
         hittable = false;
         absorbable = false;
     }
@@ -153,7 +153,7 @@ public class fireWork extends Block {
         speed = 0;
         lifetime = 60;
         hitEffect = despawnEffect = Fx.none;
-        despawnSound = Sounds.missile;
+        despawnSound = Sounds.shootMissile;
         hittable = false;
         absorbable = false;
     }
@@ -174,7 +174,7 @@ public class fireWork extends Block {
         speed = 0;
         lifetime = 60;
         hitEffect = despawnEffect = Fx.none;
-        despawnSound = Sounds.missile;
+        despawnSound = Sounds.shootMissile;
         hittable = false;
         absorbable = false;
     }
