@@ -80,17 +80,19 @@ public class bossUnitAbi extends Ability{
             outq = true;
         }
 
-        if(!Vars.state.isPaused()) {
-            time += Time.delta;
-            healTimer -= Time.delta;
-        }
+        if(!unit.hasEffect(EUStatusEffects.breakage)) {
+            if (!Vars.state.isPaused()) {
+                time += Time.delta;
+                healTimer -= Time.delta;
+            }
 
-        if(unit.health < lastHealth - maxPerSec){
-            unit.health = lastHealth - maxPerSec;
-        }
-        if(healTimer <= 0){
-            lastHealth = unit.health;
-            healTimer = 60;
+            if (unit.health < lastHealth - maxPerSec) {
+                unit.health = lastHealth - maxPerSec;
+            }
+            if (healTimer <= 0) {
+                lastHealth = unit.health;
+                healTimer = 60;
+            }
         }
         if(unit.health < lastHealth - unit.maxHealth/2){
             unit.health = lastHealth;

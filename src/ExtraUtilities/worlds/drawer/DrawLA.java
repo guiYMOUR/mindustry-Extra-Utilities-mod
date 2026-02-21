@@ -118,7 +118,7 @@ public class DrawLA extends DrawBlock {
                 EUFx.chainLightning.at(x1, y1, ang, color, len);
                 if(Mathf.chance(0.1f)){
                     lightBullet.create(build, build.team, bx, by, Mathf.random(360f), -1, 1, 1, build);
-                    Sounds.malignShoot.at(bx, by, 0.6f, 0.5f);
+                    Sounds.shootMalign.at(bx, by, 0.6f, 0.5f);
                 }
             }
         }

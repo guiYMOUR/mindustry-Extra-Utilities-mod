@@ -28,12 +28,12 @@ public class ScarletDevil extends BulletType {
         fb  = new stopHoming(){{
             sColor = color;
             lifetime = 180;
-            speed = 6;
+            speed = 7;
             hitEffect = despawnEffect = new Effect(24, e -> {
                 Draw.color(color);
                 Angles.randLenVectors(e.id, 7, 32 * e.finpow(), e.rotation, 0, (x, y) -> Fill.square(e.x + x, e.y + y, 6 * e.foutpow()));
             });;
-            trailLength = 15;
+            trailLength = 10;
             trailWidth = 3;
             trailColor = color;
             keepVelocity = false;
@@ -73,7 +73,7 @@ public class ScarletDevil extends BulletType {
             }
             @Override
             public void despawned(Bullet b) {
-                fb.create(b, b.x, b.y, 0);
+                fb.create(b, b.x, b.y, 0, 0);
             }
         };
         healPercent = 10;
@@ -125,11 +125,14 @@ public class ScarletDevil extends BulletType {
             float r = i * (360f / fs) + 90;
             ff.create(b, b.team, b.x, b.y, r, -1, 1, 1, 2.2f, mover);
         }
+        b.frags++;
     }
 
     @Override
     public void removed(Bullet b) {
-
+        if(b.frags == 0 && fragOnDespawn && fragBullet != null){
+            createFrags(b, b.x, b.y);
+        }
     }
 
     public static class stopHoming extends BulletType{
@@ -169,7 +172,6 @@ public class ScarletDevil extends BulletType {
                                     t -> t != null && collidesGround && !b.hasCollided(t.id));
                         }
                     }
-
                     if (target != null) {
                         b.initVel(b.angleTo(target), b.type.speed);
                     } else {

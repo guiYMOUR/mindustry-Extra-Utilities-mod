@@ -36,7 +36,7 @@ public class mixBoom extends BulletType {
         trailEffect = Fx.artilleryTrail;
         trailInterval = 2;
 
-        despawnSound = hitSound = Sounds.shootBig;
+        despawnSound = hitSound = Sounds.shootReign;
     }
 
     @Override
@@ -47,6 +47,7 @@ public class mixBoom extends BulletType {
                 fragBullet.create(b, b.team, x, y, a, -1, 1,  1, i * expIer);
             }
         }
+        b.frags++;
     }
 
     @Override

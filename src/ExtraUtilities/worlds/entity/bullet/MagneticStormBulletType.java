@@ -227,7 +227,7 @@ public class MagneticStormBulletType extends BasicBulletType {
                         intervalBullet.create(b, b.team, b.x, b.y, b.angleTo(pos), -1, 1, 1, pos);
                         intervalBullet.create(b, b.team, px, py, b.angleTo(px, py) + 180, -1, 1, 1, b);
 
-                        Sounds.spark.at(b.x, b.y, 3f, 0.4f);
+                        Sounds.shootArc.at(b.x, b.y, 3f, 0.4f);
                     }
                 }
 
@@ -299,7 +299,7 @@ public class MagneticStormBulletType extends BasicBulletType {
                     lightning.create(b, b.team, bdx, bdy, ob.angleTo(bdx, bdy) + 180, -1, 1, 1, ob);
                 }
             });
-            Sounds.spark.at(b.x, b.y, 3f, 0.4f);
+            Sounds.shootArc.at(b.x, b.y, 3f, 0.4f);
         }
 
         if(b.timer.get(3, bulletInterval)){
@@ -342,13 +342,25 @@ public class MagneticStormBulletType extends BasicBulletType {
         Draw.z(z);
     }
 
+//    @Override
+//    public void createFrags(Bullet b, float x, float y) {
+//        var psb = EUBulletTypes.setPos.create(b, b.x, b.y, 0);
+//        for(int i = 0; i < fragBullets; i++){
+//            float a = Mathf.randomSeed(b.id, 360) + 60 * i;
+//            fragBullet.create(b, b.team, b.x, b.y, a, -1, 1, 1, psb);
+//        }
+//        b.frags++;
+//    }
+
     @Override
-    public void createFrags(Bullet b, float x, float y) {
+    public void despawned(Bullet b) {
         var psb = EUBulletTypes.setPos.create(b, b.x, b.y, 0);
         for(int i = 0; i < fragBullets; i++){
             float a = Mathf.randomSeed(b.id, 360) + 60 * i;
             fragBullet.create(b, b.team, b.x, b.y, a, -1, 1, 1, psb);
         }
+        b.frags++;
+        super.despawned(b);
     }
 
     @Override

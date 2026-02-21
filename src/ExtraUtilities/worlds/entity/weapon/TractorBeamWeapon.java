@@ -40,7 +40,7 @@ public class TractorBeamWeapon extends Weapon {
 
     public TractorBeamWeapon(String name){
         super(name);
-        shootSound = Sounds.tractorbeam;
+        shootSound = Sounds.beamParallax;
         predictTarget = false;
         autoTarget = true;
         controllable = false;

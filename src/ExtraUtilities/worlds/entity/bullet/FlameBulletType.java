@@ -40,8 +40,9 @@ public class FlameBulletType extends BulletType {
         shootEffect = EUFx.flameShoot(colorBegin, colorTo, colorEnd, length, cone, number, lifetime);
     }
 
+
     @Override
-    public void hit(Bullet b) {
+    public void hit(Bullet b, float x, float y, boolean createFrags) {
         if(absorbable && b.absorbed) return;
         //let's step by step
         //unit▼

@@ -143,7 +143,7 @@ public class ArbiterBulletType extends BulletType {
                 EUFx.airAsh(90, splashDamageRadius, splashDamageRadius/6f, null, 3,30)
         );
 
-        hitSound = despawnSound = Sounds.titanExplosion;
+        hitSound = despawnSound = Sounds.explosionReactorNeoplasm;
     }
 
     @Override
@@ -451,7 +451,7 @@ public class ArbiterBulletType extends BulletType {
         }
 
         @Override
-        public void hit(Bullet b, float x, float y) {
+        public void hit(Bullet b, float x, float y, boolean createFrags) {
             hitEffect.at(x, y, splashDamageRadius, b.team.color);
             if(Vars.headless) hitSound.at(x, y, hitSoundPitch, hitSoundVolume);
 

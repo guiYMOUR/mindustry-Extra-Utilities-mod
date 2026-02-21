@@ -70,7 +70,7 @@ public class FireWorkBullet extends BulletType {
         }};
         shootEffect = Fx.none;
         smokeEffect = Fx.none;
-        despawnSound = hitSound = Sounds.bang;
+        despawnSound = hitSound = Sounds.explosion;
         lifetime = 50;
 
         ammoMultiplier = 1;
@@ -133,7 +133,13 @@ public class FireWorkBullet extends BulletType {
         explode(b);
     }
 
-//    @Override
+    @Override
+    public void despawned(Bullet b) {
+        super.despawned(b);
+        explode(b);
+    }
+
+    //    @Override
 //    public void update(Bullet b) {
 //        super.update(b);
 //        if(!breaker) return;

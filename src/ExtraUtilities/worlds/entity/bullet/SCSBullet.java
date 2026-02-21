@@ -58,7 +58,7 @@ public class SCSBullet extends BasicBulletType {
             Lines.stroke(e.fout() * 2 + 0.2f);
             Lines.circle(e.x, e.y, e.fin() * splashDamageRadius);
         });
-        despawnSound = Sounds.spark;
+        despawnSound = Sounds.shootArc;
         homingPower = 0.08f;
         homingRange = 256;
         homingDelay = 30;

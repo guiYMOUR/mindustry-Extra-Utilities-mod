@@ -28,7 +28,7 @@ import mindustry.world.blocks.ControlBlock;
 public class CtrlMissile extends BasicBulletType {
     public boolean autoHoming = false;
     public boolean low = false;
-    public Sound loopSound = Sounds.missileTrail;
+    public Sound loopSound = Sounds.loopMissileTrail;
     public float loopSoundVolume = 0.1f;
 
     public CtrlMissile(String sprite, float width, float height) {
@@ -41,7 +41,7 @@ public class CtrlMissile extends BasicBulletType {
         trailLength = 7;
         lifetime = 60 * 1.7f;
         buildingDamageMultiplier = 0.8f;
-        hitSound = despawnSound = Sounds.bang;
+        hitSound = despawnSound = Sounds.unitExplode1;
         absorbable = false;
         keepVelocity = false;
         //必要的

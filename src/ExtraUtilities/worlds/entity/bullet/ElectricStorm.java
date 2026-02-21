@@ -22,7 +22,7 @@ import mindustry.graphics.Layer;
 public class ElectricStorm extends BulletType {
     public Color color;
     public int maxTarget;
-    public Sound sound = Sounds.spark;
+    public Sound sound = Sounds.shootArc;
 
     Effect chain4 = EUFx.chainLightningFadeOverride(4);
 
@@ -33,7 +33,7 @@ public class ElectricStorm extends BulletType {
         this.maxTarget = maxTarget;
         keepVelocity = absorbable = hittable = collides = collidesAir = collidesGround = false;
         despawnEffect = hitEffect = Fx.none;
-        despawnSound = Sounds.explosionbig;
+        despawnSound = Sounds.blockExplodeElectricBig;
         speed = 0;
     }
 
