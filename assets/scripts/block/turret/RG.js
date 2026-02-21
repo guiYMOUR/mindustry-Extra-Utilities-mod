@@ -29,7 +29,7 @@ const chargeBeginEffectT = lib.newEffect(chargeTime * 1.2, e => {
     Draw.color();
     Fill.circle(e.x, e.y, e.fout() * 3);
 });
-const chargeSound = Sounds.lasercharge2;
+const chargeSound = Sounds.chargeVela;
 
 const bigShotEffS = lib.Fx.aimEffect(chargeTime + 5, Pal.surge, 1.2, 60 * 8, 12);
 const bigShotEffT = lib.Fx.aimEffect(chargeTime + 5, Pal.lancerLaser, 1.2, 60 * 8, 12);
@@ -106,7 +106,7 @@ RGS.intervalBullets = 6;
 
 const RG = extend(ItemTurret, 'RG', {});
 
-RG.shootSound = Sounds.laser;
+RG.shootSound = Sounds.shootLancer;
 RG.chargeSound = chargeSound;
 RG.reload = 60 * 3.5;
 RG.shoot.shots = 5;

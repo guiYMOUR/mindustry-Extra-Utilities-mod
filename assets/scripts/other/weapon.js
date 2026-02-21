@@ -148,7 +148,7 @@ const healProjectorWeapon = (() => {
         h.bullet = options.bullet;
         h.shootY = options.shootY;
         h.cooldownTime = 180;
-        h.shootSound = Sounds.pulse;
+        h.shootSound = Sounds.loopPulse;
         h.mirror = options.mirror;
         h.continuous = true;
         h.rotateSpeed = options.rotateSpeed;
@@ -271,7 +271,7 @@ const antiMissileWeapon = (() => {
         at.y = options.y;
         at.bullet = options.bullet;
         at.shootY = options.shootY;
-        at.shootSound = Sounds.missile;
+        at.shootSound = Sounds.shootMissile;
         at.mirror = options.mirror;
         at.rotateSpeed = options.rotateSpeed;
         at.targetInterval = 0;
@@ -387,7 +387,7 @@ const continueLaser = (() => {
         at.y = options.y;
         at.bullet = options.bullet;
         at.shootY = options.shootY;
-        at.shootSound = Sounds.missile;
+        at.shootSound = Sounds.shootMissile;
         at.mirror = options.mirror;
         at.rotateSpeed = options.rotateSpeed;
         at.targetInterval = 0;

@@ -14,14 +14,14 @@ T3fuse.health = 280 * 3 * 3;
 T3fuse.shoot = ShootSpread(9, 9);
 lib.Coolant(T3fuse, 0.6);
 T3fuse.coolantMultiplier = 2;
-T3fuse.shootSound = Sounds.shotgun;
+T3fuse.shootSound = Sounds.shootFuse;
 T3fuse.requirements = ItemStack.with(
     Items.copper, 500,
-    Items.graphite, 400,
+    Items.graphite, 500,
     Items.titanium, 300,
     Items.thorium, 200,
-    Items.silicon, 170 + (hardMod ? 30 : 0),
-    items.lightninAlloy, 100 + (hardMod ? 20 : 0)
+    Items.silicon, 270 + (hardMod ? 30 : 0),
+    items.lightninAlloy, 150 + (hardMod ? 20 : 0)
 );
 T3fuse.buildVisibility = BuildVisibility.shown;
 T3fuse.category = Category.turret;

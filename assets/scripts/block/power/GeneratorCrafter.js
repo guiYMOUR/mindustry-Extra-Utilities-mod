@@ -11,6 +11,7 @@ const amount = 0.125;
 const GC = extend(ConsumeGenerator, "GC", {
     setStats(){
         this.super$setStats();
+        this.stats.remove(Stat.productionTime);
         this.stats.add(Stat.productionTime, craftTime / 60, StatUnit.seconds);
         this.stats.add(Stat.output, output);
     },
@@ -97,7 +98,7 @@ GC.itemDuration = itemDuration;
 GC.hasLiquids = true;
 GC.hasItems = true;
 GC.size = 2;
-GC.ambientSound = Sounds.steam;
+GC.ambientSound = Sounds.loopSteam;
 GC.ambientSoundVolume = 0.02;
 GC.consumeItem(input)/*.optional(false, false)*/;
 GC.consumeLiquid(inputLiquid, amount);

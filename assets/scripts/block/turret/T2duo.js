@@ -4,6 +4,7 @@ const hardMod = lib.hardMod;
 const T2duo = extend(ItemTurret, "T2-duo", {});
 lib.setBuildingSimple(T2duo, ItemTurret.ItemTurretBuild, {});
 T2duo.shoot = lib.moreShootAlternate(3.6, 2);
+T2duo.shootSound = Sounds.shootDuo;
 T2duo.reload = hardMod ? 36 : 15;
 T2duo.restitution = 0.03;
 T2duo.range = 152;

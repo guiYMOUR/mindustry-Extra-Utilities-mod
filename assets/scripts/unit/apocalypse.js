@@ -41,7 +41,7 @@ apocalypse.weapons.add(
         w.spacing = 6;
         w.inaccuracy = 3;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.missile;
+        w.shootSound = Sounds.shootMissile;
         w.reload = 30;
         w.recoil = 2;
         return w;
@@ -63,7 +63,7 @@ apocalypse.weapons.add(
         w.spacing = 5;
         w.inaccuracy = 1;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.missile;
+        w.shootSound = Sounds.shootMissile;
         w.reload = 36;
         w.recoil = 2;
         return w;
@@ -101,7 +101,7 @@ apocalypse.weapons.add(
         w.bullet = r;
         w.rotate = true;
         w.rotateSpeed = 2;
-        w.shootSound = Sounds.railgun;
+        w.shootSound = Sounds.shootForeshadow;
         w.x = 28;
         w.y = -3;
         return w;

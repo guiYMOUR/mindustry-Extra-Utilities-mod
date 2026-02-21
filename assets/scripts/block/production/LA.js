@@ -27,7 +27,7 @@ lib.setBuildingSimple(LA, GenericCrafter.GenericCrafterBuild, {
                 var a = Mathf.range(180);
                 Lightning.create(this.team, items.lightninAlloy.color, 2, x + rx, y + ry, a, Mathf.random(5, 8));
             }
-            Sounds.spark.at(x + rx, y + ry, Mathf.random(0.5, 0.7));
+            Sounds.shootArc.at(x + rx, y + ry, Mathf.random(0.5, 0.7));
         }
     },
     consValid(){

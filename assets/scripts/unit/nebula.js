@@ -43,7 +43,7 @@ nebula.weapons.add(
         w2.top = false;
         w2.x = 0;
         w2.y = 0;
-        w2.shootSound = Sounds.railgun;
+        w2.shootSound = Sounds.shootForeshadow;
         w2.recoil = 0;
         return w2;
     })()
@@ -57,7 +57,7 @@ nebula.weapons.add(
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
         w.mirror = false;
-        w.shootSound = Sounds.lasershoot;
+        w.shootSound = Sounds.shootForeshadow;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;
@@ -78,7 +78,7 @@ nebula.weapons.add(
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
         w.mirror = false;
-        w.shootSound = Sounds.lasershoot;
+        w.shootSound = Sounds.shootForeshadow;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;

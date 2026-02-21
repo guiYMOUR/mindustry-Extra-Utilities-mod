@@ -49,8 +49,8 @@ if(!onlyPlugIn) {
     require("block/production/T2SA");
     require("block/production/CrispSteelSmelter");
     require("block/production/T2CrispSteelSmelter");
-    require("block/power/GeneratorCrafter");
     require("block/production/T2pulverize");
+    require("block/power/GeneratorCrafter");
 //require("block/production/crusher");
 //require("block/production/LA");
     require("block/production/AdjustableIncinerator");

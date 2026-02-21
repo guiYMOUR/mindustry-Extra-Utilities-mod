@@ -4,6 +4,7 @@ const items = require("game/items");
 const liC = Color.valueOf("bf92f9");
 const dec = Color.valueOf("ffffff");
 const dec2 = Color.valueOf("ffffff");
+const bullets = lib.getClass("ExtraUtilities.content.EUBulletTypes");
 const hardMod = lib.hardMod;
 
 const hur = extend(BasicBulletType, {});
@@ -32,27 +33,28 @@ hur.pierceBuilding = true;
 
 const hurricane = extend(PowerTurret, 'hurricane', {});
 
-hurricane.consumePower(450/60);
-hurricane.shootType = hur;
+hurricane.consumePower(540/60);
+//hurricane.shootType = hur;
+hurricane.shootType = bullets.auroraMain;
 //hurricane.shots = 1;
 hurricane.shootShake = 0.5;
-hurricane.reload = 72;
+hurricane.reload = 108;
 //hurricane.restitution = 0.02;
-hurricane.range = 160;
+hurricane.range = 176;
 hurricane.shootCone = 15;
 hurricane.ammoUseEffect = Fx.none;
 hurricane.health = 1650;
-hurricane.inaccuracy = 0;
+hurricane.inaccuracy = 30;
 hurricane.rotateSpeed = 3;
 hurricane.size = 2;
-hurricane.shootSound = Sounds.spark;
+hurricane.shootSound = Sounds.shootSap;
 lib.Coolant(hurricane, 0.2);
 hurricane.requirements = ItemStack.with(
     Items.copper, 100,
-    Items.lead, 60,
-    Items.silicon, 90,
+    Items.lead, 140,
+    Items.silicon, 110,
     //Items.graphite, 30,
-    items.crispSteel, 30 + (hardMod ? 20 : 0)
+    items.crispSteel, 90 + (hardMod ? 60 : 0)
 );
 hurricane.buildVisibility = BuildVisibility.shown;
 hurricane.category = Category.turret;

@@ -31,7 +31,7 @@ tera.weapons.add(
         w.recoil = 3;
         w.rotateSpeed = 2;
         w.shadow = 20;
-        w.shootSound = Sounds.laser;
+        w.shootSound = Sounds.shootLancer;
         w.x = 25;
         w.y = 3;
         return w;

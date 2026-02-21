@@ -483,7 +483,7 @@ const lineBullet = (() => {
                     }
                 }));
                 disE.at(b);
-                Sounds.spark.at(b);
+                Sounds.shootArc.at(b);
             },
         });
         lb.width = options.width;

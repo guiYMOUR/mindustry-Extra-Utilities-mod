@@ -67,7 +67,7 @@ antiaircraft.ammoUseEffect = Fx.none;
 antiaircraft.ammoPerShot = 2;
 antiaircraft.health = 1890;
 antiaircraft.rotateSpeed = 10;
-antiaircraft.shootSound = Sounds.railgun;
+antiaircraft.shootSound = Sounds.shootForeshadow;//没用
 antiaircraft.ammo(
     Items.silicon, rail,
     Items.plastanium, rail2

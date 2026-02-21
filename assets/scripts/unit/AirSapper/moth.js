@@ -42,7 +42,7 @@ moth.weapons.add(
         w.reload = 24;
         w.rotate = true;
         w.bullet = fireDefense;
-        w.shootSound = Sounds.sap;
+        w.shootSound = Sounds.shootSap;
         return w;
     })()
 );

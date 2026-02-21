@@ -36,7 +36,7 @@ T2PF.outputItem = new ItemStack(Items.phaseFabric, 3);
 T2PF.craftTime = 96;
 T2PF.size = 3;
 T2PF.hasPower = true;
-T2PF.ambientSound = Sounds.techloop;
+T2PF.ambientSound = Sounds.loopTech;
 T2PF.ambientSoundVolume = 0.03;
 T2PF.boostScale = 0.3;
 T2PF.consumeItems(ItemStack.with(

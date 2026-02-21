@@ -20,7 +20,7 @@ T2scatter.health = 210 * 2 * 2;
 T2scatter.inaccuracy = 10;
 T2scatter.rotateSpeed = 15;
 T2scatter.targetGround = false;
-T2scatter.shootSound = Sounds.shootSnap;
+T2scatter.shootSound = Sounds.shootScatter;
 T2scatter.ammoTypes = Blocks.scatter.ammoTypes;
 T2scatter.limitRange(2);
 T2scatter.scaledHealth = 105;

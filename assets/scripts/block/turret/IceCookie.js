@@ -54,7 +54,7 @@ Object.assign(IM, {
     targetAir : false,
     ammoUseEffect : Fx.none,
     health : 300 * 2 * 2,
-    shootSound : Sounds.bang,
+    shootSound : Sounds.shootArtillery,
 });
 IM.requirements = ItemStack.with(
     Items.copper, 100,

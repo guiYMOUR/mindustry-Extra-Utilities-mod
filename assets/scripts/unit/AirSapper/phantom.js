@@ -32,7 +32,7 @@ phantom.weapons.add(
         w.reload = 72;
         w.rotate = false;
         w.bullet = lineBullet;
-        w.shootSound = Sounds.sap;
+        w.shootSound = Sounds.shootSap;
         return w;
     })()
 );

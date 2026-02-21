@@ -44,7 +44,7 @@ T2lan.inaccuracy = 0;
 T2lan.rotateSpeed = 10;
 T2lan.size = 3;
 T2lan.targetAir = false;
-T2lan.shootSound = Sounds.laser;
+T2lan.shootSound = Sounds.shootLancer;
 lib.Coolant(T2lan, 0.4, 2);
 T2lan.requirements = ItemStack.with(
     Items.silicon, 155 + (hardMod ? 35 : 0),

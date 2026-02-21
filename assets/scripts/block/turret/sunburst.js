@@ -19,7 +19,7 @@ Object.assign(m, {
     lightRadius : 60,
     lightOpacity : 0.7,
     lightColor : COLOR,
-    hitSound : Sounds.splash,
+    hitSound : Sounds.shootSpectre,
 
     splashDamageRadius : 30,
     splashDamage : 50,
@@ -122,7 +122,7 @@ Object.assign(sunburst, {
     health : 230*3*3,
     inaccuracy : 0,
     rotateSpeed : 6,
-    shootSound : Sounds.missile,
+    shootSound : Sounds.shootMissile,
     placeableLiquid : true,
 });
 sunburst.consumePower(7);

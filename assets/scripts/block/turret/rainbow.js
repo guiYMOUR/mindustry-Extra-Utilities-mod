@@ -111,7 +111,7 @@ rainbow.size = 3;
 rainbow.range = 30 * 8;
 rainbow.reload = 72;
 rainbow.shots = 5;
-rainbow.shootSound = Sounds.shootBig;
+rainbow.shootSound = Sounds.shootSpectre;
 rainbow.health = 200 * 3 * 3;
 rainbow.shootType = r1;
 lib.Coolant(rainbow, 0.4, 2.5);

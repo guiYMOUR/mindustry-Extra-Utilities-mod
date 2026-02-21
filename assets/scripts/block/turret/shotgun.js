@@ -55,7 +55,7 @@ shotgun.inaccuracy = 11;
 shotgun.range = 190;
 //shotgun.xRand = 4;
 shotgun.size = 2;
-shotgun.shootSound = Sounds.shootBig;
+shotgun.shootSound = Sounds.shootSpectre;
 shotgun.health = 200 * 2 * 2;
 shotgun.ammoPerShot = 4;
 lib.Coolant(shotgun, 0.2);

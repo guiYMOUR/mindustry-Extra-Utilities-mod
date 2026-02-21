@@ -2,7 +2,7 @@ const items = require("game/items");
 const lib = require("blib");
 
 const minisp = extend(ItemTurret, "minisp", {});
-minisp.shootSound = Sounds.shootBig;
+minisp.shootSound = Sounds.shootSpectre;
 minisp.size = 3;
 minisp.shake = 1;
 minisp.recoil = 2;

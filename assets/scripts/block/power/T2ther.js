@@ -61,6 +61,6 @@ T2ther.powerProduction = 276/60;
 T2ther.generateEffect = Fx.none;
 T2ther.size = 3;
 T2ther.floating = true;
-T2ther.ambientSound = Sounds.hum;
+T2ther.ambientSound = Sounds.loopHum;
 T2ther.ambientSoundVolume = 0.06;
 exports.T2ther = T2ther;

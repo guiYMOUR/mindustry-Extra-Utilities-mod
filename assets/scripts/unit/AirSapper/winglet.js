@@ -21,7 +21,7 @@ winglet.weapons.add(
         w.reload = 21;
         w.rotate = false;
         w.bullet = sapper;
-        w.shootSound = Sounds.sap;
+        w.shootSound = Sounds.shootSap;
         return w;
     })()
 );

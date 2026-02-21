@@ -31,7 +31,7 @@ pu.craftTime = 36;
 pu.updateEffect = Fx.pulverizeSmall;
 pu.hasItems = true;
 pu.hasPower = true;
-pu.ambientSound = Sounds.grinding;
+pu.ambientSound = Sounds.loopGrind;
 pu.ambientSoundVolume = 0.025;
 pu.consumeItem(Items.scrap, 2);
 pu.consumePower(1);

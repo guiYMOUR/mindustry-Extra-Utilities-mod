@@ -59,7 +59,7 @@ asphyxia.weapons.add(
         w.reload = 60;
         w.rotate = true;
         w.bullet = lineBullet;
-        w.shootSound = Sounds.bang;
+        w.shootSound = Sounds.shootReign;
         return w;
     })()
 );
@@ -70,7 +70,7 @@ asphyxia.weapons.add(
         w.shootY = 13;
         w.reload = 150;
         w.cooldownTime = 200;
-        w.shootSound = Sounds.beam;
+        w.shootSound = Sounds.beamMeltdown;
         w.bullet = asl;
         w.mirror = false;
         w.continuous = true;
@@ -78,7 +78,7 @@ asphyxia.weapons.add(
         w.rotateSpeed = 3;
         w.x = 0;
         w.y = -12;
-        w.chargeSound = Sounds.lasercharge2;
+        w.chargeSound = Sounds.chargeVela;
         w.firstShotDelay = 49;
         w.recoil = 3;
         return w;
@@ -94,7 +94,7 @@ asphyxia.weapons.add(
         w.autoTarget = true;
         w.controllable = false;
         w.bullet = sapper;
-        w.shootSound = Sounds.sap;
+        w.shootSound = Sounds.shootSap;
         return w;
     })()
 );
@@ -108,7 +108,7 @@ asphyxia.weapons.add(
         w.autoTarget = true;
         w.controllable = false;
         w.bullet = sapper;
-        w.shootSound = Sounds.sap;
+        w.shootSound = Sounds.shootSap;
         return w;
     })()
 );

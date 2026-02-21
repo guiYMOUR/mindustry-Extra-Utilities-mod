@@ -72,7 +72,7 @@ const bulletF = extend(BulletType, {
     despawned(b){
         Damage.damage(b.team, b.x, b.y, Range, b.damage, true, true, true);
         Effect.shake(5, 5, b);
-        Sounds.plasmadrop.at(b);
+        Sounds.shootQuad.at(b);
         bfe.at(b);
     },
 });
@@ -129,7 +129,7 @@ skyline.weapons.add(
         //w.spacing = 6;
         w.inaccuracy = 0;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.plasmaboom;
+        w.shootSound = Sounds.explosionPlasmaSmall;
         w.reload = 36;
         w.recoil = 2;
         return w;
@@ -151,7 +151,7 @@ skyline.weapons.add(
         //w.spacing = 6;
         w.inaccuracy = 0;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.plasmaboom;
+        w.shootSound = Sounds.explosionPlasmaSmall;
         w.reload = 48;
         w.recoil = 2;
         return w;
@@ -170,7 +170,7 @@ skyline.weapons.add(
         w.x = 0;
         w.y = 0;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.release;
+        w.shootSound = Sounds.explosionObviate;
         w.reload = 180;
         w.cooldownTime = 90;
         w.firstShotDelay = 30;

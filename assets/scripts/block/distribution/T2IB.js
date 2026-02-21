@@ -43,6 +43,7 @@ T2IB.requirements = ItemStack.with(
 );
 T2IB.range = 6;
 T2IB.speed = 20;
+T2IB.displayedSpeed = 15;
 T2IB.health = 85;
 T2IB.bufferCapacity = 25;
 T2IB.buildVisibility = BuildVisibility.shown;
@@ -72,7 +73,8 @@ TJ.requirements = ItemStack.with(
 );
 TJ.buildVisibility = BuildVisibility.shown;
 TJ.category = Category.distribution;
-TJ.speed = (26 + 2) / 4;
+TJ.speed = 20;
+TJ.displayedSpeed = 40;
 TJ.capacity = 14;
 TJ.health = 80;
 TJ.buildCostMultiplier = 5;
@@ -85,6 +87,7 @@ TIJ.requirements = TJ.requirements;
 TIJ.buildVisibility = BuildVisibility.shown;
 TIJ.category = Category.distribution;
 TIJ.speed = TJ.speed;
+TIJ.displayedSpeed = TJ.displayedSpeed;
 TIJ.capacity = TJ.capacity;
 TIJ.health = TJ.health;
 TIJ.configurable = true;

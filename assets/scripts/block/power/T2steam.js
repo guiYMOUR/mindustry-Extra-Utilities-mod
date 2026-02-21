@@ -6,7 +6,7 @@ T2ST.hasLiquids = true;
 T2ST.size = 3;
 T2ST.consume(new ConsumeItemFlammable());
 T2ST.consume(new ConsumeItemExplode());
-T2ST.ambientSound = Sounds.smelter;
+T2ST.ambientSound = Sounds.loopSmelter;
 T2ST.ambientSoundVolume = 0.06;
 T2ST.drawer = new DrawMulti(
     new DrawDefault(),

@@ -44,7 +44,7 @@ Object.assign(T2scorch, {
     targetAir : false,
     ammoUseEffect : Fx.none,
     health : 400 * 2 * 2,
-    shootSound : Sounds.flame,
+    shootSound : Sounds.shootFlame,
 });
 lib.Coolant(T2scorch, 0.2, 2);
 T2scorch.requirements = ItemStack.with(

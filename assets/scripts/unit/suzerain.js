@@ -67,7 +67,7 @@ suzerain.weapons.add(
         w.rotateSpeed = 2;
         w.x = 15;
         w.y = -2;
-        w.shootSound = Sounds.railgun;
+        w.shootSound = Sounds.shootForeshadow;
         w.reload = 27;
         w.recoil = 4;
         return w;
@@ -88,7 +88,7 @@ suzerain.weapons.add(
         w.rotate = false;
         w.x = 30;
         w.y = 1;
-        w.shootSound = Sounds.bang;
+        w.shootSound = Sounds.shootReign;
         w.reload = 24;
         w.recoil = 5;
         return w;

@@ -107,10 +107,10 @@ Object.assign(missile, {
     speed : 8,
     trailChance : 1,
     trailColor : Color.valueOf("6f6f6f"),
-    hitSound : Sounds.laser,
-    despawnSound : Sounds.laser,
+    hitSound : Sounds.shootLancer,
+    despawnSound : Sounds.shootLancer,
     hitShake : 3,
-});
+});//没用
 missile.trailEffect = new Effect(50, cons(e => {
     //Draw.z(Layer.bullet - 0.001);
     Draw.color(e.color);

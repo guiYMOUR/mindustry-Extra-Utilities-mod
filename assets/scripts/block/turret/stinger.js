@@ -58,7 +58,7 @@ stinger.recoil = 2.5;
 stinger.rotateSpeed = 2;
 stinger.size = 3;
 stinger.targetAir = false;
-stinger.shootSound = Sounds.laser;
+stinger.shootSound = Sounds.shootLancer;
 stinger.killTrigger = hardMod ? -1 : 0.25;
 lib.Coolant(stinger, 0.4, 2);
 stinger.drawer = (() => {

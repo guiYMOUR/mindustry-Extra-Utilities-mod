@@ -18,5 +18,5 @@ lu.requirements = ItemStack.with(
     items.crispSteel, 10
 );
 lu.buildVisibility = BuildVisibility.shown;
-lu.category = Category.effect;
+lu.category = Category.liquid;
 exports.lu = lu;

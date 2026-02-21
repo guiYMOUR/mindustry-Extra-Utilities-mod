@@ -25,7 +25,7 @@ T3rip.shake = 2;
 T3rip.range = 370;
 T3rip.minRange = 50;
 T3rip.health = 250 * 3 * 3;
-T3rip.shootSound = Sounds.artillery;
+T3rip.shootSound = Sounds.shootArtillery;
 lib.Coolant(T3rip, 0.4, 1.5);
 T3rip.ammoTypes = Blocks.ripple.ammoTypes;
 T3rip.ammoTypes.put(Items.surgeAlloy, bullets.artillerySurge);

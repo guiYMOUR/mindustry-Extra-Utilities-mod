@@ -1,5 +1,5 @@
 const th2 = extend(NuclearReactor, "Th2", {});
-th2.ambientSound = Sounds.hum;
+th2.ambientSound = Sounds.loopHum;
 th2.ambientSoundVolume = 0.24;
 th2.size = 4;
 th2.itemCapacity = 40;

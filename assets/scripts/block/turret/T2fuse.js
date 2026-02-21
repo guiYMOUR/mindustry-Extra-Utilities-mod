@@ -12,16 +12,16 @@ T2fuse.shoot = new ShootSpread(5, 12);
 T2fuse.shootCone = 30;
 T2fuse.size = 3;
 T2fuse.health = 240 * 3 * 3;
-T2fuse.shootSound = Sounds.shotgun;
+T2fuse.shootSound = Sounds.shootFuse;
 T2fuse.envEnabled |= Env.space;
 T2fuse.shoot = ShootSpread(5, 12);
 lib.Coolant(T2fuse, 0.4);
 T2fuse.coolantMultiplier = 3;
 T2fuse.requirements = ItemStack.with(
-    Items.copper, 280,
+    Items.copper, 350,
     items.crispSteel, 200,
     Items.thorium, 150,
-    Items.surgeAlloy, 60 + (hardMod ? 40 : 0),
+    Items.surgeAlloy, 110 + (hardMod ? 40 : 0),
 );
 T2fuse.buildVisibility = BuildVisibility.shown;
 T2fuse.category = Category.turret;

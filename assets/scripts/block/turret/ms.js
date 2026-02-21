@@ -56,7 +56,7 @@ storm.rotateSpeed = 1.5;
 // storm.coolantUsage = 0.65;
 // storm.coolantMultiplier = 0.7;
 storm.size = 5;
-storm.shootSound = Sounds.shockBlast;
+storm.shootSound = Sounds.shootOmura;
 storm.soundPitchMin = storm.soundPitchMax = 0.7;
 storm.absorbLasers = true;
 //lib.Coolant(storm, 0.5);

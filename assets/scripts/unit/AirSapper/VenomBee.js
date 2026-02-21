@@ -34,7 +34,7 @@ vb.weapons.add(
             });
             return b;
         })();
-        w.shootSound = Sounds.artillery;
+        w.shootSound = Sounds.shootArtillery;
         return w;
     })()
 );

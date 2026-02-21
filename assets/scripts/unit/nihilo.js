@@ -53,7 +53,7 @@ nihilo.weapons.add(
         w.targetInterval = 8;
         w.targetSwitchInterval = 8;
         w.mirror = false;
-        w.shootSound = Sounds.lasershoot;
+        w.shootSound = Sounds.shootForeshadow;
         w.bullet = (() => {
             const b = new BulletType();
             b.shootEffect = Fx.sparkShoot;
@@ -81,7 +81,7 @@ nihilo.weapons.add(
         w.spacing = 5;
         w.inaccuracy = 4;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.missile;
+        w.shootSound = Sounds.shootMissile;
         w.reload = 36;
         w.recoil = 2;
         return w;
@@ -101,7 +101,7 @@ nihilo.weapons.add(
         w.rotateSpeed = 4;
         w.x = 14.5;
         w.y = -10;
-        w.shootSound = Sounds.artillery;
+        w.shootSound = Sounds.shootArtillery;
         w.reload = 60;
         w.recoil = 4;
         return w;
@@ -122,7 +122,7 @@ nihilo.weapons.add(
         w.x = 0;
         w.y = 38;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.railgun;
+        w.shootSound = Sounds.shootForeshadow;
         w.reload = 180;
         w.recoil = 4;
         return w;
@@ -141,7 +141,7 @@ nihilo.weapons.add(
         w.x = 0;
         w.y = 5;
         w.ejectEffect = Fx.none;
-        w.shootSound = Sounds.railgun;
+        w.shootSound = Sounds.shootForeshadow;
         w.reload = 110;
         w.cooldownTime = 90;
         w.recoil = 5;

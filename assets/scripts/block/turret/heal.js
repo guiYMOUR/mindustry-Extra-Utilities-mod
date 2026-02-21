@@ -270,7 +270,7 @@ Object.assign(heal, {
     shootDuration : shootDuration,
     acceptCoolant : false,
     shootSound : Sounds.none,
-    loopSound : Sounds.pulse,
+    loopSound : Sounds.loopPulse,
 });
 heal.consumeItem(Items.phaseFabric).boost();
 heal.consumePower(7);

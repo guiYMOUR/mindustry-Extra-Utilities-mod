@@ -8,17 +8,18 @@ lib.setBuildingSimple(T3duo, ItemTurret.ItemTurretBuild, {
         if(hardMod){
             if(Mathf.chance(0.5)){
                 lib.toBullet(Blocks.duo, Items.graphite).create(this, this.team, this.x, this.y, this.rotation, 1 ,1);
-                Sounds.pew.at(this.x, this.y);
+                Sounds.shootDuo.at(this.x, this.y);
             }
         } else {
             if(Mathf.chance(0.04)){
                 lib.toBullet(Blocks.spectre, Items.thorium).create(this, this.team, this.x, this.y, this.rotation, 1 ,1);
-                Sounds.shootBig.at(this.x, this.y);
+                Sounds.shootSpectre.at(this.x, this.y);
             }
         }
     }
 });
 T3duo.shoot = lib.moreShootAlternate(3.6, 2);
+T3duo.shootSound = Sounds.shootDuo;
 T3duo.reload = hardMod ? 24 : 12;
 T3duo.restitution = 0.03;
 T3duo.range = 140;

@@ -57,7 +57,7 @@ Object.assign(effectBullet, {
     lightningDamage : 3,
     lightning : 5,
     lightningLength : 12,
-    hitSound : Sounds.release,
+    hitSound : Sounds.explosion,//没用
 });
 effectBullet.hitEffect = new Effect(60, cons(e => {
     Draw.color(myitems.lightninAlloy.color);
@@ -135,7 +135,7 @@ LG.buildType = prov(() => {
             y = this.y;
             if(items.total() == block.itemCapacity && !working){
                 Start.at(this);
-                Sounds.lasercharge2.at(x, y, 1.5);
+                Sounds.chargeVela.at(x, y, 1.5);//没用
                 Units.nearby(null, x, y, range*2, cons(unit => {
                     unit.impulse(Tmp.v3.set(unit).sub(x, y).nor().scl(-pullPower));
                 }));

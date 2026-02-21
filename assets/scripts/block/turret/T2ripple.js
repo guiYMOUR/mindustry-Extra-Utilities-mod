@@ -23,7 +23,7 @@ T2rip.shake = 2;
 T2rip.range = 320;
 T2rip.minRange = 50;
 T2rip.health = 180 * 3 * 3;
-T2rip.shootSound = Sounds.artillery;
+T2rip.shootSound = Sounds.shootArtillery;
 lib.Coolant(T2rip, 0.3, 2.5);
 T2rip.ammoTypes = Blocks.ripple.ammoTypes;
 T2rip.requirements = ItemStack.with(

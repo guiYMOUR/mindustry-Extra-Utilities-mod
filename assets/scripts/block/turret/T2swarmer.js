@@ -17,7 +17,7 @@ swT2.inaccuracy = 10;
 swT2.range = 34.5 * 8;
 swT2.size = 3;
 swT2.health = 300 * 3 * 3;
-swT2.shootSound = Sounds.missile;
+swT2.shootSound = Sounds.shootMissile;
 
 lib.Coolant(swT2, 0.3);
 swT2.requirements = ItemStack.with(

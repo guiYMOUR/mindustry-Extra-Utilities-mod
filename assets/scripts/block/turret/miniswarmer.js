@@ -16,7 +16,7 @@ swMin.inaccuracy = 10;
 swMin.range = 26 * 8;
 swMin.size = 2;
 swMin.health = 250 * 2 * 2;
-swMin.shootSound = Sounds.missile;
+swMin.shootSound = Sounds.shootMissile;
 swMin.consumeAmmoOnce = false;
 
 lib.Coolant(swMin, 0.2, false);
