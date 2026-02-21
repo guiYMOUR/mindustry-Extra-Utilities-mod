@@ -8,6 +8,7 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import arc.struct.ObjectSet;
 import arc.struct.Seq;
+import arc.util.Strings;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
@@ -204,20 +205,69 @@ public class EUStatusEffects {
             super.applied(unit, time, extend);
 
             unit.health -= 100;
-        }
-
-        @Override
-        public void update(Unit unit, StatusEntry entry) {
 
             unit.damageMultiplier *= 0.8f;
             unit.speedMultiplier *= 0.4f;
             unit.reloadMultiplier *= 0.5f;
+        }
 
+        @Override
+        public void update(Unit unit, StatusEntry entry) {
             unit.health -= Time.delta;
 
             if(effect != Fx.none && Mathf.chanceDelta(effectChance)){
                 Tmp.v1.rnd(Mathf.range(unit.type.hitSize/2f));
                 effect.at(unit.x + Tmp.v1.x, unit.y + Tmp.v1.y, 0, color, parentizeEffect ? unit : null);
+            }
+        }
+    };
+
+    public static StatusEffect ullification = new StatusEffect("ullification"){{
+        damage = -1;
+        effect = new Effect(60, e -> {
+            if(e.data instanceof Unit u) {
+                Draw.color(Pal.remove, Pal.sap, e.finpow());
+                Lines.stroke(u.hitSize/8 * e.foutpow());
+                Lines.poly(e.x, e.y, 3, u.hitSize * e.foutpow(), 120 * e.finpow());
+            }
+        });
+        color = Color.valueOf("a639b9");
+
+        effectChance = 0.05f;
+    }
+        @Override
+        public void setStats() {
+            super.setStats();
+            stats.remove(Stat.healing);
+            stats.addMultModifier(Stat.healthMultiplier, 0.8f);
+        }
+
+        @Override
+        public void applied(Unit unit, float time, boolean extend) {
+            super.applied(unit, time, extend);
+
+            float amount = unit.health < unit.maxHealth * 0.61803f ? 0 : Math.min(61803, unit.health - unit.maxHealth * 0.61803f);
+
+            unit.health -= amount;
+
+            EUFx.numberJump.at(unit.x, unit.y, 0, color, Strings.autoFixed(amount, 2));
+
+            unit.healthMultiplier *= 0.8f;
+            unit.armor = Math.max(0, unit.armor - 10);
+        }
+
+        @Override
+        public void onRemoved(Unit unit) {
+            super.onRemoved(unit);
+            if(unit.type != null){
+                unit.armor = unit.type.armor;
+            }
+        }
+
+        @Override
+        public void update(Unit unit, StatusEntry entry) {
+            if(effect != Fx.none && Mathf.chanceDelta(effectChance)){
+                effect.at(unit.x, unit.y, 0, color, unit);
             }
         }
     };

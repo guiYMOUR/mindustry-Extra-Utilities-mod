@@ -3,8 +3,10 @@ package ExtraUtilities.content;
 import ExtraUtilities.graphics.MainRenderer;
 import ExtraUtilities.ui.ItemDisplay;
 import ExtraUtilities.worlds.blocks.distribution.PhaseNode;
+import ExtraUtilities.worlds.blocks.distribution.PowerUnloader;
 import ExtraUtilities.worlds.blocks.distribution.StackHelper;
 import ExtraUtilities.worlds.blocks.effect.Breaker;
+import ExtraUtilities.worlds.blocks.effect.ChiSa;
 import ExtraUtilities.worlds.blocks.effect.CoreKeeper;
 import ExtraUtilities.worlds.blocks.effect.WaterBomb;
 import ExtraUtilities.worlds.blocks.fireWork;
@@ -41,7 +43,6 @@ import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.Rand;
-import arc.math.geom.Geometry;
 import arc.math.geom.Position;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
@@ -78,9 +79,9 @@ import mindustry.world.blocks.distribution.DuctBridge;
 import mindustry.world.blocks.distribution.MassDriver;
 import mindustry.world.blocks.heat.*;
 import mindustry.world.blocks.liquid.ArmoredConduit;
-import mindustry.world.blocks.liquid.LiquidBlock;
 import mindustry.world.blocks.power.ConsumeGenerator;
 import mindustry.world.blocks.production.*;
+import mindustry.world.blocks.storage.Unloader;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.blocks.units.UnitAssemblerModule;
 import mindustry.world.blocks.units.UnitFactory;
@@ -121,7 +122,7 @@ public class EUBlocks {
             aparajito, aparajitoLarge,
             buffrerdMemoryBank, clock, tableClock,
             turretSpeeder, mendTurret, coreKeeper, quantumDomain, breaker, waterBomb,
-            randomer, fireWork, allNode, ADC, guiYsDomain, crystalTower;
+            randomer, blockFiller, fireWork, minichisa, allNode, ADC, guiYsDomain, crystalTower;
     public static class LiquidUnitPlan extends UnitFactory.UnitPlan{
         public LiquidStack[] liquid;
 
@@ -162,7 +163,7 @@ public class EUBlocks {
             }});
             craftTime = 120f;
             size = 3;
-            ambientSound = Sounds.hum;
+            ambientSound = Sounds.loopHum;
             ambientSoundVolume = 0.06f;
             hasLiquids = true;
             boostScale = 1f / 9f;
@@ -473,7 +474,7 @@ public class EUBlocks {
                         }
                     }
             );
-            ambientSound = Sounds.smelter;
+            ambientSound = Sounds.loopSmelter;
             ambientSoundVolume = 0.07f;
         }};
 
@@ -690,7 +691,7 @@ public class EUBlocks {
 
             drawer = new DrawMulti(new DrawDefault(), new DrawHeatInput());
 
-            ambientSound = Sounds.fire;
+            ambientSound = Sounds.loopFire;
             ambientSoundVolume = 0.02f;
 
             hasLiquids = true;
@@ -717,7 +718,7 @@ public class EUBlocks {
             consumeItems(with(Items.surgeAlloy, 6, Items.phaseFabric, 4, Items.blastCompound, 6));
             consumeLiquid(Liquids.cryofluid, 0.2f);
             craftEffect = EUFx.diffuse(size, EUItems.lightninAlloy.color, 60);
-            ambientSound = Sounds.techloop;
+            ambientSound = Sounds.loopTech;
             ambientSoundVolume = 0.03f;
 
             drawer = new DrawMulti(new DrawDefault(), new DrawLiquidRegion(), new DrawFlame(Color.valueOf("ffef99")), new DrawLA(Pal.surge, 1.6f * 8));
@@ -731,7 +732,7 @@ public class EUBlocks {
 
             craftEffect = new MultiEffect(new RadialEffect(Fx.surgeCruciSmoke, 4, 90f, 11f), EUFx.diffuse(size, EUItems.lightninAlloy.color, 60));
 
-            ambientSound = Sounds.fire;
+            ambientSound = Sounds.loopFire;
             ambientSoundVolume = 0.3f;
 
             hasLiquids = true;
@@ -754,7 +755,7 @@ public class EUBlocks {
             effectChance = 0.01f;
             size = 2;
             floating = true;
-            ambientSound = Sounds.hum;
+            ambientSound = Sounds.loopHum;
             ambientSoundVolume = 0.06f;
             canOverdrive = true;
             basicHeatOut = 2f;
@@ -769,7 +770,7 @@ public class EUBlocks {
             generateEffect = Fx.turbinegenerate;
             effectChance = 0.04f;
             size = 3;
-            ambientSound = Sounds.hum;
+            ambientSound = Sounds.loopHum;
             ambientSoundVolume = 0.06f;
 
             drawer = new DrawMulti(new DrawDefault(), new DrawHeatOutput());
@@ -795,7 +796,7 @@ public class EUBlocks {
             size = 5;
             heatOutput = 25f;
             regionRotated1 = 1;
-            ambientSound = Sounds.hum;
+            ambientSound = Sounds.loopHum;
             itemCapacity = 0;
             consumePower(600f / 60f);
         }};
@@ -809,7 +810,7 @@ public class EUBlocks {
             liquidCapacity = 24f;
             rotateDraw = false;
             regionRotated1 = 1;
-            ambientSound = Sounds.hum;
+            ambientSound = Sounds.loopHum;
             consumeLiquid(Liquids.slag, 24f / 60f);
             heatOutput = 5f;
         }
@@ -889,7 +890,7 @@ public class EUBlocks {
             else powerProduction = 220/60f;
             generateEffect = Fx.none;
             floating = true;
-            ambientSound = Sounds.hum;
+            ambientSound = Sounds.loopHum;
             ambientSoundVolume = 0.06f;
         }};
 
@@ -1082,7 +1083,7 @@ public class EUBlocks {
                 }
             };
             BulletType fbd = new fBullet(bd, 20){{
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.unitExplode2;
                 hitSoundVolume = 2;
             }};
             Effect g1 = EUFx.gone(EUItems.lightninAlloy.color, size * 8 * 1.6f, 6);
@@ -1122,7 +1123,7 @@ public class EUBlocks {
                     if(b.time < b.lifetime && b.timer.get(1, 18 * b.fout() + 6)){
                         bi.create(b, b.team, b.x, b.y, Mathf.random(360), -1, 1, 1, EUGet.pos(b.x, b.y));
                         g1.at(b);
-                        Sounds.malignShoot.at(b);
+                        Sounds.shootMalign.at(b);
                     }
                     if(b.timer.get(2, intervalDelay)){
                         float bx = b.x + Mathf.random(-size * tilesize, size * tilesize), by = b.y + Mathf.random(-size * tilesize, size * tilesize);
@@ -1192,7 +1193,7 @@ public class EUBlocks {
             consumePower(3);
 
             shootEffect = smokeEffect = none;
-            shootSound = Sounds.malignShoot;
+            shootSound = Sounds.shootMalign;
 
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
             drawer = new DrawTurret("reinforced-");
@@ -1207,6 +1208,7 @@ public class EUBlocks {
             health = 3000;
             range = 35 * 8f;
             loadReload = 120f;
+            reload = 12;
 
             shoot = new ShootBarrel(){{
                 barrels = new float[]{
@@ -1219,7 +1221,7 @@ public class EUBlocks {
                 };
             }};
 
-            shootSound = Sounds.malignShoot;
+            shootSound = Sounds.shootMalign;
             soundPitchMax = soundPitchMin = 0.7f;
 
             shootType = new BulletType(){{
@@ -1244,7 +1246,7 @@ public class EUBlocks {
                     Draw.color(EUItems.lightninAlloy.color);
                     Angles.randLenVectors(e.id, 4, 40 * e.finpow(), e.rotation, 90, (x, y) -> Fill.square(e.x + x, e.y + y, 6 * e.foutpow()));
                 });
-                hitSound = despawnSound = Sounds.back;
+                hitSound = despawnSound = Sounds.uiBack;
                 absorbable = false;
                 collidesGround = collidesTiles = false;
             }
@@ -1409,12 +1411,12 @@ public class EUBlocks {
             shoot = new ShootAlternate(6f);
             shake = 2f;
             recoil = 1f;
-            reload = 60f;
+            reload = 72f;
             shootY = 0f;
             rotateSpeed = 1.2f;
             minWarmup = 0.85f;
             shootWarmupSpeed = 0.07f;
-            shootSound = Sounds.missile;
+            shootSound = Sounds.shootMissile;
             researchCostMultiplier = 0.2f;
 
             squareSprite = false;
@@ -1432,7 +1434,7 @@ public class EUBlocks {
             trackingRange = range * 1.3f;
             reload = 2 * 60;
             size = 5;
-            shootSound = Sounds.malignShoot;
+            shootSound = Sounds.shootMalign;
             shootWarmupSpeed = 0.06f;
             minWarmup = 0.9f;
             health = 8000;
@@ -1598,14 +1600,14 @@ public class EUBlocks {
             size = 5;
             health = 4288;
 
-            reload = 90f;
+            reload = 102f;
             range = 30 * 8f;
 
             buff = EUStatusEffects.starFlame;
 
             shoot = new ShootSpread(9, 4);
             squareSprite = false;
-            shootSound = Sounds.shootBig;
+            shootSound = Sounds.shootCleroi;
             soundPitchMin = soundPitchMax = 0.6f;
 
             minWarmup = 0.7f;
@@ -1688,7 +1690,7 @@ public class EUBlocks {
                         ammoMultiplier = 1;
                         reflectable = false;
                         pierce = true;
-                        pierceCap = 5;
+                        pierceCap = 4;
                         status = EUStatusEffects.starFlame;
                         statusDuration = 6 * 60f;
                         lifetime = 42;
@@ -1872,7 +1874,7 @@ public class EUBlocks {
             shake = 4;
 
             //shootSound = Sounds.shotgun;
-            shootSound = Sounds.pulseBlast;
+            shootSound = Sounds.shootCollaris;
             soundPitchMax = soundPitchMin = 0.8f;
 
             ammo(Items.surgeAlloy, new BulletType(){{
@@ -1952,7 +1954,7 @@ public class EUBlocks {
                 public void hitEntity(Bullet b, Hitboxc entity, float health) { }
 
                 @Override
-                public void hit(Bullet b, float x, float y) { }
+                public void hit(Bullet b, float x, float y, boolean createFrags) { }
 
                 @Override
                 public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) { }
@@ -2034,11 +2036,11 @@ public class EUBlocks {
             all = true;
             range = 36 * 8;
             trackingRange = range * 1.3f;
-            reload = 60;
+            reload = 72;
             recoil = 4;
             coolant = consumeCoolant(0.5f);
             coolantMultiplier = 2f;
-            shootSound = Sounds.shootAltLong;
+            shootSound = Sounds.shootTank;
             smokeEffect = new Effect(20, e -> {
                 Draw.color(Pal.sap);
                 Angles.randLenVectors(e.id, 5, 20 * e.fin(), e.rotation, 30, (x, y) -> Fill.circle(e.x + x, e.y + y, 5 * e.fout()));
@@ -2240,16 +2242,17 @@ public class EUBlocks {
             shootY = 12f;
             rotateSpeed = 3.2f;
             coolant = consumeCoolant(0.3f);
-            shootSound = Sounds.missile;
+            shootSound = Sounds.shootMissile;
 
             BulletType f1 = new FireWorkBullet(100, 4, name("mb"), Color.valueOf("EA8878"), 6 * 8);
             BulletType f2 = new FireWorkBullet(100, 4, Color.valueOf("5CFAD5"));
             BulletType f3 = new FireWorkBullet(100, 4){{
                 colorful = true;
-                fire = new colorFire(false, 3f, 60){{
-                    stopFrom = 0f;
-                    stopTo = 0f;
+                fire = new colorFire(false, 2.5f, 60){{
+                    stopFrom = 0.2f;
+                    stopTo = 0.4f;
                     trailLength = 9;
+                    rotSpeed = 12;
                 }};
                 splashDamageRadius = 10 * Vars.tilesize;
                 trailInterval = 0;
@@ -2273,6 +2276,7 @@ public class EUBlocks {
             BulletType[] bullets1 = new BulletType[]{f1, f2, f3};
             BulletType[] bullets2 = new BulletType[]{fp1, fp2, fp3};
             ammo(Items.blastCompound, bullets1, Items.plastanium, bullets2, EUItems.lightninAlloy);
+            //ammo(Items.blastCompound, bullets1, Items.plastanium, bullets2);
 
             squareSprite = false;
         }};
@@ -2293,7 +2297,7 @@ public class EUBlocks {
             rotateSpeed = 2.6f;
             coolant = consume(new ConsumeLiquid(Liquids.water, 1));
             coolantMultiplier = 0.85f;
-            shootSound = Sounds.missile;
+            shootSound = Sounds.shootMissile;
             shootCone = 16;
             canOverdrive = false;
             maxAmmo = 10;
@@ -2323,8 +2327,8 @@ public class EUBlocks {
                 pierce = true;
                 pierceCap = 3;
                 fire = new colorFire(false, 2.3f, 60){{
-                    stopFrom = 0.55f;
-                    stopTo = 0.55f;
+                    stopFrom = 0.5f;
+                    stopTo = 0.6f;
                     rotSpeed = 666;
                 }};
                 num = 15;
@@ -2338,8 +2342,8 @@ public class EUBlocks {
                 width = 22;
                 height = 22;
                 fire = new colorFire(false, 3.6f, 60){{
-                    stopFrom = 0.7f;
-                    stopTo = 0.7f;
+                    stopFrom = 0.6f;
+                    stopTo = 0.8f;
                     rotSpeed = 666;
                     hittable = true;
                     //speedRod = 0.3f;
@@ -2372,6 +2376,7 @@ public class EUBlocks {
                     if(fragBullet != null && (fragOnAbsorb || !b.absorbed)){
                         fragBullet.create(b, b.x, b.y, b.rotation() - 60);
                     }
+                    b.frags++;
                 }
             };
             //黄
@@ -2383,8 +2388,8 @@ public class EUBlocks {
                 weaveMag = 8f;
                 weaveScale = 2f;
                 fire = new colorFire(false, 2.3f, 60){{
-                    stopFrom = 0.55f;
-                    stopTo = 0.55f;
+                    stopFrom = 0.5f;
+                    stopTo = 0.6f;
                     rotSpeed = 666;
                     hittable = true;
                 }};
@@ -2404,8 +2409,8 @@ public class EUBlocks {
                 height = 10;
                 status = StatusEffects.electrified;
                 fire = new colorFire(false, 2.3f, 60){{
-                    stopFrom = 0.55f;
-                    stopTo = 0.55f;
+                    stopFrom = 0.5f;
+                    stopTo = 0.6f;
                     rotSpeed = 666;
                 }};
                 num = 10;
@@ -2423,8 +2428,8 @@ public class EUBlocks {
                 weaveScale = 6;
                 weaveRandom = false;
                 fire = new colorFire(false, 2.8f, 60){{
-                    stopFrom = 0.55f;
-                    stopTo = 0.55f;
+                    stopFrom = 0.5f;
+                    stopTo = 0.6f;
                     rotSpeed = 666;
                     //speedRod = 0.3f;
                 }};
@@ -2452,6 +2457,7 @@ public class EUBlocks {
                     if(fragBullet != null && (fragOnAbsorb || !b.absorbed)){
                         for(int i : new int[]{-1, 1}) fragBullet.create(b, b.team, b.x, b.y, b.rotation() - 10 * i, -1, 1, 1, i);
                     }
+                    b.frags++;
                 }
             };
             //紫
@@ -2492,6 +2498,7 @@ public class EUBlocks {
                     if(fragBullet != null && (fragOnAbsorb || !b.absorbed)){
                         for(int i : new int[]{-1, 0, 1}) fragBullet.create(b, b.team, b.x, b.y, b.rotation() - 10 * i, -1, 1, 1, b.rotation());
                     }
+                    b.frags++;
                 }
             };
             //粉
@@ -2503,8 +2510,8 @@ public class EUBlocks {
                 status = StatusEffects.none;
                 textFire = new spriteBullet(name("fire-guiY"), 128, 128);
                 fire = new colorFire(false, 3f, 60){{
-                    stopFrom = 0.6f;
-                    stopTo = 0.6f;
+                    stopFrom = 0.5f;
+                    stopTo = 0.7f;
                     rotSpeed = 666;
                     hittable = true;
                 }};
@@ -2547,7 +2554,7 @@ public class EUBlocks {
                         //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
                     }
                 });
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.explosionMissile;
                 healColor = EUItems.lightninAlloy.color;
                 buildingDamageMultiplier = 0.7f;
 
@@ -2587,7 +2594,6 @@ public class EUBlocks {
                 if(bullet.time < 70) bullet.initVel(bullet.rotation(), bullet.type.speed * fout);
             };
             BulletType hard = new ScarletDevil(EUItems.lightninAlloy.color){{
-                hitSound = despawnSound = Sounds.explosionbig;
                 damage = 800;
                 splashDamage = 800;
                 splashDamageRadius = 13 * 8f;
@@ -2609,7 +2615,7 @@ public class EUBlocks {
                         //Fill.circle(dx, dy, 2 * e.fout() + 0.1f);
                     }
                 });
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.explosionMissile;
                 healColor = EUItems.lightninAlloy.color;
                 buildingDamageMultiplier = 0.7f;
 
@@ -2731,7 +2737,7 @@ public class EUBlocks {
             rotateSpeed = 1f;
             minWarmup = 0.95f;
             shootWarmupSpeed = 0.04f;
-            shootSound = Sounds.largeCannon;
+            shootSound = Sounds.shootBeamPlasma;
 
             coolant = consume(new ConsumeLiquid(Liquids.water, 120f / 60f));
             coolantMultiplier = 0.3f;
@@ -2760,7 +2766,7 @@ public class EUBlocks {
             canOverdrive = false;
             coolant = consume(new ConsumeLiquid(Liquids.water, 120f / 60f));
             coolantMultiplier = 0.3f;
-            shootSound = Sounds.largeExplosion;
+            shootSound = Sounds.explosionCore;
             squareSprite = false;
 
             range = 70 * 8;
@@ -2861,8 +2867,8 @@ public class EUBlocks {
                 trailLength = 9;
                 trailChance = 1;
                 trailColor = Color.valueOf("6f6f6f");
-                hitSound = Sounds.laser;
-                despawnSound = Sounds.laser;
+                hitSound = Sounds.shootLancer;
+                despawnSound = Sounds.shootLancer;
                 hitShake = 3;
                 trailEffect = new Effect(50, e -> {
                     Draw.color(e.color);
@@ -2932,7 +2938,7 @@ public class EUBlocks {
                             });
                         })
                 );
-                chargeSound = Sounds.lasercharge;
+                chargeSound = Sounds.chargeVela;
 
                 despawnEffect = hitEffect = new MultiEffect(
                         new Effect(60, 100, e -> {
@@ -2969,7 +2975,7 @@ public class EUBlocks {
             consumePower(10);
             range = 40 * 8;
             reload = 360;
-            shootSound = Sounds.missileLarge;
+            shootSound = Sounds.shootMissileLarge;
             canOverdrive = false;
             squareSprite = false;
 
@@ -2985,7 +2991,7 @@ public class EUBlocks {
             maxAmmo = ammoPerShot * 3;
             range = 57.5f * 8;
             minRange = 20 * 8f;
-            shootSound = Sounds.laserbig;
+            shootSound = Sounds.shootMeltdown;
             recoil = 5;
             health = 6000;
             canOverdrive = false;
@@ -3005,7 +3011,7 @@ public class EUBlocks {
                 keepVelocity = false;
                 buildingDamageMultiplier = 0.6f;
 
-                hitSound = despawnSound = Sounds.explosionbig;
+                hitSound = despawnSound = Sounds.unitExplode3;
                 despawnShake = hitShake = 8;
             }
 
@@ -3161,9 +3167,17 @@ public class EUBlocks {
                             }
                         }
 
+//                        @Override
+//                        public void createFrags(Bullet b, float x, float y) {
+//
+//                            b.frags++;
+//                        }
+
+
                         @Override
-                        public void createFrags(Bullet b, float x, float y) {
+                        public void despawned(Bullet b) {
                             fall.create(b, b.x, b.y, b.rotation());
+                            b.frags++;
                         }
                     }
             );
@@ -3694,7 +3708,7 @@ public class EUBlocks {
 
             angleBoost = 0.5f;
             shootSound = Sounds.none;
-            loopSound = Sounds.spellLoop;
+            loopSound = Sounds.beamHeal;
             consumePower(6);
             consumeItem(Items.phaseFabric).boost();
         }};
@@ -3811,6 +3825,11 @@ public class EUBlocks {
             alwaysUnlocked = true;
             buildVisibility = BuildVisibility.sandboxOnly;
         }};
+        blockFiller = new OmniSource("full-efficiency"){{
+            requirements(Category.distribution, with(Items.silicon, 1));
+            alwaysUnlocked = true;
+            buildVisibility = BuildVisibility.sandboxOnly;
+        }};
 
         allNode = new PhaseNode("a-n"){{
             requirements(Category.effect, with(Items.silicon, 1));
@@ -3862,6 +3881,27 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
 
+        minichisa = new ChiSa("minichisa"){{
+            requirements(Category.effect, with(Items.silicon, 521));
+            size = 4;
+            LEFT = 10.8f;
+            UP = 6.1f;
+            scl = 3.4f;
+            ry = -10;
+            ryt = 1f;
+            s = EUSounds.ciallo;
+
+            //我千咲的面板
+            health = 15335;
+            buildVisibility = BuildVisibility.sandboxOnly;
+        }
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, EUStatValues.ability(name, 2));
+            }
+        };
+
         EUGet.donorItems.addAll(T2sporePress, phasicDrill, penitent, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
         EUGet.donorMap.get(0).addAll(T2sporePress, phasicDrill);
         EUGet.donorMap.get(1).addAll(waterBomb);
@@ -3870,9 +3910,9 @@ public class EUBlocks {
         EUGet.donorMap.get(5).addAll(shootingStar);
         EUGet.donorMap.get(7).addAll(penitent);
 
-        EUGet.developerItems.addAll(siliconFurnace, guiY, rust, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, fireWork, crystalTower);
-        EUGet.developerMap.get(0).addAll(guiY, fiammetta, rust, guiYsDomain, allNode, ADC, randomer, fireWork);
-        EUGet.developerMap.get(1).addAll(siliconFurnace, onyxBlaster);
+        EUGet.developerItems.addAll(siliconFurnace, guiY, rust, onyxBlaster, fiammetta, guiYsDomain, allNode, ADC, randomer, blockFiller, fireWork, crystalTower, minichisa);
+        EUGet.developerMap.get(0).addAll(guiY, fiammetta, rust, guiYsDomain, allNode, ADC, randomer, blockFiller, fireWork, minichisa);
+        EUGet.developerMap.get(1).addAll(siliconFurnace, onyxBlaster, crystalTower);
     }
 
     //by guiY for Twilight Fall

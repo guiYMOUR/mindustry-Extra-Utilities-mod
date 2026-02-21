@@ -102,8 +102,11 @@ public class TDPlanet {
             //minZoom = 1f;
             orbitRadius = 3f;
             allowWaves = true;
-            allowWaveSimulation = true;
+            allowLegacyLaunchPads = true;
+            allowSectorInvasion = true;
+            allowLaunchSchematics = true;
             enemyCoreSpawnReplace = true;
+            allowLaunchLoadout = true;
             allowLaunchToNumbered = false;
             prebuildBase = false;
             ruleSetter = (r) -> {

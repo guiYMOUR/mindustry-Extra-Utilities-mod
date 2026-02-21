@@ -537,6 +537,8 @@ public class EUOverride {
         changeInHard(T2duo);
         Block T3duo = Vars.content.block(name("T3-duo"));
         changeInHard(T3duo);
+//        Block hurricane = Vars.content.block(name("hurricane"));
+//        changeInHard(hurricane);
         Block magstorm = Vars.content.block(name("magstorm"));
         changeInHard(magstorm);
         Block sancta = Vars.content.block(name("sancta"));

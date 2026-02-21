@@ -3,6 +3,7 @@ package ExtraUtilities;
 import ExtraUtilities.ai.DefenderHealAI;
 import ExtraUtilities.content.*;
 import ExtraUtilities.graphics.MainRenderer;
+import ExtraUtilities.input.EUAtLoad;
 import ExtraUtilities.net.EUCall;
 import ExtraUtilities.ui.EUI;
 import ExtraUtilities.worlds.meta.EUStatValues;
@@ -58,6 +59,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import static ExtraUtilities.input.EUAtLoad.hasOtherContentMod;
 import static arc.Core.app;
 import static arc.Core.settings;
 import static mindustry.Vars.*;
@@ -86,6 +88,11 @@ public class ExtraUtilitiesMod extends Mod{
 
     public static String toText(String str){
         return Core.bundle.format(str);
+    }
+    public static Block getJsNameBlock(String n){
+        Block b = content.block(name(n));
+
+        return b != null ? b : Blocks.duo;
     }
 
     public static boolean hardMod;
@@ -150,11 +157,13 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                Block duoIII = content.block(name("T3-duo"));
-                Block T2scorch = content.block(name("T2scorch"));
+                Block hurricane = getJsNameBlock("hurricane");
+                Block und = getJsNameBlock("und");
+                Block lu = getJsNameBlock("liquid-unloader");
+
                 updateLog.addAll(
-                        TDPlanet.supEX, TDSectorPresets.groundZEx, TDSectorPresets.relicValley, EUBlocks.penitent,
-                        duoIII, EUBlocks.onyxBlaster, EUBlocks.antiaircraft, Blocks.foreshadow,
+                        EUBlocks.minichisa, EUBlocks.blockFiller, hurricane, und, lu,
+                        Blocks.junction,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -189,13 +198,13 @@ public class ExtraUtilitiesMod extends Mod{
                         log.row();
                         log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
                     });
+                    addToTable(EUBlocks.minichisa, t);
+                    addToTable(EUStatusEffects.ullification, t);
+                    addToTable(EUBlocks.blockFiller, t);
                     addToTable(TDPlanet.supEX, t);
                     addToTable(TDSectorPresets.groundZEx, t);
                     addToTable(TDSectorPresets.relicValley, t);
                     addToTable(EUBlocks.penitent, t);
-                    addToTable(EUStatusEffects.breakage, t);
-                    addToTable(EUBlocks.rust, t);
-                    addToTable(EUBlocks.ekLiquidDriver, t);
                     addToTable(EUBlocks.guiY, t);
                 }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f).get();
                 buttons.check(toText("eu-log-not-show-next"), !Core.settings.getBool("eu-first-load"), b -> {
@@ -271,7 +280,8 @@ public class ExtraUtilitiesMod extends Mod{
         //WTMF - What This May From
         Log.info("Extra Utilities: try load WTMF");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(1f, EUFrom::load));
-        Log.info("Loading completed, congratulations! :)");
+        if(settings.getBool("eu-WTMF-open")) Log.info("Loading completed, congratulations! :)");
+        else Log.info("WTMF is not enabled. If needed, please go to settings to enable it.");
 
         Log.info("Loaded ExtraUtilities Mod constructor.");
         Events.on(ClientLoadEvent.class, e -> Time.runTask(6f, ExtraUtilitiesMod::log));
@@ -327,6 +337,8 @@ public class ExtraUtilitiesMod extends Mod{
         //settings.remove("eu-override-unit");
 
         if(!onlyPlugIn) {
+            EUAtLoad.init();
+            if(hasOtherContentMod) Log.info("Other content mods have been detected, and the EU renderer has been closed!");
             MainRenderer.init();
             EUCall.registerPackets();
             EUOverride.overrideUnitForAll(overrideUnitArm, coreReset);

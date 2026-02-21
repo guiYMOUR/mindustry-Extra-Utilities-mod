@@ -32,6 +32,7 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.graphics.Trail;
 import mindustry.type.UnitType;
+import mindustry.ui.Fonts;
 import mindustry.world.Block;
 
 import static ExtraUtilities.ExtraUtilitiesMod.*;
@@ -901,4 +902,18 @@ public class EUFx {
         }
 
     }).layer(Layer.bullet);
+
+    public static Effect numberJump = new Effect(60, e -> {
+        if(!(e.data instanceof String s)) return;
+        Draw.color(e.color);
+        float len = Mathf.randomSeed(e.id, 30f, 40f);
+        float in2x = Math.min(1, e.fin() * 2);
+        in2x = Interp.fastSlow.apply(in2x);
+        float dx = EUGet.dx(e.x, len * in2x, 90),
+                dy =  EUGet.dy(e.y, len * in2x, 90);
+
+        float tin = e.time < 30 ? Math.min(1, e.fin() * 4) : Math.min(1, e.fout() * 4);
+        tin = Interp.fastSlow.apply(tin);
+        Fonts.outline.draw(s, dx, dy, e.color, 0.8f * tin, false, 1);
+    });
 }

@@ -31,6 +31,7 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.graphics.Trail;
 import mindustry.type.StatusEffect;
+import mindustry.world.blocks.ControlBlock;
 import mindustry.world.blocks.defense.turrets.Turret;
 
 import javax.sound.sampled.Line;
@@ -257,7 +258,7 @@ public class EUBulletTypes {
             //ammoMultiplier = 1;
         }
             @Override
-            public void hit(Bullet b) {
+            public void hit(Bullet b, float x, float y, boolean createFrags) {
                 if(absorbable && b.absorbed) return;
                 //unit▼
                 Units.nearbyEnemies(b.team, b.x, b.y, flameLength, unit -> {
@@ -448,14 +449,24 @@ public class EUBulletTypes {
         fragBullets = 6;
     }
 
-        @Override
-        public void createFrags(Bullet b, float x, float y) {
-            //var psb = setPos.create(b, b.x, b.y, 0);
+//        @Override
+//        public void createFrags(Bullet b, float x, float y) {
+//            //var psb = setPos.create(b, b.x, b.y, 0);
+//            for(int i = 0; i < fragBullets; i++){
+//                float a = Mathf.randomSeed(b.id, 360) + 60 * i;
+//                fragBullet.create(b, b.team, b.x, b.y, a, -1, 1, 1, i);
+//            }
+//            b.frags++;
+//        }
 
+        @Override
+        public void despawned(Bullet b) {
             for(int i = 0; i < fragBullets; i++){
                 float a = Mathf.randomSeed(b.id, 360) + 60 * i;
                 fragBullet.create(b, b.team, b.x, b.y, a, -1, 1, 1, i);
             }
+            b.frags++;
+            super.despawned(b);
         }
 
         @Override
@@ -665,7 +676,7 @@ public class EUBulletTypes {
             Draw.color();
         };
 
-        shootSound = Sounds.malignShoot;
+        shootSound = Sounds.shootMalign;
         vol = 0.6f;
         pit = 1.2f;
         shootBullet = (b, s) -> {
@@ -947,6 +958,180 @@ public class EUBulletTypes {
             }
             if(bullet.child.size > 0) bullet.child.clear();
             return EUGet.anyOtherCreate(bullet, this, shooter, owner, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY, target);
+        }
+    };
+
+    public static void lookAt(float angle, Bullet b, float homingPower) {
+        b.rotation(Angles.moveToward(b.rotation(), angle, homingPower * Time.delta));
+    }
+
+    public static void lookAt(float x, float y, Bullet b, float homingPower) {
+        lookAt(b.angleTo(x, y), b, homingPower);
+    }
+
+
+    private static final BulletType auroraSmall = new RainbowStorm(6, 2){{
+        homingRange = 160;
+        homingPower = 0.5f;
+        lifetime = 90;
+        speed = 4f;
+        inAmi = false;
+        homingDelay = 9;
+        sideTrailWidth = 1.7f;
+        trailLength = 12;
+        trailWidth = 4;
+        laserLength = 10;
+        laserAmount = 9;
+    }
+
+        @Override
+        public void update(Bullet b) {
+            if(b.owner instanceof Turret.TurretBuild tb && tb.block instanceof Turret t && !b.within(tb,t.range)){
+                //b.vel.setAngle(Angles.moveToward(b.rotation(), b.angleTo(tb), homingPower * Time.delta * 50f));
+                b.rotation(b.angleTo(tb));
+            } else {
+                updateHoming(b);
+            }
+            updateTrail(b);
+            updateWeaving(b);
+            updateTrailEffects(b);
+            updateBulletInterval(b);
+        }
+    };
+
+    private static final BulletType auroraSmallDelay = new BulletType(){{
+        absorbable = hittable = collides = collidesTiles = collidesAir = collidesGround = false;
+        speed = damage = 0;
+        lifetime = 12;
+        despawnEffect = hitEffect = Fx.none;
+
+        despawnSound = Sounds.shootMerui;
+    }
+        @Override
+        public void despawned(Bullet b) {
+            for(int i = 0; i < fragBullets; i++){
+                float a = b.rotation() + i * 120 + Mathf.randomSeed(b.id, -30f, 30f);
+                auroraSmall.create(b, b.x, b.y, a);
+            }
+
+            despawnSound.at(b);
+        }
+    };
+
+    protected static Color auroraColor = Color.valueOf("bf92f9");
+    public static BulletType auroraMain = new BulletType(){{
+        absorbable = hittable = collides = collidesTiles = collidesAir = collidesGround = false;
+        speed = 7;
+        lifetime = 90;
+        homingDelay = 6;
+        homingPower = 5;
+
+        fragBullets = 3;
+        fragBullet = auroraSmall;
+
+        hitEffect = Fx.none;
+        despawnEffect = new Effect(15, b -> {
+            Draw.color(auroraColor);
+            Lines.stroke(1.7f);
+            Lines.poly(b.x, b.y, 6, 5, b.rotation + b.time * 4);
+
+            Lines.stroke(3f);
+            float fot = b.fout();
+            fot = Interp.fastSlow.apply(fot);
+            for(int i : Mathf.signs){
+                float dx = EUGet.dx(b.x, 2 + 6 * fot, b.rotation + i * 90),
+                        dy = EUGet.dy(b.y, 2 + 6 * fot, b.rotation + i * 90);
+                Lines.arc(dx, dy, 9, 0.35f, b.rotation - 63 + 90 * i);
+
+                dx = EUGet.dx(b.x, 12 + 4 * fot, b.rotation - 90 + i * 90);
+                dy = EUGet.dy(b.y, 12 + 4 * fot, b.rotation - 90 + i * 90);
+                Drawf.tri(dx, dy, 8, 4f * 1.7f, b.rotation - 90 - i * 90);
+            }
+        });
+    }
+
+        @Override
+        public void update(Bullet b) {
+            @Nullable Unit shooter = null;
+            if(b.owner instanceof Unit) shooter = (Unit)b.owner;
+            if(b.owner instanceof ControlBlock) shooter = ((ControlBlock)b.owner).unit();
+            if (shooter != null) {
+                if (b.time > homingDelay) {
+                    if (shooter.isPlayer()) lookAt(shooter.aimX, shooter.aimY, b, homingPower);
+                    else if(b.owner instanceof Turret.TurretBuild tb){
+                        if(tb.target != null)
+                        lookAt(b.angleTo(tb.target), b, homingPower);
+                    }
+                }
+            }
+            b.initVel(b.rotation(), speed * b.foutpow() + 0.2f);
+
+
+            updateTrailEffects(b);
+        }
+
+        @Override
+        public void draw(Bullet b) {
+            super.draw(b);
+
+            Draw.color(auroraColor);
+            //Fill.circle(b.x, b.y, 2);
+            Lines.stroke(1.7f);
+            Lines.poly(b.x, b.y, 6, 5, b.rotation() + b.time * 4);
+            //Lines.circle(b.x, b.y, 8);
+            float out = b.lifetime - 30;
+            if(b.time < out){
+                Lines.stroke(3f);
+                float fin = Math.min(1f, b.time/out);
+                float fot = 1 - fin;
+                fot = Interp.slowFast.apply(fot);
+                for(int i : Mathf.signs){
+                    float dx = EUGet.dx(b.x, 2 + 6 * fot, b.rotation() + i * 90),
+                            dy = EUGet.dy(b.y, 2 + 6 * fot, b.rotation() + i * 90);
+                    Lines.arc(dx, dy, 9, 0.35f, b.rotation() - 63 + 90 * i);
+
+                    dx = EUGet.dx(b.x, 12 + 4 * fot, b.rotation() - 90 + i * 90);
+                    dy = EUGet.dy(b.y, 12 + 4 * fot, b.rotation() - 90 + i * 90);
+                    Drawf.tri(dx, dy, 8, 4f * 1.7f, b.rotation() - 90 - i * 90);
+                }
+            } else {
+                Lines.stroke(3f);
+                float left = b.lifetime - b.time;
+                float fot = left / 30;
+                float fin = 1 - fot;
+                fin = Interp.fastSlow.apply(fin);
+                for(int i : Mathf.signs){
+                    float dx = EUGet.dx(b.x, 2 + 6 * fin, b.rotation() + i * 90),
+                            dy = EUGet.dy(b.y, 2 + 6 * fin, b.rotation() + i * 90);
+                    Lines.arc(dx, dy, 9, 0.35f, b.rotation() - 63 + 90 * i);
+
+                    dx = EUGet.dx(b.x, 12 + 4 * fin, b.rotation() - 90 + i * 90);
+                    dy = EUGet.dy(b.y, 12 + 4 * fin, b.rotation() - 90 + i * 90);
+                    Drawf.tri(dx, dy, 8, 4f * 1.7f, b.rotation() - 90 - i * 90);
+                }
+            }
+        }
+
+        @Override
+        public void updateTrailEffects(Bullet b) {
+            Tmp.v1.set(8, 0).rotate(b.rotation() - 90);
+            Tmp.v2.set(-8, 0).rotate(b.rotation() - 90);
+            float x1 = b.x + Tmp.v1.x;
+            float y1 = b.y + Tmp.v1.y;
+            float x2 = b.x + Tmp.v2.x;
+            float y2 = b.y + Tmp.v2.y;
+            EUFx.normalTrail.at(x1, y1, 1.8f, Tmp.c3.set(EUGet.rainBowRed).shiftHue(b.time * 6));
+            EUFx.normalTrail.at(x2, y2, 1.8f, Tmp.c4.set(EUGet.rainBowRed).shiftHue(b.time * 6));
+        }
+
+        @Override
+        public void createFrags(Bullet b, float x, float y) { }
+
+        @Override
+        public void despawned(Bullet b) {
+            despawnEffect.at(b.x, b.y, b.rotation());
+
+            auroraSmallDelay.create(b, b.x, b.y, b.rotation());
         }
     };
 }

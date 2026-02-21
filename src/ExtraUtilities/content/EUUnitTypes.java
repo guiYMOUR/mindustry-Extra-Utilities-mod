@@ -135,7 +135,7 @@ public class EUUnitTypes {
             buildSpeed = 20;
 
             deathExplosionEffect = Fx.none;
-            deathSound = Sounds.titanExplosion;
+            deathSound = Sounds.explosionTitan;
             targetFlags = new BlockFlag[]{BlockFlag.turret, BlockFlag.core, null};
 
             setEnginesMirror(
@@ -360,7 +360,7 @@ public class EUUnitTypes {
                     rotate = true;
                     mirror = false;
                     x = y = 0;
-                    shootSound = Sounds.cannon;
+                    shootSound = Sounds.shootNavanax;
 
                     bullet = new BulletType(){{
                         speed = 5;
@@ -395,6 +395,7 @@ public class EUUnitTypes {
                         @Override
                         public void createFrags(Bullet b, float x, float y) {
                             btL.create(b, x, y, 0);
+                            b.frags++;
                         }
 
                         @Override
@@ -446,7 +447,7 @@ public class EUUnitTypes {
                         shootCone = 360;
                         targetInterval = 6;
                         targetSwitchInterval = 6;
-                        shootSound = Sounds.malignShoot;
+                        shootSound = Sounds.shootMalign;
                         float desTime = 30;
                         float desLife = 60;
                         float runTime = 20;
@@ -485,7 +486,7 @@ public class EUUnitTypes {
                                 trailInterval = 1;
                                 pierceArmor = true;
                                 hitShake = despawnShake = 4;
-                                hitSound = despawnSound = Sounds.shootAlt;
+                                hitSound = despawnSound = Sounds.shootMerui;
                                 lightning = 1;
                                 lightningColor = eccl;
                                 lightningDamage = 15;
@@ -611,7 +612,7 @@ public class EUUnitTypes {
                         rotate = true;
                         rotateSpeed = 2f;
                         reload = 60;
-                        shootSound = Sounds.missileLarge;
+                        shootSound = Sounds.shootMissileSmall;
                         xRand = 4;
                         shoot.shots = 3;
                         shoot.shotDelay = 6;
@@ -629,7 +630,7 @@ public class EUUnitTypes {
                                 Angles.randLenVectors(e.id, 5, 32 * e.finpow(), e.rotation, 180, (x, y) -> Fill.square(e.x + x, e.y + y, 20 * e.foutpow()));
                             });
                             hitShake = despawnShake = 7;
-                            hitSound = despawnSound = Sounds.bang;
+                            hitSound = despawnSound = Sounds.unitExplode1;
                             hitEffect = despawnEffect = new MultiEffect(
                                     new Effect(90, e -> {
                                         Draw.color(trailColor);
@@ -687,7 +688,7 @@ public class EUUnitTypes {
                             rangeOverride = 60 * 8;
                             damage = 80;
                         }};
-                        shootSound = Sounds.spark;
+                        shootSound = Sounds.shootArc;
                     }},
                     new ReRotPointDefenseWeapon(name("regency-w2")){{
                         x = 55;
@@ -700,7 +701,7 @@ public class EUUnitTypes {
                             rangeOverride = 60 * 8;
                             damage = 80;
                         }};
-                        shootSound = Sounds.spark;
+                        shootSound = Sounds.shootArc;
                     }
 
                         @Override
@@ -733,7 +734,7 @@ public class EUUnitTypes {
                 rotateSpeed = 5;
                 autoTarget = true;
                 controllable = false;
-                shootSound = Sounds.shotgun;
+                shootSound = Sounds.shootToxopidShotgun;
                 targetInterval = targetSwitchInterval = 10;
                 bullet = new BulletType(){{
                     damage = 600;
@@ -770,7 +771,7 @@ public class EUUnitTypes {
                             Drawf.tri(e.x, e.y, 11 * fout, 66 * fin, 45 + ang);
                         }
                     });
-                    hitSound = Sounds.laser;
+                    hitSound = Sounds.shootLancer;
                     hitShake = despawnShake = 10;
                 }
 
@@ -865,9 +866,9 @@ public class EUUnitTypes {
                         y = 30;
                         mirror = false;
                         shootCone = 20;
-                        chargeSound = Sounds.lasercharge;
+                        chargeSound = Sounds.chargeVela;
                         reload = 120;
-                        shootSound = Sounds.missileLaunch;
+                        shootSound = Sounds.shootBeamPlasmaSmall;
                         float chargeTime = 80;
                         bullet = new BulletType(){{
                             damage = splashDamage = 600;
@@ -926,7 +927,7 @@ public class EUUnitTypes {
                             );
 
                             hitShake = despawnShake = 14;
-                            hitSound = despawnSound = Sounds.explosionbig;
+                            hitSound = despawnSound = Sounds.explosionReactor;
                         }
                             @Override
                             public void update(Bullet b) {
@@ -1204,6 +1205,7 @@ public class EUUnitTypes {
                                     float a = b.rotation() + Mathf.range(60) + 72 * i;
                                     fragBullet.create(b, b.x, b.y, a, 1, 1);
                                 }
+                                b.frags++;
                             }
 
                             @Override
@@ -1241,14 +1243,16 @@ public class EUUnitTypes {
 
                             @Override
                             public void removed(Bullet b) {
-
+                                if(b.frags == 0 && fragOnDespawn && fragBullet != null){
+                                    createFrags(b, b.x, b.y);
+                                }
                             }
                         };
 
                         x = 25.5f;
                         y = 0;
                         shootCone = 200f;
-                        shootSound = Sounds.missileSmall;
+                        shootSound = Sounds.shootMissileSmall;
                         reload = 48 + (hardMod ? 12 : 0);
                         recoil = 5;
 
@@ -1333,7 +1337,7 @@ public class EUUnitTypes {
                             intervalRandomSpread = 0;
                             intervalDelay = 27;
                             hittable = absorbable = false;
-                            hitSound = Sounds.cannon;
+                            hitSound = Sounds.shootMissileLong;
                             hitSoundPitch = 1.2f;
                             intervalBullet = new BulletType(){{
                                 damage = 12;
@@ -1394,7 +1398,9 @@ public class EUUnitTypes {
 
                                 @Override
                                 public void removed(Bullet b) {
-
+                                    if(b.frags == 0 && fragOnDespawn && fragBullet != null){
+                                        createFrags(b, b.x, b.y);
+                                    }
                                 }
                             };
                         }
@@ -1473,7 +1479,7 @@ public class EUUnitTypes {
                                             float dx = EUGet.dx(unit.x, unit.hitSize() / 2f, b.rotation()),
                                                     dy = EUGet.dy(unit.y, unit.hitSize() / 2f, b.rotation());
                                             largeHitWave.at(dx, dy, b.rotation());
-                                            Sounds.largeCannon.at(b.x, b.y, 3, 0.8f);
+                                            Sounds.shootNavanax.at(b.x, b.y, 3, 0.8f);
                                         }
                                     }
                                 }
@@ -1484,9 +1490,9 @@ public class EUUnitTypes {
                             }
 
                             @Override
-                            public void hit(Bullet b, float x, float y) {
+                            public void hit(Bullet b, float x, float y, boolean createFrags) {
                                 smallHit.at(b.x, b.y, b.rotation(), b.team.color);
-                                super.hit(b, x, y);
+                                super.hit(b, x, y, createFrags);
                             }
 
                             @Override
@@ -1497,14 +1503,16 @@ public class EUUnitTypes {
 
                             @Override
                             public void removed(Bullet b) {
-
+                                if(b.frags == 0 && fragOnDespawn && fragBullet != null){
+                                    createFrags(b, b.x, b.y);
+                                }
                             }
                         };
                         rotate = true;
                         rotateSpeed = 2;
                         x = 12;
                         y = 2;
-                        shootSound = Sounds.missileLarge;
+                        shootSound = Sounds.shootMissilePlasma;
                         reload = 90;
                         recoil = 4;
                     }
@@ -1558,7 +1566,7 @@ public class EUUnitTypes {
                         x = 25.5f;
                         y = 0;
                         shootCone = 80f;
-                        shootSound = Sounds.bang;
+                        shootSound = Sounds.unitExplode1;
                         reload = 24 + (hardMod ? 6 : 0);
                         recoil = 5;
 
@@ -1736,7 +1744,7 @@ public class EUUnitTypes {
                         top = false;
                         x = 0;
                         y = 0;
-                        shootSound = Sounds.pulseBlast;
+                        shootSound = Sounds.shootBeamPlasma;
                         recoil = 0;
                     }}
             );
@@ -1750,7 +1758,7 @@ public class EUUnitTypes {
                             targetInterval = 8;
                             targetSwitchInterval = 8;
                             mirror = false;
-                            shootSound = Sounds.lasershoot;
+                            shootSound = Sounds.shootLaser;
                             bullet = new BulletType(){{
                                 shootEffect = Fx.sparkShoot;
                                 hitEffect = Fx.pointHit;
@@ -1857,7 +1865,7 @@ public class EUUnitTypes {
                         shootY = 13;
                         reload = 150;
                         cooldownTime = 200;
-                        shootSound = Sounds.beam;
+                        shootSound = Sounds.shootMeltdown;
                         bullet = asl;
                         mirror = false;
                         continuous = true;
@@ -1867,7 +1875,7 @@ public class EUUnitTypes {
 
                         x = 0;
                         y = -12;
-                        chargeSound = Sounds.lasercharge2;
+                        chargeSound = Sounds.chargeLancer;
                         shoot.firstShotDelay = 49;
                         recoil = 3;
                         parentizeEffects = true;
@@ -1880,7 +1888,7 @@ public class EUUnitTypes {
                         reload = 60;
                         rotate = true;
                         bullet = lineBullet;
-                        shootSound = Sounds.dullExplosion;
+                        shootSound = Sounds.explosionDull;
                     }
 
                         @Override
@@ -1904,7 +1912,7 @@ public class EUUnitTypes {
                         mountType = reRotMount::new;
 
                         bullet = sapper;
-                        shootSound = Sounds.sap;
+                        shootSound = Sounds.shootSap;
                     }
                         @Override
                         public void update(Unit unit, WeaponMount m) {
@@ -1939,7 +1947,7 @@ public class EUUnitTypes {
                         mountType = reRotMount::new;
 
                         bullet = sapper;
-                        shootSound = Sounds.sap;
+                        shootSound = Sounds.shootSap;
                     }
                         @Override
                         public void update(Unit unit, WeaponMount m) {
@@ -2038,7 +2046,7 @@ public class EUUnitTypes {
                         shoot.shots = 3;
                         inaccuracy = 7;
                         ejectEffect = Fx.none;
-                        shootSound = Sounds.missileSmall;
+                        shootSound = Sounds.shootMissileSmall;
                         reload = 45;
                         recoil = 2;
                     }},
@@ -2082,7 +2090,7 @@ public class EUUnitTypes {
                         shoot.shots = 3;
                         inaccuracy = 7;
                         ejectEffect = Fx.none;
-                        shootSound = Sounds.missileSmall;
+                        shootSound = Sounds.shootMissileSmall;
                         reload = 60;
                         recoil = 2;
                     }},
@@ -2101,7 +2109,7 @@ public class EUUnitTypes {
                         ejectEffect = Fx.none;
                         reload = 6;
                         recoil = 1;
-                        shootSound = Sounds.bolt;
+                        shootSound = Sounds.shootDuo;
                     }
 
                         @Override
@@ -2133,7 +2141,7 @@ public class EUUnitTypes {
                         }};
                         rotate = true;
                         rotateSpeed = 2;
-                        shootSound = Sounds.railgun;
+                        shootSound = Sounds.shootForeshadow;
                         x = 28;
                         y = -3;
                     }}
@@ -2260,7 +2268,7 @@ public class EUUnitTypes {
                         recoil = 3;
                         rotateSpeed = 2;
                         shadow = 20;
-                        shootSound = Sounds.laser;
+                        shootSound = Sounds.shootEclipse;
                         x = 25;
                         y = 3;
 
@@ -2365,7 +2373,7 @@ public class EUUnitTypes {
                 public void hitEntity(Bullet b, Hitboxc entity, float health) { }
 
                 @Override
-                public void hit(Bullet b, float x, float y) { }
+                public void hit(Bullet b, float x, float y, boolean createFrags) { }
 
                 @Override
                 public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) { }
@@ -2413,7 +2421,7 @@ public class EUUnitTypes {
                         targetInterval = 8;
                         targetSwitchInterval = 8;
                         mirror = false;
-                        shootSound = Sounds.lasershoot;
+                        shootSound = Sounds.shootLaser;
                         bullet = new BulletType(){{
                             shootEffect = Fx.sparkShoot;
                             hitEffect = Fx.pointHit;
@@ -2436,12 +2444,13 @@ public class EUUnitTypes {
                             lightningDamage = 14;
                             lightning = 3;
                             lightningLength = 10;
+                            lightningColor = Pal.missileYellowBack;
                             trailWidth = 1.7f;
                             trailLength = 9;
                             homingRange = 12 * 8f;
                             homingPower = 0.2f;
                             homingDelay = 15f;
-                            frontColor = Pal.surge;
+                            frontColor = Pal.missileYellowBack;
 
                             sprite = "missile-large";
                         }};
@@ -2454,7 +2463,7 @@ public class EUUnitTypes {
                         shoot.shots = 5;
                         inaccuracy = 12;
                         ejectEffect = Fx.none;
-                        shootSound = Sounds.missileSmall;
+                        shootSound = Sounds.shootMissileSmall;
                         reload = 39;
                         recoil = 2;
                     }},
@@ -2462,7 +2471,48 @@ public class EUUnitTypes {
                         shake = 4;
                         shootY = 6;
                         top = false;
-                        BulletType bt = EUBulletTypes.b4.copy();
+                        BulletType bt = new mixBoom(Pal.missileYellowBack){{
+                            fragBullet = new mixExps(){{
+                                circle = false;
+
+                                lifetime = 20;
+                                speed = 3.5f;
+                                trailColor = color = Pal.missileYellowBack;
+                                damage = 0;
+                                splashDamage = 30;
+                                splashDamageRadius = 3f * 8;
+                                status = StatusEffects.shocked;
+                                trailWidth = 3;
+                                trailLength = 8;
+                                hitEffect = despawnEffect = new ExplosionEffect(){{
+                                    lifetime = 30f;
+                                    waveRad = splashDamageRadius;
+                                    waveColor = sparkColor = smokeColor = Pal.missileYellowBack;
+                                    smokeSize = 3;
+                                    smokeSizeBase = 0;
+                                    smokes = 5;
+                                    sparks = 0;
+                                }};
+                                lightningDamage = 10;
+                                lightning = 1;
+                                lightningLength = 4;
+                                lightningColor = Pal.missileYellowBack;
+                            }};
+
+                            fragBullets = 10;
+                            fragAngle = 15;
+                            fragSpread = 36;
+                            fragRandomSpread = 0;
+
+                            lightningDamage = 20;
+                            lightning = 4;
+                            lightningLength = 10;
+                            lightningColor = Pal.missileYellowBack;
+
+                            speed = 6;
+                        }};
+
+
                         bt.collidesGround = true;
                         //no collidesAir = true? 炮口对空，军事法庭！
                         bt.lifetime = 60;
@@ -2472,7 +2522,7 @@ public class EUUnitTypes {
                         rotateSpeed = 4;
                         x = 14.5f;
                         y = -10;
-                        shootSound = Sounds.dullExplosion;
+                        shootSound = Sounds.explosionDull;
                         reload = 45;
                         recoil = 4;
                     }},
@@ -2493,7 +2543,7 @@ public class EUUnitTypes {
                         x = 0;
                         y = 38;
                         ejectEffect = Fx.none;
-                        shootSound = Sounds.pulseBlast;
+                        shootSound = Sounds.shootEnergyField;
                         reload = 150;
                         recoil = 4;
                     }
@@ -2530,7 +2580,7 @@ public class EUUnitTypes {
                         x = 0;
                         y = 5;
                         ejectEffect = Fx.none;
-                        shootSound = Sounds.largeCannon;
+                        shootSound = Sounds.shootForeshadow;
                         reload = 110;
                         cooldownTime = 90;
                         recoil = 5;
@@ -2606,7 +2656,7 @@ public class EUUnitTypes {
                         reload = 72;
                         inaccuracy = 0;
 
-                        shootSound = Sounds.missileSmall;
+                        shootSound = Sounds.shootMissileSmall;
 
                         bullet = new CtrlMissile("missile-large", 6, 10){{
                             status = StatusEffects.electrified;
@@ -2740,7 +2790,7 @@ public class EUUnitTypes {
                         targetInterval = targetSwitchInterval = 0;
                         inaccuracy = 0;
                         top = false;
-                        shootSound = Sounds.malignShoot;
+                        shootSound = Sounds.shootMalign;
                     }}
             );
         }};
@@ -2788,7 +2838,7 @@ public class EUUnitTypes {
                         rotateSpeed = 2;
                         shoot = new ShootSpread(3, 120);
                         shoot.shotDelay = 8;
-                        shootSound = Sounds.malignShoot;
+                        shootSound = Sounds.shootMalign;
                         x = 18;
                         y = 19;
                         shootY = -5;
@@ -2823,7 +2873,7 @@ public class EUUnitTypes {
                                     Drawf.tri(e.x, e.y, 12, 72 * e.foutpow(), e.rotation + rand.random(-45, 45));
                                 }
                             });
-                            despawnSound = hitSound = Sounds.artillery;
+                            despawnSound = hitSound = Sounds.shootArtillerySap;
                         }
 
                             @Override
@@ -2851,7 +2901,7 @@ public class EUUnitTypes {
                         rotate = true;
                         layerOffset = 0.1f;
                         rotateSpeed = 0.9f;
-                        shootSound = Sounds.release;
+                        shootSound = Sounds.shootArtillerySapBig;
                         reload = 180;
                         recoil = 5.5f;
                         shake = 5;
@@ -2860,7 +2910,7 @@ public class EUUnitTypes {
                         minWarmup = 0.9f;
 
                         bullet = new ScarletDevil(esc){{
-                            hitSound = despawnSound = Sounds.explosionbig;
+                            hitSound = despawnSound = Sounds.unitExplode2;
                             damage = 310;
                             splashDamage = 390;
                             splashDamageRadius = 13 * 8f;
@@ -3044,7 +3094,9 @@ public class EUUnitTypes {
 
                             @Override
                             public void removed(Bullet b) {
-
+                                if(b.frags == 0 && fragOnDespawn && fragBullet != null){
+                                    createFrags(b, b.x, b.y);
+                                }
                             }
                         };
 
@@ -3054,7 +3106,7 @@ public class EUUnitTypes {
                             damage = 0;
                             speed = 1;
                             lifetime = 46 * 8;
-                            despawnSound = hitSound = Sounds.cannon;
+                            despawnSound = hitSound = Sounds.shootTank;
                             despawnShake = hitShake = 4;
                             despawnEffect = hitEffect = new MultiEffect(new Effect(60, 160, (e) -> {
                                 Draw.color(esc);
@@ -3121,13 +3173,13 @@ public class EUUnitTypes {
 
                                 @Override
                                 public void createFrags(Bullet b, float x, float y) {
-                                    super.createFrags(b, x, y);
                                     float a = Mathf.random(360);
                                     for(int i = 0; i < 3; i++){
                                         eb.create(b, b.team, x, y, a + i * (360/9f), -1, 1,  1, i * 5f);
                                         eb.create(b, b.team, x, y, a + i * (360/9f) + 120, -1, 1,  1, i * 5f);
                                         eb.create(b, b.team, x, y, a + i * (360/9f) + 240, -1, 1,  1, i * 5f);
                                     }
+                                    super.createFrags(b, x, y);
                                 }
                             };
                         }
@@ -3139,6 +3191,7 @@ public class EUUnitTypes {
                                     for(int i = 0; i < fragBullets; ++i) {
                                         fragBullet.create(b, b.x, b.y, b.rotation() - 90 + i * 60, 1, 1);
                                     }
+                                    b.frags++;
                                 }
                             }
 
@@ -3235,7 +3288,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(){{
-                        shootSound = Sounds.missileLarge;
+                        shootSound = Sounds.shootMissileLarge;
                         baseRotation = 90;
                         alternate = false;
                         shoot.shots = 3;
@@ -3317,20 +3370,25 @@ public class EUUnitTypes {
                             public void hitEntity(Bullet b, Hitboxc entity, float health) { }
 
                             @Override
-                            public void hit(Bullet b, float x, float y) { }
+                            public void hit(Bullet b, float x, float y, boolean createFrags) { }
 
                             @Override
                             public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) { }
 
+
                             @Override
-                            public void createFrags(Bullet b, float x, float y) {
-                                super.createFrags(b, x, y);
+                            public void despawned(Bullet b) {
                                 if(!(b.owner instanceof Unit owner)) return;
                                 if(!b.absorbed) {
                                     Bullet m = ms.create(owner, owner.team, b.x, b.y, owner.rotation(), 1, 1);
                                     m.aimX = owner.mounts[0].aimX;
                                     m.aimY = owner.mounts[0].aimY;
                                 }
+                                despawnEffect.at(b.x, b.y, b.rotation(), hitColor);
+                                despawnSound.at(b, 1f + Mathf.range(hitSoundPitchRange));
+
+                                Effect.shake(despawnShake, despawnShake, b);
+                                b.frags++;
                             }
 
                             @Override
@@ -3355,7 +3413,7 @@ public class EUUnitTypes {
                         };
                     }},
                     new Weapon(name("havoc-w")){{
-                        shootSound = Sounds.malignShoot;
+                        shootSound = Sounds.shootMalign;
                         rotate = true;
                         rotateSpeed = 3;
                         rotationLimit = 80;
@@ -3405,7 +3463,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(){{
-                        shootSound = Sounds.cannon;
+                        shootSound = Sounds.shootTank;
                         reload = 300;
                         autoTarget = true;
                         controllable = false;
@@ -3479,7 +3537,7 @@ public class EUUnitTypes {
                                 Lines.circle(b.x, b.y, 18 * b.fout());
                             }
                             {
-                                despawnSound = Sounds.explosionbig;
+                                despawnSound = Sounds.unitExplode2;
                             }
                         };
                         BulletType cll = new fBullet(cff, 90){{
@@ -3512,7 +3570,7 @@ public class EUUnitTypes {
                         }
 
                             @Override
-                            public void hit(Bullet b, float x, float y) { }
+                            public void hit(Bullet b, float x, float y, boolean createFrags) { }
 
                             @Override
                             public void hitEntity(Bullet b, Hitboxc entity, float health) { }
@@ -3594,7 +3652,7 @@ public class EUUnitTypes {
                         reload = 180;
                         shoot.shots = 4;
                         shoot.shotDelay = 8;
-                        shootSound = Sounds.laser;
+                        shootSound = Sounds.shootLancer;
                         bullet = new mixBoom(Pal.suppress){{
                             damage = 0;
                             splashDamage = 150;
@@ -3771,7 +3829,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(name("arcana-wm")){{
-                        shootSound = Sounds.mediumCannon;
+                        shootSound = Sounds.shootTank;
                         reload = 120;
                         recoil = 4;
                         shake = 5;
@@ -3815,7 +3873,7 @@ public class EUUnitTypes {
                                     float yy = b.y + Mathf.random(-12, 12);
                                     crack.create(b, xx, yy, b.rotation() + 90 + r);
                                     crack.create(b, xx, yy, b.rotation() - 90 + r);
-                                    Sounds.laserblast.at(xx, yy, 0.5f, 0.15f);
+                                    Sounds.shootCorvus.at(xx, yy, 0.5f, 0.15f);
                                     Effect.shake(5, 5, xx, yy);
                                 }
                             }
@@ -3911,6 +3969,7 @@ public class EUUnitTypes {
                             @Override
                             public void createFrags(Bullet b, float x, float y) {
                                 fff.create(b, b.x, b.y, 0);
+                                b.frags++;
                             }
                         };
 
@@ -3938,7 +3997,7 @@ public class EUUnitTypes {
                         );
                     }},
                     new Weapon(){{
-                        shootSound = Sounds.bioLoop;
+                        shootSound = Sounds.loopBio;
                         shootY = 16;
                         reload = 240;
                         mirror = false;
@@ -3998,7 +4057,7 @@ public class EUUnitTypes {
 
             weapons.add(
                     new Weapon(name("arcana-wp")){{
-                        shootSound = Sounds.blaster;
+                        shootSound = Sounds.shootDuo;
                         x = 11.2f;
                         y = 25f;
                         recoil = 2;
@@ -4131,7 +4190,7 @@ public class EUUnitTypes {
                         reload = 21;
                         rotate = false;
                         bullet = sapper;
-                        shootSound = Sounds.sap;
+                        shootSound = Sounds.shootSap;
                     }}
             );
 

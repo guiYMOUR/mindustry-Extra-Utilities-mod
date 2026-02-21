@@ -28,6 +28,8 @@ public class EUSounds {
     }
     //public static Sound prismLoop = new Sound(getInternalFile("sounds").child("prism-beam.ogg"));
 
+    public static Sound ciallo = loadSound("ciallo.mp3");
+
     public static Sound loadSound(String name){
         return new Sound(EU.root.child("sounds").child(name));
     }

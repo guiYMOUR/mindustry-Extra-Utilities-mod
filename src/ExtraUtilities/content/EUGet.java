@@ -594,4 +594,6 @@ public class EUGet {
     public static boolean isDeBuff(StatusEffect status){
         return status != null && status != StatusEffects.none && (status.damage > 0 || status.damageMultiplier < 1 || status.disarm || status.speedMultiplier < 1 || status.reloadMultiplier < 1 || status.healthMultiplier < 1);
     }
+
+
 }

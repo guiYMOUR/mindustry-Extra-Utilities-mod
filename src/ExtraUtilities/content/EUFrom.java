@@ -75,8 +75,6 @@ public class EUFrom {
         if(ui == null || ui.settings == null) return;
         settings.defaults("eu-WTMF-open", app == null || app.isDesktop());
         if(settings.getBool("eu-WTMF-open")) {
-
-
             getProduce();
             getConsume();
 

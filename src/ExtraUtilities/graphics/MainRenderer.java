@@ -14,6 +14,7 @@ import mindustry.game.EventType.*;
 import mindustry.graphics.*;
 import mindustry.input.Binding;
 
+import static ExtraUtilities.input.EUAtLoad.hasOtherContentMod;
 import static arc.Core.*;
 
 public class MainRenderer{
@@ -49,10 +50,11 @@ public class MainRenderer{
     }
 
     private void advancedDraw(){
-        if(settings.getBool("pixelate") || holes.size >= 512) {
+        if(settings.getBool("pixelate") || holes.size >= 512 || hasOtherContentMod) {
             holes.clear();
             return;
         }
+
         Draw.draw(Layer.background - 1, () -> {
             buffer.resize(graphics.getWidth(), graphics.getHeight());
             buffer.begin();
@@ -61,11 +63,11 @@ public class MainRenderer{
         Draw.draw(Layer.max - 1, () -> {
             buffer.end();
 
-//            if(holes.size >= 512) {
-//                for(int i = 0; i <= holes.size - 512; i++){
-//                    holes.remove(i);
-//                }
-//            }
+            if(holes.size >= 512) {
+                for(int i = 0; i <= holes.size - 512; i++){
+                    holes.remove(i);
+                }
+            }
             if(holes.size >= MainShader.MaxCont) MainShader.createShader();
 
             float[] blackholes = initFloat[holes.size];
