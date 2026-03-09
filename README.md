@@ -10,7 +10,7 @@
 
 - English | [中文](README_cn.md)
 
-- This mod does not affect the game balance, and enrich the content of the game, making the original game easier
+- The original intention of this mod was to avoid disrupting the game balance. However, since useful buildings inevitably disrupt the balance, we can only maintain a dynamic game balance...
 
 
 - QQ Group①：613420467, the password is included in the mod description
@@ -54,4 +54,5 @@
 - Abilities
 
 - Status Effects
+
 
