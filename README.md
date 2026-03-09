@@ -5,6 +5,8 @@
 <img width="240" alt="image" src="https://github.com/guiYMOUR/mindustry-Extra-Utilities-mod/assets/77377005/0fe411f3-9879-4485-b48f-023292c8c434"><img width="240" alt="image" src="https://user-images.githubusercontent.com/77377005/231817466-63545b19-6286-4ab4-b151-8bc95ce501f0.gif"><img width="240" alt="image" src="https://github.com/user-attachments/assets/941fc344-5e44-4139-93c9-2ba28dccab7d">
 <br></br>
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/d497c42b-9f33-49fa-8982-df5e5f7c2eed"><img width="240" alt="image" src="https://github.com/user-attachments/assets/0aa7a521-0b89-4d2d-9911-1376d6906d99"><img width="240" alt="image" src="https://github.com/user-attachments/assets/004cd172-253f-44c2-badb-28fefc7ed6b3">
+<br></br>
+<img width="240" alt="image" src="https://github.com/user-attachments/assets/faaf3a0e-fa5f-4270-9aab-40d0c4f63966">
 
 - English | [中文](README_cn.md)
 
@@ -52,3 +54,4 @@
 - Abilities
 
 - Status Effects
+
