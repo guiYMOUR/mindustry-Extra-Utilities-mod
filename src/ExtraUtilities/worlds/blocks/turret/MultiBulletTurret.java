@@ -1,5 +1,6 @@
 package ExtraUtilities.worlds.blocks.turret;
 
+import ExtraUtilities.worlds.meta.EUStat;
 import ExtraUtilities.worlds.meta.EUStatValues;
 import arc.Core;
 import arc.Events;
@@ -41,6 +42,8 @@ public class MultiBulletTurret extends Turret {
     public boolean all = false;
     public boolean autoResetBid = false;
 
+    public float boostRu = -1;
+
     public MultiBulletTurret(String name) {
         super(name);
     }
@@ -64,6 +67,10 @@ public class MultiBulletTurret extends Turret {
         super.setStats();
 
         stats.remove(Stat.itemCapacity);
+        if(canOverdrive) {
+            stats.remove(EUStat.boostRu);
+            stats.add(EUStat.boostRu, Core.bundle.format("stat.extra-utilities-boostRu", boostRu));
+        }
         stats.add(Stat.ammo, EUStatValues.ammo(ammoTypes, all));
         if(all){
             stats.remove(Stat.reload);
@@ -327,6 +334,19 @@ public class MultiBulletTurret extends Turret {
 
             if(!consumeAmmoOnce){
                 useAmmo();
+            }
+        }
+
+        @Override
+        public void applyBoost(float intensity, float duration) {
+            if(boostRu <= 0) super.applyBoost(intensity, duration);
+            else {
+                float boost = (intensity - 1) * boostRu + 1;
+                if (boost >= this.timeScale - 0.001f) {
+                    this.timeScaleDuration = Math.max(this.timeScaleDuration, duration);
+                }
+
+                this.timeScale = Math.max(this.timeScale, boost);
             }
         }
 

@@ -12,6 +12,7 @@ import arc.util.Eachable;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
+import mindustry.content.Blocks;
 import mindustry.entities.units.BuildPlan;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
@@ -19,6 +20,7 @@ import mindustry.graphics.Pal;
 import mindustry.input.Placement;
 import mindustry.world.Tile;
 import mindustry.world.blocks.distribution.ItemBridge;
+import mindustry.world.blocks.power.PowerNode;
 import mindustry.world.draw.DrawBlock;
 import mindustry.world.draw.DrawDefault;
 import mindustry.world.draw.DrawMulti;
@@ -32,6 +34,7 @@ public class PhaseNode extends ItemBridge {
 
     public PhaseNode(String name) {
         super(name);
+        allowDiagonal = true;
         swapDiagonalPlacement = true;
     }
 
