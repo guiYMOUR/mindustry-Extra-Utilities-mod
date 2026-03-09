@@ -157,13 +157,14 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                Block hurricane = getJsNameBlock("hurricane");
-                Block und = getJsNameBlock("und");
-                Block lu = getJsNameBlock("liquid-unloader");
+                Block T2lan = getJsNameBlock("T2-lancer");
+                Block T2Steam = getJsNameBlock("T2-steam-generator");
 
                 updateLog.addAll(
-                        EUBlocks.minichisa, EUBlocks.blockFiller, hurricane, und, lu,
-                        Blocks.junction,
+                        EUBlocks.randomer, EUBlocks.miniItemNode, EUBlocks.miniLiquidNode, EUBlocks.blockFiller,
+                        EUBlocks.thermalReactor, T2Steam,
+                        T2lan, EUBlocks.celebrationMk2, EUBlocks.celebration, EUBlocks.onyxBlaster,
+                        EUBlocks.rust, EUUnitTypes.suzerain,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -198,12 +199,12 @@ public class ExtraUtilitiesMod extends Mod{
                         log.row();
                         log.image(Tex.whiteui, Pal.accent).left().growX().height(3f).row();
                     });
+                    addToTable(EUBlocks.randomer, t);
+                    addToTable(EUBlocks.miniItemNode, t);
+                    addToTable(EUBlocks.miniLiquidNode, t);
                     addToTable(EUBlocks.minichisa, t);
                     addToTable(EUStatusEffects.ullification, t);
                     addToTable(EUBlocks.blockFiller, t);
-                    addToTable(TDPlanet.supEX, t);
-                    addToTable(TDSectorPresets.groundZEx, t);
-                    addToTable(TDSectorPresets.relicValley, t);
                     addToTable(EUBlocks.penitent, t);
                     addToTable(EUBlocks.guiY, t);
                 }).grow().center().maxWidth(Core.graphics.getWidth()/1.1f).get();
@@ -589,6 +590,10 @@ public class ExtraUtilitiesMod extends Mod{
         }
 
         if(onlyPlugIn) return;
+
+        if(!headless){
+            EUSounds.load();
+        }
 
         if(isAps()) hardMod = true;
 

@@ -15,20 +15,14 @@ import mindustry.mod.Mods;
 public class EUSounds {
     public static Mods.LoadedMod EU = Vars.mods.getMod(ExtraUtilitiesMod.class);
     public static Sound
-        //prismShoot,
-        prismLoop = new Sound();
+            prismLoop = new Sound(),
+            ciallo = new Sound();
 
     public static void load(){
-//        prismShoot = loadSound("prismS");
-        //prismLoop = loadSound("prism-beam.ogg");
-        //Threads.thread("EUSoundsLoad", () ->{
-
-        //});
         prismLoop = loadSound("prism-beam.ogg");
+        ciallo = loadSound("ciallo.mp3");
     }
     //public static Sound prismLoop = new Sound(getInternalFile("sounds").child("prism-beam.ogg"));
-
-    public static Sound ciallo = loadSound("ciallo.mp3");
 
     public static Sound loadSound(String name){
         return new Sound(EU.root.child("sounds").child(name));

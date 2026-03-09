@@ -21,8 +21,8 @@ public class EUTechTree {
     public static void load() {
         //S
         addToNode(plastaniumConveyor, () -> node(stackHelper));
-        addToNode(phaseConveyor, () -> node(itemNode));
-        addToNode(phaseConduit, () -> node(liquidNode));
+        addToNode(phaseConveyor, () -> node(miniItemNode, () -> node(itemNode)));
+        addToNode(phaseConduit, () -> node(miniLiquidNode, () -> node(liquidNode)));
         addToNode(thermalGenerator, () -> node(heatPower, () -> node(windPower, () -> node(waterPower))));
         addToNode(sporePress, () -> node(T2sporePress));
         addToNode(blastMixer, () -> node(T2blast));

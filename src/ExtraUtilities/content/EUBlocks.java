@@ -104,7 +104,7 @@ public class EUBlocks {
         //liquid
             ekPump, liquidSorter, liquidValve, communicatingValve, ekLiquidDriver, liquidIncinerator,
         //transport
-            stackHelper, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
+            stackHelper, miniItemNode, miniLiquidNode, itemNode, liquidNode, reinforcedDuctBridge, phaseReinforcedBridgeConduit, ekMessDriver,
         //production
             siliconFurnace, T2blast, T2sporePress, adaptiveMiner, adaptiveMinerII, ekSeparator, stoneExtractor, stoneCrusher, stoneMelting, T2oxide, cyanogenPyrolysis,
         /** 光束合金到此一游*/
@@ -317,6 +317,32 @@ public class EUBlocks {
             health = 60;
             buildCostMultiplier = 0.6f;
         }};
+
+        miniItemNode = new PhaseNode("mini-i-node"){{
+            requirements(Category.distribution, with(Items.silicon, 20, Items.graphite, 25, EUItems.crispSteel, 30));
+            envEnabled |= Env.space;
+            transportTime = 4f;
+
+            range = 4;
+            hasPower = false;
+
+            squareSprite = false;
+        }};
+
+        miniLiquidNode = new PhaseNode("mini-l-node"){{
+            requirements(Category.liquid, with(Items.metaglass, 20, Items.graphite, 25, EUItems.crispSteel, 30));
+            envEnabled |= Env.space;
+
+            canOverdrive = false;
+            hasLiquids = true;
+            hasItems = false;
+            outputsLiquid = true;
+            range = 4;
+            hasPower = false;
+
+            squareSprite = false;
+        }};
+
         itemNode = new PhaseNode("i-node"){{
             requirements(Category.distribution, with(Items.copper, 110, Items.lead, 80, Items.silicon, 100, Items.graphite, 85, Items.titanium, 45, Items.thorium, 40, Items.phaseFabric, 18));
             buildCostMultiplier = 0.25f;
@@ -886,8 +912,8 @@ public class EUBlocks {
             health = 320;
             requirements(Category.power, with(Items.silicon, 95, Items.titanium, 70, Items.thorium, 55, Items.metaglass, 65, Items.plastanium, 60, Items.surgeAlloy, 30));
             size = 3;
-            if(!hardMod) powerProduction = 258/60f;
-            else powerProduction = 220/60f;
+            if(!hardMod) powerProduction = 264/60f;
+            else powerProduction = 240/60f;
             generateEffect = Fx.none;
             floating = true;
             ambientSound = Sounds.loopHum;
@@ -1860,7 +1886,7 @@ public class EUBlocks {
         };
 
         antiaircraft = new ItemTurret("antiaircraft"){{
-            requirements(Category.turret, with(Items.silicon, 800, Items.graphite, 600, Items.surgeAlloy, 250, Items.thorium, 350));
+            requirements(Category.turret, with(Items.silicon, 800, Items.graphite, 600, EUItems.crispSteel, 250, Items.thorium, 350));
             size = 3;
             range = 45 * 8;
 
@@ -2005,6 +2031,7 @@ public class EUBlocks {
             health = 3200;
 
             int blockId = id;
+            boostRu = 0.5f;
             squareSprite = false;
             drawer = new DrawTurret("reinforced-"){{
                 parts.add(new RegionPart(){{
@@ -2243,6 +2270,7 @@ public class EUBlocks {
             rotateSpeed = 3.2f;
             coolant = consumeCoolant(0.3f);
             shootSound = Sounds.shootMissile;
+            boostRu = 0.8f;
 
             BulletType f1 = new FireWorkBullet(100, 4, name("mb"), Color.valueOf("EA8878"), 6 * 8);
             BulletType f2 = new FireWorkBullet(100, 4, Color.valueOf("5CFAD5"));
@@ -2299,7 +2327,7 @@ public class EUBlocks {
             coolantMultiplier = 0.85f;
             shootSound = Sounds.shootMissile;
             shootCone = 16;
-            canOverdrive = false;
+            boostRu = 0.2f;
             maxAmmo = 10;
 
             //红
@@ -3374,8 +3402,10 @@ public class EUBlocks {
             size = 2;
             alwaysUnlocked = true;
 
+            health = 6000;
+
             hasPower = true;
-            consumePower(4.5f);
+            consumePower(4f);
             consumeLiquid(Liquids.water, 0.2f);
             liquidCapacity = 12;
 
@@ -3820,11 +3850,44 @@ public class EUBlocks {
             buildVisibility = BuildVisibility.editorOnly;
         }};
 
-        randomer = new Randomer("randomer"){{
+        randomer = new OmniSource("randomer"){{
             requirements(Category.distribution, with(Items.silicon, 1));
             alwaysUnlocked = true;
-            buildVisibility = BuildVisibility.sandboxOnly;
-        }};
+            buildVisibility = BuildVisibility.debugOnly;
+        }
+
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, table -> {
+                    table.row();
+
+                    var abs = Core.bundle.get("block.extra-utilities-randomer.ea").split(";");
+                    StringBuilder fin = new StringBuilder();
+                    table.table(c -> {
+                        c.row();
+                        c.update(() -> {
+                            c.clear();
+                            int i = abs.length;
+                            for(int j = 0; j < 3; j++){
+                                String org = abs[((int)(Time.time/3) + j) % i];
+                                fin.delete(0, fin.length());
+                                for(int k = 0; k < org.length(); k++){
+                                    String s = String.valueOf(org.charAt(k));
+                                    Color color = EUGet.EC21.set(EUGet.rainBowRed).shiftHue(k * (int)(120f/org.length()) + Time.time * 3 + j * 30);
+                                    int ci = color.rgb888();
+                                    String ct = Integer.toHexString(ci);
+                                    String fct = "[" + "#" + ct + "]";
+                                    fin.append(fct).append(s);
+                                }
+                                c.add(fin.toString()).wrap().left().maxWidth(Core.graphics.getWidth()/2f);
+                                c.row();
+                            }
+                        });
+                    }).left();
+                });
+            }
+        };
         blockFiller = new OmniSource("full-efficiency"){{
             requirements(Category.distribution, with(Items.silicon, 1));
             alwaysUnlocked = true;

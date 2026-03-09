@@ -2,6 +2,7 @@ package ExtraUtilities.content;
 
 import ExtraUtilities.ui.ItemImage;
 import ExtraUtilities.worlds.blocks.unit.DerivativeUnitFactory;
+import ExtraUtilities.worlds.meta.EUStat;
 import arc.Core;
 import arc.graphics.Color;
 import arc.scene.event.Touchable;
@@ -50,10 +51,9 @@ import static arc.Core.settings;
 import static mindustry.Vars.*;
 
 public class EUFrom {
-    public static final StatCat WTMF = new StatCat("eu-wtmf");
-    public static final Stat fromStat = new Stat("eu-from", WTMF);
-    public static final Stat toStat = new Stat("eu-to", WTMF);
-    public static final Stat reqStat = new Stat("eu-req", WTMF);
+    public static final Stat fromStat = EUStat.fromStat;
+    public static final Stat toStat = EUStat.toStat;
+    public static final Stat reqStat = EUStat.reqStat;
 
     private static final ObjectMap<UnlockableContent, ObjectMap<Block, Table>> fromBlock = new ObjectMap<>();
     public static final ObjectMap<UnlockableContent, Table> fromTables = new ObjectMap<>();
