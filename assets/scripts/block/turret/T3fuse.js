@@ -17,11 +17,11 @@ T3fuse.coolantMultiplier = 2;
 T3fuse.shootSound = Sounds.shootFuse;
 T3fuse.requirements = ItemStack.with(
     Items.copper, 500,
-    Items.graphite, 500,
+    Items.graphite, 400,
     Items.titanium, 300,
     Items.thorium, 200,
     Items.silicon, 270 + (hardMod ? 30 : 0),
-    items.lightninAlloy, 150 + (hardMod ? 20 : 0)
+    items.lightninAlloy, 100 + (hardMod ? 50 : 0)
 );
 T3fuse.buildVisibility = BuildVisibility.shown;
 T3fuse.category = Category.turret;

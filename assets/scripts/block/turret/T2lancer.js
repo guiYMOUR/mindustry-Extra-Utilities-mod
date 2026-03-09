@@ -4,7 +4,7 @@ const items = require("game/items");
 const hardMod = lib.hardMod;
 
 const laser = extend(LaserBulletType, {});
-laser.damage = 150 - (hardMod ? 20 : 0);
+laser.damage = 170 - (hardMod ? 20 : 0);
 laser.sideAngle = 1;
 laser.sideWidth = 3;
 laser.sideLength = 35;
@@ -47,9 +47,9 @@ T2lan.targetAir = false;
 T2lan.shootSound = Sounds.shootLancer;
 lib.Coolant(T2lan, 0.4, 2);
 T2lan.requirements = ItemStack.with(
-    Items.silicon, 155 + (hardMod ? 35 : 0),
-    Items.graphite, 155 + (hardMod ? 45 : 0),
-    Items.plastanium, 85 + (hardMod ? 50 : 0),
+    Items.silicon, 180 + (hardMod ? 40 : 0),
+    Items.graphite, 180 + (hardMod ? 40 : 0),
+    Items.plastanium, 90 + (hardMod ? 50 : 0),
     items.crispSteel, 140 + (hardMod ? 80 : 0)
 );
 T2lan.buildVisibility = BuildVisibility.shown;

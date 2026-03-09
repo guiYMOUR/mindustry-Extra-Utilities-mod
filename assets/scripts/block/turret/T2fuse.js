@@ -18,10 +18,10 @@ T2fuse.shoot = ShootSpread(5, 12);
 lib.Coolant(T2fuse, 0.4);
 T2fuse.coolantMultiplier = 3;
 T2fuse.requirements = ItemStack.with(
-    Items.copper, 350,
+    Items.copper, 300,
     items.crispSteel, 200,
     Items.thorium, 150,
-    Items.surgeAlloy, 110 + (hardMod ? 40 : 0),
+    Items.surgeAlloy, 80 + (hardMod ? 40 : 0),
 );
 T2fuse.buildVisibility = BuildVisibility.shown;
 T2fuse.category = Category.turret;

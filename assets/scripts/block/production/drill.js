@@ -1,5 +1,6 @@
 const lib = require("blib");
 const hardMod = lib.hardMod;
+const items = require("game/items");
 
 const tiDrill = extend(Drill, "tiDrill", {});
 tiDrill.requirements = ItemStack.with(
@@ -30,7 +31,7 @@ const eff1 = new Effect(12, cons(e => {
 const shovelBuild = lib.getClass("ExtraUtilities.worlds.forJS.shovel");
 const shovel = new shovelBuild("shovel");
 shovel.requirements = ItemStack.with(
-    Items.metaglass, 60,
+    items.crispSteel, 80,
     Items.silicon, 130,
     Items.titanium, 80,
 );

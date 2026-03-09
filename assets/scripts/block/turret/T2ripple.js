@@ -27,10 +27,10 @@ T2rip.shootSound = Sounds.shootArtillery;
 lib.Coolant(T2rip, 0.3, 2.5);
 T2rip.ammoTypes = Blocks.ripple.ammoTypes;
 T2rip.requirements = ItemStack.with(
-    Items.copper, 200,
-    Items.graphite, 150,
-    Items.titanium, 70,
-    Items.silicon, 40 + (hardMod ? 30 : 0)
+    Items.copper, 150,
+    Items.graphite, 180,
+    Items.titanium, 80,
+    Items.silicon, 80 + (hardMod ? 40 : 0)
 );
 T2rip.buildVisibility = BuildVisibility.shown;
 T2rip.category = Category.turret;

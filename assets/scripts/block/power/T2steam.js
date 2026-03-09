@@ -1,5 +1,7 @@
+const items = require("game/items");
+
 const T2ST = extend(ConsumeGenerator, "T2-steam-generator", {});
-T2ST.powerProduction = 690/60;
+T2ST.powerProduction = 708/60;
 T2ST.itemDuration = 60;
 T2ST.consumeLiquid(Liquids.water, 0.15);
 T2ST.hasLiquids = true;
@@ -26,11 +28,11 @@ T2ST.drawer = new DrawMulti(
     new DrawLiquidRegion()
 )
 T2ST.requirements = ItemStack.with(
-    Items.copper, 65,
-    Items.graphite, 50,
-    Items.lead, 60,
-    Items.titanium, 55,
-    Items.silicon, 50
+    Items.copper, 80,
+    Items.graphite, 60,
+    Items.lead, 75,
+    items.crispSteel, 55,
+    Items.silicon, 60
 );
 T2ST.buildVisibility = BuildVisibility.shown;
 T2ST.category = Category.power;
