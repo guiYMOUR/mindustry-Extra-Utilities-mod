@@ -237,6 +237,7 @@ public class EUStatValues {
             }
         };
     }
+
     public static StatValue ammoString(Item i, String add){
         return table -> {
             table.row();

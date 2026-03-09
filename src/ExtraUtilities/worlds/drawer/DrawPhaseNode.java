@@ -32,7 +32,8 @@ public class DrawPhaseNode extends DrawBlock {
         if(Mathf.zero(op)) return;
 
         Draw.color(Color.white);
-        if(build.block.hasPower) Draw.alpha(Math.max(build.power.status, 0.25f) * op);
+        float ot = build.power != null ? build.power.status : 1;
+        if(build.block.hasPower) Draw.alpha(Math.max(ot, 0.25f) * op);
         else Draw.alpha(op);
 
         Draw.rect(endRegion, build.x, build.y);
