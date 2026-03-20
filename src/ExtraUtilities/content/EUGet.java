@@ -41,7 +41,7 @@ import mindustry.content.Liquids;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.Content;
 import mindustry.ctype.UnlockableContent;
-import mindustry.entities.EntityCollisions;
+import mindustry.entities.EntityCollisions.*;
 import mindustry.entities.Mover;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.ArtilleryBulletType;
@@ -58,6 +58,7 @@ import mindustry.type.StatusEffect;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import mindustry.world.blocks.ControlBlock;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -528,7 +529,7 @@ public class EUGet {
      * @param endY 结束坐标Y
      * @param speed 速度
      */
-    public static void movePoint(Bullet b, float endX, float endY, float speed) {
+    public static void movePoint(Bullet b, float endX, float endY, float speed, SolidPred solidCheck) {
         // 计算两点之间的距离
         float distance = (float) Math.sqrt(Math.pow(endX - b.x, 2) + Math.pow(endY - b.y, 2));
 
@@ -543,12 +544,16 @@ public class EUGet {
 
         // 更新子弹的位置
         //b.move(dx * moveDistance, dy * moveDistance);
-        collisions.move(b, dx * moveDistance, dy * moveDistance);
+        collisions.move(b, dx * moveDistance, dy * moveDistance, solidCheck);
 
         // 检查是否到达或超过终点
         if (Math.abs(b.x - endX) < 1e-4f && Math.abs(b.y - endY) < 1e-4f) {
             b.set(endX, endY);
         }
+    }
+
+    public static boolean hollow(int x, int y){
+        return false;
     }
 
     /**

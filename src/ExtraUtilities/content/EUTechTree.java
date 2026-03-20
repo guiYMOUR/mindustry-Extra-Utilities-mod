@@ -74,7 +74,7 @@ public class EUTechTree {
         addToNode(reinforcedBridgeConduit, () -> node(phaseReinforcedBridgeConduit));
         addToNode(reinforcedPump, () -> node(ekPump));
         addToNode(electricHeater, () -> node(largeElectricHeater));
-        addToNode(heatRedirector, () -> node(heatTransfer, () -> node(heatDriver)));
+        addToNode(heatRedirector, () -> node(heatDriver));
         addToNode(heatRouter, () -> node(heatDistributor));
         addToNode(slagHeater, () -> node(slagReheater));
         addToNode(electricHeater, () -> node(thermalHeater));

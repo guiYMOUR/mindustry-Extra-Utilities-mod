@@ -15,6 +15,8 @@ import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
+import mindustry.ai.BlockIndexer;
+import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
@@ -38,8 +40,7 @@ import javax.sound.sampled.Line;
 
 import static ExtraUtilities.ExtraUtilitiesMod.hardMod;
 import static arc.graphics.g2d.Draw.color;
-import static mindustry.Vars.headless;
-import static mindustry.Vars.indexer;
+import static mindustry.Vars.*;
 import static mindustry.content.Fx.rand;
 
 public class EUBulletTypes {
@@ -544,8 +545,21 @@ public class EUBulletTypes {
         Effect initE = EUFx.chainLightningFade(11 * 2, 1.3f, 11 * 4).layer(Layer.bullet - 0.1f);
         buildingDamageMultiplier = 0.2f;
 
+        float[] te = {-5.4f, 5.4f};
+
+        trailEffect = new Effect(45, e ->{
+            color(e.color);
+            for(float x : te){
+                Tmp.v1.set(x, -5).rotate(e.rotation - 90);
+                Fill.circle(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 2.5f * e.foutpow());
+            }
+        }).layer(Layer.bullet - 0.0001f);
+        trailInterval = 1;
+        trailColor = EUItems.lightninAlloy.color.cpy().mul(Pal.surge);
+        trailRotation = true;
+
         BulletType miss = new BulletType(){{
-            damage = 50;
+            damage = 60;
             pierceArmor = true;
             keepVelocity = hittable = absorbable = false;
             lifetime = 60;
@@ -586,7 +600,7 @@ public class EUBulletTypes {
         };
 
         intervalBullet = new BulletType(){{
-            damage = 50;
+            damage = 60;
             buildingDamageMultiplier = 0.1f;
             speed = 16;
             pierce = true;
@@ -687,14 +701,22 @@ public class EUBulletTypes {
 
         approach = b -> {
             if(b.target != null){
-                b.rotation(b.angleTo(b.target));
-                float dx = EUGet.dx(b.target.x(), homingRange/1.5f, b.ang),
-                        dy = EUGet.dy(b.target.y(), homingRange/1.5f, b.ang);
+                int rto = b.id % 2 == 0 ? 1 : -1;
 
-                EUGet.movePoint(b, dx, dy, speed/100f);
+                b.rotation(b.angleTo(b.target));
+                float dx = EUGet.dx(b.target.x(), homingRange/1.5f, b.ang - (b.time + ready) * rto * 0.8f),
+                        dy = EUGet.dy(b.target.y(), homingRange/1.5f, b.ang - (b.time + ready) * rto * 0.8f);
+
+                EUGet.movePoint(b, dx, dy, speed/100f, EUGet::hollow);
             }
         };
-    }};
+    }
+
+        @Override
+        public void updateTrailEffects(Bullet b) {
+            if(b.time > ready) super.updateTrailEffects(b);
+        }
+    };
 
     static int msTl = 15;
     static float dsRange = 8 * 8;
@@ -849,13 +871,14 @@ public class EUBulletTypes {
         trailLength = 10;
         trailWidth = 5;
         trailColor = EUItems.lightninAlloy.color.cpy();
-        int[] side = {-8, 8};
+        int[] side = {-18, 18};
         trailEffect = new Effect(30, e ->{
             color(e.color);
             for(int x : side){
-                Tmp.v1.set(x, -3).rotate(e.rotation - 90);
-                Lines.stroke(2.5f * e.foutpow());
-                Lines.poly(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 6, 5f * e.foutpow(), e.time * 5);
+                Tmp.v1.set(x * e.finpow(), -3).rotate(e.rotation - 90);
+//                Lines.stroke(3f * e.foutpow());
+//                Lines.poly(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 6, 8f * e.foutpow(), e.time * 5);
+                Fill.poly(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 3, 11f * e.foutpow(), e.rotation + x * 5);
             }
         });
         trailRotation = true;
@@ -866,8 +889,8 @@ public class EUBulletTypes {
         statusDuration = 30;
         Effect e1 = new Effect(21, e -> {
             Angles.randLenVectors(e.id, 5, splashDamageRadius * e.finpow(), e.rotation, 180, (x, y) -> {
-                Lines.stroke(3 * e.foutpow(), trailColor);
-                Lines.poly(e.x + x, e.y + y, 6, 5, Mathf.randomSeed(e.id, 360) + Time.delta);
+                Lines.stroke(4 * e.foutpow(), trailColor);
+                Lines.poly(e.x + x, e.y + y, 6, 10, Mathf.randomSeed(e.id, 360) + Time.delta);
             });
         });
         Effect e2 = new Effect(50, e -> {
@@ -875,7 +898,7 @@ public class EUBulletTypes {
             for(int i = 0; i < 5; i++){
                 float a = e.rotation + rand.random(-60, 60);
                 Draw.color(trailColor);
-                Drawf.tri(e.x, e.y, 21 * e.foutpow(), (150 + rand.random(-40, 40)) * e.foutpow(), a);
+                Drawf.tri(e.x, e.y, 19 * e.foutpow(), (200 + rand.random(-50, 50)) * e.foutpow(), a);
             }
         });
         Effect e3 = new ExplosionEffect(){{
@@ -1132,6 +1155,188 @@ public class EUBulletTypes {
             despawnEffect.at(b.x, b.y, b.rotation());
 
             auroraSmallDelay.create(b, b.x, b.y, b.rotation());
+        }
+    };
+
+    public static BulletType spectreEUBullet = new BasicBulletType(9, 250){{
+        pierce = true;
+        pierceBuilding = true;
+        pierceCap = 5;
+        hitSize = 7;
+        width = 20f;
+        height = 27f;
+        shootEffect = Fx.shootBig;
+        knockback = 0.9f;
+        homingRange = 9 * 8;
+
+        lifetime = 240;
+
+        reloadMultiplier = 0.3f;
+        ammoMultiplier = 4;
+
+        backColor = hitColor = trailColor = EUItems.lightninAlloy.color;
+        trailLength = 8;
+        trailWidth = 3;
+        frontColor = Pal.surge;
+        hitSound = Sounds.shieldHit;
+        hitEffect = new Effect(45, e -> {
+            Draw.color(e.color);
+            for(int i = 0; i < 4; i++){
+                Drawf.tri(e.x, e.y, 3.1f * e.foutpow(), 14, i * 90);
+            }
+        });
+
+        reflectable = false;
+    }
+
+        Unit re;
+        float cdist;
+        float cpriority;
+
+        Building building;
+        float bcdist;
+
+        @Override
+        public void init(Bullet b) {
+            super.init(b);
+            b.fdata = 0;
+        }
+
+        @Override
+        public void update(Bullet b) {
+            super.update(b);
+
+            if(b.owner instanceof Turret.TurretBuild tb) {
+                if(b.collided.size < 1 && tb.wasShooting) {
+                    if(tb.target != null) b.rotation(b.angleTo(tb.target));
+                    else b.rotation(b.angleTo(tb.targetPos));
+                }
+
+                if(b.fdata < 1){
+                    if(!b.within(tb, tb.range() + 8)) b.remove();
+                } else {
+                    if(!b.within(tb, tb.range() + homingRange + 8)) b.remove();
+                }
+            }
+        }
+
+        @Override
+        public void hitEntity(Bullet b, Hitboxc entity, float health) {
+            if(entity instanceof Unit u){
+                findUnit(b, u);
+
+                if(re != null) {
+                    if (b.collided.contains(re.id)) b.collided.removeValue(re.id);
+                    b.rotation(b.angleTo(re));
+                    b.fdata += 1;
+                } else {
+                    findTile(b, null);
+                    if(building != null){
+                        if (b.collided.contains(building.id)) b.collided.removeValue(building.id);
+                        b.rotation(b.angleTo(building));
+                        b.fdata += 1;
+                    }
+                }
+
+                if(b.fdata >= pierceCap) b.remove();
+
+                u.damage(b.damage);
+                if(!u.hasEffect(EUStatusEffects.breakage)) b.damage -= 30;
+                else {
+                    if(u.health <= b.damage/2f) u.kill();
+                    else u.health -= b.damage/2f;
+                }
+
+                if(u.hasEffect(EUStatusEffects.ullification)){
+                    if(u.health <= u.maxHealth * 0.02f) u.kill();
+                    else u.health -= u.maxHealth * 0.02f;
+                }
+            }
+        }
+
+        @Override
+        public void hitTile(Bullet b, Building build, float x, float y, float initialHealth, boolean direct) {
+            findUnit(b, null);
+
+            if(re != null) {
+                if (b.collided.contains(re.id)) b.collided.removeValue(re.id);
+                b.rotation(b.angleTo(re));
+                b.fdata += 1;
+            } else {
+                findTile(b, build);
+                if(building != null){
+                    if (b.collided.contains(building.id)) b.collided.removeValue(building.id);
+                    b.rotation(b.angleTo(building));
+                    b.fdata += 1;
+                }
+            }
+
+            hit(b);
+            b.damage -= 30;
+            //b.damage = damage - 30 * b.fdata;
+
+            if(b.fdata >= pierceCap) b.remove();
+        }
+
+        private void findUnit(Bullet b, Unit u){
+            re = null;
+            cdist = 0f;
+            cpriority = -99999f;
+            Units.nearbyEnemies(b.team, b.x, b.y, homingRange, e -> {
+                if(u != e && !(e.dead() || e.team == Team.derelict || !e.targetable(b.team) || e.inFogTo(b.team))) {
+                    float dst2 = e.dst2(b.x, b.y) - (e.hitSize * e.hitSize);
+                    if (!b.collided.contains(e.id)
+                            && dst2 < range * range && (re == null || dst2 < cdist || e.type.targetPriority > cpriority) && e.type.targetPriority >= cpriority) {
+                        re = e;
+                        cdist = dst2;
+                        cpriority = e.type.targetPriority;
+                    }
+                }
+            });
+
+            if(re == null){
+                cdist = 0f;
+                cpriority = -99999f;
+                Units.nearbyEnemies(b.team, b.x, b.y, homingRange, e -> {
+                    if(u != e && !(e.dead() || e.team == Team.derelict || !e.targetable(b.team) || e.inFogTo(b.team))) {
+                        float dst2 = e.dst2(b.x, b.y) - (e.hitSize * e.hitSize);
+                        if (dst2 < range * range && (re == null || dst2 < cdist || e.type.targetPriority > cpriority) && e.type.targetPriority >= cpriority) {
+                            re = e;
+                            cdist = dst2;
+                            cpriority = e.type.targetPriority;
+                        }
+                    }
+                });
+            }
+        }
+
+        private void findTile(Bullet b, Building build){
+            building = null;
+            bcdist = 0f;
+            indexer.allBuildings(b.x, b.y, homingRange, bd -> {
+                if(bd.team != b.team && build != bd && !(bd.dead() || bd.team == Team.derelict || bd.block == null || !bd.block.targetable || bd.inFogTo(b.team))){
+                    float rsize = bd.block.size/2f * tilesize;
+                    float dst2 = bd.dst2(b.x, b.y) - (rsize * rsize);
+                    if (!b.collided.contains(bd.id)
+                            && dst2 < range * range && (building == null || dst2 < bcdist)) {
+                        building = bd;
+                        bcdist = dst2;
+                    }
+                }
+            });
+            if(building == null){
+                bcdist = 0f;
+                indexer.allBuildings(b.x, b.y, homingRange, bd -> {
+                    if(bd.team != b.team && build != bd && !(bd.dead() || bd.team == Team.derelict || bd.block == null || !bd.block.targetable || bd.inFogTo(b.team))){
+                        float rsize = bd.block.size/2f * tilesize;
+                        float dst2 = bd.dst2(b.x, b.y) - (rsize * rsize);
+                        if (dst2 < range * range && (building == null || dst2 < bcdist)) {
+                            building = bd;
+                            bcdist = dst2;
+                        }
+                    }
+                });
+            }
         }
     };
 }

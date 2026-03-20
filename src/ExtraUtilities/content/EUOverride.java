@@ -167,6 +167,7 @@ public class EUOverride {
 
         Blocks.arc.consumePower(2.5f);
         ((ItemTurret) Blocks.foreshadow).ammoTypes.put(EUItems.lightninAlloy, EUBulletTypes.foreshadowEUBullet);
+        ((ItemTurret) Blocks.spectre).ammoTypes.put(EUItems.lightninAlloy, EUBulletTypes.spectreEUBullet);
         Blocks.smite.requirements(Category.turret, with(Items.oxide, 200, Items.silicon, 800, Items.carbide, 500, Items.phaseFabric, 350, EUItems.lightninAlloy, 350));
         Blocks.malign.requirements(Category.turret, with(Items.carbide, 400, Items.beryllium, 2000, Items.silicon, 800, Items.graphite, 800, Items.phaseFabric, 300, Items.surgeAlloy, 200));
         ((BaseTurret)Blocks.scathe).fogRadiusMultiplier = 0.75f;
@@ -179,15 +180,18 @@ public class EUOverride {
         if(rwl != null) {
             //WHY NOT USE 'filter.select(this::canProduce)'?
             //Anuke aaaaa!!!!
-            Blocks.constructor.description += "\n[accent]Resetting py EU mod.";
+            Blocks.constructor.description += "\n[accent]Resetting by EU mod.";
             ((Constructor)Blocks.constructor).filter = new Seq<>();
-            Blocks.largeConstructor.description += "\n[accent]Resetting py EU mod.";
+            Blocks.largeConstructor.description += "\n[accent]Resetting by EU mod.";
             ((Constructor)Blocks.largeConstructor).filter = new Seq<>();
 
             ((UnitAssembler) Blocks.tankAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.napoleon, 240 * 60f, PayloadStack.list(UnitTypes.precept, 8, rwl, 20)));
             ((UnitAssembler) Blocks.shipAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.havoc, 240 * 60f, PayloadStack.list(UnitTypes.obviate, 8, rwl, 20)));
             ((UnitAssembler) Blocks.mechAssembler).plans.add(new UnitAssembler.AssemblerUnitPlan(EUUnitTypes.arcana, 240 * 60f, PayloadStack.list(UnitTypes.anthicus, 8, rwl, 20)));
         }
+
+        Blocks.smallHeatRedirector.requirements(Category.crafting, with(Items.tungsten, 10, Items.graphite, 8, Items.oxide, 5));
+        Blocks.smallHeatRedirector.description += "\n[accent]Resetting by EU mod.";
     }
 
     public static void overrideUnit1(){

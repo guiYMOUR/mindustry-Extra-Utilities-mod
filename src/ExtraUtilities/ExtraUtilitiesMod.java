@@ -157,14 +157,14 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                Block T2lan = getJsNameBlock("T2-lancer");
-                Block T2Steam = getJsNameBlock("T2-steam-generator");
+                Block tj = getJsNameBlock("TJ");
+                Block minisp = getJsNameBlock("minisp");
 
                 updateLog.addAll(
-                        EUBlocks.randomer, EUBlocks.miniItemNode, EUBlocks.miniLiquidNode, EUBlocks.blockFiller,
-                        EUBlocks.thermalReactor, T2Steam,
-                        T2lan, EUBlocks.celebrationMk2, EUBlocks.celebration, EUBlocks.onyxBlaster,
-                        EUBlocks.rust, EUUnitTypes.suzerain,
+                        EUBlocks.randomer, EUBlocks.blockFiller,
+                        EUBlocks.penitent, EUBlocks.anti_Missile,
+                        minisp, Blocks.spectre,EUBlocks.sancta, EUBlocks.arbiter,
+                        tj,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {
@@ -345,6 +345,8 @@ public class ExtraUtilitiesMod extends Mod{
             EUOverride.overrideUnitForAll(overrideUnitArm, coreReset);
             EUOverride.overrideTDRules(coreReset);
             EUOverride.overrideBlockAll(hardMod, coreResetV7, coreReset);
+            getJsNameBlock("minisp").stats.add(Stat.ammo, EUStatValues.ammoString(EUItems.lightninAlloy, "sp"));
+            Blocks.spectre.stats.add(Stat.ammo, EUStatValues.ammoString(EUItems.lightninAlloy, "sp"));
             Blocks.foreshadow.stats.add(Stat.ammo, EUStatValues.ammoString(EUItems.lightninAlloy, "fs"));
             EUOverride.overrideJs();
             afterEnterLoad();

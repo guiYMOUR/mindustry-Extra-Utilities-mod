@@ -110,7 +110,7 @@ public class EUBlocks {
         /** 光束合金到此一游*/
             LA, ELA,
         //heat
-            thermalHeater, ventHeater, largeElectricHeater, slagReheater, heatTransfer, heatDistributor, heatDriver,
+            thermalHeater, ventHeater, largeElectricHeater, slagReheater, heatDistributor, heatDriver,
         //power
             liquidConsumeGenerator, thermalReactor, LG, heatPower, windPower, waterPower,
         //turret
@@ -847,12 +847,7 @@ public class EUBlocks {
                 stats.remove(Stat.productionTime);
             }
         };
-        heatTransfer = new HeatConductor("heat-transfer"){{
-            requirements(Category.crafting, with(Items.tungsten, 10, Items.graphite, 8, Items.oxide, 5));
-            size = 2;
-            drawer = new DrawMulti(new DrawDefault(), new DrawHeatOutput(), new DrawHeatInput("-heat"));
-            researchCostMultiplier = 5f;//因为已经解锁大的了，再多不好吧awa
-        }};
+//
         heatDistributor = new HeatConductor("heat-distributor"){{
             requirements(Category.crafting, with(Items.tungsten, 10, Items.graphite, 6, Items.oxide, 5));
 
@@ -1187,7 +1182,7 @@ public class EUBlocks {
 
 
         dissipation = new dissipation("dissipation"){{
-            requirements(Category.turret, with(Items.silicon, 300, Items.thorium, 180,EUItems.lightninAlloy, 80, Items.phaseFabric, 120));
+            requirements(Category.turret, with(Items.silicon, 300, Items.thorium, 200,EUItems.lightninAlloy, 80, Items.phaseFabric, 150));
             hasPower = true;
             size = 3;
             range = 220;
@@ -1202,9 +1197,9 @@ public class EUBlocks {
         }};
 
         anti_Missile = new antiMissileTurret("anti-missile"){{
-            requirements(Category.turret, with(Items.graphite, 150, Items.silicon, 180, Items.oxide, 120, Items.thorium, 60));
+            requirements(Category.turret, with(Items.graphite, 150, Items.silicon, 180, Items.oxide, 120, Items.thorium, 80));
             size = 2;
-            reload = 60f / 2.67f;
+            reload = 36f;
             shoot = new ShootAlternate(5);
             range = 35 * 8;
             shootType = new antiMissile(10 * 8, name("mb")){{
@@ -1216,7 +1211,7 @@ public class EUBlocks {
             rotateSpeed = 8;
             loadSpeed = 1.2f;
 
-            consumePower(3);
+            consumePower(4.5f);
 
             shootEffect = smokeEffect = none;
             shootSound = Sounds.shootMalign;
@@ -1224,8 +1219,17 @@ public class EUBlocks {
             coolant = consume(new ConsumeLiquid(Liquids.water, 12f / 60f));
             drawer = new DrawTurret("reinforced-");
 
+            health = 2250;
+
             squareSprite = false;
-        }};
+        }
+
+            @Override
+            public void setStats() {
+                super.setStats();
+                stats.add(Stat.abilities, EUStatValues.ability(name, 1));
+            }
+        };
 
         penitent = new Penitent("penitent"){{
             requirements(Category.turret, with(Items.graphite, 502, Items.silicon, 404, Items.thorium, 303));
@@ -1252,7 +1256,9 @@ public class EUBlocks {
 
             shootType = new BulletType(){{
                 ammoMultiplier = 1;
-                damage = 40;
+                damage = 35;
+                splashDamage = 20;
+                splashDamageRadius = 1.4f * 8;
                 speed = 8f;
                 lifetime = 39f;
                 homingDelay = 6f;
@@ -1272,6 +1278,10 @@ public class EUBlocks {
                     Draw.color(EUItems.lightninAlloy.color);
                     Angles.randLenVectors(e.id, 4, 40 * e.finpow(), e.rotation, 90, (x, y) -> Fill.square(e.x + x, e.y + y, 6 * e.foutpow()));
                 });
+
+                pierce = true;
+                pierceCap = 2;
+
                 hitSound = despawnSound = Sounds.uiBack;
                 absorbable = false;
                 collidesGround = collidesTiles = false;
@@ -1315,7 +1325,7 @@ public class EUBlocks {
             targetGround = false;
             alwaysUnlocked = true;
 
-            consumePower(8);
+            consumePower(9);
 
             coolant = consume(new ConsumeLiquid(Liquids.water, 24f / 60f));
             drawer = new DrawTurret("reinforced-");
@@ -1886,7 +1896,7 @@ public class EUBlocks {
         };
 
         antiaircraft = new ItemTurret("antiaircraft"){{
-            requirements(Category.turret, with(Items.silicon, 800, Items.graphite, 600, EUItems.crispSteel, 250, Items.thorium, 350));
+            requirements(Category.turret, with(Items.silicon, 500, Items.graphite, 600, EUItems.crispSteel, 250, Items.thorium, 350));
             size = 3;
             range = 45 * 8;
 
@@ -2622,8 +2632,8 @@ public class EUBlocks {
                 if(bullet.time < 70) bullet.initVel(bullet.rotation(), bullet.type.speed * fout);
             };
             BulletType hard = new ScarletDevil(EUItems.lightninAlloy.color){{
-                damage = 800;
-                splashDamage = 800;
+                damage = 1120;
+                splashDamage = 1120;
                 splashDamageRadius = 13 * 8f;
                 hitEffect = despawnEffect = new Effect(90, e -> {
                     float line = splashDamageRadius;
@@ -2648,7 +2658,7 @@ public class EUBlocks {
                 buildingDamageMultiplier = 0.7f;
 
                 pierce = true;
-                pierceCap = 2;
+                pierceCap = 4;
                 pierceBuilding = true;
 
                 speed = 20;
@@ -2760,7 +2770,7 @@ public class EUBlocks {
             maxAmmo = ammoPerShot * 3;
             shake = 6f;
             recoil = 4f;
-            reload = hardMod ? 195f : 360f;
+            reload = hardMod ? 120f : 360f;
             shootY = 0f;
             rotateSpeed = 1f;
             minWarmup = 0.95f;
@@ -3059,6 +3069,8 @@ public class EUBlocks {
                 }
             };
 
+            int[] ftes = {-20, 20};
+
             Effect se = EUFx.aimEffect(40, EUItems.lightninAlloy.color, 1.5f, range, 13);
             ammo(
                     Items.surgeAlloy,
@@ -3123,7 +3135,7 @@ public class EUBlocks {
                         trailRotation = true;
                         trailEffect = new Effect(15, e ->{
                             color(e.color);
-                            for(int x : new int[]{-20, 20}){
+                            for(int x : ftes){
                                 Tmp.v1.set(x, -10).rotate(e.rotation - 90);
                                 Fill.circle(e.x + Tmp.v1.x, e.y + Tmp.v1.y, 4 * e.foutpow());
                             }
@@ -3945,7 +3957,7 @@ public class EUBlocks {
         }};
 
         minichisa = new ChiSa("minichisa"){{
-            requirements(Category.effect, with(Items.silicon, 521));
+            requirements(Category.effect, with(EUItems.lightninAlloy, 521, Items.phaseFabric, 999));
             size = 4;
             LEFT = 10.8f;
             UP = 6.1f;
@@ -3956,12 +3968,13 @@ public class EUBlocks {
 
             //我千咲的面板
             health = 15335;
-            buildVisibility = BuildVisibility.sandboxOnly;
+            //buildVisibility = BuildVisibility.sandboxOnly;
+            alwaysUnlocked = true;
         }
             @Override
             public void setStats() {
                 super.setStats();
-                stats.add(Stat.abilities, EUStatValues.ability(name, 2));
+                stats.add(Stat.abilities, EUStatValues.ability(name, 3));
             }
         };
 
