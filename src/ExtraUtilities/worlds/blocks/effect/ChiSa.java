@@ -6,6 +6,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
+import arc.util.Strings;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -19,6 +20,9 @@ import mindustry.graphics.Pal;
 public class ChiSa extends Doll{
     public float reloadTime = 12 * 60f;
     public float range = 30 * 8;
+
+    public float damageUp = 1.3f;
+    public float upBuffTime = 15 * 60f;
 
     public Effect applyE = new Effect(12, e -> {
         Draw.color(Pal.remove, Pal.sap, e.finpow());
@@ -46,8 +50,11 @@ public class ChiSa extends Doll{
         public float reload = 0;
         public boolean inReload = false;
         boolean killed;
-        float clearTimer = 0;
-        boolean inClear = false;
+        public float clearTimer = 0;
+        public boolean inClear = false;
+
+        boolean buffed;
+        public float buffTimer = 0;
 
         @Override
         public void damage(float damage) {
@@ -57,24 +64,36 @@ public class ChiSa extends Doll{
 
         public void linchpin(){
             killed = false;
-            if(!inReload){
+            buffed = false;
+            if(!inReload &&
+                    Units.any(x - range, y - range, range * 2f, range * 2f,
+                            u -> u != null && !u.dead && u.within(x, y, range + u.hitSize/2f) && u.team != team)
+            ){
                 applyE.at(x + 1f, y + 1f);
                 Units.nearbyEnemies(team, x, y, range, u -> {
                     u.apply(EUStatusEffects.ullification, reloadTime * 2);
+
                     Sounds.shootEnergyField.at(u);
                     //我千咲的攻击力(2156) * 解弦之眼的技能倍率(35.79%)，取整
-                    if(u.health <= 772) {
+                    float d = 2156 * 0.3579f * (buffTimer > 0 ? damageUp : 1f);
+                    if(u.health <= d) {
                         u.kill();
-                        if(!inClear) killed = true;
+                        if(!inClear) {
+                            killed = true;
+                            inClear = true;
+                        }
                     } else {
-                        u.health -= 772;
+                        u.health -= d;
                     }
 
-                    EUFx.numberJump.at(u.x, u.y, 0, color, "772");
+                    EUFx.numberJump.at(u.x, u.y, 0, color, Strings.autoFixed(d, 2));
+
+                    buffed = true;
                 });
 
                 Sounds.shootToxopidShotgun.at(this);
                 if(!killed) inReload = true;
+                if(buffed) buffTimer = upBuffTime;
             }
         }
 
@@ -99,6 +118,8 @@ public class ChiSa extends Doll{
                 inClear = false;
                 clearTimer = 0;
             }
+
+            if(buffTimer >= 0) buffTimer -= Time.delta;
         }
 
         @Override

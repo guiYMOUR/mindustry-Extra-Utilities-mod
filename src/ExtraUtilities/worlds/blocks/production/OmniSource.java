@@ -1,10 +1,13 @@
 package ExtraUtilities.worlds.blocks.production;
 
 
+import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.scene.ui.layout.Table;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
+import mindustry.ctype.UnlockableContent;
 import mindustry.gen.Building;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
@@ -35,8 +38,13 @@ public class OmniSource extends Block {
 
         configurable = true;
         copyConfig = true;
-        saveConfig = true;
         clearOnDoubleTap = true;
+
+        config(Object[].class, (FillerBuild build, Object[] sub) -> {
+            if(sub.length != 2) return;
+            build.select[0] = sub[0];
+            build.select[1] = sub[1];
+        });
 
         config(Item.class, (FillerBuild build, Item sub) -> {
             if(sub != build.select[0]) build.select[0] = sub;
@@ -44,8 +52,6 @@ public class OmniSource extends Block {
         config(Liquid.class, (FillerBuild build, Liquid sub) -> {
             if(sub != build.select[1]) build.select[1] = sub;
         });
-
-        config(Object[].class, (FillerBuild build, Object[] sub) -> build.select = sub);
 
         configClear((FillerBuild build) -> {
             build.select[0] = null;
@@ -107,6 +113,26 @@ public class OmniSource extends Block {
         public void buildConfiguration(Table table){
             ItemSelection.buildTable(OmniSource.this, table, content.items(), () -> (Item) select[0], this::configure, false, selectionRows, selectionColumns);
             ItemSelection.buildTable(OmniSource.this, table, content.liquids(), () -> (Liquid) select[1], this::configure, false, selectionRows, selectionColumns);
+        }
+
+        public void drawItemSelectionOtherSide(UnlockableContent selection) {
+            if (selection != null) {
+                float dx = this.x + (float)(this.block.size * 8) / 2f;
+                float dy = this.y + (float)(this.block.size * 8) / 2f;
+                float s = 6.0F * selection.fullIcon.ratio();
+                float h = 6.0F;
+                Draw.mixcol(Color.darkGray, 1);
+                Draw.rect(selection.fullIcon, dx, dy - 1, s, h);
+                Draw.reset();
+                Draw.rect(selection.fullIcon, dx, dy, s, h);
+            }
+        }
+
+        @Override
+        public void drawSelect(){
+            super.drawSelect();
+            drawItemSelection((Item)select[0]);
+            drawItemSelectionOtherSide((Liquid)select[1]);
         }
 
         @Override

@@ -17,7 +17,7 @@ public class Penitent extends LoadTurret {
     //绝境冷却
     public float impasseReload = 15 * 60f;
     //绝境持续
-    public float impasseTime = 4 * 60f;
+    public float impasseTime = 3 * 60f;
     //战斗续行持续
     public float endTime = 2 * 60f;
 
