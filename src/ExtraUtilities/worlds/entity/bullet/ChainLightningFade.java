@@ -48,6 +48,7 @@ public class ChainLightningFade extends BulletType {
         this.damage = damage;
         this.hitEffect = hitEffect;
         status = StatusEffects.shocked;
+        reflectable = false;
     }
 
     private void init(chain b) {

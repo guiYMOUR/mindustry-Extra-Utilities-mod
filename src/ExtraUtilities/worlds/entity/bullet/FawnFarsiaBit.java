@@ -36,6 +36,7 @@ public class FawnFarsiaBit extends BulletType {
         keepVelocity = collides = absorbable = hittable = false;
         homingRange = 10 * 8;
         speed = 4;
+        reflectable = false;
     }
 
     @Override

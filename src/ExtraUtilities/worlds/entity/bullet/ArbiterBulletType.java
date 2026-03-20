@@ -165,7 +165,7 @@ public class ArbiterBulletType extends BulletType {
                 float angle = b.time * 2 * (ta % 2 == 0 ? 1 : -1) + tg;
                 float tx = EUGet.txy(b.x, b.y, ta, ta / 2.5f, tg, angle, 0);
                 float ty = EUGet.txy(b.x, b.y, ta, ta / 2.5f, tg, angle, 1);
-                EUGet.movePoint(e, tx, ty, 0.1f);
+                EUGet.movePoint(e, tx, ty, 0.1f, EUGet::hollow);
                 e.rotation(e.angleTo(tx, ty));
                 e.initVel(e.rotation(), 0);
                 e.time = 0;
@@ -258,12 +258,14 @@ public class ArbiterBulletType extends BulletType {
 
         if(a.ens.size > 0){
             for(Bullet e : a.ens){
+                boolean check = !(e.data instanceof UnitType ut) || !ut.flying;
                 int ta = Mathf.randomSeed(e.id, 80, 150);
                 float tg = Mathf.randomSeed(e.id, 360);
                 float angle = b.time * 2 * (ta % 2 == 0 ? 1 : -1) + tg;
                 float tx = EUGet.txy(b.x, b.y, ta, ta / 2.5f, tg, angle, 0);
                 float ty = EUGet.txy(b.x, b.y, ta, ta / 2.5f, tg, angle, 1);
-                EUGet.movePoint(e, tx, ty, 0.1f);
+                if(check) EUGet.movePoint(e, tx, ty, 0.1f, EntityCollisions::solid);
+                else EUGet.movePoint(e, tx, ty, 0.1f, EUGet::hollow);
                 e.rotation(e.angleTo(tx, ty));
                 e.initVel(e.rotation(), 0);
                 e.time = 0;
@@ -276,7 +278,7 @@ public class ArbiterBulletType extends BulletType {
                 float angle = b.time * 2 * (ta % 2 == 0 ? 1 : -1) + tg;
                 float tx = EUGet.txy(b.x, b.y, ta, ta / 2.5f, tg, angle, 0);
                 float ty = EUGet.txy(b.x, b.y, ta, ta / 2.5f, tg, angle, 1);
-                EUGet.movePoint(e, tx, ty, 0.1f);
+                EUGet.movePoint(e, tx, ty, 0.1f, EUGet::hollow);
                 e.rotation(e.angleTo(tx, ty));
                 e.initVel(e.rotation(), 0);
                 e.team(b.team);
