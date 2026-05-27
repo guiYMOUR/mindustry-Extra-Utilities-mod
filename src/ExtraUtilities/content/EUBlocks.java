@@ -287,7 +287,6 @@ public class EUBlocks {
             health = 80;
             squareSprite = false;
         }};
-
         ekLiquidDriver = new LiquidMassDriver("eld"){{
             requirements(Category.liquid, with(Items.beryllium, 200, Items.silicon, 150, Items.oxide, 140, Items.graphite, 200, Items.tungsten, 120));
             size = 3;
@@ -3978,8 +3977,8 @@ public class EUBlocks {
             }
         };
 
-        EUGet.donorItems.addAll(T2sporePress, phasicDrill, penitent, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
-        EUGet.donorMap.get(0).addAll(T2sporePress, phasicDrill);
+        EUGet.donorItems.addAll(T2sporePress, penitent, javelin, shootingStar, waterBomb, buffrerdMemoryBank);
+        EUGet.donorMap.get(0).addAll(T2sporePress);
         EUGet.donorMap.get(1).addAll(waterBomb);
         EUGet.donorMap.get(2).addAll(javelin);
         EUGet.donorMap.get(4).addAll(buffrerdMemoryBank);

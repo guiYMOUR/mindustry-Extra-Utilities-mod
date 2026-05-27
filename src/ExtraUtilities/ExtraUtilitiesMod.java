@@ -288,6 +288,34 @@ public class ExtraUtilitiesMod extends Mod{
         Events.on(ClientLoadEvent.class, e -> Time.runTask(6f, ExtraUtilitiesMod::log));
 
         Log.info("Extra Utilities: building rand subtitle...");
+
+        //workaround for v155.4/v158.1 Mods$1.find() bug:
+        //Mods$1 creates AtlasRegions with shadow.find(name).texture (error region texture)
+        //instead of the actual sprite texture. After packer flush, Core.atlas is replaced
+        //with the correct Mods$2 atlas, so we re-load icons here.
+        Events.on(AtlasPackEvent.class, e -> {
+            reloadIcons(content.items());
+            reloadIcons(content.liquids());
+            reloadIcons(content.blocks());
+            reloadIcons(content.units());
+            reloadIcons(content.statusEffects());
+
+            //block region fields were also loaded via Block.load() with Mods$1
+            //re-calling load() fixes subclass regions (rotatorRegion, topRegion, etc.)
+            for(var b : content.blocks()){
+                if(b.minfo != null && b.minfo.mod != null && ModName.equals(b.minfo.mod.name)){
+                    b.load();
+                }
+            }
+        });
+    }
+
+    private static <T extends UnlockableContent> void reloadIcons(Seq<T> seq){
+        for(var c : seq){
+            if(c.minfo != null && c.minfo.mod != null && ModName.equals(c.minfo.mod.name)){
+                c.loadIcon();
+            }
+        }
     }
 
     public Graphics.Cursor newCursor(String filename){
