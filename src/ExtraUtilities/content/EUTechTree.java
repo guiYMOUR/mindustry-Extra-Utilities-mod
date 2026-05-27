@@ -68,7 +68,7 @@ public class EUTechTree {
         addToNode(foreshadow, () -> node(sancta));
         addToNode(parallax, () -> node(cobweb));
 
-        addToNode(mendProjector, () -> node(mendTurret, () -> node(quantumDomain)));
+        addToNode(mendProjector, () -> node(mendTurret));
 
         addToNode(memoryCell, () -> node(buffrerdMemoryBank));
         addToNode(message, () -> node(clock));
