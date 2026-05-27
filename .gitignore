@@ -1,0 +1,19 @@
+# Agent instructions — never push
+AGENTS.md
+
+# Gradle
+build/
+.gradle/
+gradle.properties
+local.properties
+*.iml
+.idea/
+.classpath
+.project
+.settings/
+*.jar
+*.class
+
+# OS
+.DS_Store
+Thumbs.db

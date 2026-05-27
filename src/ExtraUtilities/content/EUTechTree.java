@@ -6,6 +6,7 @@ import mindustry.content.*;
 import mindustry.ctype.*;
 import mindustry.game.Objectives.*;
 import mindustry.type.*;
+import mindustry.world.Block;
 
 import static ExtraUtilities.ExtraUtilitiesMod.name;
 import static mindustry.content.Blocks.*;
@@ -38,6 +39,8 @@ public class EUTechTree {
             node(apocalypse, Seq.with(new Research(UnitTypes.eclipse)), () -> {});
             node(nihilo, Seq.with(new Research(UnitTypes.omura)), () -> {});
             node(narwhal, Seq.with(new Research(UnitTypes.navanax)), () -> {});
+            node(finalF);
+            node(minichisa);
         }));
         addToNode(airFactory, () -> node(winglet));
         addToNode(segment, () -> node(dissipation));
@@ -46,16 +49,26 @@ public class EUTechTree {
         if(Vars.content.block(name("magstorm")) != null){
             addToNode(Vars.content.block(name("magstorm")), () -> node(arbiter));
         }
+
+        addToNode(surgeSmelter, () -> node(LA, () -> {
+            node(LG);
+
+            Block crispSteelCrafter = Vars.content.block(name("crisp-steel-smelter"));
+            if (crispSteelCrafter != null) {
+                node(crispSteelCrafter);
+            }
+        }));
         addToNode(cyclone, () -> {
             node(turretResupplyPoint);
             node(celebration, () -> node(celebrationMk2));
             node(antiaircraft);
+            node(penitent);
         });
         addToNode(swarmer, () -> node(blackhole));
         addToNode(foreshadow, () -> node(sancta));
         addToNode(parallax, () -> node(cobweb));
 
-        addToNode(mendProjector, () -> node(mendTurret));
+        addToNode(mendProjector, () -> node(mendTurret, () -> node(quantumDomain)));
 
         addToNode(memoryCell, () -> node(buffrerdMemoryBank));
         addToNode(message, () -> node(clock));
@@ -99,6 +112,7 @@ public class EUTechTree {
                 node(turretSpeeder);
                 node(fiammetta);
                 node(anti_Missile);
+                node(rust);
             });
             node(javelin);
         });
@@ -114,7 +128,7 @@ public class EUTechTree {
         addToNode(slagIncinerator, () -> node(liquidIncinerator));
         addToNode(slagIncinerator, () -> node(ekSeparator));
 
-        addToNode(blastDrill, () -> node(phasicDrill));
+        addToNode(blastDrill, () -> node(phasicDrill, () -> node(quantumExplosion)));
 
         //TD
         TDPlanet.TD.techTree = nodeRoot("TD", pd, () -> addToNode(pd, () -> {
