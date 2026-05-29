@@ -22,7 +22,6 @@ public class antiMissileWeapon extends BoostWeapon{
         predictTarget = false;
         controllable = false;
         autoTarget = true;
-        useAmmo = true;
         rotate = true;
         rotateSpeed = 30;
     }
