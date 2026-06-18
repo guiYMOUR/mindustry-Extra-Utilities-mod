@@ -1,86 +1,88 @@
-/**
- * W: Why is my compiler unable to use pattern variables dnd other methods that require higher versions of Java?
- * A: Possible issue with Gradle script
- * W: But the script is fine
- * A: Check your compiler settings, If you are using IntelliJ IDEA, it in 'Build, Execution, Deployment' > 'Build Tools' > 'Gradle', and check what version of the Gradle JVM you are using
- * */
+apply plugin: "java"
 
-plugins{
-    id "java"
-}
-
-version '1.0'
+version = '1.0'
 
 sourceSets.main.java.srcDirs = ["src"]
 
 repositories{
     mavenCentral()
-    maven{ url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
-    maven{ url 'https://www.jitpack.io' }
+    maven{ url = "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven{ url = 'https://www.jitpack.io' }
 }
 
-targetCompatibility = 8
-sourceCompatibility = 17
+java{
+    targetCompatibility = 8
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 ext{
     //the build number that this mod is made for
-    mindustryVersion = 'v155.4'
-    arcVersion = 'v149'
+    mindustryVersion = 'v158.1'
     jabelVersion = "93fde537c7"
-    //sdkVersion = '30'
-    sdkRoot = System.getenv("ANDROID_HOME")
+    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 
 //java 8 backwards compatibility flag
 allprojects{
-    tasks.withType(JavaCompile){
-
-        options.encoding = 'UTF-8'
-
-        options.compilerArgs.addAll(['--release', '8'])
+    tasks.withType(JavaCompile).tap{
+        configureEach{
+            options.compilerArgs.addAll(['--release', '8'])
+            options.encoding = 'UTF-8'
+        }
     }
 }
 
+// Set UTF-8 encoding for all tasks
+System.setProperty("file.encoding", "UTF-8")
+System.setProperty("sun.jnu.encoding", "UTF-8")
+
 dependencies{
     implementation 'org.jetbrains:annotations:24.0.1'
-//    implementation "com.github.EB-wilson.UniverseCore:scenes:2.1.1"
-//    implementation "com.github.EB-wilson.UniverseCore:markdown:2.1.1"
-
-    compileOnly "com.github.Anuken.Arc:arc-core:$arcVersion"
+    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
 }
 
-task jarAndroid{
+//force arc version
+configurations.configureEach{
+    resolutionStrategy.eachDependency { details ->
+        if(details.requested.group == 'com.github.Anuken.Arc'){
+            details.useVersion "$mindustryVersion"
+        }
+    }
+}
+
+tasks.register('jarAndroid'){
     dependsOn "jar"
 
     doLast{
+        if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.")
 
-        if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.");
-
-        def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find{ f -> new File(f, "android.jar").exists()}
+        def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find{ f -> new File(f, "android.jar").exists() }
 
         if(!platformRoot) throw new GradleException("No android.jar found. Ensure that you have an Android platform installed.")
 
         //collect dependencies needed for desugaring
         def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
 
+        def d8 = isWindows ? "d8.bat" : "d8"
+
         //dex and desugar files - this requires d8 in your PATH
-        "d8 $dependencies --min-api 14 --output ${project.archivesBaseName}Android.jar ${project.archivesBaseName}Desktop.jar"
-            .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
+        "$d8 $dependencies --min-api 14 --output ${project.name}Android.jar ${project.name}Desktop.jar"
+                .execute(null, new File("build/libs")).waitForProcessOutput(System.out, System.err)
     }
 }
 
 jar{
-    archiveFileName = "${project.archivesBaseName}Desktop.jar"
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE;
+    archiveFileName = "${project.name}Desktop.jar"
 
     from{
         configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
     }
 
-    from(rootDir){
+    from(projectDir){
         include "mod.hjson"
     }
 
@@ -89,17 +91,16 @@ jar{
     }
 }
 
-task deploy(type: Jar){
+tasks.register('deploy', Jar){
     dependsOn jarAndroid
     dependsOn jar
-    archiveFileName = "${project.archivesBaseName}.jar"
+    archiveFileName = "${project.name}.jar"
 
-    from{ [zipTree("$buildDir/libs/${project.archivesBaseName}Desktop.jar"), zipTree("$buildDir/libs/${project.archivesBaseName}Android.jar")] }
+    from{ [zipTree("build/libs/${project.name}Desktop.jar"), zipTree("build/libs/${project.name}Android.jar")] }
 
     doLast{
         delete{
-            delete "$buildDir/libs/${project.archivesBaseName}Desktop.jar"
-            delete "$buildDir/libs/${project.archivesBaseName}Android.jar"
+            delete "build/libs/${project.name}Android.jar"
         }
     }
 }

@@ -46,7 +46,6 @@ public class TractorBeamWeapon extends Weapon {
         controllable = false;
         rotate = true;
         rotateSpeed = 10;
-        useAmmo = false;
         useAttackRange = false;
         targetInterval = 5;
         targetSwitchInterval = 5;
