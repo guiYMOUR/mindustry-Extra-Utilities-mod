@@ -58,8 +58,6 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
-import mindustry.type.ammo.ItemAmmoType;
-import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
 import mindustry.ui.Styles;
@@ -1127,7 +1125,6 @@ public class EUUnitTypes {
             singleTarget = true;
             health = 63000 - (hardMod ? 3000 : 0);
             itemCapacity = 240;
-            ammoType = new ItemAmmoType(Items.thorium);
 
             immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, EUStatusEffects.awsl);
 
@@ -1598,7 +1595,6 @@ public class EUUnitTypes {
             hovering = true;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
-            ammoType = new PowerAmmoType(3800);
 
             immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet, StatusEffects.electrified, EUStatusEffects.awsl);
 
@@ -1812,7 +1808,6 @@ public class EUUnitTypes {
             hovering = true;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
-            ammoType = new PowerAmmoType(3000);
             legSplashDamage = 100;
             legSplashRange = 64;
 
@@ -1987,7 +1982,6 @@ public class EUUnitTypes {
             engineSize = 11;
             targetFlags = UnitTypes.eclipse.targetFlags;
             immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting, StatusEffects.wet, EUStatusEffects.awsl);
-            ammoType = new ItemAmmoType(Items.pyratite);
 
             abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
             abilities.add(new EnergyFieldAbility(220f, 90f, 192f){{
@@ -2166,7 +2160,6 @@ public class EUUnitTypes {
             drawShields = false;
             lowAltitude = true;
             payloadCapacity = Mathf.sqr(7.5f) * Vars.tilePayload;
-            ammoType = new PowerAmmoType(2500);
 
             abilities.add(
                     new DeathBullet(new diffBullet(360, 1){{
@@ -2301,7 +2294,6 @@ public class EUUnitTypes {
             rotateSpeed = 0.9f;
             health = 63000;
             itemCapacity = 350;
-            ammoType = new ItemAmmoType(Items.surgeAlloy);
 
             BulletType air = new BulletType(){{
                 speed = 24;
@@ -2610,7 +2602,6 @@ public class EUUnitTypes {
             drawShields = false;
             health = 62500;
             itemCapacity = 800;
-            ammoType = new PowerAmmoType(1800);
 
             buildSpeed = 12;
 
@@ -2766,7 +2757,6 @@ public class EUUnitTypes {
                             rotate = true;
                             rotateSpeed = 4;
                             alternate = false;
-                            useAmmo = true;
                             continuous = true;
                             cooldownTime = 150;
                             shootY = 8;
@@ -2810,7 +2800,6 @@ public class EUUnitTypes {
             };
 
             immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped, EUStatusEffects.awsl);
-            ammoType = new ItemAmmoType(Items.blastCompound);
 
             abilities.add(new PcShieldArcAbility(){{
                 whenShooting = false;
@@ -3812,7 +3801,6 @@ public class EUUnitTypes {
             legStraightLength = 1.1f;
             legMaxLength = 1.2f;
 
-            ammoType = new PowerAmmoType(3500);
 
             legSplashDamage = 90;
             legSplashRange = 40;
@@ -4167,7 +4155,6 @@ public class EUUnitTypes {
             itemCapacity = 50;
             engineOffset = 5.8f;
             engineSize = 2.1f;
-            ammoType = new PowerAmmoType(500);
 
             BulletType sapper = new SapBulletType(){{
                 sapStrength = 1f;
