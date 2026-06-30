@@ -49,7 +49,7 @@ public class WitchService extends Block {
     public float eTime = 600;
     public ObjectMap<Unit, Float> findMap = new ObjectMap<>();
     public float AMP = 0.05f;
-    public float timeApply = 60;
+    public float timeApply = 45;
     public StatusEffect applyEffect = StatusEffects.slow;
 
     public Effect work, applyIn, applyOut;
@@ -198,51 +198,53 @@ public class WitchService extends Block {
             return hasLiquids ? p * Math.min(liquids.currentAmount() / liquidCapacity, 1f) : p;
         }
 
-        @Override
         public void updateTile() {
             Rect r = getRect(r1, x, y, rotation);
-            if((reload += getDelta()) >= timeApply) {
-                Units.nearbyEnemies(team, r, u -> {
-                    if (u.targetable(team) && !u.inFogTo(team)) {
-                        if (!u.hasEffect(eType)) {
-                            if (!findMap.containsKey(u)) {
-                                findMap.put(u, AMP);
+            if ((reload += getDelta()) >= timeApply) {
+                Units.nearbyEnemies(team, r, (ux) -> {
+                    if (ux.targetable(team) && !ux.inFogTo(team)) {
+                        if (!ux.hasEffect(eType)) {
+                            if (!findMap.containsKey(ux)) {
+                                findMap.put(ux, AMP);
                             } else {
-                                findMap.put(u, findMap.get(u) + AMP);
+                                findMap.put(ux, findMap.get(ux) + AMP);
                             }
 
                             working = true;
-                            applyIn.at(u.x, u.y, u.rotation, u);
-                            u.apply(applyEffect, timeApply / 2f);
-                        } else {
-                            if (u.isAdded() && !u.dead && findMap.containsKey(u)) {
-                                findMap.remove(u);
-                            }
+                            applyIn.at(ux.x, ux.y, ux.rotation, ux);
+                            ux.apply(applyEffect, timeApply / 2);
+                        } else if (ux.isAdded() && !ux.dead && findMap.containsKey(ux)) {
+                            findMap.remove(ux);
                         }
                     }
+
                 });
-                for(Unit u : findMap.keys()){
-                    if(u == null || !u.isAdded() || u.dead || u.hasEffect(eType)) {
-                        findMap.remove(u);
-                        continue;
-                    }
+                ObjectMap.Entries<Unit, Float> it = findMap.entries();
 
-                    findMap.put(u, findMap.get(u) + AMP);
-                    applyOut.at(u.x, u.y, u.rotation, u);
-
-                    if(findMap.get(u) >= 1) {
-                        u.apply(eType, eTime);
-                        findMap.remove(u);
+                while(it.hasNext()) {
+                    ObjectMap.Entry<Unit, Float> e = it.next();
+                    Unit u = e.key;
+                    if (u != null && u.isAdded() && !u.dead && !u.hasEffect(eType)) {
+                        float v = e.value + AMP;
+                        findMap.put(u, v);
+                        applyOut.at(u.x, u.y, u.rotation, u);
+                        if (v >= 1) {
+                            u.apply(eType, eTime);
+                            it.remove();
+                        }
+                    } else {
+                        it.remove();
                     }
                 }
 
                 reload = 0;
             }
 
-            if(working){
+            if (working) {
                 work.at(x, y, rotation * 90f, workColor, r);
                 working = false;
             }
+
         }
 
         @Override

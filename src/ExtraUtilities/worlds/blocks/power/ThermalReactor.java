@@ -42,6 +42,10 @@ public class ThermalReactor extends ThermalGenerator {
         @Override
         public void updateTile() {
             super.updateTile();
+            st = Mathf.lerpDelta(st, 1f, addSpeed);
+            if(Mathf.equal(st, 1f, 0.001f)){
+                st = 1f;
+            }
             if(st > 0.001f){
                 damage(workdamage/60f * Time.delta);
             }
@@ -49,10 +53,6 @@ public class ThermalReactor extends ThermalGenerator {
 
         @Override
         public float getPowerProduction() {
-            st = Mathf.lerpDelta(st, 1f, addSpeed);
-            if(Mathf.equal(st, 1f, 0.001f)){
-                st = 1f;
-            }
             return powerProduction *  productionEfficiency * st;
         }
 

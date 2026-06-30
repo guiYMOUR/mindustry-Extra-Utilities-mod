@@ -20,6 +20,8 @@ public class aimBulletTurret extends ItemTurret {
     }
 
     public class aimBulletBuild extends ItemTurretBuild{
+        public Bullet aim = null;
+
         @Override
         protected void shoot(BulletType type) {
             float
@@ -31,7 +33,7 @@ public class aimBulletTurret extends ItemTurret {
                 type.chargeEffect.at(bulletX, bulletY, rotation);
                 float tx = within(targetPos, range) ? targetPos.x : EUGet.dx(x, range, angleTo(targetPos)),
                         ty = within(targetPos, range) ? targetPos.y : EUGet.dy(y, range, angleTo(targetPos));
-                aimBullet.create(this, team, tx, ty, 0);
+                aim = aimBullet.create(this, team, tx, ty, 0);
             } else return;
 
             shoot.shoot(barrelCounter, (xOffset, yOffset, angle, delay, mover) -> {
