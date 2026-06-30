@@ -1,9 +1,11 @@
 const lib = require("blib");
+const items = require("game/items");
 
 const arNode = extend(PowerNode, "ar-node", {});
 arNode.maxNodes = 6;
 arNode.laserRange = 9;
 arNode.health = 220;
+arNode.armor = 12;
 arNode.placeableLiquid = true;
 arNode.requirements = ItemStack.with(
     Items.lead, 5,
@@ -22,7 +24,7 @@ png.maxNodes = 30;
 png.laserRange = 22;
 png.health = 450;
 png.requirements = ItemStack.with(
-    Items.titanium, 50,
+    items.crispSteel, 50,
     Items.lead, 60,
     Items.graphite, 40,
     Items.silicon, 55

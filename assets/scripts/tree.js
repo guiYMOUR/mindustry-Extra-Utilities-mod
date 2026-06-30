@@ -1,7 +1,7 @@
 //The single quotation mark is used because it looks comfortable.
 //科技树部分
 const lib = require('blib');
-const items = require('game/items');
+//const items = require('game/items');
 
 
 const { T2duo } = require('block/turret/T2duo');
@@ -68,7 +68,7 @@ const { speeder } = require('block/effect/speeder');
 const { unitA } = require('block/effect/unitA');
 const { lighthouse } = require('block/effect/lighthouse');*/
 //const { clWall, clWallL, aws, awl, rws, rwl } = require('block/defence/wall');
-const { clWall, clWallL, rws, rwl } = require('block/defence/wall');
+const { clWall, clWallL} = require('block/defence/wall');
 
 /*const { unitF } = require('unit/UF');
 const { suzerain } = require('unit/suzerain');
@@ -96,7 +96,7 @@ lib.addToResearch(T2scorch, { parent: 'scorch', });
 lib.addToResearch(IM, { parent: 'hail', });
 lib.addToResearch(shotgun, { parent: 'duo',
     objectives: Seq.with(
-        new Objectives.SectorComplete(SectorPresets.craters),
+        new Objectives.SectorComplete(SectorPresets.crateredBattleground),
     )
 });
 lib.addToResearch(sakura, { parent: shotgun.name, });
@@ -154,7 +154,7 @@ lib.addToResearch(th2, { parent: 'thorium-reactor', });
 lib.addToResearch(driver, { parent: 'phase-conduit', });
 lib.addToResearch(T2IB, { parent: 'bridge-conveyor',
     objectives: Seq.with(
-        new Objectives.SectorComplete(SectorPresets.craters),
+        new Objectives.SectorComplete(SectorPresets.crateredBattleground),
     )
 });
 lib.addToResearch(alloyDuct, { parent: 'armored-conveyor', });
@@ -163,18 +163,18 @@ lib.addToResearch(ppc, { parent: 'plastanium-conveyor', });
 lib.addToResearch(invertedJunction, { parent: 'junction', });
 lib.addToResearch(TJ, { parent: 'junction',
     objectives: Seq.with(
-        new Objectives.SectorComplete(SectorPresets.craters),
+        new Objectives.SectorComplete(SectorPresets.crateredBattleground),
     )
 });
 lib.addToResearch(TIJ, { parent: TJ.name, });
 lib.addToResearch(TR, { parent: 'router',
     objectives: Seq.with(
-        new Objectives.SectorComplete(SectorPresets.craters),
+        new Objectives.SectorComplete(SectorPresets.crateredBattleground),
     )
 });
 lib.addToResearch(T2LB, { parent: 'bridge-conduit',
     objectives: Seq.with(
-        new Objectives.SectorComplete(SectorPresets.craters),
+        new Objectives.SectorComplete(SectorPresets.crateredBattleground),
     )
 });
 lib.addToResearch(conduit, { parent: 'pulse-conduit', });

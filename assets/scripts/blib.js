@@ -145,7 +145,7 @@ exports.addToResearch = (content, research) => {
     var customRequirements = research.requirements;
     var objectives = research.objectives;
 
-    var lastNode = TechTree.all.find(boolf(t => t.content == content));
+    var lastNode = TechTree.all.find(boolf(t => t.content === content));
     if (lastNode != null) {
         lastNode.remove();
     }

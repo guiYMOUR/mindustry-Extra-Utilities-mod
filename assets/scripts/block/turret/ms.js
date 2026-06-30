@@ -43,7 +43,7 @@ storm.consumePower(32);
 storm.shootType = hardMod ? MS : RS;
 //storm.shots = 1;
 storm.shootShake = 5;
-storm.reload = 300;
+storm.reload = 360;
 storm.recoil = 6;
 //storm.restitution = 0.02;
 storm.range = 300;

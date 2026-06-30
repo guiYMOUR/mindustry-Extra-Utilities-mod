@@ -33,29 +33,44 @@ hur.pierceBuilding = true;
 
 const hurricane = extend(PowerTurret, 'hurricane', {});
 
-hurricane.consumePower(540/60);
-//hurricane.shootType = hur;
-hurricane.shootType = bullets.auroraMain;
+if(hardMod) {
+    hurricane.consumePower(420/60);
+    hurricane.shootType = hur;
+    hurricane.reload = 60;
+    hurricane.range = 182;
+    hurricane.inaccuracy = 3;
+    hurricane.requirements = ItemStack.with(
+        Items.copper, 100,
+        Items.lead, 77,
+        Items.graphite, 50,
+        items.crispSteel, 70
+    );
+    lib.Coolant(hurricane, 0.2);
+} else {
+    hurricane.consumePower(600/60);
+    hurricane.shootType = bullets.auroraMain;
+    hurricane.reload = 120;
+    hurricane.range = 176;
+    hurricane.inaccuracy = 30;
+    hurricane.requirements = ItemStack.with(
+        Items.copper, 100,
+        Items.lead, 140,
+        Items.silicon, 110,
+        //Items.graphite, 30,
+        items.crispSteel, 110
+    );
+}
 //hurricane.shots = 1;
 hurricane.shootShake = 0.5;
-hurricane.reload = 108;
 //hurricane.restitution = 0.02;
-hurricane.range = 176;
 hurricane.shootCone = 15;
 hurricane.ammoUseEffect = Fx.none;
-hurricane.health = 1650;
-hurricane.inaccuracy = 30;
+hurricane.health = 1850;
+
 hurricane.rotateSpeed = 3;
 hurricane.size = 2;
 hurricane.shootSound = Sounds.shootSap;
-lib.Coolant(hurricane, 0.2);
-hurricane.requirements = ItemStack.with(
-    Items.copper, 100,
-    Items.lead, 140,
-    Items.silicon, 110,
-    //Items.graphite, 30,
-    items.crispSteel, 90 + (hardMod ? 60 : 0)
-);
+
 hurricane.buildVisibility = BuildVisibility.shown;
 hurricane.category = Category.turret;
 
