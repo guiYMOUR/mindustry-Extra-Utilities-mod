@@ -58,8 +58,6 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
-import mindustry.type.ammo.ItemAmmoType;
-import mindustry.type.ammo.PowerAmmoType;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
 import mindustry.ui.Styles;
@@ -1127,7 +1125,6 @@ public class EUUnitTypes {
             singleTarget = true;
             health = 63000 - (hardMod ? 3000 : 0);
             itemCapacity = 240;
-            ammoType = new ItemAmmoType(Items.thorium);
 
             immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, EUStatusEffects.awsl);
 
@@ -1598,7 +1595,6 @@ public class EUUnitTypes {
             hovering = true;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
-            ammoType = new PowerAmmoType(3800);
 
             immunities = ObjectSet.with(EUStatusEffects.speedDown, EUStatusEffects.poison, StatusEffects.sapped, StatusEffects.wet, StatusEffects.electrified, EUStatusEffects.awsl);
 
@@ -1812,7 +1808,6 @@ public class EUUnitTypes {
             hovering = true;
             allowLegStep = true;
             groundLayer = Layer.legUnit;
-            ammoType = new PowerAmmoType(3000);
             legSplashDamage = 100;
             legSplashRange = 64;
 
@@ -1854,9 +1849,55 @@ public class EUUnitTypes {
                 lTime = 8;
             }};
 
-            SCSBullet lineBullet = new SCSBullet(){{
-                damage = 150 - (hardMod ? 30 : 0);
-            }};
+            SurgeVolt lineBullet = new SurgeVolt(150, 8) {
+                {
+                    this.maxTarget = 12;
+                    this.targetRange = 120;
+                    this.voltDamageMp = 0.8f;
+                    this.pierceArmor = true;
+                    this.absorbable = false;
+                    this.lifetime = 150;
+                    this.speed = 3;
+                    this.status = StatusEffects.sapped;
+                    this.statusDuration = 120;
+                    this.trailLength = 18;
+                    this.trailWidth = 8;
+                    this.trailColor = this.color = Pal.sapBulletBack;
+                    this.trailInterval = 3;
+                    this.trailRotation = true;
+                    this.splashDamage = 150;
+                    this.splashDamageRadius = 100;
+                    this.hitShake = 4;
+                    this.trailEffect = new Effect(16, (e) -> {
+                        Draw.color(Pal.sapBulletBack);
+
+                        for(int s : Mathf.signs) {
+                            Drawf.tri(e.x, e.y, 4, 30 * e.fslope(), e.rotation + (float)(90 * s));
+                        }
+
+                    });
+                    this.despawnHit = true;
+                    this.despawnEffect = new Effect(18, (e) -> {
+                        Draw.color(this.trailColor);
+                        Lines.stroke(e.fout() * 2 + 0.2f);
+                        Lines.circle(e.x, e.y, e.fin() * this.splashDamageRadius);
+                    });
+                    this.useChainBullet = true;
+                    this.chainBullet = new ChainLightningFade(24, 9, 2.4f, this.color, 25, Fx.hitLancer) {
+                        {
+                            this.pierceArmor = true;
+                            this.status = StatusEffects.sapped;
+                            this.statusDuration = 60;
+                        }
+                    };
+                    this.despawnSound = Sounds.shootArc;
+                    this.homingPower = 0.08f;
+                    this.homingRange = 256;
+                    this.homingDelay = 30;
+                    this.keepVelocity = false;
+                    this.collides = false;
+                }
+            };
 
             weapons.add(
                     new Weapon(name("asphyxia-main")){{
@@ -1893,9 +1934,11 @@ public class EUUnitTypes {
 
                         @Override
                         public void addStats(UnitType u, Table t) {
+                            String text = "[lightgray]" + Core.bundle.get("unit.extra-utilities-asphyxia.weapon-1.description") + "[]";
+                            EUGet.CollapseTextToTable(t, text);
                             super.addStats(u, t);
                             t.row();
-                            t.add(Core.bundle.format("unit.extra-utilities-asphyxia.weaponStat1", lineBullet.maxFind));
+                            t.add(Core.bundle.format("unit.extra-utilities-asphyxia.weaponStat1", lineBullet.maxTarget));
                         }
                     },
                     
@@ -1987,7 +2030,6 @@ public class EUUnitTypes {
             engineSize = 11;
             targetFlags = UnitTypes.eclipse.targetFlags;
             immunities = ObjectSet.with(StatusEffects.burning, StatusEffects.melting, StatusEffects.wet, EUStatusEffects.awsl);
-            ammoType = new ItemAmmoType(Items.pyratite);
 
             abilities.add(new UnitSpawnAbility(UnitTypes.crawler, 60*10, 17, -27.5f), new UnitSpawnAbility(UnitTypes.crawler, 60*10, -17, -27.5f));
             abilities.add(new EnergyFieldAbility(220f, 90f, 192f){{
@@ -2166,7 +2208,6 @@ public class EUUnitTypes {
             drawShields = false;
             lowAltitude = true;
             payloadCapacity = Mathf.sqr(7.5f) * Vars.tilePayload;
-            ammoType = new PowerAmmoType(2500);
 
             abilities.add(
                     new DeathBullet(new diffBullet(360, 1){{
@@ -2301,7 +2342,6 @@ public class EUUnitTypes {
             rotateSpeed = 0.9f;
             health = 63000;
             itemCapacity = 350;
-            ammoType = new ItemAmmoType(Items.surgeAlloy);
 
             BulletType air = new BulletType(){{
                 speed = 24;
@@ -2610,7 +2650,6 @@ public class EUUnitTypes {
             drawShields = false;
             health = 62500;
             itemCapacity = 800;
-            ammoType = new PowerAmmoType(1800);
 
             buildSpeed = 12;
 
@@ -2766,7 +2805,6 @@ public class EUUnitTypes {
                             rotate = true;
                             rotateSpeed = 4;
                             alternate = false;
-                            useAmmo = true;
                             continuous = true;
                             cooldownTime = 150;
                             shootY = 8;
@@ -2810,7 +2848,6 @@ public class EUUnitTypes {
             };
 
             immunities.addAll(StatusEffects.unmoving, StatusEffects.burning, StatusEffects.sapped, EUStatusEffects.awsl);
-            ammoType = new ItemAmmoType(Items.blastCompound);
 
             abilities.add(new PcShieldArcAbility(){{
                 whenShooting = false;
@@ -3812,8 +3849,6 @@ public class EUUnitTypes {
             legStraightLength = 1.1f;
             legMaxLength = 1.2f;
 
-            ammoType = new PowerAmmoType(3500);
-
             legSplashDamage = 90;
             legSplashRange = 40;
             drownTimeMultiplier = 2f;
@@ -4167,7 +4202,6 @@ public class EUUnitTypes {
             itemCapacity = 50;
             engineOffset = 5.8f;
             engineSize = 2.1f;
-            ammoType = new PowerAmmoType(500);
 
             BulletType sapper = new SapBulletType(){{
                 sapStrength = 1f;

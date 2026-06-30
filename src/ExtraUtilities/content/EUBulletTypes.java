@@ -217,7 +217,7 @@ public class EUBulletTypes {
     }
         @Override
         public void update(Bullet b){
-            b.vel.trns(b.rotation(), this.speed * Math.max(0, b.fout() - 0.5f));
+            b.vel.trns(b.rotation(), speed * Math.max(0, b.fout() - 0.5f));
         }
     };
 
@@ -558,53 +558,179 @@ public class EUBulletTypes {
         trailColor = EUItems.lightninAlloy.color.cpy().mul(Pal.surge);
         trailRotation = true;
 
-        BulletType miss = new BulletType(){{
-            damage = 60;
-            pierceArmor = true;
-            keepVelocity = hittable = absorbable = false;
-            lifetime = 60;
-            speed = 8;
-            trailWidth = 2;
-            trailLength = 12;
-            trailColor = EUItems.lightninAlloy.color.cpy();
-            buildingDamageMultiplier = 0.2f;
-        }
+        final BulletType miss = new BulletType() {{
+                damage = 50;
+                pierceArmor = true;
+                keepVelocity = hittable = absorbable = false;
+                lifetime = 60;
+                speed = 8;
+                trailWidth = 2;
+                trailLength = 12;
+                trailColor = EUItems.lightninAlloy.color.cpy();
+                buildingDamageMultiplier = 0.2f;
+                hitEffect = despawnEffect = Fx.none;
+            }
 
-            @Override
             public void update(Bullet b) {
                 super.update(b);
-
-                if(b.time < 30){
-                    float fin = Math.min(1, b.time/30);
+                if (b.time < 30) {
+                    float fin = Math.min(1, b.time / 30);
                     float fout = 1 - fin;
                     b.initVel(b.rotation(), fout * 4);
                 } else {
-                    if(b.data instanceof Unit u) {
+                    Object data = b.data;
+                    if (data instanceof Unit u) {
                         b.rotation(b.angleTo(u));
                         b.initVel(b.rotation(), speed);
                     }
                 }
+
             }
 
-            @Override
             public void draw(Bullet b) {
                 super.draw(b);
                 Draw.color(trailColor);
                 Fill.circle(b.x, b.y, 2);
             }
 
-            @Override
             public void removed(Bullet b) {
+            }
+        };
+        final BulletType missU = new BulletType() {{
+                damage = 30;
+                pierceArmor = true;
+                keepVelocity = hittable = absorbable = false;
+                lifetime = 45;
+                speed = 9;
+                trailWidth = 2;
+                trailLength = 12;
+                trailColor = Pal.spore;
+                buildingDamageMultiplier = 0.2f;
+                pierce = true;
+                pierceBuilding = true;
+                pierceCap = 3;
+                hitEffect = despawnEffect = Fx.none;
+            }
 
+            public void update(Bullet b) {
+                super.update(b);
+                if (b.time < 30) {
+                    float fin = Math.min(1, b.time / 30);
+                    float fout = 1 - fin;
+                    b.initVel(b.rotation(), fout * 4);
+                } else {
+                    Object data = b.data;
+                    if (data instanceof Unit u) {
+                        b.rotation(b.angleTo(u));
+                        b.initVel(b.rotation(), speed);
+                    }
+                }
+
+            }
+
+            public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                super.hitEntity(b, entity, health);
+                if (entity instanceof Unit u) {
+                    if (u.dead) {
+                        return;
+                    }
+
+                    if (u.hasEffect(EUStatusEffects.ullification)) {
+                        float dmg = u.maxHealth * 0.00618f;
+                        if (u.health < dmg) {
+                            u.kill();
+                        }
+
+                        u.health -= dmg;
+                    }
+                }
+
+            }
+
+            public void draw(Bullet b) {
+                super.draw(b);
+                Draw.color(trailColor);
+                Fill.circle(b.x, b.y, 2);
+            }
+
+            public void removed(Bullet b) {
+            }
+        };
+        final BulletType mla = new LaserBulletType(40) {{
+                colors = new Color[]{Pal.surge, Pal.accent};
+                pierceArmor = true;
+                length = 96;
+                width = 6;
+                sideWidth = 0;
+                sideAngle = 0;
+                sideLength = 0;
+            }
+
+            public void hitEntity(Bullet b, Hitboxc entity, float health) {
+                super.hitEntity(b, entity, health);
+                if (entity instanceof Unit u) {
+                    if (u.dead) {
+                        return;
+                    }
+
+                    if (u.hasEffect(EUStatusEffects.breakage)) {
+                        float dmg = 20;
+                        if (u.health < dmg) {
+                            u.kill();
+                        }
+
+                        u.health -= dmg;
+                    }
+                }
+
+            }
+        };
+        final BulletType missB = new BulletType() {{
+                damage = 40;
+                pierceArmor = true;
+                keepVelocity = hittable = absorbable = false;
+                lifetime = 45;
+                speed = 7;
+                trailWidth = 2;
+                trailLength = 12;
+                trailColor = Pal.surge;
+                buildingDamageMultiplier = 0.2f;
+            }
+
+            public void update(Bullet b) {
+                super.update(b);
+                if (b.time < 30) {
+                    float fin = Math.min(1, b.time / 30);
+                    float fout = 1 - fin;
+                    b.initVel(b.rotation(), fout * 4);
+                } else {
+                    Object data = b.data;
+                    if (data instanceof Unit u) {
+                        b.rotation(b.angleTo(u));
+                        b.remove();
+                    }
+                }
+
+            }
+
+            public void draw(Bullet b) {
+                super.draw(b);
+                Draw.color(trailColor);
+                Fill.circle(b.x, b.y, 2);
+            }
+
+            public void removed(Bullet b) {
+                mla.create(b, b.x, b.y, b.rotation());
             }
         };
 
         intervalBullet = new BulletType(){{
-            damage = 60;
+            damage = 55;
             buildingDamageMultiplier = 0.1f;
             speed = 16;
             pierce = true;
             pierceBuilding = true;
+            pierceCap = 4;
             lifetime = 11f;
             trailWidth = 2;
             trailLength = 12;
@@ -638,11 +764,30 @@ public class EUBulletTypes {
             @Override
             public void hitEntity(Bullet b, Hitboxc entity, float health) {
                 super.hitEntity(b, entity, health);
-                if(entity instanceof Unit u){
-                    if(!u.dead && u.hasEffect(EUStatusEffects.awsl)){
-                        if(b.owner instanceof Bit bit) {
-                            miss.create(b, b.team, bit.x, bit.y, bit.rotation() - 72, -1, 1, 1, u);
-                            miss.create(b, b.team, bit.x, bit.y, bit.rotation() + 72, -1, 1, 1, u);
+                if (entity instanceof Unit u) {
+                    if (!u.dead) {
+                        if (u.hasEffect(EUStatusEffects.awsl)) {
+                            Entityc owner = b.owner;
+                            if (owner instanceof Bit bit) {
+                                miss.create(b, b.team, bit.x, bit.y, bit.rotation() - 72, -1, 1, 1, u);
+                                miss.create(b, b.team, bit.x, bit.y, bit.rotation() + 72, -1, 1, 1, u);
+                            }
+                        }
+
+                        if (u.hasEffect(EUStatusEffects.breakage)) {
+                            Entityc owner = b.owner;
+                            if (owner instanceof Bit bit) {
+                                missB.create(b, b.team, bit.x, bit.y, bit.rotation() - 90, -1, 1, 1, u);
+                                missB.create(b, b.team, bit.x, bit.y, bit.rotation() + 90, -1, 1, 1, u);
+                            }
+                        }
+
+                        if (u.hasEffect(EUStatusEffects.ullification)) {
+                            Entityc owner = b.owner;
+                            if (owner instanceof Bit bit) {
+                                missU.create(b, b.team, bit.x, bit.y, bit.rotation() - 180, -1, 1, 1, u);
+                                //missU.create(b, b.team, bit.x, bit.y, bit.rotation() + 135, -1, 1, 1, u);
+                            }
                         }
                     }
                 }
@@ -854,7 +999,7 @@ public class EUBulletTypes {
 
     public static BulletType foreshadowEUBullet = new BulletType(){{
         damage = 500;
-        splashDamage = 700;
+        splashDamage = 500;
         splashDamageRadius = 9 * 8f;
         buildingDamageMultiplier = 0.25f;
         fragBullet = bit;
@@ -1243,13 +1388,13 @@ public class EUBulletTypes {
                 u.damage(b.damage);
                 if(!u.hasEffect(EUStatusEffects.breakage)) b.damage -= 30;
                 else {
-                    if(u.health <= b.damage/2f) u.kill();
-                    else u.health -= b.damage/2f;
+                    if(u.health <= b.damage/4f) u.kill();
+                    else u.health -= b.damage/4f;
                 }
 
                 if(u.hasEffect(EUStatusEffects.ullification)){
-                    if(u.health <= u.maxHealth * 0.02f) u.kill();
-                    else u.health -= u.maxHealth * 0.02f;
+                    if(u.health <= u.maxHealth * 0.00618f) u.kill();
+                    else u.health -= u.maxHealth * 0.00618f;
                 }
             }
         }

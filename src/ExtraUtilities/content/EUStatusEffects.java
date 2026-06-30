@@ -272,6 +272,53 @@ public class EUStatusEffects {
         }
     };
 
+    public static StatusEffect expulsion = new StatusEffect("expulsion") {
+        {
+            this.damage = -1;
+            this.effect = new Effect(45, (e) -> {
+                Draw.color(EUItems.lightninAlloy.color);
+                Drawf.tri(e.x, e.y - 12 * e.finpow(), 8 * e.foutpow(), 6 * e.foutpow(), -90);
+            });
+        }
+
+        public void setStats() {
+            super.setStats();
+            this.stats.remove(Stat.healing);
+        }
+
+        public void update(Unit unit, StatusEntry entry) {
+            if (!Vars.headless && this.effect != Fx.none && Mathf.chanceDelta((double)this.effectChance) && !unit.inFogTo(Vars.player.team())) {
+                Tmp.v1.rnd(Mathf.range(unit.type.hitSize / 2));
+                this.effect.at(unit.x + Tmp.v1.x, unit.y + Tmp.v1.y, 0, this.color, this.parentizeEffect ? unit : null);
+            }
+
+            unit.damageMultiplier = Math.min(unit.damageMultiplier, unit.healthf());
+        }
+    };
+    public static StatusEffect sententia = new StatusEffect("sententia") {
+        {
+            this.damage = -1;
+            this.effect = new Effect(45, (e) -> {
+                Draw.color(Pal.remove);
+                Drawf.tri(e.x, e.y - 12 * e.finpow(), 8 * e.foutpow(), 6.8f * e.foutpow(), -90);
+            });
+        }
+
+        public void setStats() {
+            super.setStats();
+            this.stats.remove(Stat.healing);
+        }
+
+        public void update(Unit unit, StatusEntry entry) {
+            if (!Vars.headless && this.effect != Fx.none && Mathf.chanceDelta(this.effectChance) && !unit.inFogTo(Vars.player.team())) {
+                Tmp.v1.rnd(Mathf.range(unit.type.hitSize / 2));
+                this.effect.at(unit.x + Tmp.v1.x, unit.y + Tmp.v1.y, 0, this.color, this.parentizeEffect ? unit : null);
+            }
+
+            unit.speedMultiplier = Math.min(unit.speedMultiplier, Math.max(0.3f, unit.healthf()));
+        }
+    };
+
     public static void load(){
         elements.addAll(breakage);
     }

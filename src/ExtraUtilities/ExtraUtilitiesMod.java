@@ -138,7 +138,7 @@ public class ExtraUtilitiesMod extends Mod{
             {
                 update(() -> {
                     leave -= Time.delta;
-                    if(leave < 0 && !canClose) {
+                    if (this.leave < 0f && !this.canClose || !Core.settings.getBool("eu-first-load")) {
                         canClose = true;
                     }
                 });
@@ -157,14 +157,17 @@ public class ExtraUtilitiesMod extends Mod{
                 });
                 cont.row();
                 updateLog.clear();
-                Block tj = getJsNameBlock("TJ");
-                Block minisp = getJsNameBlock("minisp");
+                Block T2steam = getJsNameBlock("T2-steam-generator");
+                Block th2 = getJsNameBlock("Th2");
+                Block hurricane = getJsNameBlock("hurricane");
+                Block magstorm = getJsNameBlock("magstorm");
 
                 updateLog.addAll(
-                        EUBlocks.randomer, EUBlocks.blockFiller,
-                        EUBlocks.penitent, EUBlocks.anti_Missile,
-                        minisp, Blocks.spectre,EUBlocks.sancta, EUBlocks.arbiter,
-                        tj,
+                        T2steam, th2, EUBlocks.thermoelectricGenerator,
+                        EUBlocks.shootingStar, EUBlocks.celebrationMk2,
+                        hurricane, magstorm,
+                        Blocks.foreshadow,
+                        EUUnitTypes.suzerain,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {

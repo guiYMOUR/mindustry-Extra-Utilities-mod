@@ -41,6 +41,7 @@ import mindustry.content.Liquids;
 import mindustry.content.StatusEffects;
 import mindustry.ctype.Content;
 import mindustry.ctype.UnlockableContent;
+import mindustry.entities.EntityCollisions;
 import mindustry.entities.EntityCollisions.*;
 import mindustry.entities.Mover;
 import mindustry.entities.Units;
@@ -529,27 +530,29 @@ public class EUGet {
      * @param endY 结束坐标Y
      * @param speed 速度
      */
-    public static void movePoint(Bullet b, float endX, float endY, float speed, SolidPred solidCheck) {
-        // 计算两点之间的距离
-        float distance = (float) Math.sqrt(Math.pow(endX - b.x, 2) + Math.pow(endY - b.y, 2));
+    public static void movePoint(Bullet b, float endX, float endY, float speed, boolean needRot, EntityCollisions.SolidPred solidCheck) {
+        float distance = (float)Math.sqrt(Math.pow(endX - b.x, 2) + Math.pow(endY - b.y, 2));
 
         float moveSpeed = distance * speed;
 
-        // 计算移动方向的单位向量
         float dx = (endX - b.x) / distance;
         float dy = (endY - b.y) / distance;
 
-        // 计算每个tick内移动的距离
         float moveDistance = moveSpeed * Time.delta;
+        Vars.collisions.move(b, dx * moveDistance, dy * moveDistance, solidCheck);
 
-        // 更新子弹的位置
-        //b.move(dx * moveDistance, dy * moveDistance);
-        collisions.move(b, dx * moveDistance, dy * moveDistance, solidCheck);
+        if (needRot) {
+            b.rotation(b.angleTo(endX, endY));
+        }
 
-        // 检查是否到达或超过终点
         if (Math.abs(b.x - endX) < 1e-4f && Math.abs(b.y - endY) < 1e-4f) {
             b.set(endX, endY);
         }
+
+    }
+
+    public static void movePoint(Bullet b, float endX, float endY, float speed, EntityCollisions.SolidPred solidCheck) {
+        movePoint(b, endX, endY, speed, false, solidCheck);
     }
 
     public static boolean hollow(int x, int y){
@@ -600,5 +603,32 @@ public class EUGet {
         return status != null && status != StatusEffects.none && (status.damage > 0 || status.damageMultiplier < 1 || status.disarm || status.speedMultiplier < 1 || status.reloadMultiplier < 1 || status.healthMultiplier < 1);
     }
 
+    public static int numSet(float num) {
+        float n = Math.abs(num);
+
+        int res;
+        for(res = 1; (n /= 10) > 0; ++res) {
+        }
+
+        return res;
+    }
+
+    public static float squarePointX(float centerX, float halfSide, float angleDeg) {
+        float theta = (float)Math.toRadians(angleDeg);
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        float max = Math.max(Math.abs(cos), Math.abs(sin));
+        float r = halfSide / max;
+        return centerX + r * cos;
+    }
+
+    public static float squarePointY(float centerY, float halfSide, float angleDeg) {
+        float theta = (float)Math.toRadians(angleDeg);
+        float cos = Mathf.cos(theta);
+        float sin = Mathf.sin(theta);
+        float max = Math.max(Math.abs(cos), Math.abs(sin));
+        float r = halfSide / max;
+        return centerY + r * sin;
+    }
 
 }
