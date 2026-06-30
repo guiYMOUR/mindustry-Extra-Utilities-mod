@@ -38,7 +38,7 @@ public class ChainLightningFade extends BulletType {
     public float layer = Layer.bullet + 0.1f;
 
     public ChainLightningFade(float lifetime, float linkSpace, float stroke, Color color, float damage, Effect hitEffect){
-        absorbable = hittable = collides = collidesTiles = keepVelocity = false;
+        absorbable = hittable = collides = keepVelocity = false;
         speed = 0;
         despawnEffect = Fx.none;
         this.lifetime = lifetime;

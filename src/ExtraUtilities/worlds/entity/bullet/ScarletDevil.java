@@ -190,9 +190,21 @@ public class ScarletDevil extends BulletType {
                 }
                 float dmg = b.damage * (1 + u.type.armor/10f);
                 u.damagePierce(dmg);
-                if(u.hasEffect(EUStatusEffects.breakage)){
-                    if(u.health <= dmg * 0.5f) u.kill();
-                    else u.health -= dmg * 0.5f;
+                if (u.hasEffect(EUStatusEffects.breakage)) {
+                    if (u.health <= dmg * 0.25f) {
+                        u.kill();
+                    } else {
+                        u.health -= dmg * 0.25f;
+                    }
+                }
+
+                if (u.hasEffect(EUStatusEffects.ullification)) {
+                    float finDmg = u.maxHealth * 0.001618f;
+                    if (u.health <= finDmg) {
+                        u.kill();
+                    } else {
+                        u.health -= finDmg;
+                    }
                 }
             }
             else super.hitEntity(b, entity, health);

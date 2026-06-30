@@ -27,7 +27,6 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
-import mindustry.type.ammo.PowerAmmoType;
 import mindustry.ui.Bar;
 import mindustry.world.blocks.power.PowerGraph;
 import mindustry.world.blocks.power.PowerNode;
@@ -127,21 +126,7 @@ public class BatteryAbility extends Ability {
         updateTarget(unit);
         Groups.bullet.intersect(unit.x - shieldRange, unit.y - shieldRange, shieldRange * 2, shieldRange * 2, cons);
         amount = unit.shield * 10;
-        if(Vars.state.rules.unitAmmo && amount > 0){
-            Units.nearby(unit.team, unit.x, unit.y, range, other -> {
-                if(other.type.ammoType instanceof PowerAmmoType){
-                    float powerPerAmmo = ((PowerAmmoType)other.type.ammoType).totalPower / other.type.ammoCapacity;
-                    float ammoRequired = other.type.ammoCapacity - other.ammo;
-                    float powerRequired = ammoRequired * powerPerAmmo;
-                    float powerTaken = Math.min(amount, powerRequired);
-                    if(powerTaken > 1){
-                        unit.shield -= powerTaken / 10;
-                        other.ammo += powerTaken / powerPerAmmo;
-                        Fx.itemTransfer.at(unit.x, unit.y, Math.max(powerTaken / 100, 1), Pal.power, other);
-                    }
-                }
-            });
-        }
+
         if(target == null || target.block == null) return;
         PowerGraph g = target.power.graph;
         if(g.getPowerBalance() > 0) amount = Math.min(amount + (g.getLastPowerProduced()) * Time.delta, capacity);

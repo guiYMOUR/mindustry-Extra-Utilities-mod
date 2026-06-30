@@ -214,32 +214,56 @@ public class ArbiterBulletType extends BulletType {
                 }
             });
 
-            Units.nearbyEnemies(b.team, b.x, b.y, estRange, ut -> {
-                if(ut != null && ut.type != null && ut.targetable(b.team) && !ut.inFogTo(b.team)) {
-                    if(ut.type.armor > 80){
-                        if(ut.health <= b.damage * ut.type.armor){
-                            ut.kill();
-                            ut.remove();
-                        } else ut.health -= b.damage * ut.type.armor;
+            Units.nearbyEnemies(b.team, b.x, b.y, this.estRange, (utx) -> {
+                if (utx != null && utx.type != null && utx.targetable(b.team) && !utx.inFogTo(b.team)) {
+                    if (utx.type.armor > 80) {
+                        if (utx.health <= b.damage * utx.type.armor) {
+                            utx.kill();
+                            utx.remove();
+                        } else {
+                            if (this.status != StatusEffects.none) {
+                                utx.apply(this.status, this.statusDuration);
+                            }
+
+                            utx.health -= b.damage * utx.type.armor;
+                        }
                     } else {
-                        if ((ut.health <= ((ut.maxHealth * 0.01f / 12) * (1 + ut.hitSize/100)) || ut.health <= b.damage / 12)
-                                && a.ens.size < maxAbs && ut.type.hitSize <= 20) {
-                            if (!(ut instanceof bossEntity)) {
-                                a.ens.addUnique(dateBullet.create(b, b.team, ut.x, ut.y, 0, -1, 1, 1, ut.type));
-                                ut.kill();
-                                ut.remove();
+                        float rawDmg = utx.maxHealth * 0.01f / 12 * (1 + utx.hitSize / 100);
+                        if (utx.health <= rawDmg + b.damage / 12 && a.ens.size < this.maxAbs && utx.type.hitSize <= 20) {
+                            if (!(utx instanceof bossEntity)) {
+                                a.ens.addUnique(this.dateBullet.create(b, b.team, utx.x, utx.y, 0, -1, 1, 1, utx.type));
+                                utx.kill();
+                                utx.remove();
                             }
                         } else {
-                            ut.damagePierce(b.damage / 12);
-                            ut.health -= ((ut.maxHealth * 0.01f / 12) * (1 + ut.type.hitSize/100));
-                            if(ut.hasEffect(EUStatusEffects.breakage)){
-                                float dmg = b.damage/24;
-                                if(ut.health <= dmg) ut.kill();
-                                else ut.health -= dmg;
+                            if (this.status != StatusEffects.none) {
+                                utx.apply(this.status, this.statusDuration);
+                            }
+
+                            utx.damagePierce(b.damage / 12);
+                            utx.health -= rawDmg;
+                            float applyDmg = rawDmg + b.damage / 12;
+                            if (utx.hasEffect(EUStatusEffects.breakage)) {
+                                float dmg = applyDmg * 0.25f;
+                                if (utx.health <= dmg) {
+                                    utx.kill();
+                                } else {
+                                    utx.health -= dmg;
+                                }
+                            }
+
+                            if (utx.hasEffect(EUStatusEffects.ullification)) {
+                                float dmg = utx.maxHealth * 0.01618f;
+                                if (utx.health <= dmg / 12) {
+                                    utx.kill();
+                                } else {
+                                    utx.health -= dmg / 12;
+                                }
                             }
                         }
                     }
                 }
+
             });
         }
 
