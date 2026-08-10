@@ -126,7 +126,7 @@ public class MultiBulletTurret extends Turret {
 
         @Override
         public void updateTile(){
-            unit.ammo((float)unit.type().ammoCapacity * totalAmmo / maxAmmo);
+            unit.ammo(getAmmoFraction());
 
             if(autoResetBid && bid > 0) {
                 if (target == null) {

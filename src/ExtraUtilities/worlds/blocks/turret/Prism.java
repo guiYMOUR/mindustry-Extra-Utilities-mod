@@ -165,7 +165,7 @@ public class Prism extends Turret {
                 ammoFact = Math.min(ammoFact, this.liquids.get(cl.liquid) / Prism.this.liquidCapacity);
             }
 
-            this.unit.ammo((float)this.unit.type().ammoCapacity * ammoFact);
+            this.unit.ammo(getAmmoFraction());
 
             removeBullet();
             if(bulletLife < maxShootDr && checkBullet()){
@@ -177,8 +177,8 @@ public class Prism extends Turret {
                     tr.trns(rotation, (block.size * tilesize / 2f) - recoil + shootX, sin * (sideOffsetFirst * bulletHeat + sideOffset));
                     bullets[n].rotation(rotation + ((sin * shiftAngel) * bulletHeat));
                     bullets[n].set(x + tr.x, y + tr.y);
-                    //Mana Sickness
-                    bullets[n].damage = rainbowDamage * (1 - (bulletLife/maxShootDr) * 0.75f);
+                    //Mana Sickness，魔力病和机制还原
+                    bullets[n].damage = rainbowDamage * (1 + 2 * (1 - bulletHeat)) * (1 - (bulletLife/maxShootDr) * 0.75f);
                     //need half -> half
                     //bullets[n].damage = rainbowDamage * Math.max(1 - bulletLife/maxShootDr, 0.5f);
                     if(isShooting() && hasAmmo()) bullets[n].time = 0;
