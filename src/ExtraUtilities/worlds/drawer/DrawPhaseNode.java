@@ -6,8 +6,10 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
+import arc.graphics.g2d.Fill;
 import arc.math.Mathf;
 import arc.util.Tmp;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.graphics.Layer;
@@ -48,6 +50,15 @@ public class DrawPhaseNode extends DrawBlock {
                 build.y,
                 other.x,
                 other.y, false);
+        Draw.reset();
+             float seed = 100f;
+        float progress = (Time.time / seed) % 1f;
+        float dotX = Mathf.lerp(build.x, other.x, progress);
+        float dotY = Mathf.lerp(build.y, other.y, progress);
+        
+        Draw.color(Color.white);
+        Draw.alpha(1f);
+        Fill.circle(dotX, dotY, 2f);
         Draw.reset();
     }
 
