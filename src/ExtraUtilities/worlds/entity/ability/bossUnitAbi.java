@@ -4,6 +4,7 @@ import ExtraUtilities.content.EUFx;
 import ExtraUtilities.content.EUGet;
 import ExtraUtilities.content.EUStatusEffects;
 import ExtraUtilities.content.EUUnitTypes;
+import ExtraUtilities.ui.OSLog;
 import ExtraUtilities.worlds.drawer.DrawFunc;
 import ExtraUtilities.worlds.entity.unit.bossEntity;
 import ExtraUtilities.worlds.entity.unit.bossType;
@@ -172,6 +173,10 @@ public class bossUnitAbi extends Ability{
                         EUFx.EUUtSp.at(u.x, u.y, u.rotation - 90, ut);
                         u.add();
                     }
+                }
+                if(!Vars.net.active() && Vars.player != null && unit.team != Vars.player.team()) {
+                    //OSLog.show("star-half2", OSLog.getPcUsername());
+                    OSLog.show("star-half1", OSLog.getPcUsername());
                 }
                 s1 = true;
                 c1 = false;
