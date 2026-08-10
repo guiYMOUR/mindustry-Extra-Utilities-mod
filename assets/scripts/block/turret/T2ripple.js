@@ -5,9 +5,10 @@ const MultiShootTurret = lib.getClass("ExtraUtilities.worlds.blocks.turret.Multi
 const hardMod = lib.hardMod;
 
 const T2rip = new MultiShootTurret("T2-ripple");
-T2rip.reload = 30;
+T2rip.reload = 60;
 T2rip.shoot = lib.moreShootAlternate(8, shots);
 T2rip.shots = shots;
+T2rip.perShoot = 4;
 T2rip.targetAir = false;
 T2rip.inaccuracy = 10;
 //T2rip.xRand = 4;

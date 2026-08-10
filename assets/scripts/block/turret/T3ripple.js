@@ -7,9 +7,9 @@ const shots = 3;
 const hardMod = lib.hardMod;
 
 const T3rip = new MultiShootTurret("T3-ripple");
-T3rip.reload = 20;
+T3rip.reload = 40;
 T3rip.shots = shots;
-T3rip.perShoot = 4;
+T3rip.perShoot = 5;
 T3rip.shoot = lib.moreShootAlternate(6, shots);
 T3rip.targetAir = false;
 T3rip.inaccuracy = 10;
