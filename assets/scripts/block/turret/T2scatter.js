@@ -26,9 +26,8 @@ T2scatter.limitRange(2);
 T2scatter.scaledHealth = 105;
 T2scatter.coolant = T2scatter.consumeCoolant(0.22);
 T2scatter.requirements = ItemStack.with(
-    Items.copper, 90,
-    Items.lead, 80,
-    Items.graphite, 40
+    Items.lead, 100,
+    Items.graphite, 75
 );
 T2scatter.buildVisibility = BuildVisibility.shown;
 T2scatter.category = Category.turret;
