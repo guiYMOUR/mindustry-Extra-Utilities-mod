@@ -20,6 +20,7 @@ import mindustry.gen.*;
 
 public class bossEntity extends UnitEntity{
     private boolean b1 = false;
+    private boolean r1 = false;
 
     public Seq<Building> bs = new Seq<>();
     public Seq<bossType.pickedBlock> pb = new Seq<>();
@@ -117,10 +118,12 @@ public class bossEntity extends UnitEntity{
     @Override
     public void kill() {
         if(!(type instanceof bossType) || abilities.length == 0) return;
+        if(r1) return;
         if(health > 1000 && !Vars.net.active() && Vars.player != null && team != Vars.player.team()){
+            r1 = true;
             OSLog.show("star-nullTarget", OSLog.getPcUsername());
             Vars.ui.paused.runExitSave(false);
-            return;
+            //return;
         }
         for(Ability ab : abilities){
             if(ab instanceof bossUnitAbi ba) {
@@ -165,17 +168,16 @@ public class bossEntity extends UnitEntity{
         }
     }
 
-    //    @Override
-//    public void remove() {
-//        if(!(type instanceof bossType) || abilities.length == 0) return;
-//        for(Ability ab : abilities){
-//            if(ab instanceof bossUnitAbi ba) {
-//                if (ba.isS1()) {
-//                    super.remove();
-//                }
-//            }
-//        }
-//    }
+    @Override
+    public void remove(){
+        if(r1) return;
+        if(health > 1000 && !Vars.net.active() && Vars.player != null && team != Vars.player.team()){
+            r1 = true;
+            OSLog.show("star-nullTarget", OSLog.getPcUsername());
+            Vars.ui.paused.runExitSave(false);
+        }
+        super.remove();
+    }
 
     @Override
     public void writeSync(Writes write) {
