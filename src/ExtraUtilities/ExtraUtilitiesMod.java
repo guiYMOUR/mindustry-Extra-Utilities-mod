@@ -144,10 +144,13 @@ public class ExtraUtilitiesMod extends Mod{
                 cont.row();
                 updateLog.clear();
 
+                var T2scatter = getJsNameBlock("T2-scatter");
+                var prism = getJsNameBlock("prism");
+
                 updateLog.addAll(
-                        EUBlocks.T2carbideCrucible,
-                        EUBlocks.anti_Missile, EUBlocks.blackhole,
-                        EUUnitTypes.suzerain,
+                        T2scatter, prism,
+                        EUUnitTypes.regency,
+                        EUBlocks.sancta,
                         EUBlocks.guiY
                 );
                 ScrollPane p = cont.pane(t -> {

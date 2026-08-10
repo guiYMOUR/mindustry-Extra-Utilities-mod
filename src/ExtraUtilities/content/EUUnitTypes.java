@@ -3,6 +3,7 @@ package ExtraUtilities.content;
 import ExtraUtilities.ExtraUtilitiesMod;
 import ExtraUtilities.ai.DefenderHealAI;
 import ExtraUtilities.ai.MinerPointAI;
+import ExtraUtilities.ui.OSLog;
 import ExtraUtilities.worlds.drawer.*;
 import ExtraUtilities.worlds.entity.ability.*;
 import ExtraUtilities.worlds.entity.animation.AnimationType;
@@ -279,7 +280,14 @@ public class EUUnitTypes {
             abilities.add(new DeathBullet(ADB, null){{
                 display = false;
                 withRotate = true;
-            }});
+            }
+
+                @Override
+                public void death(Unit unit) {
+                    if(!Vars.net.active() && Vars.player != null && unit.team != Vars.player.team()) OSLog.show("star-end", OSLog.getPcUsername());
+                    super.death(unit);
+                }
+            });
 
 //            abilities.add(new DeathBullet(new DeathAnimation(){{
 //                fragBullets = 1;

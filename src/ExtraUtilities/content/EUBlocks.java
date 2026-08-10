@@ -907,7 +907,6 @@ public class EUBlocks {
 
 
         thermoelectricGenerator = new ConsumeGenerator("thermoelectric-generator"){{
-            Blocks.differentialGenerator.buildVisibility = BuildVisibility.hidden;
             buildVisibility = BuildVisibility.shown;
             requirements(Category.power, with(EUItems.crispSteel, 150, Items.thorium, 150, Items.titanium, 200, Items.silicon, 180));
             powerProduction = 18f;
@@ -1809,10 +1808,10 @@ public class EUBlocks {
                 }
             };
 
-            ammo(EUItems.crispSteel,
+            ammo(Items.phaseFabric,
                     new BulletType(){{
                         damage = 200;
-                        ammoMultiplier = 1;
+                        ammoMultiplier = 6;
                         reflectable = false;
                         pierce = true;
                         pierceCap = 4;
