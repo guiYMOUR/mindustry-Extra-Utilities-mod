@@ -146,9 +146,11 @@ public class ExtraUtilitiesMod extends Mod{
 
                 var T2scatter = getJsNameBlock("T2-scatter");
                 var prism = getJsNameBlock("prism");
+                var T2ripple = getJsNameBlock("T2-ripple");
+                var T3ripple = getJsNameBlock("T3-ripple");
 
                 updateLog.addAll(
-                        T2scatter, prism,
+                        T2scatter, T2ripple, T3ripple, prism,
                         EUUnitTypes.regency,
                         EUBlocks.sancta,
                         EUBlocks.guiY
